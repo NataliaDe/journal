@@ -1,0 +1,19 @@
+{
+    "require": {
+        "slim/slim": "2.*",
+		"gabordemooij/redbean": "dev-master",
+        "twbs/bootstrap": "4.*",
+        "components/jquery": "^3.2",
+        "phpoffice/phpexcel": "^1.8",
+        "flynsarmy/slim-monolog": "^1.0",
+        "phpmailer/phpmailer": "^6.0",
+        "setasign/tfpdf": "^1.25"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\MW\\": "app/mw",
+            "App\\EXC\\": "app/exc",
+             "App\\MODELS\\": "app/models"
+        }
+    }
+}

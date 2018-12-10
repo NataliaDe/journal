@@ -1,0 +1,1 @@
+[2018-03-28 09:44:51] SlimMonoLogger.INFO: Сессия -  :: Удаление пользователя - запись с id = 1 [] {"memory_usage":"2.5 MB","uid":"785f5d0","process_id":5276,"memory_peak_usage":"2.5 MB","url":"/journal/user/1","ip":"::1","http_method":"POST","server":"localhost","referrer":"http://localhost/journal/user/1"}

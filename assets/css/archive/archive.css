@@ -1,0 +1,75 @@
+
+        
+        
+        /*---------- таблица archive ------------*/
+        
+        
+        #archive_result_table, #archive_result_table_wrapper{
+            width: 1719px !important;
+        }
+        
+
+        #inptarchive_result_table0, #inptarchive_result_table1,#selarchive_result_table2,#selarchive_result_table5{
+            width: 54px;
+        }
+        #inptarchive_result_table3{
+            width: 110px;
+        }
+                #inptarchive_result_table4{
+            width: 103px;
+        }
+                        #inptarchive_result_table6{
+            width: 114px;
+        }
+        
+                                #inptarchive_result_table7,#inptarchive_result_table8{
+            width: 68px;
+        }
+                                        #inptarchive_result_table9{
+            width: 89px;
+        }
+        
+                #selarchive_result_table10,#selarchive_result_table11{
+            width: 54px;
+        }
+           
+                #inptarchive_result_table12,#inptarchive_result_table13{
+            width: 75px;
+        }
+                #inptarchive_result_table14{
+            width: 147px;
+        }
+                        #inptarchive_result_table15,#inptarchive_result_table16,#inptarchive_result_table17,#inptarchive_result_table18,#inptarchive_result_table19{
+            width: 89px;
+        }
+        
+                        #inptarchive_result_table20{
+            width: 54px;
+        }
+        
+                        #inptarchive_result_table21{
+            width: 147px;
+        }
+        
+                                #inptarchive_result_table22, #inptarchive_result_table23{
+            width: 89px;
+        }
+                                #inptarchive_result_table24{
+            width: 54px;
+        }
+                                      #inptarchive_result_table25,#inptarchive_result_table29{
+            width: 80px;
+        }
+                                        #inptarchive_result_table26, #inptarchive_result_table27,#inptarchive_result_table28{
+            width: 89px;
+        }
+        
+        
+/*        #userTable_wrapper, #classifTable_wrapper{
+            width: 85%;
+            margin-left: 100px;
+        }*/
+        /*---------- END таблица archive ------------*/
+        
+        
+    
