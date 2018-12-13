@@ -204,7 +204,25 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                     </td>
 
-                    <td></td>
+                    <td>
+
+                                                <?php
+                        //            short on technic
+                        if (isset($sily_mchs[$row['id']]) && !empty($sily_mchs[$row['id']])) {
+
+                             foreach ($sily_mchs[$row['id']] as $si) {
+                                        $teh = '<b>' . $si['mark'] . '</b> ';
+                                        //$teh = '<b>' . $si['mark'] . '</b> ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
+                             echo $teh. '<br>';
+
+                             }
+
+
+        }
+
+        ?>
+
+                    </td>
 
         <!--                    <td>< $row['floor'] ?></td>-->
                     <td>
