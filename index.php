@@ -1218,26 +1218,26 @@ $id_rig_arr=array();
 
 
                         /* id of rigs, where silymschs/innerservice are not selected */
-        $id_rig_empty_sily = R::getAll('SELECT id_rig FROM countsily WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ') AND'
+      /*  $id_rig_empty_sily = R::getAll('SELECT id_rig FROM countsily WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ') AND'
             . ' id_rig not IN(select id_rig from countsily where id_rig IN(' . implode(',', $id_rig_arr) . ') AND c=?)', array(0,1));
         foreach ($id_rig_empty_sily as $value) {
              $data['id_rig_empty_sily'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where silymschs/innerservice are not selected */
 
 
         /* id of rigs, where informing are not selected */
-        $id_rig_empty_informing = R::getAll('SELECT id_rig FROM countinforming WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ')', array(0));
+       /* $id_rig_empty_informing = R::getAll('SELECT id_rig FROM countinforming WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ')', array(0));
                 foreach ($id_rig_empty_informing as $value) {
              $data['id_rig_empty_informing'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where informing are not selected */
 
                         /* id of rigs, where time character are not selected */
-        $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
+      /*  $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
         foreach ($id_rig_empty_character as $value) {
             $data['id_rig_empty_character'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where time character are not selected */
 
                 /* fill or no icons */
@@ -1321,26 +1321,26 @@ $id_rig_arr=array();
 
 
                         /* id of rigs, where silymschs/innerservice are not selected */
-        $id_rig_empty_sily = R::getAll('SELECT id_rig FROM countsily WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ') AND'
+       /* $id_rig_empty_sily = R::getAll('SELECT id_rig FROM countsily WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ') AND'
             . ' id_rig not IN(select id_rig from countsily where id_rig IN(' . implode(',', $id_rig_arr) . ') AND c=?)', array(0,1));
         foreach ($id_rig_empty_sily as $value) {
              $data['id_rig_empty_sily'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where silymschs/innerservice are not selected */
 
 
         /* id of rigs, where informing are not selected */
-        $id_rig_empty_informing = R::getAll('SELECT id_rig FROM countinforming WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ')', array(0));
+      /*  $id_rig_empty_informing = R::getAll('SELECT id_rig FROM countinforming WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ')', array(0));
                 foreach ($id_rig_empty_informing as $value) {
              $data['id_rig_empty_informing'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where informing are not selected */
 
                         /* id of rigs, where time character are not selected */
-        $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
+       /* $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
         foreach ($id_rig_empty_character as $value) {
             $data['id_rig_empty_character'][] = $value['id_rig'];
-        }
+        }*/
         /* END id of rigs, where time character are not selected */
 
 
