@@ -4,43 +4,69 @@
             <br>
 
 
-			             <div class="container">
+            <div class="container">
 
-						<div class='row'>
+                <div class='row'>
 
-						<div class='col-lg-4'>
-<div id="dumka1877" poll-id="1877" width="300" height="300"></div>
-<script type="text/javascript" src="https://takadumka.info/poll/1877.js"></script>
+                    <div class='col-lg-4'>
+                        <div id="dumka1877" poll-id="1877" width="300" height="300"></div>
+                        <script type="text/javascript" src="https://takadumka.info/poll/1877.js"></script>
 
-</div>
+                    </div>
 
-<div class='col-lg-4'>
+                    <div class='col-lg-4'>
 
-<div id="dumka1886" poll-id="1886" width="300" height="300"></div>
-<script type="text/javascript" src="https://takadumka.info/poll/1886.js"></script>
+                        <div id="dumka1886" poll-id="1886" width="300" height="300"></div>
+                        <script type="text/javascript" src="https://takadumka.info/poll/1886.js"></script>
 
-</div>
+                    </div>
+
+                </div>
 
             </div>
-
-			</div>
 
             <br><br>
 
 
-																														            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 06.12.2018</b></i></span>
- <br>
+        <div class="container">
+                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 26.12.2018</b></i></span>
+                <br>
 
             </div>
 
 
-											 			            <div class="container"><br>
+            <div class="container"><br>
+                <div class="alert alert-success alert-success-custom">
+                    <strong>26.12.2018 была восстановлена работоспособность ПС в связи с переходом на другое
+                        серверное программное обеспечение. <br>
+                    </strong>
+                </div>
 
-																	                <div class="alert alert-danger alert-danger-custom">
+                              <div class="alert alert-info alert-info-custom">
+                    <strong>
+                        Выезды до 26.12.2018 удалены из БД. <br><br>В дальнейшем в целях экономии серверного пространства и увеличения скорости обработки данных 1 раз в
+                        месяц будет производиться очистка старых данных. <br><br>В 2019 году будет разрабатываться механизм,
+                        позволяющий сохранять старые данные в архив для дальнейшей выборки и аналитики.
+                    </strong>
+                </div>
+
+
+            </div>
+
+
+
+
+            <div class="container">
+                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 06.12.2018</b></i></span>
+                <br>
+
+            </div>
+
+
+            <div class="container"><br>
+                <div class="alert alert-danger alert-danger-custom">
                     <strong>06.12.2018 проводится обновление ПС "Журнал ЦОУ" до версии 1.6. Не забываем очищать кэш браузера. <br>Возможна некорректная работа ПС.
-</strong>
-
+                    </strong>
                 </div>
 
 
