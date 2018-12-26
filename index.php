@@ -2449,7 +2449,7 @@ $app->post('/select', function () use ($app) {
             else{// today is taken on duty
                 $dateduty=$today;
             }
- $dateduty='2018-10-27';
+// $dateduty='2018-10-27';
             if (isset($dateduty)) {
                 $list_teh = R::getAssoc("CALL `getListTeh`('{$_POST['id_pasp']}','{$dateduty}');");
             } else {
