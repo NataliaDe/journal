@@ -50,6 +50,12 @@
                     </strong>
                 </div>
 
+                                <div class="alert alert-success alert-success-custom">
+                    <strong>В классификатор "Причина выезда" добавлены позиции "другие загорания", "демеркуризация."
+</strong>
+
+                </div>
+
 
             </div>
 
