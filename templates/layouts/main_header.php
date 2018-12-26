@@ -39,7 +39,7 @@
 
                 <!-- news-->
                 <li class="dropdown tasks-menu">
-                    <a  href="<?= $baseUrl ?>/news" target="_blank" class="item-menu"><span>Новости <span style="color: cyan">16.11.2018</span></span></a>
+                    <a  href="<?= $baseUrl ?>/news" target="_blank" class="item-menu"><span>Новости <span style="color: cyan">06.12.2018</span></span></a>
                 </li>
 
 
