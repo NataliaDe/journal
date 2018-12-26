@@ -382,11 +382,14 @@ class Model_Rigtable {
 
 
     /* json */
-    public function selectAllForJson($is_delete) {
+    public function selectAllForJson($is_delete,$d1,$d2) {
         //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
 
         $sql = 'SELECT * FROM journal.rigtable WHERE  is_delete = ?  ';
         $param = array( $is_delete);
+
+          $this->setDateStart($d1);
+            $this->setDateEnd($d2);
 
         return $this->getRigTable($sql, $param);
     }

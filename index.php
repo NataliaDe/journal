@@ -3323,7 +3323,7 @@ $app->group('/save_to_json', 'is_login', 'is_permis', function () use ($app) {
         /*  Выборка запрошенных данных  */
 
            $rig_m = new Model_Rigtable();//rig
-           $rig = $rig_m->selectAllForJson(0);
+           $rig = $rig_m->selectAllForJson(0,$d1,$d2);
 
            if(isset($rig) && !empty($rig)){
                          $json_val=array();
