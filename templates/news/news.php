@@ -28,6 +28,37 @@
             <br><br>
 
 
+
+            <div class="container">
+                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 04.01.2019</b></i></span>
+                <br>
+
+            </div>
+
+
+            <div class="container"><br>
+                <div class="alert alert-success alert-success-custom">
+                    <strong>По предложению Гомельского областного УМЧС в классификатор "Вид работ" добавлена позиция "открывание дверей" для причины вызова "Помощь населению".
+                    </strong>
+                </div>
+
+                <div class="alert alert-success alert-success-custom">
+                    <strong>
+                        По запросу Гомельского областного УМЧС созданы пользователи для:<br>
+                        - Гомельского ПАСО<br>
+                        - ПАСО №4 Мозырского ГРОЧС<br>
+                        - ПАСО №3 Речицкого РОЧС<br> с правом создавать/редактировать выезды.
+                    </strong>
+                </div>
+
+
+                <div class="alert alert-info alert-info-custom">
+                    <strong>При создании пользователя в поле "ФИО пользователя" разрешено вводить цифры.
+                    </strong>
+                </div>
+            </div>
+
+
         <div class="container">
                 <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 26.12.2018</b></i></span>
                 <br>
