@@ -18,6 +18,7 @@ nb-configuration.xml
 /share/logs/*.log
 
 /templates/news/news.php
+/templates/layouts/news_head.php
 /temp/
 /tmpl/save_to_json/*.json
 
