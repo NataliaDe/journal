@@ -1,0 +1,24 @@
+### NetBeans ###
+nbactions.xml
+nbproject/
+nbbuild/
+nbdist/
+.nb-gradle/
+nb-configuration.xml
+/java/
+/WEB-INF/
+.idea
+*.iml
+
+### OTHER ###
+.idea
+.DS_Store
+/vendor/
+/share/config/default.php
+/share/logs/*.log
+
+/templates/news/news.php
+/temp/
+/tmpl/save_to_json/*.json
+
+
