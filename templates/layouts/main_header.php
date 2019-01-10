@@ -39,7 +39,10 @@
 
                 <!-- news-->
                 <li class="dropdown tasks-menu">
-                    <a  href="<?= $baseUrl ?>/news" target="_blank" class="item-menu"><span>Новости <span style="color: cyan">04.01.2019</span></span></a>
+                    <?php
+                    include __DIR__.'/news_head.php';
+                    ?>
+
                 </li>
 
 
