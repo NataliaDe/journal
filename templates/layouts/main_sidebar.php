@@ -222,7 +222,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
-                    <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> Диаграмма</a></li>
+<!--                    <li><a href="< $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> Диаграмма</a></li>-->
                     <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет3</a></li>
                     <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>
                 </ul>
