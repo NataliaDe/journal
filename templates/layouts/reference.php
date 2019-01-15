@@ -9,36 +9,36 @@
                 <br><br>
             </div>
             <div class="modal-body">
-                 <a href='/journal/templates/layouts/spravka/index.html' target='_blank'><span style='color:red'>Инструкция по использованию</span></a> 
+                 <a href='/journal/templates/layouts/spravka/index.html' target='_blank'><span style='color:red'>Инструкция по использованию</span></a>
                 <?php
                 if (isset($_GET["file"]))
                     $filename = $_GET["file"];
                 else {
                      $filename = "instruct.doc";
-                     //$filename1 = "ukazanie.doc";
+                     $filename1 = "ukazanie.doc";
                 }
                 if (strpos($filename, "/") !== false)
                     die("Hack atempt detected!");
                 if ($fileext = substr($filename, strrpos($filename, ".")) !== ".doc")
                     die("Поддерживается только чтение вордовских документов");
 
-                $p =  $baseUrl.'assets/doc/';
+                $p =  $baseUrl.'/assets/doc/';
                 $path = $p . $filename;
-               // $path1 = $p . $filename1;
+                $path1 = $p . $filename1;
 //echo $path;
 
                // echo "Скачать <a href='$path'>инструкцию по использованию</a><br> ";
-               // echo "Скачать <a href='$path1'>Указание: письмо о внедрении в ОЭ (исх.№ 1/54/350.вн.)</a><br><br> ";
+                echo "<br> <b>Скачать <a href='$path1'>Указание: Об опытной эксплуатации ПС «Журнал ЦОУ» (исх.№ 2041 от 29.12.2018)</a></b><br><br> ";
                 ?>
-   
+
             <p class="modal-header"></p>
                 <b>Контактная информация:</b><br>
                 автор идеи - Шилько Сергей Чеславович, 8(017) 209 27 11<br>
-                 руководитель - Шульга Максим Константинович, 8(017) 209 27 51<br>   
+                 руководитель - Шульга Максим Константинович, 8(017) 209 27 51<br>
                 разработчик - Дещеня Наталья Александровна, 8(017) 209 27 48<br>
 
             </div>
- 
+
             <div class="modal-footer">
 
                 <div class="copyright">

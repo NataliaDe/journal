@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+		<title>Список подключенных районов</title>
+		<style>
+			body{
+				margin: 40px auto;
+				width: 500px;
+			}
+
+			/* -------------------------------------- */
+
+			ol{
+				counter-reset: li;
+				list-style: none;
+				*list-style: decimal;
+				font: 15px 'trebuchet MS', 'lucida sans';
+				padding: 0;
+				margin-bottom: 4em;
+				text-shadow: 0 1px 0 rgba(255,255,255,.5);
+			}
+
+			ol ol{
+				margin: 0 0 0 2em;
+			}
+
+			/* -------------------------------------- */			
+
+			.rounded-list a{
+				position: relative;
+				display: block;
+				padding: .4em .4em .4em 2em;
+				*padding: .4em;
+				margin: .5em 0;
+				background: #ddd;
+				color: #444;
+				text-decoration: none;
+				-moz-border-radius: .3em;
+				-webkit-border-radius: .3em;
+				border-radius: .3em;
+				-webkit-transition: all .3s ease-out;
+				-moz-transition: all .3s ease-out;
+				-ms-transition: all .3s ease-out;
+				-o-transition: all .3s ease-out;
+				transition: all .3s ease-out;	
+			}
+
+			.rounded-list a:hover{
+				background: #eee;
+			}
+
+			.rounded-list a:hover:before{
+				-moz-transform: rotate(360deg);
+			  	-webkit-transform: rotate(360deg);
+			    -moz-transform: rotate(360deg);
+			    -ms-transform: rotate(360deg);
+			    -o-transform: rotate(360deg);
+			    transform: rotate(360deg);	
+			}
+
+			.rounded-list a:before{
+				content: counter(li);
+				counter-increment: li;
+				position: absolute;	
+				left: -1.3em;
+				top: 50%;
+				margin-top: -1.3em;
+				background: #87ceeb;
+				height: 2em;
+				width: 2em;
+				line-height: 2em;
+				border: .3em solid #fff;
+				text-align: center;
+				font-weight: bold;
+				-moz-border-radius: 2em;
+				-webkit-border-radius: 2em;
+				border-radius: 2em;
+				-webkit-transition: all .3s ease-out;
+				-moz-transition: all .3s ease-out;
+				-ms-transition: all .3s ease-out;
+				-o-transition: all .3s ease-out;
+				transition: all .3s ease-out;
+			}
+
+			/* -------------------------------------- */
+
+			.rectangle-list a{
+				position: relative;
+				display: block;
+				padding: .4em .4em .4em .8em;
+				*padding: .4em;
+				margin: .5em 0 .5em 2.5em;
+				background: #ddd;
+				color: #444;
+				text-decoration: none;
+				-webkit-transition: all .3s ease-out;
+				-moz-transition: all .3s ease-out;
+				-ms-transition: all .3s ease-out;
+				-o-transition: all .3s ease-out;
+				transition: all .3s ease-out;	
+			}
+
+			.rectangle-list a:hover{
+				background: #eee;
+			}	
+
+			.rectangle-list a:before{
+				content: counter(li);
+				counter-increment: li;
+				position: absolute;	
+				left: -2.5em;
+				top: 50%;
+				margin-top: -1em;
+				background: #fa8072;
+				height: 2em;
+				width: 2em;
+				line-height: 2em;
+				text-align: center;
+				font-weight: bold;
+			}
+			
+			.rectangle-list a:after{
+				position: absolute;	
+				content: '';
+				border: .5em solid transparent;
+				left: -1em;
+				top: 50%;
+				margin-top: -.5em;
+				-webkit-transition: all .3s ease-out;
+				-moz-transition: all .3s ease-out;
+				-ms-transition: all .3s ease-out;
+				-o-transition: all .3s ease-out;
+				transition: all .3s ease-out;				
+			}
+
+			.rectangle-list a:hover:after{
+				left: -.5em;
+				border-left-color: #fa8072;				
+			}					
+			div.header {
+			 position:absolute;
+			 top:0;
+			 left:0;
+			 width:100%;
+			 background-color: Black;
+			 padding: 3px;
+			}
+			div.header a{
+			text-decoration: none;
+			color: #fff;
+			}
+		</style>
+<style type="text/css"></style></head>
+	<body>
+			<div class="header">
+				<a href="http://172.26.200.14/journal/">Вернуться к программе</a>
+			</div>
+		<ol class="rounded-list" color="red">
+			
+			<li>Брестская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Барановичский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ивановский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Малоритский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Пинский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Брестский ГОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Березовский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Брестский РОЧС</a></li>
+					
+					<li><a href="http://172.26.200.14/journal/">Ганцевичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Дрогичинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Жабинковский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ивацевичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Каменецкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кобринский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лунинецкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ляховичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Пружанский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Столинский РОЧС</a></li>
+					
+					
+					
+					
+				</ol>
+			</li>
+			
+			<li>Витебская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Бешенковичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лепельский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Новополоцкий ГОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Полоцкий ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Браславский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Верхнедвинский РОЧС</a></li>
+					
+					<li><a href="http://172.26.200.14/journal/">Витебский ГОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Витебский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Глубокский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Городокский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Докшицкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Дубровенский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лиозненский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Миорский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Оршанский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Поставский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Россонский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Сенненский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Толочинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ушачский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Чашникский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Шарковщинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Шумилинский РОЧС</a></li>
+					
+					
+					
+					
+					
+					
+					
+				</ol>
+			</li>
+			
+			<li>Гомельская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Брагинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Гомельский ГОЧС (+ за РОЧС)</a></li>
+					<li><a href="http://172.26.200.14/journal/">Речицкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Светлогорский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Буда-Кошелевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ветковский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Гомельский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Добрушский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ельский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Житковичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Жлобинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Калинковичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кормянский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лельчицкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лоевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Наровлянский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Октябрьский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Петриковский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Рогачевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Хойникский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Чечерский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Мозырский ГРОЧС</a></li>
+					
+					
+					
+					
+				</ol>
+			</li>
+			
+			
+			
+				<li>Гродненская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Берестовицкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Волковысский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Гродненский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Свислочский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Вороновский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Гродненский ГОЧС</a></li>
+					
+					<li><a href="http://172.26.200.14/journal/">Дятловский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Зельвенский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ивьевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кореличский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Лидский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Мостовский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Новогрудский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Островецкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Ошмянский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Слонимский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Сморгонский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Щучинский РОЧС</a></li>
+					
+					
+					
+				</ol>
+			</li>
+			
+			
+				<li>Минская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Березинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Борисовский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Минский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Молодечненский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Несвижский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Пуховичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Солигорский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Вилейский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Воложинский РОЧС</a></li>
+					
+					<li><a href="http://172.26.200.14/journal/">Жодинский ГОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Дзержинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Клецкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Копыльский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Крупский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Логойский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Любанский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Мядельский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Слуцкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Смолевичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Стародорожский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Столбцовский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Узденский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Червенский РОЧС</a></li>
+
+					
+					
+					
+				</ol>
+			</li>
+			
+			<li>Могилевская область
+				<ol>
+					<li><a href="http://172.26.200.14/journal/">Белыничский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Бобруйский ГРОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Шкловский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Быховский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Глусский РОЧС</a></li>
+					
+					<li><a href="http://172.26.200.14/journal/">Могилевский ГОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Горецкий РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Дрибинский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кировский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Климовичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кличевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Костюковичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Краснопольский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Кричевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Круглянский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Могилевский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Мстиславский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Осиповичский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Славгородский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Хотимский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Чаусский РОЧС</a></li>
+					<li><a href="http://172.26.200.14/journal/">Чериковский РОЧС</a></li>
+
+					
+					
+					
+				</ol>
+			</li>
+			
+	
+		</ol>
+
+	
+
+</body></html>
