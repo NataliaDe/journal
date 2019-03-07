@@ -26,7 +26,7 @@ use \RedBeanPHP\Facade as R;
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
+use Dompdf\Dompdf;
 
 //require('/vendor/setasign/fpdf.php');
 
@@ -64,6 +64,7 @@ use App\MODELS\Model_Classificator;
 use App\MODELS\Model_Listmail;//список email
 use App\MODELS\Model_Mailsend;// отправленыые путевки
 use App\MODELS\Model_Listmailview;//список email
+use App\MODELS\Model_Actionwaybill;//meri dly putevki
 
 
 //архив
@@ -1629,9 +1630,11 @@ $app->group('/classif', 'is_login', 'is_permis', function () use ($app, $log) {
                 break;
             case "destination":$name_bean = 'Список лиц';
                 break;
-             case "workview":$name_bean = 'Вид работ';
+            case "workview":$name_bean = 'Вид работ';
                 break;
-             case "listmail":$name_bean = 'Список email';
+            case "listmail":$name_bean = 'Список email';
+                break;
+            case "actionwaybill":$name_bean = 'Меры безопасности (для путевки)';
                 break;
         }
 
@@ -1641,7 +1644,7 @@ $app->group('/classif', 'is_login', 'is_permis', function () use ($app, $log) {
         $bean1 = strtolower($bean); //преобразовать строку в нижн регистр - название таблицы
         $data['classif_active'] = $bean1;
 
-        $array_tables = array('reasonrig', 'firereason', 'service', 'officebelong','statusrig','destination','workview','listmail'); //перечень возможных классификаторов
+        $array_tables = array('reasonrig', 'firereason', 'service', 'officebelong', 'statusrig', 'destination', 'workview', 'listmail', 'actionwaybill'); //перечень возможных классификаторов
 
         if (!in_array($bean1, $array_tables)) {
             $data['url_back'] = 'rig'; //куда вернуться
@@ -1651,70 +1654,294 @@ $app->group('/classif', 'is_login', 'is_permis', function () use ($app, $log) {
         }
 
 
-        if($bean1=='destination'){
-              /* ---------------------- Выборка данных -------------------- */
-         $model = new Model_Destination();
-        $data['list'] = $model->selectAll(); //выбор всех данных
+        if ($bean1 == 'destination') {
+            /* ---------------------- Выборка данных -------------------- */
+            $model = new Model_Destination();
+            $data['list'] = $model->selectAll(); //выбор всех данных
+            //должность - классификатор
+            $data['position'] = R::getAll('SELECT * FROM position');
 
-        //должность - классификатор
-        $data['position']=R::getAll('SELECT * FROM position');
 
+            //звание - классификатор
+            $data['rank'] = R::getAll('SELECT * FROM rank');
 
-        //звание - классификатор
-        $data['rank']=R::getAll('SELECT * FROM rank');
-
-        /* ---------------------- END Выборка данных -------------------- */
-        }
-        elseif($bean1=='listmail'){
-              $model = new Model_Listmailview();
-        $data['classif'] = $model->selectAll(); //выбор всех данных
+            /* ---------------------- END Выборка данных -------------------- */
+        } elseif ($bean1 == 'listmail') {
+            $model = new Model_Listmailview();
+            $data['classif'] = $model->selectAll(); //выбор всех данных
 
 
 
-                /*         * *** Классификаторы **** */
-        $region = new Model_Region();
-        $data['region'] = $region->selectAll(); //области
-        $locorg = new Model_Locorgview();
-        $data['locorg'] = $locorg->selectAll(1); //выбрать все подразд кроме РЦУ, УМЧС(там нет техники)
-        $pasp = new Model_Pasp();
-        $data['pasp'] = $pasp->selectAll();
+            /*             * *** Классификаторы **** */
+            $region = new Model_Region();
+            $data['region'] = $region->selectAll(); //области
+            $locorg = new Model_Locorgview();
+            $data['locorg'] = $locorg->selectAll(1); //выбрать все подразд кроме РЦУ, УМЧС(там нет техники)
+            $pasp = new Model_Pasp();
+            $data['pasp'] = $pasp->selectAll();
+        } else {
 
-
-        }
-
-        else{
-
-                    /* ---------------------- Создать экземпляр класса Bean -------------------- */
-        $model = new Model_Classificator($bean1);
-        $data['classif'] = $model->selectAll(); //выбор всех данных
-        /* ---------------------- END Создать экземпляр класса Bean -------------------- */
+            /* ---------------------- Создать экземпляр класса Bean -------------------- */
+            $model = new Model_Classificator($bean1);
+            $data['classif'] = $model->selectAll(); //выбор всех данных
+            /* ---------------------- END Создать экземпляр класса Bean -------------------- */
 
 
 
-           if($bean1 == 'workview'){
-                        $reasonrig_m = new Model_Reasonrig();
-            $data['reasonrig'] = $reasonrig_m->selectAll(0); //все причины
-        }
-
-
+            if ($bean1 == 'workview') {
+                $reasonrig_m = new Model_Reasonrig();
+                $data['reasonrig'] = $reasonrig_m->selectAll(0); //все причины
+            }
         }
 
         $app->render('layouts/header.php');
-               if($bean1=='destination'){
-                   $data['path_to_view'] = 'classif/destination/destinationTable.php';
-               }
-               elseif($bean1=='listmail'){
 
-                   $data['path_to_view'] = 'classif/listmail/listmailTable.php';
-               }
- else {
-             $data['path_to_view'] = 'classif/classifTable.php';
- }
+        if ($bean1 == 'destination') {
+            $data['path_to_view'] = 'classif/destination/destinationTable.php';
+        } elseif ($bean1 == 'listmail') {
+
+            $data['path_to_view'] = 'classif/listmail/listmailTable.php';
+        } elseif ($bean1 == 'actionwaybill') {
+            $data['path_to_view'] = 'classif/actionwaybill/table.php';
+        } else {
+            $data['path_to_view'] = 'classif/classifTable.php';
+        }
 
         $app->render('layouts/div_wrapper.php', $data);
         $app->render('layouts/footer.php');
     })->conditions(array('bean' => '[a-z]{5,}'));
 
+    //actionwaybill classif - form add
+    $app->get('/actionwaybill/addForm', function () use ($app, $log) {
+
+        $name_bean = 'Меры безопасности (для путевки)';
+        $bread_crumb = array('Классификаторы', $name_bean,'Добавление');
+        $data['bread_crumb'] = $bread_crumb;
+
+          $reasonrig_m = new Model_Reasonrig();
+          $data['reasonrig'] = $reasonrig_m->selectAll(0); //all reason
+
+          if(isset($_SESSION['msg_success']) && !empty($_SESSION['msg_success'])){
+              $data['msg_success']=$_SESSION['msg_success'];
+              unset($_SESSION['msg_success']);
+          }
+
+        $app->render('layouts/header.php');
+        $data['path_to_view'] = 'classif/actionwaybill/addForm.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+        //actionwaybill classif - add/edit
+    $app->post('/actionwaybill/addForm/:id', function ($id=0) use ($app, $log) {
+
+        //echo  $_POST['id_reasonrig'];
+      //  echo $_POST['myeditor'];
+        //print_r($_POST['myeditor']);
+       // print_r($_POST);
+     //   echo '************<br>';
+
+        $id_reasonrig=$app->request()->post('id_reasonrig');
+        $myeditor=$app->request()->post('myeditor');
+        $is_off=$app->request()->post('is_off');
+        $ord=$app->request()->post('ord');
+
+        $add_data=array();
+
+        if($id_reasonrig != 0){
+                    foreach ($myeditor as $key=>$value) {
+            if(isset($value) && !empty($value)){
+
+                /* include or no in waybill */
+                if (isset($is_off[$key]) && $is_off[$key] == 1) {
+                    $is = 1;
+                } else {
+                    $is = 0;
+                }
+
+                /* order in waybill - ord */
+
+
+                $add_data[]=array('id_reasonrig'=>$id_reasonrig,'description'=>$value,'is_off'=>$is,'ord'=>$ord[$key]);
+                //  $add_data[]=array('id_reasonrig'=>$id_reasonrig,'is_off'=>$is);
+            }
+        }
+        }
+
+
+     //   print_r($add_data);
+
+
+      // exit();
+
+        /* add */
+        if ($id == 0) {
+
+            /* repeat of ord */
+            $is_twice = array_count_values($ord);
+            $max_ord = max($is_twice);
+            if ($max_ord > 1)
+                $app->redirect(BASE_URL . '/error/actionwaybill');
+
+            /* add into bd */
+            if (isset($add_data) && !empty($add_data)) {
+                $way = new Model_Actionwaybill();
+                $new_id = $way->save($add_data, $id);
+            }
+
+            /* success */
+            if ($new_id==TRUE) {
+                /* add next block */
+                if (isset($_POST['next'])) {
+
+                    $_SESSION['msg_success'] = 'Информация успешно добавлена в БД!';
+                    /* add next block */
+                    $app->redirect(BASE_URL . '/classif/actionwaybill/addForm');
+                }
+
+                 else {
+                    /* redirect to table */
+                    $app->redirect(BASE_URL . '/classif/actionwaybill');
+                }
+            }
+            else{
+                  $app->redirect(BASE_URL . '/error');
+            }
+        }
+        /* edit */ else {
+
+            /* edit ord another action of this reason */
+              $way = new Model_Actionwaybill();
+              $old_action_ord = $way->isOrd($id);
+              //print_r($old_action_ord);
+              if (isset($old_action_ord) && !empty($old_action_ord)) {
+
+                foreach ($old_action_ord as $value) {
+                    $new_ord = $value['ord'];
+                }
+                foreach ($add_data as $add) {
+                    $id_reas=$add['id_reasonrig'];
+                    $old_ord=$add['ord'];
+                }
+               // echo $new_ord.'    ****'.$old_ord ;exit();
+
+                $way->editOrd($id_reas, $old_ord, $new_ord);
+            }
+
+
+            /* edit bd */
+            if (isset($add_data) && !empty($add_data)) {
+                $way = new Model_Actionwaybill();
+                $new_id = $way->save($add_data, $id);
+            }
+
+            $app->redirect(BASE_URL . '/classif/actionwaybill');
+        }
+    });
+
+        //actionwaybill classif - edit form
+    $app->get('/actionwaybill/edit/:id', function ($id) use ($app, $log) {
+
+        $name_bean = 'Меры безопасности (для путевки)';
+        $bread_crumb = array('Классификаторы', $name_bean,'Редактирование');
+        $data['bread_crumb'] = $bread_crumb;
+
+          $reasonrig_m = new Model_Reasonrig();
+          $data['reasonrig'] = $reasonrig_m->selectAll(0); //all reason
+
+           $way = new Model_Actionwaybill();
+           $data['action']= $way->selectById($id);
+
+$data['action_id']=$id;
+
+        $app->render('layouts/header.php');
+        $data['path_to_view'] = 'classif/actionwaybill/editForm.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+            //actionwaybill classif - delete
+    $app->post('/actionwaybill/delete', function () use ($app, $log) {
+
+        $ids = $app->request()->post('ids_del');
+
+        if (isset($ids) && !empty($ids)) {
+            // $ids_for_del= explode(',', $ids);
+
+            $way = new Model_Actionwaybill();
+            $way->delete($ids);
+
+            $log->info('Сессия -  :: УДАЛЕНИЕ записи из таблицы actionwaybill  -  выполнил ' . $_SESSION['user_name']); //запись в logs
+        }
+    });
+
+
+            //actionwaybill classif - edit form of order
+    $app->get('/actionwaybill/edit/ord/:id_reasonrig', function ($id_reasonrig) use ($app, $log) {
+
+        $name_bean = 'Меры безопасности (для путевки)';
+        $bread_crumb = array('Классификаторы', $name_bean,'Редактирование','Последовательность в путевке');
+        $data['bread_crumb'] = $bread_crumb;
+
+          $reasonrig_m = new Model_Reasonrig();
+          $data['reasonrig'] = $reasonrig_m->selectAll(0); //all reason
+
+           $way = new Model_Actionwaybill();
+           $data['action']= $way->selectAllActionByIdReason($id_reasonrig);
+
+$data['action_id']=$id_reasonrig;
+
+        $app->render('layouts/header.php');
+        $data['path_to_view'] = 'classif/actionwaybill/editFormOrd.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+                //actionwaybill classif - edit  of order
+    $app->post('/actionwaybill/edit/ord/:id_reasonrig', function ($id_reasonrig) use ($app, $log) {
+
+       // print_r($_POST);
+         $id_reasonrig=$app->request()->post('id_reasonrig');
+//        $myeditor=$app->request()->post('myeditor');
+        $is_off=$app->request()->post('is_off');
+        $ord=$app->request()->post('ord');
+
+      $is_twice=  array_count_values ($ord);
+      $max_ord= max($is_twice);
+       // print_r($is_twice);
+          //  echo 'da';
+       // exit();
+
+        if($max_ord>1)
+         $app->redirect(BASE_URL . '/error/actionwaybill');
+
+        $add_data=array();
+
+        if($id_reasonrig != 0){
+
+            foreach ($ord as $key=> $value) {
+    /* include or no in waybill */
+                if (isset($is_off[$key]) && $is_off[$key] == 1) {
+                    $is = 1;
+                } else {
+                    $is = 0;
+                }
+                $add_data[$key]=array('id_reasonrig'=>$id_reasonrig,'is_off'=>$is,'ord'=>$ord[$key]);
+
+                                    /* edit bd */
+            if (isset($add_data) && !empty($add_data)) {
+                $way = new Model_Actionwaybill();
+                $new_id = $way->save($add_data, $key);
+            }
+            }
+
+        }
+       // print_r($add_data);
+     //  exit();
+
+        $app->redirect(BASE_URL . '/classif/actionwaybill');
+
+    });
 
 });
 
@@ -2231,6 +2458,14 @@ $app->get('/error', function () use ($app) {
     $app->render('layouts/div_wrapper.php', $data);
     $app->render('layouts/footer.php');
 });
+
+/* classif actionwaybill */
+$app->get('/error/actionwaybill', function () use ($app) {
+    $app->render('layouts/header.php');
+    $data['path_to_view'] = 'error_actionwaybill.php';
+    $app->render('layouts/div_wrapper.php', $data);
+    $app->render('layouts/footer.php');
+});
 /* ------------------ КОНЕЦ сообщение об ошибке -------------------------- */
 
 /* ------------- Формирование классификаторов административно-терр деления --------------- */
@@ -2612,6 +2847,10 @@ $app->group('/waybill', 'is_login', 'is_permis', function () use ($app) {
     $people_m = new Model_People();
     $people = $people_m->selectAllByIdRig($id_rig);
 
+    /* action od waybill by reasonrig */
+     $way = new Model_Actionwaybill();
+    $action = $way->selectAllByIdRig($id_rig);
+
 
 
     if (empty($rig)) {//нет вызова
@@ -2715,7 +2954,7 @@ $app->group('/waybill', 'is_login', 'is_permis', function () use ($app) {
 
         // echo $data_people;
     }
-    $array=array('address'=>$address, 'object'=>$object, 'purpose'=>$purpose,'hour'=>$hour,'minutes'=>$minutes,'day'=>$day,'name_month'=>$name_month,'year'=>$year,'data_people'=>$data_people);
+    $array=array('address'=>$address, 'object'=>$object, 'purpose'=>$purpose,'hour'=>$hour,'minutes'=>$minutes,'day'=>$day,'name_month'=>$name_month,'year'=>$year,'data_people'=>$data_people,'action'=>$action);
     return $array;
     }
 
@@ -2973,6 +3212,7 @@ try {
       // pdf_print
 $app->get('/pdf_print/:id_rig', function ($id_rig) use ($app) {
 
+
      $array=getData($id_rig);
 
     /* ---------------------------------------------------- ЭКСПОРТ в PDF ------------------------------------------------------------------------------ */
@@ -3050,6 +3290,18 @@ $pdf->SetFont('DejaVu','',14);
 $pdf->Write(8,'Подпись дежурного диспетчера   ');
 $pdf->SetFont('DejaVu','U',14);
 $pdf->Write(8,'                                            ');
+
+$pdf->Ln( 10 );//отступ после строки
+$pdf->Ln( 10 );//отступ после строки
+$pdf->SetFont('DejaVu','',14);
+$text_1='По мнению президента, проект закона — один из ключевых вопросов кадровой политики, «ведь эффективность и авторитет всей системы власти во многом зависят от уровня подготовки и мотивированности работников государственных органов».
+
+Президент отметил, что высокий правовой статус государственных служащих, обеспечивающий престижность этой профессии, невозможен без установления в законе социально-правовых гарантий для них. Но эти гарантии должны строго соотноситься с обязанностями и ответственностью каждого сотрудника госоргана, обратил внимание он.
+
+«Поручая разработать этот закон, я предупреждал всех вас, что эти „коврижки“, которые у нас принято раздавать в любом законе в виде каких-то социальных гарантий, не должны быть выше того, что они есть, — сказал Александр Лукашенко. — Материальное положение госслужащих должно расти или падать в соответствии с ростом или падением жизненного уровня нашего населения. Это ключевое».
+Читать полностью:  ';
+
+$pdf->Write(8,$text_1);
 
 $f = mt_rand() . '_tmp.pdf';
 $pdf->Output(__DIR__ . '/temp/' . $f,'F');//сохранить в папку
@@ -3220,6 +3472,112 @@ $app->get('/excel_download/:id_rig', function ($id_rig) use ($app) {
 
 });
 
+// test!!!!!!
+$app->get('/html_pdf_print/:id_rig/:is_action/:is_download', function ($id_rig,$is_action,$is_download) use ($app) {
+
+     $array=getData($id_rig);
+    // print_r($array);exit();
+
+     /* generate html file of putevki */
+
+        $font_default = '<style>body { font-family: DejaVu Sans; font-size: 16px }</style>';
+        $head = '<center><b>ПУТЕВКА № ' . $id_rig . '<br> для выезда дежурной смены подразделения</b></center><br><br>';
+
+
+
+        /* 1.address  */
+$address='1. Адрес&nbsp;&nbsp;&nbsp;<u>'.$array['address'].$array['object'].'</u><br>';
+
+/* 2.purpose  */
+$purpose='2. Цель выезда&nbsp;&nbsp;&nbsp;<u>'.$array['purpose'].'</u><br>';
+
+/* 3. time and date of msg */
+$date_time_msg='3. Время и дата получения сообщения&nbsp;&nbsp;&nbsp;<u>'.$array['hour'].'</u> часов <u>'.$array['minutes'].'</u> '.'  минут(ы) '.
+    '<u>«'.$array['day'].'»</u> '.$array['name_month'].'&nbsp;<u>'.$array['year'].'</u>  г.<br>';
+
+
+/* 4. data about people  */
+$people='4. Данные о заявителе&nbsp;&nbsp;&nbsp;<u>'.$array['data_people'].'</u><br><br>';
+
+/* sign of operativnogo */
+$sign='Подпись дежурного диспетчера&nbsp;&nbsp;&nbsp;<u>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</u><br><br>';
+
+
+$text_1='По мнению президента, проект закона — один из ключевых вопросов кадровой политики, «ведь эффективность и авторитет всей системы власти во многом зависят от уровня подготовки и мотивированности работников государственных органов».
+
+Президент отметил, что высокий правовой статус государственных служащих, обеспечивающий престижность этой профессии, невозможен без установления в законе социально-правовых гарантий для них. Но эти гарантии должны строго соотноситься с обязанностями и ответственностью каждого сотрудника госоргана, обратил внимание он.
+
+«Поручая разработать этот закон, я предупреждал всех вас, что эти „коврижки“, которые у нас принято раздавать в любом законе в виде каких-то социальных гарантий, не должны быть выше того, что они есть, — сказал Александр Лукашенко. — Материальное положение госслужащих должно расти или падать в соответствии с ростом или падением жизненного уровня нашего населения. Это ключевое».
+Читать полностью:  <br><br>';
+//$text_2='По мнению президента, проект закона — один из ключевых вопросов кадровой политики, «ведь эффективность и авторитет всей системы власти во многом зависят от уровня подготовки и мотивированности работников государственных органов».
+//
+//Президент отметил, что высокий правовой статус государственных служащих, обеспечивающий престижность этой профессии, невозможен без установления в законе социально-правовых гарантий для них. Но эти гарантии должны строго соотноситься с обязанностями и ответственностью каждого сотрудника госоргана, обратил внимание он.
+//
+//«Поручая разработать этот закон, я предупреждал всех вас, что эти „коврижки“, которые у нас принято раздавать в любом законе в виде каких-то социальных гарантий, не должны быть выше того, что они есть, — сказал Александр Лукашенко. — Материальное положение госслужащих должно расти или падать в соответствии с ростом или падением жизненного уровня нашего населения. Это ключевое».
+//Читать полностью:  <br><br>';
+//$text_3='По мнению президента, проект закона — один из ключевых вопросов кадровой политики, «ведь эффективность и авторитет всей системы власти во многом зависят от уровня подготовки и мотивированности работников государственных органов».
+//
+//Президент отметил, что высокий правовой статус государственных служащих, обеспечивающий престижность этой профессии, невозможен без установления в законе социально-правовых гарантий для них. Но эти гарантии должны строго соотноситься с обязанностями и ответственностью каждого сотрудника госоргана, обратил внимание он.  ';
+
+  $res = $font_default . $head.$address.$purpose.$date_time_msg.$people.$sign;
+
+  /* with action */
+  if($is_action == 1){
+        if (!empty($array['action'])) {
+            foreach ($array['action'] as $value) {
+                $res = $res . $value['description'];
+            }
+        }
+  }
+
+
+
+
+        /* END generate html file of putevki */
+
+
+// instantiate and use the dompdf class
+$dompdf = new Dompdf();
+$dompdf->loadHtml($res, 'UTF-8');
+
+// (Optional) Setup the paper size and orientation
+$dompdf->setPaper('A4', 'portrait');
+
+// Render the HTML as PDF
+$dompdf->render();
+
+
+/* save to directory */
+$f = mt_rand() . '_tmp.pdf';
+
+/* print, open in browser */
+if($is_download == 0){
+
+     $output = $dompdf->output();
+     file_put_contents(__DIR__ . '/temp/' . $f, $output);
+
+/* see in browser */
+    $content = file_get_contents(__DIR__ . '/temp/' . $f);
+
+    header('Content-Type: application/pdf');
+    header('Content-Length: ' . strlen($content));
+    header('Content-Disposition: inline; filename="YourFileName.pdf"');
+    header('Cache-Control: private, max-age=0, must-revalidate');
+    header('Pragma: public');
+    ini_set('zlib.output_compression','0');
+
+    die($content);
+}
+else{
+$filename='putevka'.$id_rig.'.pdf';
+$dompdf->stream($filename);
+}
+
+
+
+});
 
 });
 
@@ -3318,6 +3676,9 @@ $app->group('/save_to_json', 'is_login', 'is_permis', function () use ($app) {
         }
         /* ------- END Даты ------ */
 
+//        $year_d1 = new DateTime( $d1);
+//$year_bd=$year_d1->Format('Y'); //время - часы
+//$bd_name='archive_'.$year_bd;
 
 
         /*  Выборка запрошенных данных  */
@@ -3368,8 +3729,7 @@ $app->group('/save_to_json', 'is_login', 'is_permis', function () use ($app) {
 
               array_push($json_val, $json);
 
-
-          }
+            }
 
 
            //инф по привлекаемым СиС МЧС
@@ -3426,47 +3786,176 @@ $json_val[$key]['innerservice']=$innerservice[$row['id_rig']];
               }
           }
 
-          //print_r($json_val);
+
+/* name of bd by year */
+$year_d1 = new DateTime( $d1);
+$year_bd=$year_d1->Format('Y'); //время - часы
+$bd_name='archive'.$year_bd;
+
+                     /* for archive !!!!! add name if bd in bootstrap.php */
+            R::selectDatabase($bd_name);
+
+            //R::addDatabase( $bd_name, '', 'root', '', $frozen );
+ //print_r($json_val);exit();
+  foreach ($json_val as $row) {
+
+
+      /*---- rig ----*/
+      $json=array();
+              $json['id_rig']=$row['id_rig'];
+              $json['date_msg']=$row['date_msg'];
+              $json['time_msg']=$row['time_msg'];
+              $json['id_locorg']=$row['id_locorg'];//создатель
+              $json['local_name']=$row['local_name'];
+              $json['region_name']=$row['region_name'];
+              $json['address']=$row['address'];
+            //  $json['floor']= strval($row['floor']);
+              $json['reasonrig_name']=$row['reasonrig_name'];
+              $json['description']=$row['description'];
+              $json['firereason_name']=$row['firereason_name'];
+              $json['inspector']=$row['inspector'];
+              $json['id_statusrig']=$row['id_statusrig'];
+              $json['statusrig_name']=$row['statusrig_name'];
+              $json['statusrig_color']=$row['statusrig_color'];
+              $json['is_closed']=$row['is_closed'];
+              $json['id_organ_user']=$row['id_organ_user'];//создатель
+              $json['is_delete']=$row['is_delete'];
+              $json['id_region_user']=$row['id_region_user'];//создатель
+              $json['sub']=$row['sub'];
+              $json['id_region']=$row['id_region'];//куда выезжали
+              $json['id_local']=$row['id_local'];//куда выезжали
+              $json['additional_field_address']=$row['additional_field_address'];
+              $json['time_loc']=$row['time_loc'];
+              $json['time_likv']=$row['time_likv'];
+              $json['inf_detail']=$row['inf_detail'];
+              $json['view_work']=$row['view_work'];
+              $json['office_name']=$row['office_name'];
+              $json['object']=$row['object'];
+              $json['is_opg']=$row['is_opg'];
+              $json['opg_text']=$row['opg_text'];
+
+
+
+       /*------ silymchs -----*/
+      $sily=array();
+
+        if (isset($row['silymchs'])) {
+                 foreach ($row['silymchs'] as $silymchs) {
+                     $sily[]= $silymchs['mark'] . ' ном. ' . $silymchs['numbsign'] . ' ' . $silymchs['locorg_name'] . ' ' . $silymchs['pasp_name'] .
+                          (!empty($silymchs['time_exit']) ? ('; время выезда '.$silymchs['time_exit']) : '').
+                         (!empty($silymchs['time_arrival']) ? ('; время прибытия '.$silymchs['time_arrival']) : '').
+                          (!empty($silymchs['time_follow']) ? ('; время следования '.$silymchs['time_follow']) : '').
+                         (!empty($silymchs['time_end']) ? ('; время окончания работ '.$silymchs['time_end']) : '').
+                          (!empty($silymchs['time_return']) ? ('; время возвращения '.$silymchs['time_return']) : '').
+                          (!empty($silymchs['distance']) ? ('; расстояние '.$silymchs['distance'].' км.') : '').
+                         (($silymchs['is_return'] == 1) ? ('; был отбой техники ') : '')
+                         ;
+                 }
+                 $sily_str= implode('~', $sily);
+                         if (!empty($sily_str)) {
+                        $json['silymchs'] = $sily_str;
+                    }
+                }
+
+
+
+
+        /*------ people -----*/
+
+             if (isset($row['people'])) {
+
+                $p = ((empty($row['people']['fio'])) ? '' : $row['people']['fio']) . '' . ((empty($row['people']['phone'])) ? '' : (', ' . $row['people']['phone'])) . '' . ((empty($row['people']['address'])) ? '' : (', ' . $row['people']['address'])) . '' . ((empty($row['people']['position'])) ? '' : (', ' . $row['people']['position']));
+ $json['floor']= $row['floor'];
+  $json['floor_all']= $row['floor_all'];
+             }
+                     if(!empty($p)){
+            $json['people']=$p;
+        }
+  //print_r($json);
+ /* ------ innerservice ----- */
+                if (isset($row['innerservice'])) {
+                    $inner=array();
+                    foreach ($row['innerservice'] as $innerservice) {
+                        $inner[]= $innerservice['service_name'] .
+                            ((empty($innerservice['time_msg'])) ? '' : ( '; время сообщения ' . $innerservice['time_msg'] )).
+                            ((empty($innerservice['time_arrival'])) ? '' : ( '; время прибытия ' . $innerservice['time_arrival'] )).
+                            ((empty($innerservice['distance'])) ? '' : ( '; расстояние ' . $innerservice['distance'] . ' км')).
+                            ((empty($innerservice['note'])) ? '' : ('; прим: ' . $innerservice['note']))
+
+                            ;
+                    }
+                     $inner_str= implode('~', $inner);
+                    if (!empty($inner_str)) {
+                        $json['innerservice'] = $inner_str;
+                    }
+                }
+       // print_r($inner_str);
+//exit();
+                /*------ informing -----*/
+                     if (isset($row['informing'])) {
+                          $inf=array();
+                           foreach ($row['informing'] as $informing) {
+                                $inf[]= $informing['fio'] . ' (' . $informing['position_name'] . ')'.
+                                    ((empty($informing['time_msg'])) ? '' : ( '; время сообщения' . $informing['time_msg'] )).
+                                    ((empty($informing['time_exit'])) ? '' : ('; время выезда ' . $informing['time_exit'] )).
+                                    ((empty($informing['time_arrival'])) ? '' : ( '; время возвращения ' . $informing['time_arrival']))
+                                    ;
+                           }
+                            $inf_str= implode('~', $inf);
+                    if (!empty($inf_str)) {
+                        $json['informing'] = $inf_str;
+                    }
+                     }
+
+                     $json['date_insert']=date("Y-m-d H:i:s");
+
+                    // print_r($json);
+
+                     /* for archive !!!!! add name if bd in bootstrap.php */
+                //R::selectDatabase($bd_name);
+
+                /* save into table */
+                $save = R::dispense($bd_name);
+                $save->import($json);
+                R::store($save);
+            }
+R::selectDatabase('default');
           //exit();
 
        /*  экспорт в json */
-          $fp = fopen('tmpl/save_to_json/'.$d1.'_'.$d2.'.json', 'w');
-fwrite($fp, json_encode($json_val, JSON_UNESCAPED_UNICODE));
-fclose($fp);
+//            $fp = fopen('tmpl/save_to_json/' . $d1 . '_' . $d2 . '.json', 'w');
+//            fwrite($fp, json_encode($json_val, JSON_UNESCAPED_UNICODE));
+//            fclose($fp);
+//
+//            $data['msg'] = 'Файл ' . $d1 . '_' . $d2 . '.json успешно сформирован!';
 
- $data['msg']='Файл '.$d1.'_'.$d2.'.json успешно сформирован!';
 
-
-                /*  записать этот диапазон в БД */
-        $archive_m = new Model_Archivedate();
-           $archive_m->save($d1,$d2);
-
-         }
+            /*  записать этот диапазон в БД */
+//            $archive_m = new Model_Archivedate();
+//            $archive_m->save($d1, $d2);
+   $data['msg']='Данные успешно сохранены!';
+        }
            else{
                $data['msg']='Нет данных!';
            }
 
 
-
-
-                            $archive_m = new Model_Archivedate();
-    $data['archive_date'] = $archive_m->selectAll();//какие архивы уже сделаны
+        $archive_m = new Model_Archivedate();
+        $data['archive_date'] = $archive_m->selectAll(); //какие архивы уже сделаны
         $archive_year_m = new Model_Archiveyear();
-        $data['archive_year']= $archive_year_m->selectAll();//какие года есть в БД
+        $data['archive_year'] = $archive_year_m->selectAll(); //какие года есть в БД
 
 
-  $bread_crumb = array('Сохранить в json', 'Выбор диапазона дат');
+        $bread_crumb = array('Сохранить в json', 'Выбор диапазона дат');
         $data['bread_crumb'] = $bread_crumb;
-         $data['title']='Сохранить в json';
+        $data['title'] = 'Сохранить в json';
 
 
-        $app->render('layouts/header.php',$data);
+        $app->render('layouts/header.php', $data);
         $data['path_to_view'] = 'save_to_json/form.php';
         $app->render('layouts/div_wrapper.php', $data);
         $app->render('layouts/footer.php');
-
-
-});
+    });
 
 });
 
@@ -3503,6 +3992,13 @@ $app->group('/archive', function () use ($app) {
    $isset_date = $archive_m->selectAll();//какие архивы уже сделаны
     $isset_year = $archive_year_m->selectAll();//какие года есть в БД
 
+//    R::selectDatabase('ss');
+//    $aa=R::getAll('select * from regions');
+//    print_r($aa);    echo '******************<';
+//     R::selectDatabase('default');
+//    $bb=R::getAll('select * from destination');
+//    print_r($bb);
+//    exit();
 
         $app->render('layouts/archive/header.php',$data);
         $data['path_to_view'] = 'archive/form.php';
@@ -3590,6 +4086,141 @@ if(isset($array_of_content_file_json)&& !empty($array_of_content_file_json)){
         $app->render('layouts/archive/footer.php');
 
         exit();
+    });
+});
+
+
+/* new archive. bd */
+$app->group('/archive_1', function () use ($app) {
+
+    $app->get('/', function () use ($app) {
+
+        $bread_crumb = array('Архив', 'Параметры');
+        $data['bread_crumb'] = $bread_crumb;
+         $data['title']='Журнал ЦОУ. Архив';
+
+
+
+           /*         * *** Классификаторы **** */
+       // $region = new Model_Region();
+
+
+        $name_oblast[1] = 'Брестская область';
+        $name_oblast[2] = 'Витебская область';
+        $name_oblast[3] = 'г. Минск';
+        $name_oblast[4] = 'Гомельская область';
+        $name_oblast[5] = 'Гродненская область';
+        $name_oblast[6] = 'Минская область';
+        $name_oblast[7] = 'Могилевская область';
+
+        $data['region'] = $name_oblast; //области
+
+        $archive_m = new Model_Archivedate();
+        $data['archive_date'] = $archive_m->selectAll();
+        //$archive_year_m = new Model_Archiveyear();
+       // $data['archive_year'] = $archive_year_m->selectAll();
+        $data['archive_year'] = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+
+  // $isset_date = $archive_m->selectAll();//какие архивы уже сделаны
+   // $isset_year = $archive_year_m->selectAll();//какие года есть в БД
+
+
+        $app->render('layouts/archive/header.php',$data);
+        $data['path_to_view'] = 'archive_1/form.php';
+        $app->render('layouts/archive/div_wrapper.php', $data);
+        $app->render('layouts/archive/footer.php');
+    });
+
+
+    $app->post('/', function () use ($app) {
+
+        /* если выбран диапазон дат, то выбрать год нельзя и наоборот. Но обязательно что-то из этого должно быть!!! */
+        $archive_date = (isset($_POST['archive_date']) && !empty($_POST['archive_date'])) ? $_POST['archive_date'] : 0; //диапазон дат - array
+        $archive_year = (isset($_POST['archive_year']) && !empty($_POST['archive_year'])) ? $_POST['archive_year'] : 0; //year
+//куда был выезд - область
+        $id_region = (isset($_POST['id_region']) && !empty($_POST['id_region'])) ? $_POST['id_region'] : 0;
+        $region_m = new Model_Region();
+        $data['region_name'] = $region_m->selectNameById($id_region);
+
+//куда был выезд - район
+        $id_local = (isset($_POST['id_local']) && !empty($_POST['id_local'])) ? $_POST['id_local'] : 0;
+        $local_m = new Model_Local();
+        $data['local_name'] = $local_m->selectNameById($id_local);
+
+
+        if ($archive_date != 0) {//выбран диапазон дат
+            //получить из БД диапазоны дат - имена json-файлов, которые надо прочитать
+            $archive_m = new Model_Archivedate();
+            $date_for_file_json = $archive_m->selectById($archive_date);
+
+            $data['query_date'] = $date_for_file_json; //запросшенные диапазоны
+            //считать данные из json-файлов в массив
+            $array_of_content_file_json = array();
+            foreach ($date_for_file_json as $value) {
+                $file_json = $value['date_start'] . '_' . $value['date_end'];
+                $myFile = "tmpl/save_to_json/" . $file_json . ".json";
+                $arr_data = array(); // create empty array
+                //Get data from existing json file
+                $jsondata = file_get_contents($myFile);
+
+                // converts json data into array
+                $arr_data = json_decode($jsondata, true);
+                $array_of_content_file_json[$file_json] = $arr_data; //каждый файл помещаем как элемент массива, ключ которого соответствует диапазону файла
+            }
+            //print_r($array_of_content_file_json);
+        } elseif ($archive_year != 0) {//выбран год
+            //получить из БД год, по которому запрошены данные
+            $archive_year_m = new Model_Archiveyear();
+            $year_for_file_json = $archive_year_m->selectById($archive_year); //год
+            $data['query_year'] = $year_for_file_json; //запросшенный год
+            //получить из БД все диапазоны дат, которые ложаться в этот год
+            $archive_m = new Model_Archivedate();
+            $date_for_file_json = $archive_m->selectByYear($year_for_file_json);
+
+
+            //считать данные из json-файлов в массив
+            $array_of_content_file_json = array();
+            foreach ($date_for_file_json as $value) {
+                $file_json = $value['date_start'] . '_' . $value['date_end'];
+                $myFile = "tmpl/save_to_json/" . $file_json . ".json";
+                $arr_data = array(); // create empty array
+                //Get data from existing json file
+                $jsondata = file_get_contents($myFile);
+
+                // converts json data into array
+                $arr_data = json_decode($jsondata, true);
+                $array_of_content_file_json[$file_json] = $arr_data; //каждый файл помещаем как элемент массива, ключ которого соответствует диапазону файла
+            }
+            // print_r($array_of_content_file_json);
+        }
+
+if(isset($array_of_content_file_json)&& !empty($array_of_content_file_json)){
+    $data['result']=$array_of_content_file_json;
+}
+//print_r($array_of_content_file_json);
+//exit();
+
+
+        $bread_crumb = array('Архив', 'Результат запроса');
+        $data['bread_crumb'] = $bread_crumb;
+        $data['title'] = 'Журнал ЦОУ. Архив';
+
+        $app->render('layouts/archive/header.php', $data);
+        $data['path_to_view'] = 'archive/result/table.php';
+        $app->render('layouts/archive/div_wrapper.php', $data);
+        $app->render('layouts/archive/footer.php');
+
+        exit();
+    });
+
+     $app->post('/getInfRig', function () use ($app) {
+
+         $view = $app->render('archive_1/getInfRig.php');
+        $response = ['success' => TRUE, 'view' => $view];
+        // echo '9969';
     });
 });
 

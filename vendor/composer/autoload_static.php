@@ -20,6 +20,14 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         array (
             'Monolog\\' => 8,
         ),
+        'F' => 
+        array (
+            'FontLib\\' => 8,
+        ),
+        'D' => 
+        array (
+            'Dompdf\\' => 7,
+        ),
         'A' => 
         array (
             'App\\MW\\' => 7,
@@ -45,6 +53,14 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
+        'FontLib\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'Dompdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/dompdf/dompdf/src',
+        ),
         'App\\MW\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/mw',
@@ -62,9 +78,17 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
     public static $prefixesPsr0 = array (
         'S' => 
         array (
+            'Svg\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src',
+            ),
             'Slim' => 
             array (
                 0 => __DIR__ . '/..' . '/slim/slim',
+            ),
+            'Sabberworm\\CSS' => 
+            array (
+                0 => __DIR__ . '/..' . '/sabberworm/php-css-parser/lib',
             ),
         ),
         'P' => 
@@ -84,8 +108,33 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
     );
 
     public static $classMap = array (
+        'CGIF' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'CGIFCOLORTABLE' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'CGIFFILEHEADER' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'CGIFIMAGE' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'CGIFIMAGEHEADER' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'CGIFLZW' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
+        'Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+        'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
+        'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
+        'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',
+        'HTML5_Tokenizer' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Tokenizer.php',
+        'HTML5_TreeBuilder' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/TreeBuilder.php',
+        'PDFBarcode' => __DIR__ . '/..' . '/mpdf/mpdf/classes/barcode.php',
+        'SVG' => __DIR__ . '/..' . '/mpdf/mpdf/classes/svg.php',
         'TTFontFile' => __DIR__ . '/..' . '/setasign/tfpdf/font/unifont/ttfonts.php',
+        'TTFontFile_Analysis' => __DIR__ . '/..' . '/mpdf/mpdf/classes/ttfontsuni_analysis.php',
+        'bmp' => __DIR__ . '/..' . '/mpdf/mpdf/classes/bmp.php',
+        'cssmgr' => __DIR__ . '/..' . '/mpdf/mpdf/classes/cssmgr.php',
+        'directw' => __DIR__ . '/..' . '/mpdf/mpdf/classes/directw.php',
+        'form' => __DIR__ . '/..' . '/mpdf/mpdf/classes/form.php',
+        'grad' => __DIR__ . '/..' . '/mpdf/mpdf/classes/grad.php',
+        'indic' => __DIR__ . '/..' . '/mpdf/mpdf/classes/indic.php',
+        'mPDF' => __DIR__ . '/..' . '/mpdf/mpdf/mpdf.php',
+        'meter' => __DIR__ . '/..' . '/mpdf/mpdf/classes/meter.php',
         'tFPDF' => __DIR__ . '/..' . '/setasign/tfpdf/tfpdf.php',
+        'tocontents' => __DIR__ . '/..' . '/mpdf/mpdf/classes/tocontents.php',
+        'wmf' => __DIR__ . '/..' . '/mpdf/mpdf/classes/wmf.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

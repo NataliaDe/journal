@@ -283,6 +283,35 @@ $('#destinationForm')
             }
         });
 
+                $('#classifTableActionWaybill').DataTable({
+            "pageLength": 50,
+             "order": [[ 4, "asc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+
 
 /*  rigTable  */
               var rig_table_vis =  $('#rigTable').DataTable({
@@ -518,6 +547,60 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица классификаторов ------------*/
+
+
+
+ /*---------- table classif of action waybill ------------*/
+    $('#classifTableActionWaybill tfoot th').each(function (i) {
+        var table = $('#classifTableActionWaybill').DataTable();
+        if (i !== 6 && i != 7) {
+
+
+                        if (i == 1 ) {
+                //выпадающий список
+                var y = 'classif_action';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#classifTableActionWaybill tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else{
+
+                var title = $('#classifTableActionWaybill tfoot th').eq($(this).index()).text();
+                var x = $('#classifTableActionWaybill tfoot th').index($(this));
+                var y = 'classifForm_actionwaybill';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+
+
+        }
+    });
+    $("#classifTableActionWaybill tfoot input").on('keyup change', function () {
+        var table = $('#classifTableActionWaybill').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END table classif of action waybill ------------*/
+
 
 
      /*---------- таблица таблица классификатора listmailTable ------------*/
@@ -1396,3 +1479,81 @@ $( window ).load(function() {
   $( "#toggle-vis-rig-table-13" ).trigger( "click" );
   $( "#toggle-vis-rig-table-7" ).trigger( "click" );
 });
+
+
+/* delete actionwaybill from bd  */
+$(document).on('click', '#btn_del_action', function (e) {
+
+    var mas = [];
+    $(':checkbox:checked').each(function () {
+        mas.push(this.value);
+
+    });
+    var mas_to_str = mas.toString();
+
+    if (mas_to_str) {
+        $.ajax({
+            type: 'POST',
+            url: "/journal/classif/actionwaybill/delete",
+            cache: false,
+            data: {ids_del: mas_to_str},
+            success: function (responce) {
+                alert('Выбранные записи были удалены из бД!');
+                location.reload();
+
+            }
+        });
+    }
+
+});
+
+
+
+/*------------------------  archive -------------------------------- */
+ $('#getArchiveData').on({
+        'click': function (event) {
+   // alert('123');
+
+              // alert('1');
+   var date_start=$('input[name="date_start"]').val();
+   var date_end=$('input[name="date_end"]').val();
+
+   var archive_year=$('select[name="archive_year"]').val();
+   var region=$('select[name="id_region"]').val();
+   var local=$('select[name="id_local"]').val();
+
+
+
+   if(date_start && date_end){
+     //  alert('123');
+           $.ajax({
+        type: 'POST',
+        url: '/journal/archive_1/getInfRig',
+       // dataType: 'json',
+        data: {
+            date_start: date_start,
+           date_end: date_end,
+           archive_year:archive_year,
+           region:region,
+           local:local
+
+        },
+
+        success: function (response) {
+
+            $('#ajax-content').fadeOut("slow", function () {
+              //  $('h1.m-n > *:not(:first)').remove();
+                $('#ajax-content').html(response);
+               $('#ajax-content').fadeIn("slow");
+                console.log("it Work");
+            });
+
+        }
+    });
+   }
+
+        }
+
+    });
+
+

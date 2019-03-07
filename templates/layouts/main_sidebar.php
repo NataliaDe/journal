@@ -204,6 +204,20 @@
                         <a href="<?= $baseUrl ?>/classif/destination"><i class="fa fa-chevron-circle-down"></i> Список лиц</a>
                     </li>
 
+                        <?php
+    if (isset($item_active) && $item_active == 'actionwaybill') {
+        ?>
+                            <li class="active">
+                            <?php
+                        } else {
+                            ?>
+                            <li>
+                                <?php
+                            }
+                            ?>
+                            <a href="<?= $baseUrl ?>/classif/actionwaybill"><i class="fa fa-chevron-circle-down"></i>Меры без.(путевка)</a>
+                        </li>
+
                 </ul>
             </li>
 

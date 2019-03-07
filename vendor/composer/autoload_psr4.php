@@ -10,6 +10,8 @@ return array(
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),
+    'FontLib\\' => array($vendorDir . '/phenx/php-font-lib/src/FontLib'),
+    'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),
     'App\\MW\\' => array($baseDir . '/app/mw'),
     'App\\MODELS\\' => array($baseDir . '/app/models'),
     'App\\EXC\\' => array($baseDir . '/app/exc'),

@@ -94,19 +94,33 @@
 
                 /*---------- таблица с классификаторами ------------*/
 
-        #inptclassifForm0{
+        #inptclassifForm0,#inptclassifForm_actionwaybill0{
             width: 42px;
         }
                 #inptclassifForm1{
             width: 140px;
         }
-                        #inptclassifForm2{
+                        #inptclassifForm2,#inptclassifForm_actionwaybill3,#inptclassifForm_actionwaybill4, #inptclassifForm_actionwaybill5{
             width: 100px;
         }
-         #classifTable_wrapper{
+         #classifTable_wrapper,#classifTableActionWaybill_wrapper{
             width: 85%;
             margin-left: 30px;
         }
+
+
+                                #inptclassifForm_actionwaybill2{
+            width: 300px;
+        }
+               #inptclassifForm_actionwaybill1{
+            width: 90px;
+        }
+
+          #selclassif_action1{
+            width: 116px;
+        }
+
+
         /*---------- END таблица с классификаторами ------------*/
 
 
@@ -323,7 +337,7 @@ top:2px;
 }
 /*------- КОНЕЦ кратко по технике в таблице выездов---------*/
 
-
-
-
+.cke_chrome {
+//width: 50% !important;
+}
 

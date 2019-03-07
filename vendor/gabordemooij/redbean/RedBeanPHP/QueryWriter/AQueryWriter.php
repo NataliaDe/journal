@@ -99,6 +99,11 @@ abstract class AQueryWriter
 	public $typeno_sqltype = array();
 
 	/**
+	 * @var bool
+	 */
+	protected static $noNuke = false;
+
+	/**
 	 * Toggles support for automatic generation of JSON columns.
 	 * Using JSON columns means that strings containing JSON will
 	 * cause the column to be created (not modified) as a JSON column.
@@ -114,6 +119,21 @@ abstract class AQueryWriter
 	{
 		$old = self::$flagUseJSONColumns;
 		self::$flagUseJSONColumns = $flag;
+		return $old;
+	}
+
+	/**
+	 * Toggles support for nuke().
+	 * Can be used to turn off the nuke() feature for security reasons.
+	 * Returns the old flag value.
+	 *
+	 * @param boolean $flag TRUE or FALSE
+	 *
+	 * @return boolean
+	 */
+	public static function forbidNuke( $flag ) {
+		$old = self::$noNuke;
+		self::$noNuke = (bool) $flag;
 		return $old;
 	}
 
@@ -1155,6 +1175,34 @@ abstract class AQueryWriter
 		}
 
 		return $count;
+	}
+
+	/**
+	 * @see QueryWriter::queryRecursiveCommonTableExpression
+	 */
+	public function queryRecursiveCommonTableExpression( $type, $id, $up = TRUE, $addSql = NULL, $bindings = array() )
+	{
+		$alias     = $up ? 'parent' : 'child';
+		$direction = $up ? " {$alias}.{$type}_id = {$type}.id " : " {$alias}.id = {$type}.{$type}_id ";
+
+		array_unshift( $bindings, $id );
+
+		$sql = $this->glueSQLCondition( $addSql, QueryWriter::C_GLUE_WHERE );
+
+		$rows = $this->adapter->get("
+			WITH RECURSIVE tree AS
+			(
+				SELECT *
+				FROM {$type} WHERE {$type}.id = ?
+				UNION ALL
+				SELECT {$type}.* FROM {$type}
+				INNER JOIN tree {$alias} ON {$direction}
+			)
+			SELECT * FROM tree {$sql};",
+			$bindings
+		);
+
+		return $rows;
 	}
 
 	/**

@@ -22,12 +22,14 @@ use RedBeanPHP\Util\QuickExport as QuickExport;
 use RedBeanPHP\Util\MatchUp as MatchUp;
 use RedBeanPHP\Util\Look as Look;
 use RedBeanPHP\Util\Diff as Diff;
+use RedBeanPHP\Util\Tree as Tree;
+use RedBeanPHP\Util\Feature;
 
 /**
  * RedBean Facade
  *
  * Version Information
- * RedBean Version @version 5.1
+ * RedBean Version @version 5.2
  *
  * This class hides the object landscape of
  * RedBeanPHP behind a single letter class providing
@@ -47,7 +49,7 @@ class Facade
 	/**
 	 * RedBeanPHP version constant.
 	 */
-	const C_REDBEANPHP_VERSION = '5.1';
+	const C_REDBEANPHP_VERSION = '5.2';
 
 	/**
 	 * @var ToolBox
@@ -93,6 +95,11 @@ class Facade
 	 * @var Finder
 	 */
 	private static $finder;
+
+	/**
+	 * @var Tree
+	 */
+	private static $tree;
 
 	/**
 	 * @var Logger
@@ -179,24 +186,17 @@ class Facade
 	 * occur during the testing process and catches all
 	 * exceptions that might be thrown during the test.
 	 *
-	 * @param boolean   $autoReconnect   if the function attempts to reconnect to the server on failure
-	 * @param string    $sql             the sql you want to execute to test the connection
-	 *
 	 * @return boolean
 	 */
-	public static function testConnection( $autoReconnect = FALSE, $sql = 'SELECT 1' )
+	public static function testConnection()
 	{
 		if ( !isset( self::$adapter ) ) return FALSE;
 
 		$database = self::$adapter->getDatabase();
 		try {
-			$database->getPDO()->query( $sql );
-		} catch ( \Exception $e ) {
-			if ( !$autoReconnect ) return FALSE;
-			$database->close();
-			$database->connect();
-		}
-		return TRUE;
+			@$database->connect();
+		} catch ( \Exception $e ) {}
+		return $database->isConnected();
 	}
 
 	/**
@@ -399,9 +399,9 @@ class Facade
 	 *
 	 * @return boolean
 	 */
-	public static function selectDatabase( $key )
+	public static function selectDatabase( $key, $force = FALSE )
 	{
-		if ( self::$currentDB === $key ) {
+		if ( self::$currentDB === $key && !$force ) {
 			return FALSE;
 		}
 
@@ -799,11 +799,13 @@ class Facade
 	}
 
 	/**
-	 * Finds a bean using a type and a where clause (SQL).
+	 * Finds beans using a type and optional SQL statement.
 	 * As with most Query tools in RedBean you can provide values to
 	 * be inserted in the SQL statement by populating the value
 	 * array parameter; you can either use the question mark notation
 	 * or the slot-notation (:keyname).
+	 *
+	 * Your SQL does not have to start with a WHERE-clause condition.
 	 *
 	 * @param string $type     the type of bean you are looking for
 	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
@@ -817,12 +819,7 @@ class Facade
 	}
 
 	/**
-	 * The findAll() method differs from the find() method in that it does
-	 * not assume a WHERE-clause, so this is valid:
-	 *
-	 * R::findAll('person',' ORDER BY name DESC ');
-	 *
-	 * Your SQL does not have to start with a valid WHERE-clause condition.
+	 * Alias for find().
 	 *
 	 * @param string $type     the type of bean you are looking for
 	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
@@ -1078,7 +1075,7 @@ class Facade
 	 * @param string $sql      SQL query to execute
 	 * @param array  $bindings a list of values to be bound to query parameters
 	 *
-	 * @return string
+	 * @return RedBeanPHP\Cursor\PDOCursor
 	 */
 	public static function getCursor( $sql, $bindings = array() )
 	{
@@ -1560,6 +1557,7 @@ class Facade
 		self::$redbean            = self::$toolbox->getRedBean();
 		self::$finder             = new Finder( self::$toolbox );
 		self::$associationManager = new AssociationManager( self::$toolbox );
+		self::$tree               = new Tree( self::$toolbox );
 		self::$redbean->setAssociationManager( self::$associationManager );
 		self::$labelMaker         = new LabelMaker( self::$toolbox );
 		$helper                   = new SimpleModelHelper();
@@ -1825,20 +1823,28 @@ class Facade
 	 *
 	 * Note that while this function accepts just
 	 * a bean type and query snippet, the beans will still be loaded first. This is because
-	 * the function still respects all the FUSE hooks that may have beeb
+	 * the function still respects all the FUSE hooks that may have been
 	 * associated with the domain logic associated with these beans.
 	 * If you really want to delete just records from the database use
 	 * a simple DELETE-FROM SQL query instead.
+	 *
+	 * Returns the number of beans deleted.
 	 *
 	 * @param string $type       bean type to look for in database
 	 * @param string $sqlSnippet an SQL query snippet
 	 * @param array  $bindings   SQL parameter bindings
 	 *
-	 * @return array
+	 * @return int
 	 */
-	public static function hunt( $type, $sqlSnippet, $bindings = array() )
+	public static function hunt( $type, $sqlSnippet = NULL, $bindings = array() )
 	{
-		return self::trashAll( self::find( $type, $sqlSnippet, $bindings ) );
+		$numberOfTrashedBeans = 0;
+		$beans = self::findCollection( $type, $sqlSnippet, $bindings );
+		while( $bean = $beans->next() ) {
+			self::trash( $bean );
+			$numberOfTrashedBeans++;
+		}
+		return $numberOfTrashedBeans;
 	}
 
 	/**
@@ -2707,6 +2713,59 @@ class Facade
 	}
 
 	/**
+	 * The gentleman's way to register a RedBeanPHP ToolBox instance
+	 * with the facade. Stores the toolbox in the static toolbox
+	 * registry of the facade class. This allows for a neat and
+	 * explicit way to register a toolbox.
+	 *
+	 * @param string  $key     key to store toolbox instance under
+	 * @param ToolBox $toolbox toolbox to register
+	 *
+	 * @return void
+	 */
+	public static function addToolBoxWithKey( $key, ToolBox $toolbox )
+	{
+		self::$toolboxes[$key] = $toolbox;
+	}
+
+	/**
+	 * The gentleman's way to remove a RedBeanPHP ToolBox instance
+	 * from the facade. Removes the toolbox identified by
+	 * the specified key in the static toolbox
+	 * registry of the facade class. This allows for a neat and
+	 * explicit way to remove a toolbox.
+	 * Returns TRUE if the specified toolbox was found and removed.
+	 * Returns FALSE otherwise.
+	 *
+	 * @param string  $key     identifier of the toolbox to remove
+	 *
+	 * @return boolean
+	 */
+	public static function removeToolBoxByKey( $key )
+	{
+		if ( !array_key_exists( $key, self::$toolboxes ) ) {
+			return FALSE;
+		}
+		return TRUE;
+	}
+
+	/**
+	 * Returns the toolbox associated with the specified key.
+	 *
+	 * @param string  $key     key to store toolbox instance under
+	 * @param ToolBox $toolbox toolbox to register
+	 *
+	 * @return ToolBox|NULL
+	 */
+	public static function getToolBoxByKey( $key )
+	{
+		if ( !array_key_exists( $key, self::$toolboxes ) ) {
+			return NULL;
+		}
+		return self::$toolboxes[$key];
+	}
+
+	/**
 	 * Toggles JSON column features.
 	 * Invoking this method with boolean TRUE causes 2 JSON features to be enabled.
 	 * Beans will automatically JSONify any array that's not in a list property and
@@ -2746,6 +2805,82 @@ class Facade
 	{
 		AQueryWriter::useJSONColumns( $flag );
 		OODBBean::convertArraysToJSON( $flag );
+	}
+
+	/**
+	 * @experimental
+	 *
+	 * Given a bean and an optional SQL snippet,
+	 * this method will return all child beans in a hierarchically structured
+	 * bean table.
+	 *
+	 * @note that not all database support this functionality. You'll need
+	 * at least MariaDB 10.2.2 or Postgres. This method does not include
+	 * a warning mechanism in case your database does not support this
+	 * functionality.
+	 *
+	 * @note that this functionality is considered 'experimental'.
+	 * It may still contain bugs.
+	 *
+	 * @param OODBBean $bean     bean to find children of
+	 * @param string   $sql      optional SQL snippet
+	 * @param array    $bindings SQL snippet parameter bindings
+	 */
+	public static function children( OODBBean $bean, $sql = NULL, $bindings = array() )
+	{
+		return self::$tree->children( $bean, $sql, $bindings );
+	}
+
+	/**
+	 * @experimental
+	 *
+	 * Given a bean and an optional SQL snippet,
+	 * this method will return all parent beans in a hierarchically structured
+	 * bean table.
+	 *
+	 * @note that not all database support this functionality. You'll need
+	 * at least MariaDB 10.2.2 or Postgres. This method does not include
+	 * a warning mechanism in case your database does not support this
+	 * functionality.
+	 *
+	 * @note that this functionality is considered 'experimental'.
+	 * It may still contain bugs.
+	 *
+	 * @param OODBBean $bean     bean to find parents of
+	 * @param string   $sql      optional SQL snippet
+	 * @param array    $bindings SQL snippet parameter bindings
+	 */
+	public static function parents( OODBBean $bean, $sql = NULL, $bindings = array() )
+	{
+		return self::$tree->parents( $bean, $sql, $bindings );
+	}
+
+	/**
+	 * Toggles support for nuke().
+	 * Can be used to turn off the nuke() feature for security reasons.
+	 * Returns the old flag value.
+	 *
+	 * @param boolean $flag TRUE or FALSE
+	 *
+	 * @return boolean
+	 */
+	public static function noNuke( $yesNo ) {
+		return AQueryWriter::forbidNuke( $yesNo );
+	}
+
+	/**
+	 * Selects the feature set you want as specified by
+	 * the label.
+	 *
+	 * Usage:
+	 * R::useFeatureSet( 'novice/latest' );
+	 *
+	 * @param string $label label
+	 *
+	 * @return void
+	 */
+	public static function usefeatureSet( $label ) {
+		return Feature::feature($label);
 	}
 
 	/**

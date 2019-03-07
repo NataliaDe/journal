@@ -292,7 +292,11 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                                         </li>-->
 
                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/pdf_print/<?= $row['id'] ?>" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf)</a>
+                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf)</a>
+                                </li>
+
+                                 <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf + меры)</a>
                                 </li>
         <?php
         // }
@@ -300,7 +304,11 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
         ?>
 
                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/pdf_download/<?= $row['id'] ?>" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf)</a>
+                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf)</a>
+                                </li>
+
+                                <li class="dropdown-submenu">
+                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf + меры)</a>
                                 </li>
 
                                 <li class="dropdown-submenu">

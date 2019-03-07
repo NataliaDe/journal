@@ -44,4 +44,6 @@ $app->configureMode('development', function () use ($app) {
 
 $log = $app->getLog();
 R::setup($config['db']['dsn'], $config['db']['user'], $config['db']['pass']);
+/* for archive !!!!! */
+R::addDatabase('archive2018', $config_2['db']['dsn'], $config_2['db']['user'], $config_2['db']['pass'], $config_2['frozen']);
 //R::setup('mysql:host=localhost;dbname=ss', 'ss', 'ss02GB47');

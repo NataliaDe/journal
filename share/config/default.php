@@ -45,3 +45,16 @@ $config['app']['cookies.httponly'] = true;
 $config['app']['cookies.secret_key'] = '05ymStMF2suR';
 //$config['app']['cookies.cipher']		= MCRYPT_RIJNDAEL_256;
 //$config['app']['cookies.cipher_mode']	= MCRYPT_MODE_CBC;
+
+$config_2['db'] = array(
+    'driver' => 'mysql',
+    //local
+    'host' => 'localhost',
+    'user' => 'root',
+    'pass' => '',
+    'dbname' => 'archive2018'
+
+);
+$config_2['db']['dsn'] = sprintf(
+        '%s:host=%s;dbname=%s', $config_2['db']['driver'], $config_2['db']['host'], $config_2['db']['dbname']
+);

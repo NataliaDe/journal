@@ -50,7 +50,7 @@
 <script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script> -->
 
 <!-- select2 jquery js - поиск в выпад списке -->
-<script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script> 
+<script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
 
 <!--dataTables-->
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.dataTables.js"></script>
@@ -61,10 +61,16 @@
 <!--chained plugin-->
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.chained.min.js"></script>
 
-
+<script src="<?= $baseUrl ?>/assets/ckeditor/ckeditor.js"></script>
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
+
+<script type="text/javascript">
+	CKEDITOR.replace('myeditor1');
+        CKEDITOR.replace('myeditor2');
+        CKEDITOR.replace('myeditor3');
+</script>
 
 </body>
 </html>
