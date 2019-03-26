@@ -1520,12 +1520,17 @@ $(document).on('click', '#btn_del_action', function (e) {
 
    var archive_year=$('select[name="archive_year"]').val();
    var region=$('select[name="id_region"]').val();
-   var local=$('select[name="id_local"]').val();
+   var local=$('input[name="id_local"]').val();
 
 
 
-   if(date_start && date_end){
-     //  alert('123');
+   if(date_start && date_end && archive_year){
+
+
+      $('#ajax-content').fadeOut("slow");
+      $('#preload-get-archive-data').css('display','block');
+
+
            $.ajax({
         type: 'POST',
         url: '/journal/archive_1/getInfRig',
@@ -1541,15 +1546,26 @@ $(document).on('click', '#btn_del_action', function (e) {
 
         success: function (response) {
 
-            $('#ajax-content').fadeOut("slow", function () {
-              //  $('h1.m-n > *:not(:first)').remove();
+$('#preload-get-archive-data').css('display','none');
+
+           // $('#ajax-content').fadeOut("slow", function () {
                 $('#ajax-content').html(response);
                $('#ajax-content').fadeIn("slow");
                 console.log("it Work");
-            });
+          //  });
 
         }
     });
+   }
+   else{
+       if(date_start == '')
+        toastr.error('Выберите дату начала', 'Ошибка!', {timeOut: 5000});
+    else if(date_end == ''){
+         toastr.error('Выберите дату окончания', 'Ошибка!', {timeOut: 5000});
+    }
+    else if(archive_year == ''){
+          toastr.error('Выберите год', 'Ошибка!', {timeOut: 5000});
+    }
    }
 
         }

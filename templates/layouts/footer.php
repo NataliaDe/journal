@@ -64,6 +64,9 @@
 <script src="<?= $baseUrl ?>/assets/ckeditor/ckeditor.js"></script>
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
+
+
+
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
 
 <script type="text/javascript">

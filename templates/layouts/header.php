@@ -17,19 +17,19 @@
         <link rel="icon" href="<?= $baseUrl ?>/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" href="<?= $baseUrl ?>/favicon.ico" type="image/x-icon" />
 
-        
+
 
         <title>
                     <?php
   if(isset($title) && !empty($title))  {
       $name_title=$title;
-  }   
+  }
   else{
       $name_title=' Журнал ЦОУ';
   }
   echo $name_title;
 ?>
-            
+
            </title>
 
 
@@ -71,11 +71,11 @@
 
         <!-- Chosen CSS -->
 <!--        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.css">-->
-        
+
         <!-- select2 css - поиск в выпад списке -->
                 <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2_1.css">
-                
-                
+
+
 
         <!-- manual -->
         <link href="<?= $baseUrl ?>/assets/css/manual.css" rel="stylesheet">
@@ -92,11 +92,13 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+       
+
 
     </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
-    
-    
+
+
 <!--    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">-->
 
 

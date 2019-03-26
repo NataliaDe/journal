@@ -25,6 +25,28 @@ if (isset($msg) && !empty($msg)) {
 <form  role="form" class="form" name="archiveForm" id="rep1Form" method="post" >
 
     <div class="row">
+
+                <div class="col-lg-2">
+
+            <div class="form-group">
+                <label for="year">Год</label>
+                <select class="form-control" name="archive_year" id="id_archive_year" >
+
+                    <option value="">Не выбран</option>
+                    <?php
+                    foreach ($archive_year as $ay) {
+                        if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
+                            printf("<p><option value='%s' selected ><label>%s</label></option></p>", $ay['table_name'], mb_substr($ay['table_name'], 0, -1));
+                        } else {
+                            printf("<p><option value='%s' ><label>%s</label></option></p>", $ay['table_name'], mb_substr($ay['table_name'], 0, -1));
+                        }
+                    }
+                    ?>
+
+                </select>
+            </div>
+        </div>
+
         <div class="col-lg-2">
 <div class="form-group">
                     <label for="date_start" >дата начала</label>
@@ -77,26 +99,7 @@ if (isset($msg) && !empty($msg)) {
         </div>
 
 
-        <div class="col-lg-2">
 
-            <div class="form-group">
-                <label for="year">Год</label>
-                <select class="form-control" name="archive_year" id="id_archive_year" >
-
-                    <option value="">Не выбран</option>
-                    <?php
-                    foreach ($archive_year as $ay) {
-                        if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
-                            printf("<p><option value='%s' selected ><label>%s</label></option></p>", $ay['table_name'], $ay['table_name']);
-                        } else {
-                            printf("<p><option value='%s' ><label>%s</label></option></p>", $ay['table_name'], $ay['table_name']);
-                        }
-                    }
-                    ?>
-
-                </select>
-            </div>
-        </div>
 
         <div class="col-lg-2">
             <div class="form-group">
@@ -135,7 +138,14 @@ if (isset($msg) && !empty($msg)) {
     </div>
 </form>
 
+        <center>
+        <div id="preload-get-archive-data" style="display:none;">
+            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+Идет загрузка данных...
+
+        </div>
+        </center>
 
 <div id="ajax-content">
-    123
+
 </div>

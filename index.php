@@ -4218,11 +4218,476 @@ if(isset($array_of_content_file_json)&& !empty($array_of_content_file_json)){
 
      $app->post('/getInfRig', function () use ($app) {
 
+
+                      /* post data */
+$date_start=$app->request()->post('date_start');
+$date_end=$app->request()->post('date_end');
+$table_name_year=$app->request()->post('archive_year');
+$region_id=$app->request()->post('region');
+$local=$app->request()->post('local');
+
+switch ($region_id) {
+            case 1: $region = "Брестская";
+                break;
+            case 2: $region = "Витебская";
+                break;
+            case 3: $region = "г.Минск";
+                break;
+            case 4: $region = "Гомельская";
+                break;
+            case 5: $region = "Гродненская";
+                break;
+            case 6:$region = "Минская";
+                break;
+            case 7:$region = "Могилевская";
+                break;
+            default: $region = "";
+                break;
+        }
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql=' FROM jarchive.'.$table_name_year.'  WHERE date_msg between ? and ? and id_rig not in '
+                . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+      //  $param[]=0;
+
+
+
+        if(isset($region) && $region !=''){
+           // $sql=$sql.' AND region_name like ?';
+              $sql=$sql.' AND region_name = ?';
+             $param[] = $region;
+        }
+        if(isset($local) && !empty($local)){
+              $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+ $sql='SELECT id_rig '.$sql;
+ $data['result']=R::getAll($sql, $param);
+
+$cnt_result=count($data['result']);
+
+$ids_rig=array();
+foreach ($data['result'] as $value) {
+    $ids_rig[]=$value['id_rig'];
+}
+
+//$data['cnt']=$cnt_result;
+/* colors */
+$_SESSION['colors']=array();
+$spread = 25;
+for ($row = 0; $row < $cnt_result; ++$row) {
+        for($c=0;$c<3;++$c) {
+        $color[$c] = rand(0+$spread,255-$spread);
+    }
+    //echo "<div style='float:left; background-color:rgb($color[0],$color[1],$color[2]);'>&nbsp;Base Color&nbsp;</div><br/>";
+    for($i=0;$i<92;++$i) {
+    $r = rand($color[0]-$spread, $color[0]+$spread);
+    $g = rand($color[1]-$spread, $color[1]+$spread);
+    $b = rand($color[2]-$spread, $color[2]+$spread);
+   // echo "<div style='background-color:rgb($r,$g,$b); width:10px; height:10px; float:left;'></div>";
+    $id_rig=$ids_rig[$row];
+    $p=0.6;
+    $colors[$id_rig]=$r.','.$g.','.$b.','.$p;
+    }
+    //echo "<br/>";
+}
+$_SESSION['colors']=$colors;
+
+
+
          $view = $app->render('archive_1/getInfRig.php');
         $response = ['success' => TRUE, 'view' => $view];
         // echo '9969';
     });
+
+    /* table of tab */
+         $app->post('/getTabContent/:id_tab', function ($id_tab) use ($app) {
+
+             /* post data */
+$date_start=$app->request()->post('date_start');
+$date_end=$app->request()->post('date_end');
+$table_name_year=$app->request()->post('archive_year');
+$region_id=$app->request()->post('region');
+$local=$app->request()->post('local');
+
+//$date_start='2018-12-03';
+//$date_end='2018-12-10';
+//$table_name_year='2018a';
+
+ switch ($region_id) {
+            case 1: $region = "Брестская";
+                break;
+            case 2: $region = "Витебская";
+                break;
+            case 3: $region = "г.Минск";
+                break;
+            case 4: $region = "Гомельская";
+                break;
+            case 5: $region = "Гродненская";
+                break;
+            case 6:$region = "Минская";
+                break;
+            case 7:$region = "Могилевская";
+                break;
+            default: $region = "";
+                break;
+        }
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql=' FROM jarchive.'.$table_name_year.'  WHERE date_msg between ? and ? and id_rig not in '
+                . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+      //  $param[]=0;
+
+
+
+        if(isset($region) && $region !=''){
+           // $sql=$sql.' AND region_name like ?';
+              $sql=$sql.' AND region_name = ?';
+             $param[] = $region;
+
+              $region_for_export=$region;
+        }
+        else{
+            $region_for_export='no';
+        }
+        if(isset($local) && !empty($local)){
+              $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+               $local_for_export=$local;
+        }
+         else{
+            $local_for_export='no';
+        }
+
+        $sql=$sql.' ORDER BY id_rig ASC';
+
+if($id_tab=='table-content1'){//rig
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv '.$sql;
+
+}
+elseif($id_tab=='table-content2'){//technic mchs
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,time_loc, time_likv,silymchs '.$sql;
+
+}
+elseif($id_tab=='table-content3'){//informing
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, informing '.$sql;
+
+}
+elseif($id_tab=='table-content4'){//innerservice
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, innerservice '.$sql;
+
+}
+
+//echo $sql;
+$data['result']=R::getAll($sql, $param);
+
+
+
+
+$data['link_excel']='archive_1/exportExcel/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export;
+
+           $view = $app->render('archive_1/tab-content/'.$id_tab.'.php',$data);
+        $response = ['success' => TRUE, 'view' => $view];
+        // echo '9969';
+
+
+    });
+
+
+       $app->get('/exportExcel/:id_tab/:table/:date_from/:date_to/:reg/:loc', function ($id_tab,$table,$date_from,$date_to,$reg,$loc) use ($app) {
+
+             /* get data */
+$date_start=$date_from;
+$date_end=$date_to;
+$table_name_year=$table;
+$region=$reg;
+$local=$loc;
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql=' FROM jarchive.'.$table_name_year.'  WHERE date_msg between ? and ? and id_rig not in '
+                . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+      //  $param[]=0;
+
+//var_dump($region);
+        if($region != 'no' ){
+           // echo 'uuuuuu';
+           // $sql=$sql.' AND region_name like ?';
+              $sql=$sql.' AND region_name = ?';
+             $param[] = $region;
+        }
+
+        if( $local != 'no'){
+
+              $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+
+        $sql=$sql.' ORDER BY id_rig ASC';
+
+if($id_tab=='table-content1'){//rig
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv '.$sql;
+
+}
+elseif($id_tab=='table-content2'){//technic mchs
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,time_loc, time_likv,silymchs '.$sql;
+
+}
+elseif($id_tab=='table-content3'){//informing
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, informing '.$sql;
+
+}
+elseif($id_tab=='table-content4'){//innerservice
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, innerservice '.$sql;
+
+}
+
+
+$result=R::getAll($sql, $param);
+//$cnt_result=count($result);
+
+//echo $sql;
+//print_r($param);
+//echo $cnt_result;
+//exit();
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/archive/' . $id_tab . '.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 9; //strначальная строка для записи
+        $c = 0; // stolbec начальный столбец для записи
+
+        $i = 0; //счетчик кол-ва записей № п/п
+
+
+        $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все')); //выбранный область и район
+
+          /* устанавливаем бордер ячейкам */
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if(!empty($result)){
+         if($id_tab=='table-content1'){//rig
+     foreach ($result as $row) {
+            $i++;
+
+            $sheet->setCellValue('A' . $r, $i); //№ п/п
+            $sheet->setCellValue('B' . $r, $row['id_rig']);
+            $sheet->setCellValue('C' . $r, $row['date_msg']);
+            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('E' . $r, $row['local_name']);
+            $sheet->setCellValue('F' . $r, $row['address']);
+            $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
+            $sheet->setCellValue('H' . $r, $row['view_work']);
+            $sheet->setCellValue('I' . $r, $row['inf_detail']);
+            $sheet->setCellValue('J' . $r, $row['people']);
+            $sheet->setCellValue('K' . $r, $row['time_loc']);
+            $sheet->setCellValue('L' . $r, $row['time_likv']);
+
+            $r++;
+        }
+
+
+
+        $sheet->getStyleByColumnAndRow(0, 8, 11, $r - 1)->applyFromArray($styleArray);
+}
+elseif($id_tab=='table-content2'){//technic mchs
+
+ $i=0;
+    foreach ($result as $row) {
+         $arr_silymchs= explode('~', $row['silymchs']);
+
+    foreach ($arr_silymchs as $value) {
+        if(!empty($value)){
+                $i++;
+         $arr_mark= explode('#', $value);
+
+        $mark=$arr_mark[0];
+
+        /* all after # explode, exit,arrival......is_return , result -all  after ? */
+        $arr_time= explode('?', $arr_mark[1]);
+
+          /* all  after ? explode.  exit,arrival......is_return*/
+$each_time= explode('&', $arr_time[1]);
+
+$t_exit=$each_time[0];
+$t_arrival=$each_time[1];
+$t_follow=$each_time[2];
+$t_end=$each_time[3];
+$t_return=$each_time[4];
+$t_distance=$each_time[5];
+$t_is_return=($each_time[6] == 0)?'нет':'да';
+
+            $sheet->setCellValue('A' . $r, $i); //№ п/п
+            $sheet->setCellValue('B' . $r, $row['id_rig']);
+            $sheet->setCellValue('C' . $r, $row['date_msg']);
+            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('E' . $r, $row['local_name']);
+            $sheet->setCellValue('F' . $r, $row['address']);
+            $sheet->setCellValue('G' . $r, $mark);
+            $sheet->setCellValue('H' . $r, $t_exit);
+            $sheet->setCellValue('I' . $r, $t_arrival );
+            $sheet->setCellValue('J' . $r, $row['time_loc']);
+            $sheet->setCellValue('K' . $r, $row['time_likv']);
+             $sheet->setCellValue('L' . $r, '');
+              $sheet->setCellValue('M' . $r, $t_end);
+              $sheet->setCellValue('N' . $r, $t_return);
+              $sheet->setCellValue('O' . $r, $t_distance);
+              $sheet->setCellValue('P' . $r, $t_is_return);
+
+            $r++;
+
+    }
+    }
+    }
+     $sheet->getStyleByColumnAndRow(0, 8, 15, $r - 1)->applyFromArray($styleArray);
+
+}
+elseif($id_tab=='table-content3'){//informing
+
+      foreach ($result as $row) {
+
+                $arr = explode('~', $row['informing']);
+
+                foreach ($arr as $value) {
+                    if (!empty($value)) {
+                        $i++;
+                        $arr_fio = explode('#', $value);
+                        /* fio - before # */
+                        $fio = $arr_fio[0];
+
+                        /* all  after # explode. time_msg,time_exit.... */
+                        $each_time = explode('&', $arr_fio[1]);
+
+                        $t_msg = $each_time[0];
+                        $t_exit = $each_time[1];
+                        $t_arrival = $each_time[2];
+
+
+                        $sheet->setCellValue('A' . $r, $i); //№ п/п
+                        $sheet->setCellValue('B' . $r, $row['id_rig']);
+                        $sheet->setCellValue('C' . $r, $row['date_msg']);
+                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('E' . $r, $row['local_name']);
+                        $sheet->setCellValue('F' . $r, $row['address']);
+                        $sheet->setCellValue('G' . $r, $fio);
+                        $sheet->setCellValue('H' . $r, $t_msg);
+                        $sheet->setCellValue('I' . $r, $t_exit);
+                        $sheet->setCellValue('J' . $r, $t_arrival);
+
+                        $r++;
+                    }
+                }
+            }
+               $sheet->getStyleByColumnAndRow(0, 8, 9, $r - 1)->applyFromArray($styleArray);
+        }
+elseif($id_tab=='table-content4'){//innerservice
+
+            $i = 0;
+            foreach ($result as $row) {
+
+                $arr = explode('~', $row['innerservice']);
+
+                foreach ($arr as $value) {
+
+                    if (!empty($value)) {
+                        $i++;
+                        $arr_name = explode('#', $value);
+                        /* fio - before # */
+                        $service_name = $arr_name[0];
+
+                        /* all  after # explode. time_msg,time_exit.... */
+                        $each_time = explode('&', $arr_name[1]);
+
+                        $t_msg = $each_time[0];
+                        $t_arrival = $each_time[1];
+
+                        $note = explode('%', $each_time[2]);
+
+                        $t_distance = $note[0];
+                        $t_note = $note[1];
+
+
+                        $sheet->setCellValue('A' . $r, $i); //№ п/п
+                        $sheet->setCellValue('B' . $r, $row['id_rig']);
+                        $sheet->setCellValue('C' . $r, $row['date_msg']);
+                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('E' . $r, $row['local_name']);
+                        $sheet->setCellValue('F' . $r, $row['address']);
+                        $sheet->setCellValue('G' . $r, $t_msg);
+                        $sheet->setCellValue('H' . $r, $t_arrival);
+                        $sheet->setCellValue('I' . $r, $service_name);
+                        $sheet->setCellValue('J' . $r, $t_distance);
+                        $sheet->setCellValue('K' . $r, $t_note);
+
+                        $r++;
+                    }
+                }
+            }
+
+            $sheet->getStyleByColumnAndRow(0, 8, 10, $r - 1)->applyFromArray($styleArray);
+}
+
+        }
+
+        /* Сохранить в файл */
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="archive.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
 });
+
 
 
 /* ------------------------- END  Archive Журнал ЦОУ ------------------------------- */
