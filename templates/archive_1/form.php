@@ -20,14 +20,22 @@ if (isset($msg) && !empty($msg)) {
     <?php
 }
 ?>
-<h2>Архив выездов</h2><br>
+<h2>Архив выездов</h2>
+<span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 15px" ></span>
+<span style="color: red; font-size: 15px">  При выборе большого диапазона (больше 1 недели) из-за большого объема данных запрос может быть НЕ ОБРАБОТАН.</b></span><br>
+<i class="fa fa-book" aria-hidden="true"></i>&nbsp;
+При необходимости построения специализированных запросов - обращаться в ОВПО для их реализации.
+<br><br><br>
+
 <!-- action="< $_SERVER['REQUEST_URI'] ?>" -->
 <form  role="form" class="form" name="archiveForm" id="rep1Form" method="post" >
 
     <div class="row">
 
                 <div class="col-lg-2">
-
+<?php
+//print_r($archive_year);
+?>
             <div class="form-group">
                 <label for="year">Год</label>
                 <select class="form-control" name="archive_year" id="id_archive_year" >
@@ -35,10 +43,11 @@ if (isset($msg) && !empty($msg)) {
                     <option value="">Не выбран</option>
                     <?php
                     foreach ($archive_year as $ay) {
+                        $period=' (с 01.01 '.' по '. date('d.m', strtotime($ay['max_date'])).')';
                         if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
-                            printf("<p><option value='%s' selected ><label>%s</label></option></p>", $ay['table_name'], mb_substr($ay['table_name'], 0, -1));
+                            printf("<p><option data-mad='%s' value='%s' selected ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
                         } else {
-                            printf("<p><option value='%s' ><label>%s</label></option></p>", $ay['table_name'], mb_substr($ay['table_name'], 0, -1));
+                            printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
                         }
                     }
                     ?>
@@ -49,7 +58,7 @@ if (isset($msg) && !empty($msg)) {
 
         <div class="col-lg-2">
 <div class="form-group">
-                    <label for="date_start" >дата начала</label>
+                    <label for="date_start" >дата начала (с 06:00:00)</label>
                     <div class="input-group date" id="date_start">
                         <?php
                               if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
@@ -76,7 +85,7 @@ if (isset($msg) && !empty($msg)) {
         <div class="col-lg-2">
 
             <div class="form-group">
-                    <label for="date_end">&nbsp;дата окончания</label>
+                    <label for="date_end">&nbsp;дата окончания (до 06:00:00)</label>
                     <div class="input-group date" id="date_end">
                             <?php
                               if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {

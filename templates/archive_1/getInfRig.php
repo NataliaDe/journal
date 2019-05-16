@@ -42,6 +42,8 @@
     <section id="content2" class="sec">
         <p>
             В данной вкладке находится общая информация по выезжавшей технике.
+            <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+ <span style="color: red; font-size: 13px">  После применения в таблице фильтра по технике (и информации связанной с ней, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
         <center>
@@ -64,6 +66,8 @@
     <section id="content3" class="sec">
         <p>
             В данной вкладке находится общая информация по информированию должностных лиц.
+              <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+ <span style="color: red; font-size: 13px">  После применения в таблице фильтра по адресату (и информации связанной с ним, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
                 <center>
@@ -87,6 +91,8 @@
     <section id="content4" class="sec">
         <p>
             В данной вкладке находится общая информация по привлечению сил других ведомств.
+             <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+ <span style="color: red; font-size: 13px">  После применения в таблице фильтра по службе (и информации связанной с ней, например, время прибытия) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
 

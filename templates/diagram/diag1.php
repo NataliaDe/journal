@@ -1,19 +1,37 @@
+<style>
+            .canvasjs-chart-credit{
+                display:none !important;
+}
+    </style>
+
 <?php
 
 foreach ($umchs_fair as $row) {
     $dataPoints1[]=array("label"=> $row['name'], "y"=> $row['vsego']);
 }
 
-foreach ($umchs_vsego as $row) {
+//foreach ($umchs_vsego as $row) {
+//    $dataPoints2[]=array("label"=> $row['name'], "y"=> $row['vsego']);
+//}
+foreach ($umchs_other as $row) {
     $dataPoints2[]=array("label"=> $row['name'], "y"=> $row['vsego']);
+}
+foreach ($umchs_vsego as $row) {
+    $dataPoints3[]=array("label"=> $row['name'], "y"=> $row['end']);
 }
 //РОСН, УГЗ, Авиация
 foreach ($cp_fair as $row) {
     $dataPoints1[]=array("label"=> $row['name'], "y"=> $row['vsego']);
 }
 
-foreach ($cp_vsego as $row) {
+//foreach ($cp_vsego as $row) {
+//    $dataPoints2[]=array("label"=> $row['name'], "y"=> $row['vsego']);
+//}
+foreach ($cp_other as $row) {
     $dataPoints2[]=array("label"=> $row['name'], "y"=> $row['vsego']);
+}
+foreach ($cp_vsego as $row) {
+    $dataPoints3[]=array("label"=> $row['name'], "y"=> $row['end']);
 }
 
 
@@ -41,6 +59,9 @@ foreach ($cp_vsego as $row) {
 ?>
 
 <br><br><br>
+
+<center><b>С <u><?= date('d.m.Y H:i:s', strtotime($min_d)) ?></u> по <u><?= date('d.m.Y H:i:s', strtotime($max_d))?></u> </b></center>
+<br>
 <script>
 window.onload = function () {
 
@@ -50,6 +71,7 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	title:{
 		text: ""
 	},
+
 	legend:{
 		cursor: "pointer",
 		verticalAlign: "center",
@@ -65,7 +87,14 @@ var chart = new CanvasJS.Chart("chartContainer", {
 		dataPoints: <?php echo json_encode($dataPoints1, JSON_NUMERIC_CHECK); ?>
 	},{
 		type: "column",
-		name: "ВСЕГО",
+		name: "Остальные выезды",
+		indexLabel: "{y}",
+		yValueFormatString: "#0.##",
+		showInLegend: true,
+		dataPoints: <?php echo json_encode($dataPoints3, JSON_NUMERIC_CHECK); ?>
+	},{
+		type: "column",
+		name: "Другие загорания",
 		indexLabel: "{y}",
 		yValueFormatString: "#0.##",
 		showInLegend: true,

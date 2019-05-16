@@ -16,6 +16,7 @@
                 else {
                      $filename = "instruct.doc";
                      $filename1 = "ukazanie.doc";
+                     $filename2 = "o vnedrenii PS.doc";
                 }
                 if (strpos($filename, "/") !== false)
                     die("Hack atempt detected!");
@@ -25,10 +26,12 @@
                 $p =  $baseUrl.'/assets/doc/';
                 $path = $p . $filename;
                 $path1 = $p . $filename1;
+                 $path2 = $p . $filename2;
 //echo $path;
 
                // echo "Скачать <a href='$path'>инструкцию по использованию</a><br> ";
                 echo "<br> <b>Скачать <a href='$path1'>Указание: Об опытной эксплуатации ПС «Журнал ЦОУ» (исх.№ 2041 от 29.12.2018)</a></b><br><br> ";
+                 echo "<br> <b>Скачать <a href='$path2'>Письмо о внедрении ПС «Журнал ЦОУ» (исх.№ 502 от 19.03.2019)</a></b><br><br> ";
                 ?>
 
             <p class="modal-header"></p>

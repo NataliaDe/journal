@@ -10,12 +10,29 @@
 
         <div class="row">
             <div class="col-lg-2">
+
+
+                <?php
+                if ($id_user_rig == $_SESSION['id_user']) {
+
+                    ?>
                 <div class="form-group">
                     <?php
                     include dirname(dirname(__FILE__)) . '/tabsRig/buttonSaveRig.php';
                     ?>
-                  
-                </div>  
+
+                </div>
+                    <?php
+                } else {
+
+ include dirname(dirname(__FILE__)) . '/tabsRig/infoMsg.php';
+
+                }
+
+                ?>
+
+
+
             </div>
         </div>
 
@@ -30,7 +47,7 @@
 ?>
               <div class="row">
 
-               
+
                     <input type="hidden" class="form-control datetime"  name="informing[<?= $i ?>][id]" value="<?= $value['id'] ?>" />
 
                     <div class="col-lg-2">
@@ -79,7 +96,7 @@
                                         <?php
                                     }
                                     ?>
-                           
+
                         </div>
                     </div>
 
@@ -110,7 +127,7 @@
                                                 <?php
                                             }
                                         }
-                                        ?>  
+                                        ?>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" onclick="getTimeMsg(<?= $i ?>);" ></span></span>
                             </div>
                         </div>
@@ -143,7 +160,7 @@
                                                 <?php
                                             }
                                         }
-                                        ?>  
+                                        ?>
 
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" onclick="getTimeExit(<?= $i ?>);"></span></span>
                             </div>
@@ -156,7 +173,7 @@
                                 <?php
                                 if (isset($value['time_arrival']) && $value['time_arrival'] != '0000-00-00 00:00:00') {
                                                                              if ($id_level != $_SESSION['id_level']) {
-                                                                                 
+
                                                 ?>
                                 <input disabled="" type="text" class="form-control datetime"  name="informing[<?= $i ?>][time_arrival]" value="<?= $value['time_arrival'] ?>" />
                                                 <?php
@@ -177,10 +194,10 @@
                                                 <?php
                                             }
                                     ?>
-                                   
+
                                     <?php
                                 }
-                                ?>  
+                                ?>
                                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar" onclick="getTimeArrival(<?= $i ?>);"></span></span>
                             </div>
                         </div>

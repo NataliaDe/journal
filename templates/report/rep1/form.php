@@ -16,7 +16,7 @@
                               if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
-                        
+
                         <?php
                               }
                               else{
@@ -25,7 +25,7 @@
                         <?php
                               }
                         ?>
-                    
+
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                               if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
-                        
+
                         <?php
                               }
                               else{
@@ -47,11 +47,11 @@
                         <?php
                               }
                         ?>
-                      
+
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
-        
+
 
         <div class="form-group">
                     <label for="id_region">Область</label>
@@ -59,7 +59,7 @@
    <?php
    if($_SESSION['id_level'] == 1){
        ?>
-                        <option value="">все</option>              
+<!--                        <option value="">все</option>              -->
                         <?php
    }
                         foreach ($region as $re) {
@@ -72,13 +72,13 @@
                         ?>
                     </select>
                 </div>
-        
+
                 <div class="form-group">
                     <label for="id_local">Район</label>
                     <select class="form-control" name="id_local" id="auto_local"  >
                         <option value="">Все</option>
                         <?php
-                        
+
                         foreach ($local as $row) {
                             if ( $row['id'] == $_SESSION['id_local']  && $_SESSION['id_level'] != 1) {
                                 printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
@@ -89,7 +89,7 @@
                         ?>
                     </select>
                 </div>
-            
+
 
                 <div class="form-group">
                     <button class="btn bg-purple" type="submit"   >Сформировать</button>
@@ -97,5 +97,8 @@
     </form>
 <br><br>
 
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> - 
+<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
 в соответствии с формой 2 Приложения 5 к Уставу службы органов и подразделений по чрезвычайным ситуациям Республики Беларусь.
+<br>
+<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
+    рекомендуем строить отчет за период не больше 1 недели в связи с большим объемом данных.</span>

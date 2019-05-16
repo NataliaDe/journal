@@ -34,23 +34,22 @@ class Model_Jrig {
         return R::getAll('SELECT * FROM journal.jrig WHERE id_rig = ?', array($this->id_rig));
     }
 
-            public function selectAllInIdRig($id_rig) {
+            public function selectAllInIdRig($id_rig)
+    {
 
-				$new_result=array();
+        $new_result = array();
 
-				if(!empty($id_rig)){
-					    $str_id_rig = implode(',', $id_rig);
-        $result = R::getAll('SELECT * FROM jrig WHERE id_rig IN (  ' . $str_id_rig . ')');
-        foreach ($result as $row) {
-            $new_result[$row['id_rig']] []= $row;
+        if (!empty($id_rig)) {
+            $str_id_rig = implode(',', $id_rig);
+            $result = R::getAll('SELECT * FROM jrig WHERE id_rig IN (  ' . $str_id_rig . ')');
+            foreach ($result as $row) {
+                $new_result[$row['id_rig']] [] = $row;
+            }
         }
-				}
 
 
         return $new_result;
     }
-
-
     /*  involved units, short   */
                 public function selectInvolvedUnits($id_rig) {
 
@@ -229,5 +228,9 @@ $y[$key]['is_return'] = 0;
             R::store($sily);
         }
     }
+
+
+
+
 
 }

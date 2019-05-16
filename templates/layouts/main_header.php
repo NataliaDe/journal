@@ -6,7 +6,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
 <!--          <span class="logo-mini">Журнал</span>-->
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Журнал </b>ЦОУ <span style="font-size: 14px">1.7</span></span>
+        <span class="logo-lg"><b>Журнал </b>ЦОУ <span style="font-size: 14px">2.0</span></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
 
@@ -20,7 +20,7 @@
 
 
         <a href="#" class="logo" style="width: 200px" id="title_for_ivanov">
-        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px">1.7</span></span>
+        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px">2.0</span></span>
     </a>
 
 

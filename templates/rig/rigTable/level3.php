@@ -1,9 +1,17 @@
+<style>
+    .is-neighbor-td{
+        border-top: 2px solid  #999 !important;
+        border-bottom:  2px solid  #999 !important;
+
+    }
+</style>
+
 <div class="noprint" id="conttabl">
     <b> Выберите столбец, чтобы скрыть/отобразить:  </b>
     <b>
 
         <a class="toggle-vis-rig-table" id="toggle-vis-rig-table-7" data-column="7" style="background-color: #fdee8d;  color: black">Привлекаемая техника</a> -
-      <a class="toggle-vis-rig-table" id="toggle-vis-rig-table-13"  data-column="13" style="background-color: #fdee8d;  color: black">Автор создания</a>
+        <a class="toggle-vis-rig-table" id="toggle-vis-rig-table-13"  data-column="13" style="background-color: #fdee8d;  color: black">Автор создания</a>
 
     </b>
 
@@ -42,6 +50,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
     <?php
 }
 //print_r($result_icons);
+
 ?>
 <table class="table table-condensed   table-bordered table-custom" id="rigTable" >
     <!-- строка 1 -->
@@ -61,7 +70,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
             <th style="width:160px;">Детализированная информация</th>
             <th style="width:40px;">Время лок.</th>
             <th style="width:40px;">Время ликв.</th>
-<th style="width:30px;">Создатель</th>
+            <th style="width:30px;">Создатель</th>
             <th style="width:20px;">Ред./Уд.</th>
 
 
@@ -109,31 +118,55 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                     $time_likv = '00:00';
                 }
 
-                ?>
-                <tr style="background-color: <?= (isset($reasonrig_color[$row['id_reasonrig']])) ? $reasonrig_color[$row['id_reasonrig']] : 'white' ?>;">
 
-                    <td><?= $row['id'] ?></td>
 
-                    <td><?php
-        if ($row['is_closed'] == 0) {//пожар не закрыт
+                if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                     ?>
+                    <tr style="background-color:#ddd; border: 5px solid #da0d0d !important; ">
+                        <?php
+                    } else {
+
+                        ?>
+                    <tr style="background-color: <?= (isset($reasonrig_color[$row['id_reasonrig']])) ? $reasonrig_color[$row['id_reasonrig']] : 'white' ?>;">
+                        <?php
+                    }
+
+                    ?>
+
+
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+                        <?php
+                        if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
+
+                            ?>
+                            <i class="fa fa-share" aria-hidden="true"></i>
+                            <?php
+                        }
+
+                        ?>&nbsp;
+        <?= $row['id'] ?></td>
+
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"  >
+                        <?php
+                        if ($row['is_closed'] == 0) {//пожар не закрыт
+
+                            ?>
                             <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
                             <?php
                         }
 
                         ?></td>
-                    <td><?= $row['date_msg'] ?></td>
-                    <td><?= $row['time_msg'] ?></td>
-                    <td ><?= $row['local_name'] ?></td>
-                    <td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['date_msg'] ?></td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['time_msg'] ?></td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?></td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
                         <!--                            если адрес пуст-выводим дополнит поле с адресом-->
                         <?php
-                       if ($row['address'] != NULL ){
-                            echo $row['address'].'<br>'.$row['additional_field_address'];
-                        }
-                        else{
-                             echo $row['additional_field_address'];
+                        if ($row['address'] != NULL) {
+                            echo $row['address'] . '<br>' . $row['additional_field_address'];
+                        } else {
+                            echo $row['additional_field_address'];
                         }
 
 
@@ -146,7 +179,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                         ?>
                     </td>
 
-                    <td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 
 
                         <?php
@@ -177,10 +210,10 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                                 </ul>
                             </ul>
-            <?php
-        }
+                            <?php
+                        }
 
-        ?>
+                        ?>
 
 
 
@@ -204,170 +237,188 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                     </td>
 
-                    <td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 
-                                                <?php
+                        <?php
                         //            short on technic
                         if (isset($sily_mchs[$row['id']]) && !empty($sily_mchs[$row['id']])) {
 
-                             foreach ($sily_mchs[$row['id']] as $si) {
-                                        $teh = '<b>' . $si['mark'] . '</b> ';
-                                        //$teh = '<b>' . $si['mark'] . '</b> ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
-                             echo $teh. '<br>';
+                            foreach ($sily_mchs[$row['id']] as $si) {
+                                $teh = '<b>' . $si['mark'] . '</b> ';
+                                //$teh = '<b>' . $si['mark'] . '</b> ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
+                                echo $teh . '<br>';
+                            }
+                        }
 
-                             }
-
-
-        }
-
-        ?>
+                        ?>
 
                     </td>
 
-        <!--                    <td>< $row['floor'] ?></td>-->
-                    <td>
-                        <?php
-                         /* id of rigs, where silymschs/innerservice are not selected */
-                        if(isset($result_icons['car']) && in_array($row['id'], $result_icons['car'])){
-                            ?>
-                        <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
-                        <?php
-                        }
-                        else{
-                            ?>
-                            <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank">
-                            <?php
-                        }
-                        ?>
-                        <i class="fa fa-lg fa-car" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Техника"></i></a>
-
-
-                        <?php
-                          /* id of rigs, where silymschs/innerservice are not selected */
-                        if(isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])){
-                            ?>
-                       <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
-                        <?php
-                        }
-                        else{
-                            ?>
-                            <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
-                            <?php
-                        }
-                        ?>
-                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
-
-
-                                                <?php
-                          /* id of rigs, where silymschs/innerservice are not selected */
-                        if(isset($result_icons['character']) && in_array($row['id'], $result_icons['character'])){
-                            ?>
-                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank" style="color: #c51a05 !important">
-                        <?php
-                        }
-                        else{
-                            ?>
-                           <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
-                            <?php
-                        }
-                        ?>
-                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
-
-
-
-
-
-
-                        <!--                        путевка-->
-                        <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >
-                            <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa fa-lg fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
-                            <ul class="dropdown-menu" id="waybill-menu">
+                <!--                    <td>< $row['floor'] ?></td>-->
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
         <?php
-        // if ($_SESSION['ulevel'] == 1) {
-
-        ?>
-
-                                <!--                          <li class="dropdown-submenu">
-                                                              <a tabindex="-1" href="<?= $baseUrl ?>/waybill/mail/<?= $row['id'] ?>" class="caret-spr_inf" target="_blank"><i class="fa fa-envelope-open-o" aria-hidden="true" style="color:blue"></i>Отправить на почту (pdf)</a>
-                                                        </li>-->
-
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf)</a>
-                                </li>
-
-                                 <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf + меры)</a>
-                                </li>
-        <?php
-        // }
-
-        ?>
-
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf)</a>
-                                </li>
-
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf + меры)</a>
-                                </li>
-
-                                <li class="dropdown-submenu">
-                                    <a tabindex="-1" href="<?= $baseUrl ?>/waybill/excel_download/<?= $row['id'] ?>" class="caret-spr_inf" ><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green;"></i>Скачать (excel)</a>
-                                </li>
-
-
-                            </ul>
-                        </ul>
-
-
-
-
-                    </td>
-                    <td><?= $row['reasonrig_name'] ?></td>
-        <?php
-        $mb_str_len = mb_strlen($row['inf_detail'], 'utf-8');
-        if ($mb_str_len >= 100) {// обрезать текст
-            $locex = mb_substr($row['inf_detail'], 0, 80, 'utf-8');
+        /* id of rigs, where silymschs/innerservice are not selected */
+        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car'])) {
 
             ?>
+                            <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
+                            <?php
+                        } else {
 
-                        <td  ><span id="sp<?= $i ?>"><?= $locex ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="Читать далее"><b>...</b></span></span>
-                            <p id="collapse<?= $i ?>" class="panel-collapse collapse">
-                        <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
-                            </p>
+                            ?>
+                                <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank">
+                                <?php
+                            }
 
-
-
-
-                        </td>
-                        <?php
-                    } else {// не обрезать
-
-                        ?>
-                        <td><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span> </td>
-            <?php
-        }
-
-        ?>
-                    <td><?= $time_loc ?></td>
-                    <td><?= $time_likv ?></td>
- <td><?= $row['auth_locorg'] ?></td>
-
-                    <td> <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Редактировать вызов"></i></button></a>
-
-                        <a href="<?= $baseUrl ?>/rig/delete/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Удалить вызов"></i></button></a>
-                    </td>
+                            ?>
+                                <i class="fa fa-lg fa-car" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Техника"></i></a>
 
 
+                            <?php
+                            /* id of rigs, where silymschs/innerservice are not selected */
+                            if (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
 
-                </tr>
-        <?php
-    }
-}
+                                ?>
+                                <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
+                                    <?php
+                                } else {
 
-?>
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
+                                        <?php
+                                    }
+
+                                    ?>
+                                    <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
+
+
+                                <?php
+                                /* id of rigs, where silymschs/innerservice are not selected */
+                                if (isset($result_icons['character']) && in_array($row['id'], $result_icons['character'])) {
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank" style="color: #c51a05 !important">
+                                        <?php
+                                    } else {
+
+                                        ?>
+                                        <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
+                                            <?php
+                                        }
+
+                                        ?>
+                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
 
 
 
-    </tbody>
-</table>
+
+
+
+                                    <!--                        путевка-->
+                                    <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >
+                                        <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa fa-lg fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
+                                        <ul class="dropdown-menu" id="waybill-menu">
+                                            <?php
+                                            // if ($_SESSION['ulevel'] == 1) {
+
+                                            ?>
+
+                                            <!--                          <li class="dropdown-submenu">
+                                                                          <a tabindex="-1" href="<?= $baseUrl ?>/waybill/mail/<?= $row['id'] ?>" class="caret-spr_inf" target="_blank"><i class="fa fa-envelope-open-o" aria-hidden="true" style="color:blue"></i>Отправить на почту (pdf)</a>
+                                                                    </li>-->
+
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf)</a>
+                                            </li>
+
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf + меры)</a>
+                                            </li>
+                                            <?php
+                                            // }
+
+                                            ?>
+
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf)</a>
+                                            </li>
+
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf + меры)</a>
+                                            </li>
+
+                                            <li class="dropdown-submenu">
+                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/excel_download/<?= $row['id'] ?>" class="caret-spr_inf" ><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green;"></i>Скачать (excel)</a>
+                                            </li>
+
+
+                                        </ul>
+                                    </ul>
+
+
+
+
+                                    </td>
+                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['reasonrig_name'] ?></td>
+                                    <?php
+                                    $mb_str_len = mb_strlen($row['inf_detail'], 'utf-8');
+                                    if ($mb_str_len >= 100) {// обрезать текст
+                                        $locex = mb_substr($row['inf_detail'], 0, 80, 'utf-8');
+
+                                        ?>
+
+                                        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"   ><span id="sp<?= $i ?>"><?= $locex ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="Читать далее"><b>...</b></span></span>
+                                            <p id="collapse<?= $i ?>" class="panel-collapse collapse">
+            <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
+                                            </p>
+
+
+
+
+                                        </td>
+                                        <?php
+                                    } else {// не обрезать
+
+                                        ?>
+                                        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span> </td>
+                                        <?php
+                                    }
+
+                                    ?>
+                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_loc ?></td>
+                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_likv ?></td>
+                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?></td>
+
+                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+                                        <?php
+                                        if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
+
+                                            ?>
+                                        <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>
+                                            <?php
+                                        } else {
+
+                                            ?>
+ <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
+                                            <a href="<?= $baseUrl ?>/rig/delete/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Удалить вызов"></i></button></a>
+                                                    <?php
+                                                }
+
+                                                ?>
+
+                                    </td>
+
+
+
+                                    </tr>
+                                    <?php
+                                }
+                            }
+
+                            ?>
+
+
+
+                            </tbody>
+                            </table>

@@ -85,7 +85,38 @@ class Model_Rigtable {
             $sql = $sql . $is_where;
         }
 
-        return R::getAll($sql, $param);
+        $res=R::getAll($sql, $param);
+
+        if (empty($res)) {
+
+            if ($_SESSION['id_level'] == 3) {//ГРОЧС
+                $new_res = $this->selectNeighborById($is_delete, $_SESSION['id_locorg'], $id_rig);
+
+                if (!empty($new_res)) {
+                    $rig_table = $this->selectAllByIdLocorgNeighbor($id_rig);
+                    return $rig_table;
+                } else {
+                    return $res;
+                }
+            }
+            elseif ($_SESSION['id_level'] == 2) {//umchs
+                $new_res = $this->selectNeighborByIdRegion($is_delete, $_SESSION['id_region'], $id_rig);
+
+                if (!empty($new_res)) {
+                    $rig_table = $this->selectAllByIdRegionNeighbor($id_rig);
+                    return $rig_table;
+                } else {
+                    return $res;
+                }
+            }
+            else{
+                 return $res;
+            }
+        } else {
+            return $res;
+        }
+
+        //return R::getAll($sql, $param);
     }
 
 
@@ -98,7 +129,7 @@ class Model_Rigtable {
     // дата, время, адрес объекта для вызова по id
     public function selectByIdRig($id_rig) {
 
-            return R::getAll('SELECT date_msg, time_msg, address, additional_field_address FROM journal.rigtable WHERE id = ? ',array($id_rig));
+            return R::getAll('SELECT date_msg, time_msg, address, additional_field_address,id_user FROM journal.rigtable WHERE id = ? ',array($id_rig));
 
     }
 
@@ -183,7 +214,8 @@ class Model_Rigtable {
             $sql = $sql . $date_filter;
         }
 
-//            print_r($a);
+//            print_r($sql);
+//            print_r($param);
 //            exit();
         return R::getAll($sql, $param);
     }
@@ -226,6 +258,7 @@ class Model_Rigtable {
         $x = $_POST;
         $y = array();
         $error = array();
+
 
         /*         * * проверка на вшивость дата1 ** */
         if (isset($x['date_start']) && !empty($x['date_start'])) {
@@ -273,6 +306,7 @@ class Model_Rigtable {
         }
 
         $y['error'] = $error;
+
 
 
         return $y;
@@ -394,6 +428,96 @@ class Model_Rigtable {
         return $this->getRigTable($sql, $param);
     }
 
+
+
+
+   public function selectIdRigByIdGrochs($is_delete,$id_grochs)
+    {
+
+        $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE grochs_of_teh = ? and is_delete = ? and id_locorg_user <> ?  ';
+        $param = array($id_grochs, $is_delete,$id_grochs);
+
+        $result= $this->getRigTable($sql, $param);
+       // print_r($result);exit();
+        $new_result = array();
+        foreach ($result as $row) {
+            $new_result [] = $row['id'];
+        }
+
+        return $new_result;
+    }
+
+
+        public function selectAllByIdLocorgNeighbor($id_rigs)
+    {
+
+        //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
+
+        if (!empty($id_rigs)) {
+
+            if(is_array($id_rigs))
+            $sql = 'SELECT r.*, 1 AS is_neighbor FROM journal.rigtable AS r WHERE r.id IN(' . implode(',', $id_rigs) . ')';
+            else
+                $sql = 'SELECT r.*, 1 AS is_neighbor FROM journal.rigtable AS r WHERE r.id = '.$id_rigs;
+
+            return R::getAll($sql);
+        } else {
+            return array();
+        }
+    }
+
+
+       public function selectNeighborById($is_delete, $id_grochs, $id_rig)
+    {
+
+        $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE grochs_of_teh = ? and is_delete = ? and id_locorg_user <> ? and id = ?  ';
+        $param = array($id_grochs, $is_delete, $id_grochs, $id_rig);
+
+        return R::getAll($sql, $param);
+    }
+
+       public function selectIdRigByIdRegion($is_delete,$id_region)
+    {
+
+        $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE region_of_teh = ? and is_delete = ? and id_region_user <> ?  ';
+        $param = array($id_region, $is_delete,$id_region);
+
+        $result= $this->getRigTable($sql, $param);
+       // print_r($result);exit();
+        $new_result = array();
+        foreach ($result as $row) {
+            $new_result [] = $row['id'];
+        }
+
+        return $new_result;
+    }
+
+            public function selectAllByIdRegionNeighbor($id_rigs)
+    {
+
+        //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
+
+        if (!empty($id_rigs)) {
+
+            if(is_array($id_rigs))
+            $sql = 'SELECT r.*, 1 AS is_neighbor FROM journal.rigtable AS r WHERE r.id IN(' . implode(',', $id_rigs) . ')';
+            else
+                $sql = 'SELECT r.*, 1 AS is_neighbor FROM journal.rigtable AS r WHERE r.id = '.$id_rigs;
+
+            return R::getAll($sql);
+        } else {
+            return array();
+        }
+    }
+
+           public function selectNeighborByIdRegion($is_delete, $id_region, $id_rig)
+    {
+
+        $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE region_of_teh = ? and is_delete = ? and id_region_user <> ? and id = ?  ';
+        $param = array($id_region, $is_delete, $id_region, $id_rig);
+
+        return R::getAll($sql, $param);
+    }
 }
 
 ?>

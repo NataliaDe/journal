@@ -1,11 +1,12 @@
 <!--выгрузка данных в переменные-->
 <?php
+
 //print_r($time_character);
 if(isset($time_character) && !empty($time_character)){
 
         $time_loc=$time_character['time_loc'];
         $time_likv=$time_character['time_likv'];
-        
+
         $is_close=$time_character['is_close'];
         $is_likv_before_arrival=$time_character['is_likv_before_arrival'];
 
@@ -14,6 +15,7 @@ else{
     $time_loc=NULL;
     $time_likv=NULL;
 }
+
 ?>
 <!-- КОНЕЦ выгрузка данных в переменные-->
 <br>
@@ -32,7 +34,7 @@ else{
                               if (isset($time_loc) && $time_loc != '0000-00-00 00:00:00' && $time_loc!=NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="time_loc"  value="<?= $time_loc ?>"/>
-                        
+
                         <?php
                               }
                               else{
@@ -41,7 +43,7 @@ else{
                         <?php
                               }
                         ?>
-                    
+
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
@@ -54,7 +56,7 @@ else{
                               if (isset($time_likv) && $time_likv != '0000-00-00 00:00:00' && $time_likv!=NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="time_likv"  value="<?= $time_likv ?>"/>
-                        
+
                         <?php
                               }
                               else{
@@ -63,13 +65,13 @@ else{
                         <?php
                               }
                         ?>
-                      
+
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
             </div>
-            
-         
+
+
             <div class="col-lg-2">
                    <br>
                 <div class="form-group">
@@ -77,11 +79,11 @@ else{
                       <?php
                               if (isset($is_close) && $is_close == 1 ) {
                                   ?>
-                            <input id="checkbox0" type="checkbox" name="is_close" value="1" checked="" >   
+                            <input id="checkbox0" type="checkbox" name="is_close" value="1" checked="" >
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox0" type="checkbox" name="is_close" value="1" >                  
+                            <input id="checkbox0" type="checkbox" name="is_close" value="1" >
                             <?php
                         }
                         ?>
@@ -91,9 +93,9 @@ else{
                     </div>
                 </div>
             </div>
-            
-                        
-         
+
+
+
             <div class="col-lg-2">
                    <br>
                 <div class="form-group">
@@ -101,11 +103,11 @@ else{
                       <?php
                               if (isset($is_likv_before_arrival) && $is_likv_before_arrival == 1) {
                                   ?>
-                            <input id="checkbox01" type="checkbox" name="is_likv_before_arrival" value="1" checked="" >   
+                            <input id="checkbox01" type="checkbox" name="is_likv_before_arrival" value="1" checked="" >
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox01" type="checkbox" name="is_likv_before_arrival" value="1" >                  
+                            <input id="checkbox01" type="checkbox" name="is_likv_before_arrival" value="1" >
                             <?php
                         }
                         ?>
@@ -115,18 +117,28 @@ else{
                     </div>
                 </div>
             </div>
-            
-<!--            <div class="col-lg-2"></div>-->
-            
-        <div class="col-lg-2">
-            
-<?php
 
- include dirname(dirname(__FILE__)) . '/tabsRig/buttonSaveRig.php';
-?>
-            
+<!--            <div class="col-lg-2"></div>-->
+
+
+<?php
+if ($id_user_rig == $_SESSION['id_user']) {
+
+    ?>
+    <div class="col-lg-2">
+        <?php
+        include dirname(dirname(__FILE__)) . '/tabsRig/buttonSaveRig.php';
+
+        ?>
     </div>
-            
+    <?php
+} else {
+
+    include dirname(dirname(__FILE__)) . '/tabsRig/infoMsg.php';
+}
+
+?>
+
         </div>
 
 

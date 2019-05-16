@@ -52,7 +52,7 @@ $config_2['db'] = array(
     'host' => 'localhost',
     'user' => 'root',
     'pass' => '',
-    'dbname' => 'archive2018'
+    'dbname' => 'jarchive'
 
 );
 $config_2['db']['dsn'] = sprintf(

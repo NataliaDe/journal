@@ -100,7 +100,7 @@
                 #inptclassifForm1{
             width: 140px;
         }
-                        #inptclassifForm2,#inptclassifForm_actionwaybill3,#inptclassifForm_actionwaybill4, #inptclassifForm_actionwaybill5{
+                        #inptclassifForm2,#inptclassifForm_actionwaybill2,#inptclassifForm_actionwaybill5, #inptclassifForm_actionwaybill6{
             width: 100px;
         }
          #classifTable_wrapper,#classifTableActionWaybill_wrapper{
@@ -109,8 +109,11 @@
         }
 
 
-                                #inptclassifForm_actionwaybill2{
+                                #inptclassifForm_actionwaybill3{
             width: 300px;
+        }
+                                        #inptclassifForm_actionwaybill4{
+            width: 100px;
         }
                #inptclassifForm_actionwaybill1{
             width: 90px;
@@ -339,5 +342,18 @@ top:2px;
 
 .cke_chrome {
 //width: 50% !important;
+}
+
+
+.red-border-input{
+     border: solid 2px #e61010;
+}
+
+#logslogin_tbl_wrapper{
+    width: 65%;
+}
+
+#logsaction_tbl_wrapper{
+    width: 65%;
 }
 

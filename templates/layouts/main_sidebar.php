@@ -237,8 +237,9 @@
                 <ul class="treeview-menu">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
 <!--                    <li><a href="< $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> Диаграмма</a></li>-->
-                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет3</a></li>
-                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>
+                    <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i>Диаграмма выездов</a></li>
+                    <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i>Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</a></li>
+<!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
                 </ul>
             </li>
 
@@ -246,13 +247,28 @@
 <?php
 if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == 2) {
     ?>
-                <li>
-                    <a href="<?= $baseUrl ?>/logs" target="_blank">
+<!--                <li>
+                    <a href="< $baseUrl ?>/logs" target="_blank">
                         <i class="fa fa-book" aria-hidden="true"></i>
                         <span>Логи</span>
 
                     </a>
-                </li>
+                </li>-->
+
+
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-book" aria-hidden="true"></i>
+            <span>Логи</span>
+            <i class="fa fa-angle-left pull-right"></i>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="<?= $baseUrl ?>/logs" target="_blank"><i class="fa fa-chevron-circle-down"></i> json</a></li>
+            <li><a href="<?= $baseUrl ?>/logs/login" target="_blank"><i class="fa fa-chevron-circle-down"></i>Авторизация</a></li>
+            <li><a href="<?= $baseUrl ?>/logs/actions" target="_blank"><i class="fa fa-chevron-circle-down"></i>Действия</a></li>
+    <!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
+        </ul>
+    </li>
 
                    <li>
                     <a href="<?= $baseUrl ?>/save_to_json" target="_blank">

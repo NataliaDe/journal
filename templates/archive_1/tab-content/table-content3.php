@@ -130,8 +130,8 @@ $t_arrival=$each_time[2];
 </table>
 
 <br>
-	<a href="<?=$link_excel?>"><button class="submit" type="submit" >Экспорт в Excel</button></a>
-
+<a href="<?=$link_excel?>" id="link_to_excel"><button class="submit" type="submit" >Экспорт в Excel</button></a>
+<input type="hidden" value="<?= $link_excel_hidden ?>" id="prev_link_to_excel">
 
         <script>
 
@@ -139,7 +139,8 @@ $t_arrival=$each_time[2];
     $(function () {
 
                 $('#archiveTable3').DataTable({
-            "pageLength": 50,
+         //   "pageLength": 50,
+          "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
              "order": [[ 0, "asc" ]],
             language: {
                 "processing": "Подождите...",
@@ -183,7 +184,7 @@ $t_arrival=$each_time[2];
             if (i == 11 || i==15 ) {
                 //выпадающий список
                 var y = 'rigForm';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"  onChange="changeLinkExcel();"><option value=""></option></select>')
                         .appendTo($(this).empty())
                         .on('change', function () {
 
@@ -206,7 +207,7 @@ $t_arrival=$each_time[2];
                 var x = $('#archiveTable3 tfoot th').index($(this));
                 var y = 'archiveTable3';
                 //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск" onkeyup="keyupField();"   />');
                 // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
             }
 
@@ -221,5 +222,89 @@ $t_arrival=$each_time[2];
     });
 
           });
+
+
+
+function changeLinkExcel(){
+
+        var id_rig=$('#inptarchiveTable31').val();
+        var date_msg=$('#inptarchiveTable32').val();
+        var time_msg=$('#inptarchiveTable33').val();
+        var local=$('#inptarchiveTable34').val();
+        var addr=$('#inptarchiveTable35').val();
+
+       // var reason=$('#selrigForm6').val();
+       // var work_view=$('#selrigForm7').val();
+
+      //  var detail_inf=$('#inptarchiveTable18').val();
+      //  var people=$('#inptarchiveTable19').val();
+       // var time_loc=$('#inptarchiveTable29').val();
+       // var time_likv=$('#inptarchiveTable210').val();
+
+      //  var is_likv_before_arrival=$('#selrigForm11').val();
+
+     //alert(reason);
+      //alert(detail_inf);
+
+
+         if(id_rig === '' || id_rig === undefined)
+            id_rig='no';
+         if(date_msg === '' || date_msg === undefined)
+            date_msg='no';
+         if(time_msg === '' || time_msg === undefined)
+            time_msg='no';
+         if(local === '' || local === undefined)
+            local='no';
+         if(addr === '' || addr === undefined)
+            addr='no';
+
+        /* if(reason === '' || reason === undefined)
+            reason='no';
+         if(work_view === '' || work_view === undefined)
+            work_view='no';
+
+
+         if(detail_inf === '' || detail_inf === undefined)
+            detail_inf='no';
+         if(people === '' || people === undefined)
+            people='no';*/
+//         if(time_loc === '' || time_loc === undefined)
+//            time_loc='no';
+//         if(time_likv === '' || time_likv === undefined)
+//            time_likv='no';
+//         if(is_likv_before_arrival === '' || is_likv_before_arrival === undefined)
+//            is_likv_before_arrival='no';
+
+
+
+
+      //var link_to_excel=id_rig+'/'+date_msg+'/'+time_msg+'/'+local+'/'+addr+'/'+reason+'/'+work_view+'/'+detail_inf+'/'+people+'/'+time_loc+'/'+time_likv;
+      var link_to_excel=id_rig+'/'+date_msg+'/'+time_msg+'/'+local+'/'+addr;
+      var prev_link_to_excel=$('#prev_link_to_excel').val();
+
+      var new_link_to_excel=prev_link_to_excel+'/'+link_to_excel;
+    //  alert(new_link_to_excel);
+
+$('#link_to_excel').attr("href",new_link_to_excel);
+
+    }
+
+
+    function keyupField(){
+         // Allow controls such as backspace, tab etc.
+ //  var arr = [8,9,35,36,37,38,39,40,45,46,47,48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102,103,104,105,186,188,190,219,221,222];
+  var arr = [8,9,35,36,37,38,39,40,45,46,47,48,49,50,51,52,53,54,55,56,57,97,98,99,100,101,102,103,104,105,186,188,190,219,221,222,111,187,189,191,220,226];
+
+  // Allow letters
+  for(var i = 65; i <= 90; i++){
+    arr.push(i);
+  }
+//alert(event.which);
+                    if(jQuery.inArray(event.which, arr) !== -1){
+
+//alert('aaa');
+changeLinkExcel();
+  }
+    }
         </script>
 

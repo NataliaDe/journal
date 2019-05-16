@@ -1,5 +1,6 @@
 <?php
-//print_r($people);
+//print_r($rig);
+//echo $_SESSION['id_user'];
 if (isset($rig) && !empty($rig)) {
 
     $time_msg = $rig['time_msg'];
@@ -28,6 +29,7 @@ if (isset($rig) && !empty($rig)) {
     $id_statusrig = $rig['id_statusrig'];
     $is_opg = $rig['is_opg'];
     $opg_text = $rig['opg_text'];
+    $id_user=$rig['id_user'];
 
     /* ------- выбор вида нас.п. -------- */
 	if(isset($locality) && !empty($locality)){
@@ -77,6 +79,7 @@ if (isset($rig) && !empty($rig)) {
     $id_statusrig = 0;
     $is_opg = 0;
     $opg_text = NULL;
+    $id_user=$_SESSION['id_user'];
 
 
     /* ------- выбор вида нас.п. -------- */
@@ -159,13 +162,26 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-
-
     <div class="col-lg-2">
         <?php
-        include dirname(__FILE__) . '/buttonSaveRig.php';
+        if ($id_user == $_SESSION['id_user']) {
+
+            ?>
+
+            <?php
+            include dirname(__FILE__) . '/buttonSaveRig.php';
+
+            ?>
+
+            <?php
+        } else {
+
+          include dirname(__FILE__) . '/infoMsg.php';
+        }
+
         ?>
     </div>
+
 
 
 </div>
@@ -523,7 +539,7 @@ if ($id != 0) {//редактирование - заполнить  по умо�
     <div class="col-lg-2">
         <div class="form-group">
             <label for="object">Объект</label>
-            <textarea class="form-control" rows="2" cols="22" placeholder="описание объекта" name="object"><?= $object ?></textarea>
+            <textarea class="form-control" rows="2" cols="22" placeholder="описание объекта" name="object" id="object_id"><?= $object ?></textarea>
         </div>
     </div>
 
@@ -560,6 +576,8 @@ foreach ($officebelong as $row) {
 
 
 </div>
+
+
 
 
 

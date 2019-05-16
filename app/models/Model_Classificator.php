@@ -27,8 +27,9 @@ class Model_Classificator  {
     public function selectAll() {
 
         if ($this->bean == 'actionwaybill') {
-            return R::getAll('SELECT a.id, r.name as reason_name, a.description,a.is_off, a.ord,a.last_update, r.id as reason_id from journal.actionwaybill as a '
-                . 'left join journal.reasonrig as r on a.id_reasonrig=r.id WHERE r.is_delete =?  ORDER BY r.name ASC', array(0));
+            return R::getAll('SELECT a.id, r.name as reason_name, a.description,a.is_off, a.ord,a.last_update, r.id as reason_id,w.name as work_name,a.id_work_view from journal.actionwaybill as a '
+                . 'left join journal.reasonrig as r on a.id_reasonrig=r.id '
+                . 'left join journal.workview as w on a.id_work_view=w.id WHERE r.is_delete =?  ORDER BY r.name ASC', array(0));
         } else{
               return R::getAll('SELECT * FROM journal.'.  $this->bean.' WHERE is_delete =?  ORDER BY name ASC',array(0));
         }

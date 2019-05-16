@@ -5,6 +5,7 @@
 //echo $_SERVER['REQUEST_URI'];
 ?>
 <br>
+<center><b>В стадии разработки. Для нужд ОВПО РЦУРЧС.</b></center>
 
 <br><br>
 
@@ -38,7 +39,7 @@ if (isset($msg) && !empty($msg)) {
 
                         $end_d = new DateTime($ad['date_end']);
                         $end = $end_d->Format('d.m.Y');
-                        
+
                         if (isset($_POST['archive_date']) && in_array($ay['id'], $_POST['archive_date'])) {
 
                             printf("<p><option value='%s' selected ><label>с %s по %s</label></option></p>", $ad['id'], $start, $end);
@@ -59,7 +60,7 @@ if (isset($msg) && !empty($msg)) {
                 <label for="year">Год</label>
                 <select class="form-control" name="archive_year" id="id_archive_year" onchange="javascript:yearOrDate();"  >
 
-                    <option value="">Не выбран</option>              
+                    <option value="">Не выбран</option>
                     <?php
                     foreach ($archive_year as $ay) {
                         if (isset($_POST['archive_year']) && $ay['id'] == $_POST['archive_year']) {
@@ -73,7 +74,7 @@ if (isset($msg) && !empty($msg)) {
                 </select>
             </div>
         </div>
-    </div>  
+    </div>
 
 
 
@@ -84,7 +85,7 @@ if (isset($msg) && !empty($msg)) {
                 <label for="id_region">Область</label>
                 <select class="form-control" name="id_region" id="id_region"  >
 
-                    <option value="">все</option>              
+                    <option value="">все</option>
                     <?php
                     foreach ($region as $re) {
                         if (isset($_POST['id_region']) && $re['id'] == $_POST['id_region']) {

@@ -15,17 +15,35 @@
             <input type="text" class="form-control"  placeholder="" name="position"  value="<?= $position ?>">
 
         </div>
-    </div> 
-    
+    </div>
+
     <div class="col-lg-5"></div>
     <div class="col-lg-2">
-       
-    <div class="col-lg-2">
-<?php
 
- include dirname(__FILE__) . '/buttonSaveRig.php';
+
+
+<?php
+ //include dirname(__FILE__) . '/buttonSaveRig.php';
 ?>
-    </div>
+                <?php
+        if ($id_user == $_SESSION['id_user']) {
+
+            ?>
+            <div class="col-lg-2">
+                <?php
+                include dirname(__FILE__) . '/buttonSaveRig.php';
+
+                ?>
+            </div>
+            <?php
+        } else {
+
+
+            include dirname(__FILE__) . '/infoMsg.php';
+        }
+
+        ?>
+
     </div>
 
 </div>
@@ -95,7 +113,7 @@
 //                    elseif($row['is_delete'] != 1){
 //                          printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
 //                    }
-//                      
+//
 //
 //                }
                 ?>
@@ -119,11 +137,11 @@ $id_statusrig=0;//не выбрано
                       <?php
                                     if (isset($is_opg) && $is_opg == 1) {
                                   ?>
-                            <input id="checkbox2" type="checkbox" name="is_opg" value="1" checked="" onchange=" setOpgText(0);" >   
+                            <input id="checkbox2" type="checkbox" name="is_opg" value="1" checked="" onchange=" setOpgText(0);" >
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox2" type="checkbox" name="is_opg" value="1" onchange=" setOpgText(1);" >                  
+                            <input id="checkbox2" type="checkbox" name="is_opg" value="1" onchange=" setOpgText(1);" >
                             <?php
                         }
                         ?>
@@ -133,7 +151,7 @@ $id_statusrig=0;//не выбрано
                     </div>
                 </div>
             </div>
-    
+
     <div class="col-lg-3">
         <div class="form-group">
 
@@ -149,12 +167,12 @@ $id_statusrig=0;//не выбрано
                             <?php
                         }
                         ?>
-            
+
         </div>
     </div>
-    
-             
-    
+
+
+
 </div>
 
 <hr>

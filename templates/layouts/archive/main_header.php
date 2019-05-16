@@ -9,31 +9,31 @@
         <span class="logo-lg">Архив</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
- 
+
     <nav class="navbar navbar-static-top" role="navigation" style="background-color: #f39c12">
         <!-- Sidebar toggle button-->
 
         <a href="#" style="background-color: #f39c12" class="sidebar-toggle" data-toggle="offcanvas" role="button"  data-placement="left" title="Свернуть/развернуть меню" onclick="none_title_for_ivanov();">
-           
-            
+
+
         </a>
-        
-    
+
+
         <a href="#" class="logo" style="width: 270px; background-color: #e08a02" id="title_for_ivanov"  >
-        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px">1.2 Архив</span></span>
+        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px">1.0 Архив</span></span>
     </a>
 
-      
+
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-                
+
                      <!-- справка-->
                 <li class="dropdown tasks-menu">
                     <a href="<?= $baseUrl ?>/" class="item-menu" target="_blank"><span>Журнал ЦОУ</span></a>
                 </li>
-                
-                
+
+
                 <!-- справка-->
                 <li class="dropdown tasks-menu">
                     <a href="#" class="item-menu"><span  data-toggle="modal" data-target="#myModal" >Справка</span></a>

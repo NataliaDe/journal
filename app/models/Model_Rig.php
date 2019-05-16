@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `ss.regions` 
+ * Object model mapping for relational table `ss.regions`
  */
 
 namespace App\MODELS;
@@ -27,7 +27,7 @@ class Model_Rig {
         $x = $_POST;
         $y = array();
         $error=array();
-        
+
                             /*             * * проверка на вшивость Время сообщения  ** */
             if (isset($x['time_msg']) && !empty($x['time_msg'])) {
                 if ($this->isDateTimeValid($x['time_msg'], "Y-m-d H:i:s")) {
@@ -81,9 +81,10 @@ class Model_Rig {
         if ($this->id == 0) {//insert
             $array['id_locorg'] = $_SESSION['id_locorg'];
             $array['date_insert'] = $this->setDateInsert();
+             $array['id_user']=$_SESSION['id_user'];
         }
         $array['last_update'] = $this->setLastUpdate();
-        $array['id_user']=$_SESSION['id_user'];
+
         $rig->import($array);
 
         $new_id = R::store($rig);
@@ -116,7 +117,7 @@ class Model_Rig {
         $x = $_POST;
         $y = array();
         $error=array();
-        
+
         if (isset($x['is_close']) && $x['is_close'] == 1) {//стоит отметка не учитывать даты
             $y['time_loc'] = '0000-00-00 00:00:00';
             $y['time_likv'] = '0000-00-00 00:00:00';
@@ -155,7 +156,7 @@ class Model_Rig {
                 $y['time_loc'] = NULL;
             }
             /*             * * END проверка на вшивость Время локализации  ** */
-            
+
                                 /*             * * проверка на вшивость Время ликвид  ** */
             if (isset($x['time_likv']) && !empty($x['time_likv'])) {
                 if ($this->isDateTimeValid($x['time_likv'], "Y-m-d H:i:s")) {
@@ -169,8 +170,8 @@ class Model_Rig {
                  $y['is_close_by_time_likv'] = 0;//выезд не закрыт
             }
             /*             * * END проверка на вшивость Время ликвид  ** */
-        
-        
+
+
         //время ликв д б больше вр лакализации
         if( $y['time_loc']!= NULL && $y['time_likv'] != NULL && $y['time_loc'] >$y['time_likv'] ){
              $error['time_loc_likv'] = ' Время ликвидации не может превышать время локализации ';
@@ -181,8 +182,8 @@ class Model_Rig {
          $y['error'] = $error;
         return $y;
     }
-    
-    
+
+
     //проверка на формат дата-время
     public function isDateTimeValid($field,$format) {
                 $t_exit = \DateTime::createFromFormat($format, $field);
@@ -190,9 +191,9 @@ class Model_Rig {
                     return true;
                 else
                     return false;
-         
+
     }
-    
+
 //save время лок, ликв
     public function saveTimeCharacter($array, $id) {
          unset($array['error']);//очистить элемент с ошибками
@@ -202,7 +203,7 @@ class Model_Rig {
         $rig->import($array);
         R::store($rig);
     }
-    
+
 
 
 }

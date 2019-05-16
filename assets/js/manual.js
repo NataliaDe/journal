@@ -419,6 +419,65 @@ $('#destinationForm')
         });
 
 
+                $('#logslogin_tbl').DataTable({
+            "pageLength": 50,
+             "order": [[ 0, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+
+                $('#logsaction_tbl').DataTable({
+            "pageLength": 50,
+             "order": [[ 0, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+
+
     });
 
 
@@ -553,7 +612,7 @@ $(document).ready(function () {
  /*---------- table classif of action waybill ------------*/
     $('#classifTableActionWaybill tfoot th').each(function (i) {
         var table = $('#classifTableActionWaybill').DataTable();
-        if (i !== 6 && i != 7) {
+        if (i !== 7 && i != 8) {
 
 
                         if (i == 1 ) {
@@ -652,6 +711,53 @@ $(document).ready(function () {
 
     /*---------- END таблица с logs------------*/
 
+       /*---------- таблица с logs login ------------*/
+    $('#logslogin_tbl tfoot th').each(function (i) {
+        var table = $('#logslogin_tbl').DataTable();
+
+                var title = $('#logslogin_tbl tfoot th').eq($(this).index()).text();
+                var x = $('#logslogin_tbl tfoot th').index($(this));
+                var y = 'logsForm';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+
+
+    });
+    $("#logslogin_tbl tfoot input").on('keyup change', function () {
+        var table = $('#logslogin_tbl').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END таблица с logs login------------*/
+
+
+           /*---------- таблица с logs action ------------*/
+    $('#logsaction_tbl tfoot th').each(function (i) {
+        var table = $('#logsaction_tbl').DataTable();
+
+                var title = $('#logsaction_tbl tfoot th').eq($(this).index()).text();
+                var x = $('#logsaction_tbl tfoot th').index($(this));
+                var y = 'logsForm';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+
+
+    });
+    $("#logsaction_tbl tfoot input").on('keyup change', function () {
+        var table = $('#logsaction_tbl').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END таблица с logs action ------------*/
+
 
 });
 
@@ -692,7 +798,7 @@ jQuery("#id_pasp"+i).chained("#id_locorg"+i); // зависимость ПАСЧ
 
 
 
-    /**** поле дата/время  разрешено только . и : *****/
+    /*** поле дата/время  разрешено только . и : *****/
 $('.datetime').keypress(function (key) {
     if ((key.charCode < 48 && key.charCode !== 46) || (key.charCode > 57 && key.charCode !== 58))
         return false;
@@ -1522,9 +1628,10 @@ $(document).on('click', '#btn_del_action', function (e) {
    var region=$('select[name="id_region"]').val();
    var local=$('input[name="id_local"]').val();
 
+   var max_date=$('select[name="archive_year"]').find(':selected').attr('data-mad');
 
 
-   if(date_start && date_end && archive_year){
+   if(date_start && date_end && archive_year && (date_start !== date_end) && (date_start < max_date) ){
 
 
       $('#ajax-content').fadeOut("slow");
@@ -1566,6 +1673,12 @@ $('#preload-get-archive-data').css('display','none');
     else if(archive_year == ''){
           toastr.error('Выберите год', 'Ошибка!', {timeOut: 5000});
     }
+        else if(date_start === date_end){
+          toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 5000});
+    }
+            else if(date_start >= max_date){
+          toastr.error('В архиве нет данных, начиная с '+max_date, 'Ошибка!', {timeOut: 5000});
+    }
    }
 
         }
@@ -1573,3 +1686,109 @@ $('#preload-get-archive-data').css('display','none');
     });
 
 
+/* processing rig tab. change reasonrig */
+$('#rigForm #id_reasonrig').on('change', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var object_id = $('#rigForm #object_id').val();
+    var coord_lat = $('#rigForm #coord_lat').val();
+      var coord_lon = $('#rigForm #coord_lon').val();
+    //$('#rigForm #object_id').addClass('red-border-input');
+ var coord_lat_length = $('#rigForm #coord_lat').val().length;
+ //alert(coord_lat);
+    if (reason == 34) {
+
+        if (object_id == '') {
+             $('#rigForm #object_id').addClass('red-border-input');
+        }
+
+        //alert(reason);
+         if (coord_lat == '') {
+             $('#rigForm #coord_lat').addClass('red-border-input');
+         }
+
+  if (coord_lon == '') {
+        $('#rigForm #coord_lon').addClass('red-border-input');
+    }
+    } else {
+        $('#rigForm #object_id').removeClass('red-border-input');
+        $('#rigForm #coord_lat').removeClass('red-border-input');
+        $('#rigForm #coord_lon').removeClass('red-border-input');
+        //alert('jkl');
+    }
+
+});
+
+
+$('#rigForm #object_id').on('keyup', function (e) {
+
+ var reason = $('#rigForm #id_reasonrig').val();
+    var object_id = $('#rigForm #object_id').val();
+
+    if (object_id == '' && reason == 34) {
+        $('#rigForm #object_id').addClass('red-border-input');
+    } else {
+        $('#rigForm #object_id').removeClass('red-border-input');
+    }
+});
+
+
+//$('#rigForm #coord_lat').on('keyup', function (e) {
+//
+// var reason = $('#rigForm #id_reasonrig').val();
+//    var coord_lat = $('#rigForm #coord_lat').val();
+//
+// var coord_lat_length = $('#rigForm #coord_lat').val().length;
+//  //  alert(coord_lat_length);
+//
+//    if (coord_lat == '' && reason == 34) {
+//        $('#rigForm #coord_lat').addClass('red-border-input');
+//    } else {
+//        $('#rigForm #coord_lat').removeClass('red-border-input');
+//    }
+//});
+
+//$('#rigForm #coord_lon').on('keyup', function (e) {
+//
+// var reason = $('#rigForm #id_reasonrig').val();
+//    var coord_lon = $('#rigForm #coord_lon').val();
+//
+//    if (coord_lon == '' && reason == 34) {
+//        $('#rigForm #coord_lon').addClass('red-border-input');
+//    } else {
+//        $('#rigForm #coord_lon').removeClass('red-border-input');
+//    }
+//});
+
+
+$('#rigForm #coord_lat').on('blur', function (e) {
+
+ var reason = $('#rigForm #id_reasonrig').val();
+    var coord_lat = $('#rigForm #coord_lat').val();
+
+ var coord_lat_length = $('#rigForm #coord_lat').val().length;
+  //  alert(coord_lat_length);
+
+    if (coord_lat == '' && reason == 34) {
+        $('#rigForm #coord_lat').addClass('red-border-input');
+    } else {
+        $('#rigForm #coord_lat').removeClass('red-border-input');
+    }
+});
+
+$('#rigForm #coord_lon').on('blur', function (e) {
+
+ var reason = $('#rigForm #id_reasonrig').val();
+    var coord_lon = $('#rigForm #coord_lon').val();
+
+
+  //  alert(coord_lat_length);
+
+    if (coord_lon == '' && reason == 34) {
+        $('#rigForm #coord_lon').addClass('red-border-input');
+    } else {
+        $('#rigForm #coord_lon').removeClass('red-border-input');
+    }
+});
+
+/* END processing rig tab. change reasonrig */

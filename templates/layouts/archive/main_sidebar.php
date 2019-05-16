@@ -28,13 +28,30 @@
         <ul class="sidebar-menu">
             <li class="header">Главное меню</li>
 
-            <li>
-                <a href="<?= $baseUrl ?>/archive" target="_blank">
-                    <i class="fa fa-search"></i><span>Поиск</span> 
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-file-archive-o" aria-hidden="true"></i>
+                    <span>Навигация</span>
+
+
                 </a>
+                <ul class="treeview-menu">
+
+
+                    <li>
+                        <a href="<?= $baseUrl ?>/archive_1" target="_blank">
+                            <i class="fa fa-file"></i><span>Архив</span>
+                        </a>
+                    </li>
+                                        <li>
+                        <a href="<?= $baseUrl ?>/archive" target="_blank">
+                            <i class="fa fa-file"></i><span>Архив (json)<br>для ОВПО</span>
+                        </a>
+                    </li>
+
+
+                </ul>
             </li>
-
-
 
 
 
