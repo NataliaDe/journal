@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `Informing` 
+ * Object model mapping for relational table `Informing`
  */
 
 namespace App\MODELS;
@@ -12,13 +12,13 @@ class Model_Informing {
 
 //    public function selectAll() {
 //           return R::getAll('SELECT * FROM journal.service ORDER BY name ASC');
-//       
+//
 //    }
     public function setIdRig($id_rig) {
         $this->id_rig = $id_rig;
     }
 
-    public function getPOSTData() {
+      public function getPOSTData() {
         $x = $_POST['informing'];
         $y = array();
 		$error=array();
@@ -32,13 +32,15 @@ class Model_Informing {
                 $y[$key]['id'] = intval($x [$key]['id']); // id of informing table - int
 
                 $y[$key]['id_destination'] = intval($x [$key]['id_destination']); // id адресата - int
-                
+
                 $y [$key]['destination_text']=$x [$key]['destination_text'];
+
+				$y[$key]['id_level_created'] = $_SESSION['id_level'];
 
                 /*                 * * проверка на вшивость Время сообщения  ** */
                 if (isset($x [$key]['time_msg']) && !empty($x [$key]['time_msg'])) {
-                    if ($this->isDateTimeValid($x [$key]['time_msg'], "Y-m-d H:i:s")) {
-                        $y[$key]['time_msg'] = $x [$key]['time_msg'];
+                    if ($this->isDateTimeValid($x [$key]['time_msg'], "Y-m-d H:i") == true) {
+                        $y[$key]['time_msg'] = $x [$key]['time_msg'].':00';
                     } else {
                         $error['time_msg'] = ' Поле "Время сообщения о ЧС" должно быть датой ';
                     }
@@ -49,8 +51,8 @@ class Model_Informing {
 
                 /*                 * * проверка на вшивость Время выезда  ** */
                 if (isset($x [$key]['time_exit']) && !empty($x [$key]['time_exit'])) {
-                    if ($this->isDateTimeValid($x [$key]['time_exit'], "Y-m-d H:i:s")) {
-                        $y[$key]['time_exit'] = $x [$key]['time_exit'];
+                    if ($this->isDateTimeValid($x [$key]['time_exit'], "Y-m-d H:i") == true) {
+                        $y[$key]['time_exit'] = $x [$key]['time_exit'].':00';
                     } else {
                         $error['time_exit'] = ' Поле "Время выезда" должно быть датой ';
                     }
@@ -61,8 +63,8 @@ class Model_Informing {
 
                 /*                 * * проверка на вшивость Время прибытия  ** */
                 if (isset($x [$key]['time_arrival']) && !empty($x [$key]['time_arrival'])) {
-                    if ($this->isDateTimeValid($x [$key]['time_arrival'], "Y-m-d H:i:s")) {
-                        $y[$key]['time_arrival'] = $x [$key]['time_arrival'];
+                    if ($this->isDateTimeValid($x [$key]['time_arrival'], "Y-m-d H:i") == true) {
+                        $y[$key]['time_arrival'] = $x [$key]['time_arrival'].':00';
                     } else {
                         $error['time_arrival'] = ' Поле "Время прибытия" должно быть датой ';
                     }
@@ -72,19 +74,19 @@ class Model_Informing {
                 /*                 * * END проверка на вшивость Время прибытия  ** */
 
                 //Время сообщения о ЧС не может превышать время выезда
-                if($y[$key]['time_msg'] != NULL && $y[$key]['time_exit'] != NULL ){
+                if(isset($y[$key]['time_msg']) && $y[$key]['time_msg'] != NULL && isset($y[$key]['time_exit']) && $y[$key]['time_exit'] != NULL ){
                                     if ($y[$key]['time_msg'] > $y[$key]['time_exit']) {
                     $error['time_msg_exit'] = ' Время сообщения о ЧС не может превышать время выезда ';
                 }
                 }
 
                 //Время выезда не может превышать время прибытия
-                  if($y[$key]['time_exit'] != NULL && $y[$key]['time_arrival'] != NULL ){
+                  if(isset($y[$key]['time_exit']) && $y[$key]['time_exit'] != NULL && isset($y[$key]['time_arrival']) && $y[$key]['time_arrival'] != NULL ){
                         if ($y[$key]['time_exit'] > $y[$key]['time_arrival']) {
                     $error['time_exit_arrival'] = ' Время выезда не может превышать время прибытия ';
                 }
                   }
-              
+
             }
         }
         $y['error'] = $error;
@@ -106,12 +108,8 @@ class Model_Informing {
         $this->setIdRig($id_rig);
 
         // что сейчас в БД
-        $service_from_bd = $this->selectAllByIdRig($id_rig);
-        
-//        print_r($service_from_bd);
-//        echo '<br>';
-//        print_r($array);
-//        exit();
+        $service_from_bd = $this->selectAllByIdRigOnlyMy($id_rig,$_SESSION['id_level']);
+
 
         //если не выбрано ни одного адресата на данном выезде
         if (empty($array)) {
@@ -128,9 +126,12 @@ class Model_Informing {
                 foreach ($service_from_bd as $key_bd => $value_bd) {
                     if (!empty($array)) {
                         foreach ($array as $key => $value) {
-                            if ($value_bd['id'] == $value['id']) {
+                            if ($value_bd['id'] == $value['id'] ) {
+
+                                //if($value['my'] == 1){
                                 //перезапись данных по id innerservice
                                 $this->updateById($value);
+                                //}
 
                                 //убираем из массива
                                 unset($array[$key]);
@@ -144,21 +145,27 @@ class Model_Informing {
                 //если на форме было > адресатов, чем в БД- добавить оставшихся
                 if (!empty($array)) {
                     foreach ($array as $key => $value) {
+                        // if($value['my'] == 1){
                         //новый адресат
                         $this->updateById($value);
+                        // }
                     }
                 }
 
                 //удалить из БД оставшихся-лишних, (если на форме выбрано меньше адресатов, чем было в БД)
                 if (!empty($service_from_bd)) {
+                    // if($value['my'] == 1){
                     //очистить
                     $this->deleteById($service_from_bd);
+                   //  }
                 }
             } else {//в БД было пусто
                 //добавление
                 foreach ($array as $value) {
+                    // if($value['my'] == 1){
                     //новый адресат
                     $this->updateById($value);
+                   //  }
                 }
             }
         }
@@ -169,18 +176,24 @@ class Model_Informing {
         //return R::getAll('SELECT * FROM journal.informing WHERE id_rig = ?', array($this->id_rig));
          return R::getAll('SELECT * FROM journal.informingrep WHERE id_rig = ?', array($this->id_rig));
     }
-    
+
+        public function selectAllByIdRigOnlyMy($id_rig,$id_level) {
+        $this->setIdRig($id_rig);
+        //return R::getAll('SELECT * FROM journal.informing WHERE id_rig = ?', array($this->id_rig));
+         return R::getAll('SELECT * FROM journal.informingrep WHERE id_rig = ? and id_level_created = ?', array($this->id_rig, $id_level));
+    }
+
         public function selectAllInIdRig($id_rig) {
-			
+
 			$new_result=array();
-			
+
 			if(!empty($id_rig)){
 			 $str_id_rig = implode(',', $id_rig);
 
         $result = R::getAll('SELECT * FROM informingrep WHERE id_rig IN (  ' . $str_id_rig . ')');
         foreach ($result as $row) {
             $new_result[$row['id_rig']] []= $row;
-        }	
+        }
 			}
 
        return $new_result;
@@ -205,6 +218,13 @@ class Model_Informing {
             $s = R::load('informing', $value['id']);
             R::trash($s);
         }
+    }
+
+
+    function getNotFullInfo($ids_rig)
+    {
+        return R::getAll('SELECT id_rig FROM journal.informingrep WHERE id_rig IN ('. implode(',', $ids_rig).') AND '
+            . ' (id_destination <> 0 OR destination_text <> "") AND (time_msg is null OR time_exit is null OR time_arrival is null)');
     }
 
 }

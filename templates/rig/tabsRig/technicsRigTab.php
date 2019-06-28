@@ -263,33 +263,9 @@ for ($i = $i; $i <= $k; $i++) {
         ?>
 
             <div class="col-lg-2">
-
-
-            <?php
-           // include dirname(__FILE__) . '/buttonSaveRig.php';
-            ?>
-
-        <?php
-        if ($id_user_rig == $_SESSION['id_user']) {
-
-            ?>
- <div class="col-lg-2">
             <?php
             include dirname(__FILE__) . '/buttonSaveRig.php';
-
             ?>
- </div>
-            <?php
-        } else {
-
-
-       include dirname(__FILE__) . '/infoMsg.php';
-
-        }
-
-        ?>
-
-
             </div>
                     <?php
                 }
@@ -417,7 +393,7 @@ if (isset($innerservice)) {
         <?php
         if (isset($value['time_msg']) && $value['time_msg'] != '0000-00-00 00:00:00') {
             ?>
-                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_msg]" value="<?= $value['time_msg'] ?>" />
+                        <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_msg]" value="<?= date('Y-m-d H:i', strtotime($value['time_msg']))?>" />
             <?php
         } else {
             ?>
@@ -437,7 +413,7 @@ if (isset($innerservice)) {
         <?php
         if (isset($value['time_arrival']) && $value['time_arrival'] != '0000-00-00 00:00:00') {
             ?>
-                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_arrival]" value="<?= $value['time_arrival'] ?>" />
+                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_arrival]" value="<?=  date('Y-m-d H:i', strtotime($value['time_arrival'])) ?>" />
             <?php
         } else {
             ?>

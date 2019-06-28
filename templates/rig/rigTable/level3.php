@@ -1,3 +1,21 @@
+<?php
+//print_r($not_full_sily);
+
+if(isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']['name_sign'] == 'level3_type1'){//type1
+     include dirname(__FILE__) . '/types_table/level3_type1.php';
+
+}
+elseif(isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']['name_sign'] == 'level3_type2'){//type1
+     include dirname(__FILE__) . '/types_table/level3_type2.php';
+
+}
+else{//standart table
+
+
+
+?>
+
+
 <style>
     .is-neighbor-td{
         border-top: 2px solid  #999 !important;
@@ -52,6 +70,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 //print_r($result_icons);
 
 ?>
+
 <table class="table table-condensed   table-bordered table-custom" id="rigTable" >
     <!-- строка 1 -->
     <thead>
@@ -140,7 +159,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                             ?>
-                            <i class="fa fa-share" aria-hidden="true"></i>
+                        !&nbsp;<i class="fa fa-share" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Выезд в соседний гарнизон"></i>
                             <?php
                         }
 
@@ -148,13 +167,29 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
         <?= $row['id'] ?></td>
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"  >
-                        <?php
-                        if ($row['is_closed'] == 0) {//пожар не закрыт
+                                    <?php
+                                    if ($row['is_closed'] == 0) {//пожар не закрыт
+                                        if (!empty($row['empty_fields'])) {
 
-                            ?>
-                            <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
-                            <?php
-                        }
+                                            ?>
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
+                                               title="Вызов не закрыт. Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
+                                               <?php
+                                           } else {
+
+                                               ?>
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
+                                            <?php
+                                        }
+                                    } elseif (!empty($row['empty_fields'])) {
+
+                                        ?>
+                                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
+                                           title="Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
+                                        <?php
+                                    }
+
+                                    //print_r($row['empty_fields']);
 
                         ?></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['date_msg'] ?></td>
@@ -263,7 +298,8 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
             ?>
                             <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
                             <?php
-                        } else {
+                        }
+                        else {
 
                             ?>
                                 <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank">
@@ -275,21 +311,29 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
 
                             <?php
-                            /* id of rigs, where silymschs/innerservice are not selected */
-                            if (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
+                /* id of rigs, where info are not selected */
+                                if (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
 
-                                ?>
-                                <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
+                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не заполнено."></i></a>
+                                    <?php
+                                } elseif (isset($not_full_info) && in_array($row['id'], $not_full_info)) {
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank"  style="color: #f39c12 !important">
+                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Заполнено частично."></i></a>
                                     <?php
                                 } else {
 
                                     ?>
                                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
-                                        <?php
-                                    }
+                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
+                                    <?php
+                                }
 
-                                    ?>
-                                    <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
+                                ?>
+
 
 
                                 <?php
@@ -298,16 +342,24 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                                     ?>
                                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank" style="color: #c51a05 !important">
-                                        <?php
-                                    } else {
-
-                                        ?>
-                                        <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
-                                            <?php
-                                        }
-
-                                        ?>
                                         <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
+                                    <?php
+                                } elseif (isset($not_full_sily) && in_array($row['id'], $not_full_sily)) {
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank"  style="color: #f39c12 !important">
+                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики. Не заполнено время возвращения"></i></a>
+                                    <?php
+                                } else {
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
+                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
+                                    <?php
+                                }
+
+                                ?>
+
 
 
 
@@ -316,7 +368,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                                     <!--                        путевка-->
                                     <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >
-                                        <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa fa-lg fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
+                                        <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
                                         <ul class="dropdown-menu" id="waybill-menu">
                                             <?php
                                             // if ($_SESSION['ulevel'] == 1) {
@@ -395,7 +447,8 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                                             ?>
-                                        <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>
+                                        <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
+<!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
                                             <?php
                                         } else {
 
@@ -422,3 +475,8 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                             </tbody>
                             </table>
+<?php
+
+}
+
+?>

@@ -54,6 +54,10 @@
 
 <!--dataTables-->
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.dataTables.js"></script>
+<!--<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/fh-3.1.4/datatables.min.js"></script>-->
+<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>-->
+
 
 <!--маска ввода-->
 <script type="text/javascript" src="<?= $baseUrl ?>/assets/js/jquery.maskedinput.min.js"></script>
@@ -62,6 +66,8 @@
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.chained.min.js"></script>
 
 <script src="<?= $baseUrl ?>/assets/ckeditor/ckeditor.js"></script>
+
+
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
 

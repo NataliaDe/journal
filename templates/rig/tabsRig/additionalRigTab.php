@@ -18,32 +18,11 @@
     </div>
 
     <div class="col-lg-5"></div>
+
     <div class="col-lg-2">
-
-
-
 <?php
- //include dirname(__FILE__) . '/buttonSaveRig.php';
+ include dirname(__FILE__) . '/buttonSaveRig.php';
 ?>
-                <?php
-        if ($id_user == $_SESSION['id_user']) {
-
-            ?>
-            <div class="col-lg-2">
-                <?php
-                include dirname(__FILE__) . '/buttonSaveRig.php';
-
-                ?>
-            </div>
-            <?php
-        } else {
-
-
-            include dirname(__FILE__) . '/infoMsg.php';
-        }
-
-        ?>
-
     </div>
 
 </div>
@@ -53,7 +32,7 @@
 <div class="row">
 
     <div class="col-lg-4">
-        <div class="form-group">
+        <div class="form-group" id="firereason-id">
             <label for="id_firereason">Причина пожара</label>
             <select class="js-example-basic-single form-control" name="id_firereason"  >
                 <option value="">Выбрать</option>

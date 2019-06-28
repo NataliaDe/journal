@@ -362,6 +362,122 @@ $('#destinationForm')
 
 
 
+
+/*  rigTable type1  */
+              var rig_table_vis_type1 =  $('#rigTableType1').DataTable({
+            "pageLength": 50,
+             "order": [[ 2, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+//                                 "columnDefs": [
+//            {
+//                "targets": [ 13 ],
+//                "visible": false
+//            }
+//        ]
+        });
+
+        $('a.toggle-vis-rig-table-type1').on( 'click', function (e) {
+        e.preventDefault();
+
+        // Get the column API object
+        var column_type1 = rig_table_vis_type1.column( $(this).attr('data-column') );
+
+        // Toggle the visibility
+        column_type1.visible( ! column_type1.visible() );
+
+
+    } );
+
+
+
+    /*  rigTable type2  */
+              var rig_table_vis_type2 =  $('#rigTableType2').DataTable({
+                   //fixedHeader: true,
+       // fixedHeader: {
+            //header: true,
+          //  footer:true
+            //headerOffset: 15
+                    //$('#fixed').height()
+      //  },
+//           "fixedHeader": {
+//      header: true
+//    },
+      orderCellsTop: true,
+      fixedHeader: true,
+
+            "pageLength": 50,
+             "order": [[ 1, "asc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+//                                 "columnDefs": [
+//            {
+//                "targets": [ 13 ],
+//                "visible": false
+//            }
+//        ]
+        });
+
+          $("tfoot").css("display", "table-header-group");//tfoot of table
+
+
+        $('a.toggle-vis-rig-table-type2').on( 'click', function (e) {
+        e.preventDefault();
+
+        // Get the column API object
+        var column_type2 = rig_table_vis_type2.column( $(this).attr('data-column') );
+
+        // Toggle the visibility
+        column_type2.visible( ! column_type2.visible() );
+
+
+    } );
+
+
+
+
 		        $('#destinationTable').DataTable({
             "pageLength": 50,
              "order": [[ 0, "asc" ]],
@@ -478,7 +594,66 @@ $('#destinationForm')
 
 
 
+                $('#remarkTable').DataTable({
+            "pageLength": 50,
+             "order": [[ 0, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+          $('#remarkTableRcu').DataTable({
+            "pageLength": 50,
+             "order": [[ 0, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+
+
     });
+
 
 
 })(jQuery);
@@ -486,6 +661,7 @@ $('#destinationForm')
 
 $(document).ready(function () {
     $("tfoot").css("display", "table-header-group");//tfoot of table
+
 
 
     /*---------- таблица с пользователями ------------*/
@@ -581,6 +757,106 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с выездами ------------*/
+
+
+
+     /*---------- rig table type1 ------------*/
+    $('#rigTableType1 tfoot th').each(function (i) {
+        var table = $('#rigTableType1').DataTable();
+        if (i !== 1 && i != 7 && i != 13) {
+
+            if (i == 8 || i==12 ) {
+                //выпадающий список
+                var y = 'rigFormType1';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#rigTableType1 tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else {
+                var title = $('#rigTableType1 tfoot th').eq($(this).index()).text();
+                var x = $('#rigTableType1 tfoot th').index($(this));
+                var y = 'rigFormType1';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+        }
+    });
+    $("#rigTableType1 tfoot input").on('keyup change', function () {
+        var table = $('#rigTableType1').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END rig table type1 ------------*/
+
+
+      /*---------- rig table type2 ------------*/
+    $('#rigTableType2 tfoot th').each(function (i) {
+        var table = $('#rigTableType2').DataTable();
+        if (  i != 17) {
+
+            if (i == 14 || i==16 ) {
+                //выпадающий список
+                var y = 'rigFormType2';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#rigTableType2 tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else {
+                var title = $('#rigTableType2 tfoot th').eq($(this).index()).text();
+                var x = $('#rigTableType2 tfoot th').index($(this));
+                var y = 'rigFormType2';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+        }
+    });
+    $("#rigTableType2 tfoot input").on('keyup change', function () {
+        var table = $('#rigTableType2').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END rig table type2 ------------*/
+
+
+
 
  /*---------- таблица таблица классификаторов ------------*/
     $('#classifTable tfoot th').each(function (i) {
@@ -757,6 +1033,98 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с logs action ------------*/
+
+
+
+    /* ------------- remark table ---------------*/
+ $('#remarkTable tfoot th').each(function (i) {
+        var table = $('#remarkTable').DataTable();
+        if (i !== 11 && i != 12) {
+
+            if (i == 6 || i==7 || i == 8 || i == 10 ) {
+                //выпадающий список
+                var y = 'remarkTable';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#remarkTable tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else {
+                var title = $('#remarkTable tfoot th').eq($(this).index()).text();
+                var x = $('#remarkTable tfoot th').index($(this));
+                var y = 'remarkTable';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+        }
+    });
+    $("#remarkTable tfoot input").on('keyup change', function () {
+        var table = $('#remarkTable').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    $('#remarkTableRcu tfoot th').each(function (i) {
+        var table = $('#remarkTableRcu').DataTable();
+        if (i !== 6 && i !== 7 && i !== 8 ) {
+
+            if (i == 6 || i==7 || i == 8 || i == 10 ) {
+                //выпадающий список
+                var y = 'remarkTable';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#remarkTableRcu tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else {
+                var title = $('#remarkTableRcu tfoot th').eq($(this).index()).text();
+                var x = $('#remarkTableRcu tfoot th').index($(this));
+                var y = 'remarkTable';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+        }
+    });
+    $("#remarkTableRcu tfoot input").on('keyup change', function () {
+        var table = $('#remarkTableRcu').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+    /* ------------- end remark table ---------------*/
 
 
 });
@@ -1367,12 +1735,13 @@ function deleteReasonrigUser(j) {
 
 
  /*------------------------------- маска ввода --------------------------------------*/
-       jQuery("#coord_lat").mask("99.9999?99");//долгота
-      jQuery("#coord_lon").mask("99.9999?99");//широта
+       jQuery("#coord_lat").mask("99.999999");//долгота
+      jQuery("#coord_lon").mask("99.999999");//широта
 
       /**** время следования - форма журнала выезда ****/
       for(var i=1;i<30;i++){
-                      jQuery("#time_follow"+i).mask("99:99:99");
+                     // jQuery("#time_follow"+i).mask("99:99:99");
+                      jQuery("#time_follow"+i).mask("99:99");
       }
 
 
@@ -1401,6 +1770,7 @@ function setTimeFollow(i){
      /*----- значения полей ------*/
      var time_exit=    $('input[name='+'"'+t_exit+'"'+']').val();
           var time_arrival=    $('input[name='+'"'+t_arr+'"'+']').val();
+
 
 var a=new Date(time_exit);//вр.выезда
 var b=new Date(time_arrival);//вр.приб
@@ -1444,10 +1814,23 @@ else{
      var s=seconds;
 }
 //result
-var t=h+":"+m+":"+s;//00:00:00 - format
-    $('input[name='+'"'+j+'"'+']').val(t);
+//var t=h+":"+m+":"+s;//00:00:00 - format
+var t=h+":"+m;//00:00:00 - format
+//alert('kk');
+//alert(time_arrival);
+//if(time_arrival =='')
+//    alert('ll');
+//alert();
+if(time_exit.length == 16 && time_arrival.length == 16){
+
+     $('input[name='+'"'+j+'"'+']').val(t);
+}
+
+
 
 }
+
+
 /*--------------- END Высчитать время след = вр.приб-вр.выезда    ------------*/
 
 /*----------------- Пересчет кол-ва выездов, пользователей в левом меню ---------------------*/
@@ -1584,6 +1967,15 @@ $( window ).load(function() {
   //alert('hello');
   $( "#toggle-vis-rig-table-13" ).trigger( "click" );
   $( "#toggle-vis-rig-table-7" ).trigger( "click" );
+
+  /* rig table type1 */
+  $( "#toggle-vis-rig-table-type1-13" ).trigger( "click" );
+
+    /* rig table type2 */
+    $( "#toggle-vis-rig-table-type1-0" ).trigger( "click" );
+  $( "#toggle-vis-rig-table-type2-16" ).trigger( "click" );
+
+
 });
 
 
@@ -1692,28 +2084,101 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
     var reason = $('#rigForm #id_reasonrig').val();
     var object_id = $('#rigForm #object_id').val();
     var coord_lat = $('#rigForm #coord_lat').val();
-      var coord_lon = $('#rigForm #coord_lon').val();
+    var coord_lon = $('#rigForm #coord_lon').val();
+    var id_officebelong = $('#rigForm [name="id_officebelong"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var inspector = $('#rigForm [name="inspector"]').val();
+    //alert(id_officebelong);
     //$('#rigForm #object_id').addClass('red-border-input');
- var coord_lat_length = $('#rigForm #coord_lat').val().length;
- //alert(coord_lat);
+    var coord_lat_length = $('#rigForm #coord_lat').val().length;
+    //alert(coord_lat);
     if (reason == 34) {
 
         if (object_id == '') {
-             $('#rigForm #object_id').addClass('red-border-input');
+            $('#rigForm #object_id').addClass('red-border-input');
         }
 
         //alert(reason);
-         if (coord_lat == '') {
-             $('#rigForm #coord_lat').addClass('red-border-input');
-         }
+        if (coord_lat == '') {
+            $('#rigForm #coord_lat').addClass('red-border-input');
+        }
 
-  if (coord_lon == '') {
-        $('#rigForm #coord_lon').addClass('red-border-input');
+        if (coord_lon == '') {
+            $('#rigForm #coord_lon').addClass('red-border-input');
+        }
+
+
+        if (id_officebelong == '0') {
+            $("#office-belong-id .select2-selection").addClass('red-border-input');
+        }
+
+        if (id_firereason == '0') {
+            $("#firereason-id .select2-selection").addClass('red-border-input');
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        }
+
+        if (firereason_descr == '') {
+            $('#rigForm [name="firereason_descr"]').addClass('red-border-input');
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        }
+
+        if (inspector == '') {
+
+            $('#rigForm [name="inspector"]').addClass('red-border-input');
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        }
+
     }
+    //other zagor
+    else if (reason == 14 || reason == 69) {
+        if (inspector == '') {
+            $('#rigForm [name="inspector"]').addClass('red-border-input');
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+
+        }
+
+//reset
+        $('#rigForm #object_id').removeClass('red-border-input');
+        $('#rigForm #coord_lat').removeClass('red-border-input');
+        $('#rigForm #coord_lon').removeClass('red-border-input');
+        $("#office-belong-id .select2-selection").removeClass('red-border-input');
+        $("#firereason-id .select2-selection").removeClass('red-border-input');
+        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+
+
+    }
+
+    // molnia
+    else if (reason == 74) {
+        if (object_id == '') {
+            $('#rigForm #object_id').addClass('red-border-input');
+        }
+
+        if (id_officebelong == '0') {
+            $("#office-belong-id .select2-selection").addClass('red-border-input');
+        }
+
+
+        $('#rigForm #coord_lat').removeClass('red-border-input');
+        $('#rigForm #coord_lon').removeClass('red-border-input');
+        $("#firereason-id .select2-selection").removeClass('red-border-input');
+        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+        $('#rigForm [name="inspector"]').removeClass('red-border-input');
+
+        $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+
+
     } else {
         $('#rigForm #object_id').removeClass('red-border-input');
         $('#rigForm #coord_lat').removeClass('red-border-input');
         $('#rigForm #coord_lon').removeClass('red-border-input');
+        $("#office-belong-id .select2-selection").removeClass('red-border-input');
+        $("#firereason-id .select2-selection").removeClass('red-border-input');
+        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+        $('#rigForm [name="inspector"]').removeClass('red-border-input');
+
+        $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
         //alert('jkl');
     }
 
@@ -1725,7 +2190,7 @@ $('#rigForm #object_id').on('keyup', function (e) {
  var reason = $('#rigForm #id_reasonrig').val();
     var object_id = $('#rigForm #object_id').val();
 
-    if (object_id == '' && reason == 34) {
+    if (object_id == '' && (reason == 34 || reason == 74)) {
         $('#rigForm #object_id').addClass('red-border-input');
     } else {
         $('#rigForm #object_id').removeClass('red-border-input');
@@ -1791,4 +2256,201 @@ $('#rigForm #coord_lon').on('blur', function (e) {
     }
 });
 
+
+
+$('#rigForm [name="id_officebelong"]').on('change', function (e) {
+
+var reason = $('#rigForm #id_reasonrig').val();
+    var id_officebelong =$('#rigForm [name="id_officebelong"]').val();
+
+    if (id_officebelong == 0 && (reason == 34 || reason == 74)) {
+       $( "#office-belong-id .select2-selection" ).addClass('red-border-input');
+    } else {
+        $( "#office-belong-id .select2-selection" ).removeClass('red-border-input');
+    }
+});
+
+
+$('#rigForm [name="id_firereason"]').on('change', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var inspector = $('#rigForm [name="inspector"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+
+    if (id_firereason == 0 && reason == 34) {
+        $("#firereason-id .select2-selection").addClass('red-border-input');
+        $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    } else {
+
+        if (firereason_descr == '' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else if (inspector == '' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else {
+
+            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+        }
+
+        $("#firereason-id .select2-selection").removeClass('red-border-input');
+
+    }
+
+});
+
+
+
+$('#rigForm [name="firereason_descr"]').on('keyup', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var inspector = $('#rigForm [name="inspector"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+
+    if (firereason_descr == '' && reason == 34) {
+        $('#rigForm [name="firereason_descr"]').addClass('red-border-input');
+        $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    } else {
+
+        if (inspector == '' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else if (id_firereason == '0' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else {
+
+            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+        }
+
+        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+
+    }
+
+
+});
+
+
+$('#rigForm [name="inspector"]').on('keyup', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var inspector = $('#rigForm [name="inspector"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+
+    if (inspector == '' && (reason == 34 || reason == 14 || reason == 69)) {
+        $('#rigForm [name="inspector"]').addClass('red-border-input');
+        $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    } else {
+
+        if (firereason_descr == '' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else if (id_firereason == '0' && reason == 34) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        } else {
+
+            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+        }
+
+        $('#rigForm [name="inspector"]').removeClass('red-border-input');
+
+    }
+});
+
+
+$('#rigForm [name="id_work_view"]').on('change', function (e) {
+
+var reason = $('#rigForm #id_reasonrig').val();
+    var id_work_view =$('#rigForm [name="id_work_view"]').val();
+
+    if (id_work_view == 0 ) {
+       $( "#work-view-id .select2-selection" ).addClass('red-border-input');
+    } else {
+        $( "#work-view-id .select2-selection" ).removeClass('red-border-input');
+    }
+});
+
+
+$('#rigForm [name="id_reasonrig"]').on('change', function (e) {
+
+var reason = $('#rigForm #id_reasonrig').val();
+
+
+    if (reason == 0 ) {
+       $( "#reason-rig-id .select2-selection" ).addClass('red-border-input');
+    } else {
+        $( "#reason-rig-id .select2-selection" ).removeClass('red-border-input');
+    }
+});
+
 /* END processing rig tab. change reasonrig */
+
+
+/* form export to csv */
+$('form#exporttoCsvRep1').submit(function(e){
+
+         // Запрещаем стандартное поведение для кнопки submit
+         e.preventDefault();
+
+        var date_start=$('#exporttoCsvRep1 [name="date_start"]').val();
+        var date_end=$('#exporttoCsvRep1 [name="date_end"]').val();
+
+//alert(certificate_id);
+
+
+       if(date_start == '')
+        toastr.error('Выберите дату начала', 'Ошибка!', {timeOut: 5000});
+    else if(date_end == ''){
+         toastr.error('Выберите дату окончания', 'Ошибка!', {timeOut: 5000});
+    }
+        else if(date_start === date_end){
+          toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 5000});
+    }
+            else if(date_start > date_end){
+          toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 5000});
+    }
+          else{
+          //later you decide you want to submit
+         $(this).unbind('submit').submit();
+            }
+
+         });
+
+
+
+         /* form search rig in archive */
+$('form#searchArchiveForm').submit(function(e){
+
+         // Запрещаем стандартное поведение для кнопки submit
+         e.preventDefault();
+
+       var archive_year=$('select[name="archive_year"]').val();
+       var id_rig=$('input[name="id_rig"]').val();
+
+//alert(id_rig);
+
+
+       if(archive_year == '')
+        toastr.error('Выберите год', 'Ошибка!', {timeOut: 5000});
+
+else if(id_rig == '')
+    toastr.error('Введите ID выезда', 'Ошибка!', {timeOut: 5000});
+          else{
+          //later you decide you want to submit
+         $(this).unbind('submit').submit();
+            }
+
+         });
+
+
+         $('#id_rig_seacrh_archive').keypress(function (key) {
+    if (((key.charCode < 48)&& (key.charCode != 44)) || (key.charCode > 57) )
+        return false;
+});
+
+
+
+
+
+
+
+
+

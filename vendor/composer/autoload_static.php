@@ -14,6 +14,8 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'ParseCsv\\extensions\\' => 20,
+            'ParseCsv\\' => 9,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
@@ -44,6 +46,14 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'ParseCsv\\extensions\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/parsecsv/php-parsecsv/src/extensions',
+        ),
+        'ParseCsv\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/parsecsv/php-parsecsv/src',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (

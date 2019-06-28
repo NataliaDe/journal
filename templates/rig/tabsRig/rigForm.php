@@ -13,10 +13,10 @@
                     <?php
                 } elseif($active_tab != 2) {
                     ?>
-                <li>                     
+                <li>
                     <?php
                 }
-				
+
 				if($active_tab != 2) {
                 ?>
                 <a  href="#1" data-toggle="tab">Обработка вызова</a>
@@ -24,14 +24,14 @@
 
             <?php
 				}
-				
+
             if ($active_tab == 2) {
                 ?>
                 <li class="active">
                     <?php
                 } else {
                     ?>
-                <li>                     
+                <li>
                     <?php
                 }
                 ?>
@@ -45,10 +45,10 @@
                     <?php
                 } elseif($active_tab != 2) {
                     ?>
-                <li>                     
+                <li>
                     <?php
                 }
-				
+
 				if($active_tab != 2) {
                 ?>
                 <a href="#3" data-toggle="tab">Дополнительно</a>
@@ -71,14 +71,14 @@
                     <div class="tab-pane " id="1">
                         <?php
                     }
-					if($active_tab != 2) 
+					if($active_tab != 2)
                     include dirname(__FILE__) . '/processRigTab.php';
                     ?>
                 </div>
 
                 <!--Высылка техники-->
                 <?php
-     
+
                 if ($active_tab == 2) {
                     ?>
                     <div class="tab-pane active" id="2">
@@ -103,15 +103,106 @@
                             <div class="tab-pane" id="3">
                                 <?php
                             }
-							if($active_tab != 2) 
+							if($active_tab != 2)
                             include dirname(__FILE__) . '/additionalRigTab.php';
                             ?>
                         </div>
 
-                    </div> 
+                    </div>
 <!--                    tab-content-->
 
 
 
                     </form>
                 </div>
+
+
+  <script>
+  window.onload = function() {
+   // alert( 'Документ и все ресурсы загружены' );
+
+       var reason = $('#rigForm #id_reasonrig').val();
+    var inspector = $('#rigForm [name="inspector"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+
+    var id_officebelong = $('#rigForm [name="id_officebelong"]').val();
+    var object_id = $('#rigForm #object_id').val();
+    var coord_lat = $('#rigForm #coord_lat').val();
+    var coord_lon = $('#rigForm #coord_lon').val();
+
+    var work_view = $('#rigForm [name="id_work_view"]').val();
+
+
+    if(work_view == 0){
+        $('#rigForm #work-view-id .select2-selection').addClass('red-border-input');
+    }
+
+    if(reason == 34){
+
+      if(inspector == '' || firereason_descr == '' || id_firereason == 0){
+
+
+           $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+
+           if(inspector == ''){
+
+            $('#rigForm [name="inspector"]').addClass('red-border-input');
+        }
+
+                   if(firereason_descr == ''){
+
+            $('#rigForm [name="firereason_descr"]').addClass('red-border-input');
+        }
+                           if(id_firereason == 0){
+            $('#rigForm #firereason-id .select2-selection').addClass('red-border-input');
+        }
+      }
+
+
+
+        if (object_id == '') {
+            $('#rigForm #object_id').addClass('red-border-input');
+        }
+
+        //alert(reason);
+        if (coord_lat == '') {
+            $('#rigForm #coord_lat').addClass('red-border-input');
+        }
+
+        if (coord_lon == '') {
+            $('#rigForm #coord_lon').addClass('red-border-input');
+        }
+
+
+        if (id_officebelong == '0') {
+            $("#office-belong-id .select2-selection").addClass('red-border-input');
+        }
+
+
+    }
+
+    //drugie, logny
+    else if(reason == 14 || reason == 69){
+   if(inspector == ''){
+
+         $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            $('#rigForm [name="inspector"]').addClass('red-border-input');
+        }
+    }
+    //molnia
+    else if(reason == 74){
+
+        if (object_id == '') {
+            $('#rigForm #object_id').addClass('red-border-input');
+        }
+                if (id_officebelong == '0') {
+            $("#office-belong-id .select2-selection").addClass('red-border-input');
+        }
+    }
+    else if(reason == 0){
+         $("#reason-rig-id .select2-selection").addClass('red-border-input');
+    }
+
+  };
+</script>

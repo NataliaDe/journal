@@ -74,9 +74,20 @@ else{
 
             <div class="col-lg-2">
                    <br>
+
                 <div class="form-group">
                     <div class="checkbox checkbox-success">
                       <?php
+
+                      if(isset($id_reasonrig) && ($id_reasonrig == 34 || $id_reasonrig == 14)){// pogar, drugie zag
+                                                           ?>
+                        <input id="checkbox0" type="checkbox" name="is_close" value="1" disabled="" >
+
+                            <?php
+                      }
+                      else{
+
+
                               if (isset($is_close) && $is_close == 1 ) {
                                   ?>
                             <input id="checkbox0" type="checkbox" name="is_close" value="1" checked="" >
@@ -86,11 +97,22 @@ else{
                             <input id="checkbox0" type="checkbox" name="is_close" value="1" >
                             <?php
                         }
+                        }
                         ?>
                         <label for="checkbox0">
                             Не учитывать даты
                         </label>
+                            <?php
+                              if(isset($id_reasonrig) && ($id_reasonrig == 34 || $id_reasonrig == 14)){// pogar, drugie zag
+                                 ?>
+                            <i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Для указанной причины вызова данная функция не доступна!"></i>
+                            <?php
+                              }
+                            ?>
+
                     </div>
+
+
                 </div>
             </div>
 
@@ -121,23 +143,12 @@ else{
 <!--            <div class="col-lg-2"></div>-->
 
 
-<?php
-if ($id_user_rig == $_SESSION['id_user']) {
-
-    ?>
     <div class="col-lg-2">
         <?php
         include dirname(dirname(__FILE__)) . '/tabsRig/buttonSaveRig.php';
 
         ?>
     </div>
-    <?php
-} else {
-
-    include dirname(dirname(__FILE__)) . '/tabsRig/infoMsg.php';
-}
-
-?>
 
         </div>
 

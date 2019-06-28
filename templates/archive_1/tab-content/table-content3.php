@@ -108,7 +108,7 @@ $t_arrival=$each_time[2];
 ?>
     <tr  style='background-color:rgb(<?=$_SESSION['colors'][$row['id_rig']]?>); '>
                     <td><?= $i ?></td>
-                    <td><?= $row['id_rig'] ?></td>
+                    <td><b><a href="<?= $baseUrl ?>/archive_1/search/rig/2019/<?= $row['id_rig'] ?>" style="color:black" target="_blank"><?= $row['id_rig'] ?><a></b></td>
                     <td><?= $row['date_msg'] ?></td>
                     <td><?= $row['time_msg'] ?></td>
                     <td><?= $row['local_name'] ?></td>

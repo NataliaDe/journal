@@ -1,3 +1,5 @@
+
+
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
@@ -186,8 +188,24 @@
                             ?>
                             <a href="<?= $baseUrl ?>/classif/listmail"><i class="fa fa-chevron-circle-down"></i> Список email</a>
                         </li>
-                        <?php
 
+                            <?php
+                            if (isset($item_active) && $item_active == 'actionwaybill') {
+
+                                ?>
+                                <li class="active">
+                                    <?php
+                                } else {
+
+                                    ?>
+                                <li>
+                                    <?php
+                                }
+
+                                ?>
+                                <a href="<?= $baseUrl ?>/classif/actionwaybill"><i class="fa fa-chevron-circle-down"></i>Меры без.(путевка)</a>
+                            </li>
+                            <?php
                         }
 
 
@@ -204,19 +222,7 @@
                         <a href="<?= $baseUrl ?>/classif/destination"><i class="fa fa-chevron-circle-down"></i> Список лиц</a>
                     </li>
 
-                        <?php
-    if (isset($item_active) && $item_active == 'actionwaybill') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
-                            ?>
-                            <li>
-                                <?php
-                            }
-                            ?>
-                            <a href="<?= $baseUrl ?>/classif/actionwaybill"><i class="fa fa-chevron-circle-down"></i>Меры без.(путевка)</a>
-                        </li>
+
 
                 </ul>
             </li>
@@ -236,9 +242,10 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
-<!--                    <li><a href="< $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> Диаграмма</a></li>-->
-                    <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i>Диаграмма выездов</a></li>
-                    <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i>Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</a></li>
+                    <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма</span></a></li>
+                    <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма</span></a></li>
+                    <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</span></a></li>
+                    <li><a href="<?= $baseUrl ?>/table_close_rigs" target="_blank"><i class="fa fa-chevron-circle-down"></i> Выезды за сутки</a></li>
 <!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
                 </ul>
             </li>
@@ -277,11 +284,17 @@ if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == 2) {
 
                     </a>
                 </li>
+
+                <li>
+                    <a href="<?= $baseUrl ?>/export/csv/rep1" target="_blank" class="<?= (isset($export_csv_rep1)) ? 'active-sidebar' : ''  ?>">
+                            <i class="fa fa-map-marker"></i><span>Экспорт в csv</span> <small class="label pull-right bg-red" ></small>
+                        </a>
+                    </li>
     <?php
 }
 
 if (isset($_SESSION['id_user'])) {
-    if (!($_SESSION['id_level'] == 1 && $_SESSION['is_admin'] == 1)) {//кроме РЦУ админ
+    //if (!($_SESSION['id_level'] == 1 && $_SESSION['is_admin'] == 1)) {//кроме РЦУ админ
         ?>
 
 
@@ -295,12 +308,16 @@ if (isset($_SESSION['id_user'])) {
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="<?= $baseUrl ?>/settings/reason_rig_color" target="_blank"><i class="fa fa-chevron-circle-down"></i>Причина вызова</a></li>
+                             <li><a href="<?= $baseUrl ?>/settings/index" target="_blank"><i class="fa fa-chevron-circle-down"></i>Другие</a></li>
                         </ul>
+
+
+
                     </li>
 
 
         <?php
-    }
+    //}
 }
 ?>
 

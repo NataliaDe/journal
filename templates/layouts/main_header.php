@@ -27,6 +27,17 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
+<!--                <li class="dropdown tasks-menu">
+                    <a href="<?= $baseUrl ?>/remark"  class="item-menu"><span>Книга замечаний</span></a>
+                </li>-->
+
+                <li>
+                    <a href="<?= $baseUrl ?>/remark" class="logo">
+                        <img src="<?= $baseUrl ?>/assets/images/feedback.png" width="50" height="50" >
+
+                    </a>
+                </li>
+
 
                      <!-- справка-->
 <!--                <li class="dropdown tasks-menu">

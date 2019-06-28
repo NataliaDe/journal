@@ -163,24 +163,28 @@ if (isset($people) && !empty($people)) {
     </div>
 
     <div class="col-lg-2">
-        <?php
-        if ($id_user == $_SESSION['id_user']) {
-
-            ?>
-
-            <?php
+                <?php
             include dirname(__FILE__) . '/buttonSaveRig.php';
 
             ?>
+    </div>
+
+<!--    <div class="col-lg-2">
+        <?php
+        //if ($id_user == $_SESSION['id_user'] || ($_SESSION['id_level'] == 1 && $_SESSION['can_edit'] == 1 && $_SESSION['is_admin'] == 1)) {
+
+            ?>
+
+
 
             <?php
-        } else {
-
-          include dirname(__FILE__) . '/infoMsg.php';
-        }
+//        } else {
+//
+//          include dirname(__FILE__) . '/infoMsg.php';
+//        }
 
         ?>
-    </div>
+    </div>-->
 
 
 
@@ -204,7 +208,7 @@ if (isset($people) && !empty($people)) {
 
 
     <div class="col-lg-2">
-        <div class="form-group">
+        <div class="form-group" id="reason-rig-id">
             <label for="id_reasonrig">Причина вызова</label>
             <select class="js-example-basic-single form-control" name="id_reasonrig" id="id_reasonrig" >
 <option value="">Выбрать</option>
@@ -223,7 +227,7 @@ foreach ($reasonrig as $row) {
 
 
     <div class="col-lg-2">
-        <div class="form-group">
+        <div class="form-group" id="work-view-id">
             <label for="id_work_view">Вид работ</label>
             <select class="js-example-basic-single form-control" name="id_work_view"  id="id_workview" >
                 <option value="">Выбрать</option>
@@ -544,7 +548,7 @@ if ($id != 0) {//редактирование - заполнить  по умо�
     </div>
 
     <div class="col-lg-2">
-        <div class="form-group">
+        <div class="form-group" id="office-belong-id">
             <label for="id_officebelong">Ведомственная прин.</label>
             <select class="js-example-basic-single form-control" name="id_officebelong"  >
                 <option value="">Выбрать</option>

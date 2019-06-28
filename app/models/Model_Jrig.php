@@ -98,10 +98,10 @@ $y[$key]['is_return'] = 1;
 
                 // проверка на вшивость Время выезда
                 if (isset($row['time_exit']) && !empty($row['time_exit'])) {
-                    if ($this->isDateTimeValid($row['time_exit'], "Y-m-d H:i:s")) {
-                        $y[$key]['time_exit'] = $row['time_exit'];
+                    if ($this->isDateTimeValid($row['time_exit'], "Y-m-d H:i")) {
+                        $y[$key]['time_exit'] = $row['time_exit'].':00';
                     } else {
-                        $error['time_exit'] = ' Поле "Время выезда" должно быть датой ';
+                        $error['time_exit'] = ' Поле "Время выезда" должно быть датой. Формат без секунд! ';
                     }
                 } else {
                     $y[$key]['time_exit'] = NULL;
@@ -110,10 +110,10 @@ $y[$key]['is_return'] = 1;
 
                 //проверка на вшивость Время возвращения
                 if (isset($row['time_return']) && !empty($row['time_return'])) {
-                    if ($this->isDateTimeValid($row['time_return'], "Y-m-d H:i:s")) {
-                        $y[$key]['time_return'] = $row['time_return'];
+                    if ($this->isDateTimeValid($row['time_return'], "Y-m-d H:i")) {
+                        $y[$key]['time_return'] = $row['time_return'].':00';
                     } else {
-                        $error['time_return'] = ' Поле "Время возвращения" должно быть датой ';
+                        $error['time_return'] = ' Поле "Время возвращения" должно быть датой. Формат без секунд! ';
                     }
                 } else {
                     $y[$key]['time_return'] = NULL;
@@ -127,10 +127,10 @@ $y[$key]['is_return'] = 0;
 
  /*             * * проверка на вшивость Время выезда  ** */
             if (isset($row['time_exit']) && !empty($row['time_exit'])) {
-                if ($this->isDateTimeValid($row['time_exit'], "Y-m-d H:i:s")) {
-                    $y[$key]['time_exit'] = $row['time_exit'];
+                if ($this->isDateTimeValid($row['time_exit'], "Y-m-d H:i")) {
+                    $y[$key]['time_exit'] = $row['time_exit'].':00';
                 } else {
-                    $error['time_exit'] = ' Поле "Время выезда" должно быть датой ';
+                    $error['time_exit'] = ' Поле "Время выезда" должно быть датой. Формат без секунд! ';
                 }
             } else {
                 $y[$key]['time_exit'] = NULL;
@@ -139,41 +139,54 @@ $y[$key]['is_return'] = 0;
 
             /*             * * проверка на вшивость Время прибытия  ** */
             if (isset($row['time_arrival']) && !empty($row['time_arrival'])) {
-                if ($this->isDateTimeValid($row['time_arrival'], "Y-m-d H:i:s")) {
-                    $y[$key]['time_arrival'] = $row['time_arrival'];
+                if ($this->isDateTimeValid($row['time_arrival'], "Y-m-d H:i") == TRUE) {
+                    $y[$key]['time_arrival'] = $row['time_arrival'].':00';
                 } else {
-                    $error['time_arrival'] = ' Поле "Время прибытия" должно быть датой ';
+                    $error['time_arrival'] = ' Поле "Время прибытия" должно быть датой. Формат без секунд! ';
                 }
             } else {
                 $y[$key]['time_arrival'] = NULL;
             }
+            //echo $y[$key]['time_arrival'];            echo '<br>';
             /*             * *  END проверка на вшивость Время прибытия  ** */
 
             /*             * **** время выезда< время прибытия ******* */
-            if ($y[$key]['time_arrival'] < $y[$key]['time_exit'] && !empty($y[$key]['time_arrival'])) {
+            if (!empty($y[$key]['time_arrival']) && $y[$key]['time_arrival'] < $y[$key]['time_exit']) {
                 $error['time_exit_arrival'] = ' Время выезда не может превышать время прибытия ';
             }
             /*             * **** END время выезда< время прибытия ******* */
 
                /*             * ****  время следования ******* */
-                if (isset($row['time_follow']) && !empty($row['time_follow'])) {
-                if ($this->isDateTimeValid($row['time_follow'], "H:i:s")) {
-                    $y[$key]['time_follow'] = $row['time_follow'];
+//                if (isset($row['time_follow']) && !empty($row['time_follow'])) {
+//                if ($this->isDateTimeValid($row['time_follow'], "H:i")) {
+//                    $y[$key]['time_follow'] = $row['time_follow'].':00';
+//                } else {
+//                     $y[$key]['time_follow'] = NULL;
+//                    $error['time_follow'] = ' Поле "Время следования" должно иметь формат времени ';
+//                }
+//            } else {
+//                $y[$key]['time_follow'] = NULL;
+//            }
+              if (isset($y[$key]['time_exit']) && !empty($y[$key]['time_exit']) && isset($y[$key]['time_arrival']) && !empty($y[$key]['time_arrival'])) {
+
+                    $datetime1 = new \DateTime($y[$key]['time_exit']);
+                    $datetime2 = new \DateTime($y[$key]['time_arrival']);
+                    $interval = $datetime1->diff($datetime2);
+//$elapsed = $interval->format('%y years %m months %a days %h hours %i minutes %s seconds');
+                    $elapsed = $interval->format('%H:%I:%S');
+                    $y[$key]['time_follow'] = $elapsed;
                 } else {
-                     $y[$key]['time_follow'] = NULL;
-                    $error['time_follow'] = ' Поле "Время следования" должно иметь формат времени ';
+                    $y[$key]['time_follow'] = '00:00:00';
                 }
-            } else {
-                $y[$key]['time_follow'] = NULL;
-            }
+
    /*             * **** END время следования ******* */
 
             /*             * * проверка на вшивость Время окончания работ ** */
             if (isset($row['time_end']) && !empty($row['time_end'])) {
-                if ($this->isDateTimeValid($row['time_end'], "Y-m-d H:i:s")) {
-                    $y[$key]['time_end'] = $row['time_end'];
+                if ($this->isDateTimeValid($row['time_end'], "Y-m-d H:i")) {
+                    $y[$key]['time_end'] = $row['time_end'].':00';
                 } else {
-                    $error['time_end'] = ' Поле "Время окончания работ" должно быть датой ';
+                    $error['time_end'] = ' Поле "Время окончания работ" должно быть датой. Формат без секунд! ';
                 }
             } else {
                 $y[$key]['time_end'] = NULL;
@@ -183,10 +196,10 @@ $y[$key]['is_return'] = 0;
 
             /*             * * проверка на вшивость Время возвращения ** */
             if (isset($row['time_return']) && !empty($row['time_return'])) {
-                if ($this->isDateTimeValid($row['time_return'], "Y-m-d H:i:s")) {
-                    $y[$key]['time_return'] = $row['time_return'];
+                if ($this->isDateTimeValid($row['time_return'], "Y-m-d H:i")) {
+                    $y[$key]['time_return'] = $row['time_return'].':00';
                 } else {
-                    $error['time_return'] = ' Поле "Время возвращения" должно быть датой ';
+                    $error['time_return'] = ' Поле "Время возвращения" должно быть датой. Формат без секунд! ';
                 }
             } else {
                 $y[$key]['time_return'] = NULL;

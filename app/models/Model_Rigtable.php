@@ -129,7 +129,7 @@ class Model_Rigtable {
     // дата, время, адрес объекта для вызова по id
     public function selectByIdRig($id_rig) {
 
-            return R::getAll('SELECT date_msg, time_msg, address, additional_field_address,id_user FROM journal.rigtable WHERE id = ? ',array($id_rig));
+            return R::getAll('SELECT date_msg, time_msg, address, additional_field_address,id_user, id_reasonrig FROM journal.rigtable WHERE id = ? ',array($id_rig));
 
     }
 
@@ -517,6 +517,83 @@ class Model_Rigtable {
         $param = array($id_region, $is_delete, $id_region, $id_rig);
 
         return R::getAll($sql, $param);
+    }
+
+
+
+        public function selectAllForCsv($is_delete, $data)
+    {
+        //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
+
+
+        $param = array($is_delete);
+        if (isset($data['id_reasonrig'])) {
+            $sql = 'SELECT r.*, SUBSTRING(REPLACE(inf_detail,CHAR(13)+CHAR(10)," "), 1, 250) AS inf_detail_1,REPLACE(inf_detail,CHAR(13)+CHAR(10)," ") AS inf_detail_2  FROM journal.rigtable as r WHERE  is_delete = ? AND id_reasonrig IN('. implode(',', $data['id_reasonrig']).') AND latitude <> 0 AND longitude <> 0 AND address is not null and LENGTH(latitude) >8 and LENGTH(longitude) >8 AND inf_detail <> "" ';
+            //$param[] = $data['id_reasonrig'];
+        } else {
+            $sql = 'SELECT r.*, SUBSTRING(REPLACE(inf_detail,CHAR(13)+CHAR(10)," "), 1, 250) AS inf_detail_1,REPLACE(inf_detail,CHAR(13)+CHAR(10)," ") AS inf_detail_2  FROM journal.rigtable as r WHERE  is_delete = ? AND latitude is not null AND longitude <> 0 AND address is not null and LENGTH(latitude) >8 and LENGTH(longitude) >8 AND inf_detail <> ""';
+        }
+
+        $this->setDateStart($data['date_start']);
+        $this->setDateEnd($data['date_end']);
+
+        return $this->getRigTableWithLimit($sql, $param,$data['limit']);
+    }
+
+
+
+
+    public function getRigTableWithLimit($sql, $param,$limit=0) {
+        if (isset($this->date_start) && isset($this->date_end)) {//с 06 00 до 06 00 по конкретным датам пользователя
+
+
+                 $date_filter = ' AND date_msg between ? and ? and id not in '
+                . '  ( SELECT id FROM journal.rigtable WHERE is_delete = 0'
+.' and (date_msg = ? and time_msg< ? ) or  (date_msg = ? and time_msg>= ? )  ) ';// с 06 утра до 06 утра
+        $param[] = $this->date_start;
+        $param[] = $this->date_end;
+
+        $param[] = $this->date_start;
+        $param[] = $this->time1;
+        $param[] = $this->date_end;
+        $param[] = $this->time2;
+
+        } else {//с 06 00 до 06 00 за текущие сутки
+
+            $this->getPeriodDefault();
+
+
+                 $date_filter = ' AND date_msg between ? and ? and id not in '
+                . '  ( SELECT id FROM journal.rigtable WHERE is_delete = 0'
+.' and (date_msg = ? and time_msg< ? ) or  (date_msg = ? and time_msg>= ? )  ) ';// с 06 утра до 06 утра
+        $param[] = $this->date1;
+        $param[] = $this->date2;
+
+        $param[] = $this->date1;
+        $param[] = $this->time1;
+        $param[] = $this->date2;
+        $param[] = $this->time2;
+
+        }
+
+        if (isset($date_filter)) { //добавляем
+            $sql = $sql . $date_filter;
+        }
+
+        if(isset($limit) && $limit != 0)
+             $sql = $sql .' LIMIT '.$limit;
+
+//            print_r($sql);
+//            print_r($param);
+//            exit();
+        return R::getAll($sql, $param);
+    }
+
+
+    public function setStartEndDates($start_date,$end_date)
+    {
+           $this->setDateStart($start_date);
+            $this->setDateEnd($end_date);
     }
 }
 

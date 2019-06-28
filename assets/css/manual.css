@@ -92,6 +92,112 @@
         /*---------- END таблица с выездами ------------*/
 
 
+        /* rig table type 1 */
+        #inptrigFormType11, #inptrigFormType12{
+            width: 78px;
+        }
+         #inptrigFormType13{
+            width: 74px;
+        }
+         #inptrigFormType14{
+            width: 100px;
+        }
+          #inptrigFormType15{
+            width: 155px;
+        }
+         #inptrigFormType17{
+            width: 100px;
+        }
+          #inptrigFormType16{
+            width: 232px;
+        }
+
+         #selrigFormType18,#inptrigFormType18{
+            width: 80px;
+        }
+
+        #inptrigFormType111,#selrigFormType113,#inptrigFormType110{
+            width: 60px;
+        }
+         #inptrigFormType112{
+            width: 60px;
+        }
+         #inptrigFormType19{
+            width: 190px;
+        }
+
+         #inptrigFormType10{
+            width: 50px;
+        }
+
+        #selrigFormType112{
+            width: 100px;
+        }
+        #rigTableType1_wrapper{
+            width: 98%;
+        }
+
+        /* rig table type1 */
+
+
+
+
+
+        /* rig table type 2 */
+        #inptrigFormType21, #inptrigFormType22{
+            width: 78px;
+        }
+         #inptrigFormType23{
+            width: 74px;
+        }
+         #inptrigFormType24{
+            width: 250px;
+        }
+          #inptrigFormType25{
+            width: 50px;
+        }
+         #inptrigFormType27{
+            width: 50px;
+        }
+          #inptrigFormType26,#selrigFormType217,#inptrigFormType210,#inptrigFormType211{
+            width: 50px;
+        }
+
+         #selrigFormType28,#inptrigFormType28{
+            width: 71px;
+        }
+
+        #selrigFormType213,#inptrigFormType213{
+            width: 86px;
+        }
+         #inptrigFormType212{
+            width: 60px;
+        }
+         #inptrigFormType29,#selrigFormType214,#inptrigFormType214,#selrigFormType216{
+            width: 50px;
+        }
+
+         #inptrigFormType20,#selrigFormType218{
+            width: 50px !important;
+        }
+
+        #selrigFormType212{
+            width: 80px;
+        }
+        #inptrigFormType216,#inptrigFormType217,#selrigFormType21{
+            width: 71px;
+        }
+
+        #inptrigFormType215{
+             width: 150px;
+        }
+        #rigTableType2_wrapper{
+            width: 94%;
+        }
+
+        /* rig table type2 */
+
+
                 /*---------- таблица с классификаторами ------------*/
 
         #inptclassifForm0,#inptclassifForm_actionwaybill0{
@@ -346,7 +452,7 @@ top:2px;
 
 
 .red-border-input{
-     border: solid 2px #e61010;
+     border: solid 2px #e61010 !important;
 }
 
 #logslogin_tbl_wrapper{
@@ -356,4 +462,36 @@ top:2px;
 #logsaction_tbl_wrapper{
     width: 65%;
 }
+
+.active-sidebar{
+        border-color: #3c8dbc !important;
+}
+
+
+#inptremarkTable0,#inptremarkTable10{
+    width: 46px;
+}
+#inptremarkTable1,#inptremarkTable3{
+    width: 150px
+}
+#inptremarkTable2,#inptremarkTable5{
+    width: 100px
+}
+#inptremarkTable9{
+     width: 130px
+}
+#inptremarkTable4{
+      width: 100px
+}
+#selremarkTable8{
+    width: 70px;
+}
+#selremarkTable6{
+    width: 50px;
+}
+
+
+        #remarkTableRcu_wrapper,#remarkTable_wrapper{
+            width: 92%;
+        }
 
