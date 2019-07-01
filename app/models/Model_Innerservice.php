@@ -197,6 +197,15 @@ class Model_Innerservice {
         return $new_result;
     }
 
+
+
+    public function selectAllForCard($id_rig) {
+
+        $result = R::getAll('SELECT i.id,i.id_rig, i.time_msg, i.time_arrival, i.distance, i.note, s.name as service_name FROM innerservice as i left join service as s ON s.id=i.id_service WHERE i.id_rig =  ' . $id_rig );
+
+        return $result;
+    }
+
 }
 
 ?>

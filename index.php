@@ -4835,6 +4835,7 @@ $table_name_year=$app->request()->post('archive_year');
 $region_id=$app->request()->post('region');
 $local=$app->request()->post('local');
 
+$data['table_name_year']=$table_name_year;
 //$date_start='2018-12-03';
 //$date_end='2018-12-10';
 //$table_name_year='2018a';
@@ -6212,232 +6213,20 @@ elseif($id_tab=='table-content4'){//innerservice
     /* search from archive */
     $app->post('/search/rig', function () use ($app) {
 
+        /* select data from bd. */
+        $id_rig = $app->request()->post('id_rig');
+        $table_name_year = $app->request()->post('archive_year');
+
+        $data=getCardByIdRig($table_name_year,$id_rig);
+
+
+
         $bread_crumb = array('Архив', 'Поиск по ID выезда');
         $data['bread_crumb'] = $bread_crumb;
         $data['title'] = 'Архив.Поиск по ID выезда';
 
 
-
-        /* select data from bd. */
-        $id_rig = $app->request()->post('id_rig');
-        $table_name_year = $app->request()->post('archive_year');
-
-        $sql = ' SELECT * FROM jarchive.' . $table_name_year . '  WHERE  id_rig = ' . $id_rig;
-
-        $result = R::getAll($sql);
-        $r=array();
-
-
-        $i=0;
-        foreach ($result as $value) {
-            $r['id_rig']=$value['id_rig'];
-             $r['date_msg']=$value['date_msg'];
-             $r['time_msg']=$value['time_msg'];
-             $r['time_loc']=$value['time_loc'];
-             $r['time_likv']=$value['time_likv'];
-             $r['address']=(empty($value['address'])) ? ((!empty($value['additional_field_address'])) ? $value['additional_field_address'] : '') : $value['address'];
-
-              $r['is_address']=(empty($value['address'])) ? 0 : 1;
-
-             $r['inf_region']=array();
-             if(strpos($value['region_name'], "г.") === 0)
-             $r['region_name']='';
-             else
-                 $r['region_name']=$value['region_name'].' область';
-
-             if(strpos($value['local_name'], "г.") === 0)
-             $r['local_name']='';
-             else
-                 $r['local_name']=$value['local_name'].' район';
-
-             if(!empty($r['region_name']))
-                 $r['inf_region'][]=$r['region_name'];
-             if(!empty($r['local_name']))
-                 $r['inf_region'][]=$r['local_name'];
-
-             $r['inf_additional_field']=array();
-             if(!empty($value['additional_field_address']))
-                 $r['inf_additional_field'][]=$value['additional_field_address'];
-                          if($value['is_opposite'] == 1)
-                 $r['inf_additional_field'][]='напротив';
-
-
-
-
-
-
-
-             $r['reasonrig_name']=($value['reasonrig_name'] == 'не выбрано') ? '' : (stristr($value['reasonrig_name'], ' '));
-             $r['view_work']=($value['view_work'] == 'не выбрано') ? '' : $value['view_work'];
-             $r['firereason_name']=($value['firereason_name'] == 'не выбрано') ? '' : $value['firereason_name'];
-             $r['inspector']=(empty($value['inspector']) || $value['inspector'] == '') ? '' : $value['inspector'];
-
-
-
-             $r['description']=(empty($value['description']) || $value['description'] == '') ? '' : $value['description'];
-             $r['inf_detail']=(empty($value['inf_detail']) || $value['inf_detail'] == '') ? '' : $value['inf_detail'];
-             $r['firereason_description']=(empty($value['firereason_description']) || $value['firereason_description'] == '') ? '' : $value['firereason_description'];
-
-
-
-             $r['people']=(empty($value['people']) || $value['people'] == '') ? '' : $value['people'];
-              $r['object']=(empty($value['object']) || $value['object'] == '') ? '' : $value['object'];
-              $r['office_name']=($value['office_name'] == 'не выбрано') ? '' : $value['office_name'];
-
-               $r['latitude']=(empty($value['latitude'] ) || $value['latitude'] == 0 || $value['latitude']  == NULL) ? '' : $value['latitude'];
-               $r['longitude']=(empty($value['longitude'] ) || $value['longitude'] == 0 || $value['longitude']  == NULL) ? '' : $value['longitude'];
-
-                $r['google_link']='';
-                $r['yandex_link']='';
-                $r['coord_link']=array();
-
-               if (!empty($r['latitude']) && !empty($r['longitude'])){
-                   $yandex_link='https://yandex.by/maps/26010/kobrin/?ll='.$r['longitude'].'%2C'.$r['latitude'].'&mode=search&sll=27.492966%2C53.870999&sspn=0.493011%2C0.173885&text='.$r['latitude'].'%2C%20'.$r['longitude'].'&z=17';
-                   $yandex_link_new='<a href="'.$yandex_link.'" target="_blank">ссылка на yandex карту</a>';
-                   $google_link='https://www.google.com/search?q='.$r['latitude'].'%2C+'.$r['longitude'].'&rlz=1C1VFKB_enBY842BY842&oq='.$r['latitude'].'%2C+'.$r['longitude'].'&aqs=chrome..69i57.487j0j7&sourceid=chrome&ie=UTF-8';
-                   $google_link_new='<a href="'.$google_link.'" target="_blank">ссылка на google карту</a>';
-                $r['coord'] = $r['latitude'] . ', ' . $r['longitude'];
-
-
-$r['coord_link'][]=$yandex_link_new;
-                $r['coord_link'][]=$google_link_new;
-
-               }
-            elseif (!empty($r['latitude']))
-            $r['coord'] = $r['latitude'];
-            elseif(!empty($r['longitude']) )
-            $r['coord'] = $r['longitude'];
-            else
-            $r['coord'] = '';
-
-
-
-            /* sily mchs */
-            $is_likv_before=($value['is_likv_before_arrival'] == 0)?'нет':'да' ;
-            $arr_silymchs = explode('~', $value['silymchs']);
-
-            $silymchs=array();
-
-            // 1 car
-            foreach ($arr_silymchs as $row) {
-               // $row_data=array();
-                if (!empty($row)) {
-                    $i++;
-                    $arr_mark = explode('#', $row);
-                    /* mark - before # */
-                    // $mark[]=$arr_mark[0];
-                    $mark = $arr_mark[0];
-
-                    /* all after # explode, exit,arrival......is_return , result -all  after ? */
-                    $arr_time = explode('?', $arr_mark[1]);
-
-
-                    $numbsign_part= explode('$', $arr_time[0]);
-                    $numbsign=$numbsign_part[0];
-                    $podr_part= explode('%', $numbsign_part[1]);
-                    $podr=$podr_part[0].', '.$podr_part[1];
-
-
-                    /* all  after ? explode.  exit,arrival......is_return */
-                    $each_time = explode('&', $arr_time[1]);
-                    $t_exit = (!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
-                    $t_arrival = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
-                    $t_follow =(!empty($each_time[2]) && $each_time[2] != '-') ? date('H:i', strtotime($each_time[2])) : '-';
-                    $t_end = (!empty($each_time[3]) && $each_time[3] != '-') ? date('H:i', strtotime($each_time[3])) : '-';
-                    $t_return = (!empty($each_time[4]) && $each_time[4] != '-') ? date('H:i', strtotime($each_time[4])) : '-';
-                    $t_distance = $each_time[5];
-                    $t_is_return = ($each_time[6] == 0) ? 'нет' : 'да';
-
-
-
-                    $row_data=array('mark'=>$mark,'numbsign'=>$numbsign,'podr'=>$podr,'time_msg'=>date('H:i', strtotime($value['time_msg'])), 't_exit'=>$t_exit,
-                       't_arrival'=>$t_arrival, 'is_likv_before'=>$is_likv_before,'t_end'=>$t_end, 't_return'=>$t_return,'t_follow'=>$t_follow,
-                        't_distance'=>$t_distance,'t_is_return'=>$t_is_return);
-
-                    $silymchs[]=$row_data;
-                }
-            }
-             $data['silymchs'] = $silymchs;
-
-
-
-             /* inner service */
-
-             $innerservice=array();
-
-   $arr = explode('~', $value['innerservice']);
-
-            foreach ($arr as $row) {
-
-                if (!empty($row)) {
-                    $i++;
-                    $arr_name = explode('#', $row);
-                    /* fio - before # */
-                    $service_name = $arr_name[0];
-
-                    /* all  after # explode. time_msg,time_exit.... */
-                    $each_time = explode('&', $arr_name[1]);
-
-                    $t_msg =(!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
-                    $t_arrival = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
-
-                    $note = explode('%', $each_time[2]);
-
-                    $t_distance = $note[0];
-                    $t_note = $note[1];
-
-
-                    $row_data=array('service_name'=>$service_name,'time_msg'=>$t_msg,
-                       't_arrival'=>$t_arrival,
-                        't_distance'=>$t_distance,'note'=>$t_note);
-
-                    $innerservice[]=$row_data;
-                }
-            }
-             $data['innerservice'] = $innerservice;
-
-
-
-             /* informing */
-
-            $informing = array();
-            $i = 0;
-
-            $arr = explode('~', $value['informing']);
-
-            foreach ($arr as $row) {
-                if (!empty($row)) {
-                    $i++;
-                    $arr_fio = explode('#', $row);
-                    /* fio - before # */
-                    $fio = $arr_fio[0];
-
-                    /* all  after # explode. time_msg,time_exit.... */
-                    $each_time = explode('&', $arr_fio[1]);
-
-                   $t_msg =(!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
-                    $t_exit = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
-                    $t_arrival = (!empty($each_time[2]) && $each_time[2] != '-') ? date('H:i', strtotime($each_time[2])) : '-';
-
-                    $row_data = array('fio' => $fio, 'time_msg'     => $t_msg, 't_exit'    => $t_exit,
-                        't_arrival'    => $t_arrival);
-
-                    $informing[] = $row_data;
-                }
-            }
-             $data['informing'] = $informing;
-        }
-
-       // print_r($silymchs);exit();
-
-
-        $data['result'] = $r;
-
-
-
-        //$result=array();
-        //$result = 1;
-        if (empty($result)) {//no results
+        if (empty($data['result'])) {//no results
 
             $data['result_search_empty'] = 1;
 
@@ -6456,56 +6245,6 @@ $r['coord_link'][]=$yandex_link_new;
             $app->render('card_by_id_rig/id/card_by_id_rig.php', $data);
         }
     });
-
-
-    /* link from archive */
-    $app->get('/search/rig(/:year/:id_rig)', function () use ($app) {
-
-        $bread_crumb = array('Архив', 'Поиск по ID выезда');
-        $data['bread_crumb'] = $bread_crumb;
-        $data['title'] = 'Архив.Поиск по ID выезда';
-
-
-
-        /*         * *** Классификаторы **** */
-        // $region = new Model_Region();
-
-
-        $name_oblast[1] = 'Брестская область';
-        $name_oblast[2] = 'Витебская область';
-        $name_oblast[3] = 'г. Минск';
-        $name_oblast[4] = 'Гомельская область';
-        $name_oblast[5] = 'Гродненская область';
-        $name_oblast[6] = 'Минская область';
-        $name_oblast[7] = 'Могилевская область';
-
-        $data['region'] = $name_oblast; //области
-
-        $archive_m = new Model_Archivedate();
-        $data['archive_date'] = $archive_m->selectAll();
-        //$archive_year_m = new Model_Archiveyear();
-        // $data['archive_year'] = $archive_year_m->selectAll();
-        $archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
-
-        foreach ($archive_year as $value) {
-            $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
-            $archive_year_1[] = $value;
-        }
-        $data['archive_year'] = $archive_year_1;
-
-        /*         * *** КОНЕЦ Классификаторы **** */
-
-
-
-
-
-        //$result=array();
-        $result = 1;
-        if (!empty($result)) {
-            $app->render('card_by_id_rig/id/card_by_id_rig.php', $data);
-        }
-    });
-
 
     /* END search by id rig */
 });
@@ -6531,6 +6270,38 @@ $r['coord_link'][]=$yandex_link_new;
 /* ------------------------- END  Archive Журнал ЦОУ ------------------------------- */
 
 
+
+/*-------- card of rig by id - link from journal rigtable, from archive rigtable -------*/
+$app->get('/card_rig/:year/:id_rig', function ($year, $id_rig) use ($app) {
+
+    /* from bd */
+    if (isset($year) && isset($id_rig)) {
+
+        if ($year == 0) {//from journal
+            $data = getCardByIdRigFromJournal($id_rig);
+            //print_r($data);
+            // exit();
+        } else {//from archive
+            $data = getCardByIdRig($year, $id_rig);
+        }
+    }
+
+
+
+    $bread_crumb = array('Архив', 'Поиск по ID выезда');
+    $data['bread_crumb'] = $bread_crumb;
+    $data['title'] = 'Архив.Поиск по ID выезда';
+
+    $data['no_btn_back'] = 1;
+
+
+    if (isset($data['result']) && !empty($data['result'])) {
+        $app->render('card_by_id_rig/id/card_by_id_rig.php', $data);
+    } else {//no results
+        $app->render('card_by_id_rig/id/empty_result.php', $data);
+    }
+});
+/*------ END card of rig by id - link from journal rigtable -------*/
 
 
 /* ------------------------- diagram ------------------------------- */
@@ -7753,11 +7524,439 @@ function getEmptyFields($rigs){
 }
 
 
- $app->get('/aaa', function () use ($app) {
 
 
-        $app->render('aaa.php');
+/* select data from bd. card by id rig. archive_1 */
+function getCardByIdRig($table_name_year,$id_rig){
+     $sql = ' SELECT * FROM jarchive.' . $table_name_year . '  WHERE  id_rig = ' . $id_rig;
 
-    });
+        $result = R::getAll($sql);
+        $r=array();
+
+
+        $i=0;
+        foreach ($result as $value) {
+            $r['id_rig']=$value['id_rig'];
+             $r['date_msg']=$value['date_msg'];
+             $r['time_msg']=$value['time_msg'];
+             $r['time_loc']=$value['time_loc'];
+             $r['time_likv']=$value['time_likv'];
+             $r['address']=(empty($value['address'])) ? ((!empty($value['additional_field_address'])) ? $value['additional_field_address'] : '') : $value['address'];
+
+              $r['is_address']=(empty($value['address'])) ? 0 : 1;
+
+             $r['inf_region']=array();
+             if(strpos($value['region_name'], "г.") === 0)
+             $r['region_name']='';
+             else
+                 $r['region_name']=$value['region_name'].' область';
+
+             if(strpos($value['local_name'], "г.") === 0)
+             $r['local_name']='';
+             else
+                 $r['local_name']=$value['local_name'].' район';
+
+             if(!empty($r['region_name']))
+                 $r['inf_region'][]=$r['region_name'];
+             if(!empty($r['local_name']))
+                 $r['inf_region'][]=$r['local_name'];
+
+             $r['inf_additional_field']=array();
+             if(!empty($value['additional_field_address']))
+                 $r['inf_additional_field'][]=$value['additional_field_address'];
+                          if($value['is_opposite'] == 1)
+                 $r['inf_additional_field'][]='напротив';
+
+
+
+
+
+
+
+             $r['reasonrig_name']=($value['reasonrig_name'] == 'не выбрано') ? '' : (stristr($value['reasonrig_name'], ' '));
+             $r['view_work']=($value['view_work'] == 'не выбрано') ? '' : $value['view_work'];
+             $r['firereason_name']=($value['firereason_name'] == 'не выбрано') ? '' : $value['firereason_name'];
+             $r['inspector']=(empty($value['inspector']) || $value['inspector'] == '') ? '' : $value['inspector'];
+
+
+
+             $r['description']=(empty($value['description']) || $value['description'] == '') ? '' : $value['description'];
+             $r['inf_detail']=(empty($value['inf_detail']) || $value['inf_detail'] == '') ? '' : $value['inf_detail'];
+             $r['firereason_description']=(empty($value['firereason_description']) || $value['firereason_description'] == '') ? '' : $value['firereason_description'];
+
+
+
+             $r['people']=(empty($value['people']) || $value['people'] == '') ? '' : $value['people'];
+              $r['object']=(empty($value['object']) || $value['object'] == '') ? '' : $value['object'];
+              $r['office_name']=($value['office_name'] == 'не выбрано') ? '' : $value['office_name'];
+
+               $r['latitude']=(empty($value['latitude'] ) || $value['latitude'] == 0 || $value['latitude']  == NULL) ? '' : $value['latitude'];
+               $r['longitude']=(empty($value['longitude'] ) || $value['longitude'] == 0 || $value['longitude']  == NULL) ? '' : $value['longitude'];
+
+                $r['google_link']='';
+                $r['yandex_link']='';
+                $r['coord_link']=array();
+
+               if (!empty($r['latitude']) && !empty($r['longitude'])) {
+            $yandex_link = 'https://yandex.by/maps/26010/kobrin/?ll=' . $r['longitude'] . '%2C' . $r['latitude'] . '&mode=search&sll=27.492966%2C53.870999&sspn=0.493011%2C0.173885&text=' . $r['latitude'] . '%2C%20' . $r['longitude'] . '&z=17';
+            $yandex_link_new = '<a href="' . $yandex_link . '" target="_blank"><img src="/journal/assets/images/yandex.png" style="width: 1.5%"></a>';
+            $google_link = 'https://www.google.com/search?q=' . $r['latitude'] . '%2C+' . $r['longitude'] . '&rlz=1C1VFKB_enBY842BY842&oq=' . $r['latitude'] . '%2C+' . $r['longitude'] . '&aqs=chrome..69i57.487j0j7&sourceid=chrome&ie=UTF-8';
+            $google_link_new = '<a href="' . $google_link . '" target="_blank"><img src="/journal/assets/images/google.png" style="width: 1.2%"></a>';
+            $r['coord'] = $r['latitude'] . ', ' . $r['longitude'];
+
+
+            $r['coord_link'][] = $yandex_link_new;
+            $r['coord_link'][] = $google_link_new;
+        } elseif (!empty($r['latitude']))
+            $r['coord'] = $r['latitude'];
+        elseif (!empty($r['longitude']))
+            $r['coord'] = $r['longitude'];
+        else
+            $r['coord'] = '';
+
+            /* sily mchs */
+            $is_likv_before=($value['is_likv_before_arrival'] == 0)?'нет':'да' ;
+            $arr_silymchs = explode('~', $value['silymchs']);
+
+            $silymchs=array();
+
+            // 1 car
+            foreach ($arr_silymchs as $row) {
+               // $row_data=array();
+                if (!empty($row)) {
+                    $i++;
+                    $arr_mark = explode('#', $row);
+                    /* mark - before # */
+                    // $mark[]=$arr_mark[0];
+                    $mark = $arr_mark[0];
+
+                    /* all after # explode, exit,arrival......is_return , result -all  after ? */
+                    $arr_time = explode('?', $arr_mark[1]);
+
+
+                    $numbsign_part= explode('$', $arr_time[0]);
+                    $numbsign=$numbsign_part[0];
+                    $podr_part= explode('%', $numbsign_part[1]);
+                    $podr=$podr_part[0].', '.$podr_part[1];
+
+
+                    /* all  after ? explode.  exit,arrival......is_return */
+                    $each_time = explode('&', $arr_time[1]);
+                    $t_exit = (!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
+                    $t_arrival = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
+                    $t_follow =(!empty($each_time[2]) && $each_time[2] != '-') ? date('H:i', strtotime($each_time[2])) : '-';
+                    $t_end = (!empty($each_time[3]) && $each_time[3] != '-') ? date('H:i', strtotime($each_time[3])) : '-';
+                    $t_return = (!empty($each_time[4]) && $each_time[4] != '-') ? date('H:i', strtotime($each_time[4])) : '-';
+                    $t_distance = $each_time[5];
+                    $t_is_return = ($each_time[6] == 0) ? 'нет' : 'да';
+
+
+
+                    $row_data=array('mark'=>$mark,'numbsign'=>$numbsign,'podr'=>$podr,'time_msg'=>date('H:i', strtotime($value['time_msg'])), 't_exit'=>$t_exit,
+                       't_arrival'=>$t_arrival, 'is_likv_before'=>$is_likv_before,'t_end'=>$t_end, 't_return'=>$t_return,'t_follow'=>$t_follow,
+                        't_distance'=>$t_distance,'t_is_return'=>$t_is_return);
+
+                    $silymchs[]=$row_data;
+                }
+            }
+             $data['silymchs'] = $silymchs;
+
+
+
+             /* inner service */
+
+             $innerservice=array();
+
+   $arr = explode('~', $value['innerservice']);
+
+            foreach ($arr as $row) {
+
+                if (!empty($row)) {
+                    $i++;
+                    $arr_name = explode('#', $row);
+                    /* fio - before # */
+                    $service_name = $arr_name[0];
+
+                    /* all  after # explode. time_msg,time_exit.... */
+                    $each_time = explode('&', $arr_name[1]);
+
+                    $t_msg =(!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
+                    $t_arrival = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
+
+                    $note = explode('%', $each_time[2]);
+
+                    $t_distance = $note[0];
+                    $t_note = $note[1];
+
+
+                    $row_data=array('service_name'=>$service_name,'time_msg'=>$t_msg,
+                       't_arrival'=>$t_arrival,
+                        't_distance'=>$t_distance,'note'=>$t_note);
+
+                    $innerservice[]=$row_data;
+                }
+            }
+             $data['innerservice'] = $innerservice;
+
+
+
+             /* informing */
+
+            $informing = array();
+            $i = 0;
+
+            $arr = explode('~', $value['informing']);
+
+            foreach ($arr as $row) {
+                if (!empty($row)) {
+                    $i++;
+                    $arr_fio = explode('#', $row);
+                    /* fio - before # */
+                    $fio = $arr_fio[0];
+
+                    /* all  after # explode. time_msg,time_exit.... */
+                    $each_time = explode('&', $arr_fio[1]);
+
+                   $t_msg =(!empty($each_time[0]) && $each_time[0] != '-') ? date('H:i', strtotime($each_time[0])) : '-';
+                    $t_exit = (!empty($each_time[1]) && $each_time[1] != '-') ? date('H:i', strtotime($each_time[1])) : '-';
+                    $t_arrival = (!empty($each_time[2]) && $each_time[2] != '-') ? date('H:i', strtotime($each_time[2])) : '-';
+
+                    $row_data = array('fio' => $fio, 'time_msg'     => $t_msg, 't_exit'    => $t_exit,
+                        't_arrival'    => $t_arrival);
+
+                    $informing[] = $row_data;
+                }
+            }
+             $data['informing'] = $informing;
+        }
+
+       // print_r($silymchs);exit();
+
+
+        $data['result'] = $r;
+
+        return $data;
+}
+
+
+/* select data from bd. card by id rig. rigtable journal */
+function getCardByIdRigFromJournal($id_rig){
+     $sql = ' SELECT * FROM rigtable  WHERE  id = ' . $id_rig;
+
+        $result = R::getAll($sql);
+        $r=array();
+
+
+        $i=0;
+        foreach ($result as $value) {
+            $r['id_rig']=$value['id'];
+             $r['date_msg']=$value['date_msg'];
+             $r['time_msg']=$value['time_msg'];
+             $r['time_loc']=$value['time_loc'];
+             $r['time_likv']=$value['time_likv'];
+             $r['address']=(empty($value['address'])) ? ((!empty($value['additional_field_address'])) ? $value['additional_field_address'] : '') : $value['address'];
+
+              $r['is_address']=(empty($value['address'])) ? 0 : 1;
+
+             $r['inf_region']=array();
+             if(strpos($value['region_name'], "г.") === 0)
+             $r['region_name']='';
+             else
+                 $r['region_name']=$value['region_name'].' область';
+
+             if(strpos($value['local_name'], "г.") === 0)
+             $r['local_name']='';
+             else
+                 $r['local_name']=$value['local_name'].' район';
+
+             if(!empty($r['region_name']))
+                 $r['inf_region'][]=$r['region_name'];
+             if(!empty($r['local_name']))
+                 $r['inf_region'][]=$r['local_name'];
+
+             $r['inf_additional_field']=array();
+             if(!empty($value['additional_field_address']))
+                 $r['inf_additional_field'][]=$value['additional_field_address'];
+                          if($value['is_opposite'] == 1)
+                 $r['inf_additional_field'][]='напротив';
+
+
+             $r['reasonrig_name']=($value['reasonrig_name'] == 'не выбрано') ? '' : (stristr($value['reasonrig_name'], ' '));
+             $r['view_work']=($value['view_work'] == 'не выбрано') ? '' : $value['view_work'];
+             $r['firereason_name']=($value['firereason_name'] == 'не выбрано') ? '' : $value['firereason_name'];
+             $r['inspector']=(empty($value['inspector']) || $value['inspector'] == '') ? '' : $value['inspector'];
+
+
+
+             $r['description']=(empty($value['description']) || $value['description'] == '') ? '' : $value['description'];
+             $r['inf_detail']=(empty($value['inf_detail']) || $value['inf_detail'] == '') ? '' : $value['inf_detail'];
+             $r['firereason_description']=(empty($value['firereason_description']) || $value['firereason_description'] == '') ? '' : $value['firereason_description'];
+
+
+
+
+              $r['object']=(empty($value['object']) || $value['object'] == '') ? '' : $value['object'];
+              $r['office_name']=($value['office_name'] == 'не выбрано') ? '' : $value['office_name'];
+
+               $r['latitude']=(empty($value['latitude'] ) || $value['latitude'] == 0 || $value['latitude']  == NULL) ? '' : $value['latitude'];
+               $r['longitude']=(empty($value['longitude'] ) || $value['longitude'] == 0 || $value['longitude']  == NULL) ? '' : $value['longitude'];
+
+                $r['google_link']='';
+                $r['yandex_link']='';
+                $r['coord_link']=array();
+
+               if (!empty($r['latitude']) && !empty($r['longitude'])) {
+            $yandex_link = 'https://yandex.by/maps/26010/kobrin/?ll=' . $r['longitude'] . '%2C' . $r['latitude'] . '&mode=search&sll=27.492966%2C53.870999&sspn=0.493011%2C0.173885&text=' . $r['latitude'] . '%2C%20' . $r['longitude'] . '&z=17';
+            $yandex_link_new = '<a href="' . $yandex_link . '" target="_blank"><img src="/journal/assets/images/yandex.png" style="width: 1.5%"></a>';
+            $google_link = 'https://www.google.com/search?q=' . $r['latitude'] . '%2C+' . $r['longitude'] . '&rlz=1C1VFKB_enBY842BY842&oq=' . $r['latitude'] . '%2C+' . $r['longitude'] . '&aqs=chrome..69i57.487j0j7&sourceid=chrome&ie=UTF-8';
+            $google_link_new = '<a href="' . $google_link . '" target="_blank"><img src="/journal/assets/images/google.png" style="width: 1.2%"></a>';
+            $r['coord'] = $r['latitude'] . ', ' . $r['longitude'];
+
+
+            $r['coord_link'][] = $yandex_link_new;
+            $r['coord_link'][] = $google_link_new;
+        } elseif (!empty($r['latitude']))
+            $r['coord'] = $r['latitude'];
+        elseif (!empty($r['longitude']))
+            $r['coord'] = $r['longitude'];
+        else
+            $r['coord'] = '';
+
+
+
+
+        /* people */
+            $people= R::getAll('select * from people where id_rig = ?',array($id_rig));
+            $arr_people=array();
+            if(!empty($people)){
+                            foreach ($people as $p) {
+
+            if (!empty($p['fio']))
+                $arr_people[] = $p['fio'];
+            if (!empty($p['phone']))
+                $arr_people[] = 'тел: ' . $p['phone'];
+            if (!empty($p['position']))
+                $arr_people[] = $p['position'];
+            if (!empty($value['address']))
+                $arr_people[] = $p['address'];
+        }
+            }
+
+
+         $r['people']=(empty($arr_people) ) ? '' : implode(', ', $arr_people);
+
+            /* sily mchs */
+            $is_likv_before=($value['is_likv_before_arrival'] == 0)?'нет':'да' ;
+            $arr_silymchs = R::getAll('select * from jrig where id_rig = ?',array($id_rig));
+
+            $silymchs=array();
+
+            // 1 car
+            foreach ($arr_silymchs as $row) {
+               // $row_data=array();
+                if (!empty($row)) {
+                    $i++;
+
+                    $mark = $row['mark'];
+
+                    $numbsign=$row['numbsign'];
+                    $podr=$row['locorg_name'].', '.$row['pasp_name'];
+
+
+                    /* all  after ? explode.  exit,arrival......is_return */
+                    $t_exit = (!empty($row['time_exit']) && $row['time_exit'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_exit'])) : '-';
+                    $t_arrival = (!empty($row['time_arrival']) && $row['time_arrival'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_arrival'])) : '-';
+                    $t_follow =(!empty($row['time_follow']) && $row['time_follow'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_follow'])) : '-';
+                    $t_end = (!empty($row['time_end']) && $row['time_end'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_end'])) : '-';
+                    $t_return =(!empty($row['time_return']) && $row['time_return'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_return'])) : '-';
+                    $t_distance = (!empty($row['distance'])) ? $row['distance'] : '0';
+                    $t_is_return = ($row['is_return'] == 0) ? 'нет' : 'да';
+
+
+
+                    $row_data=array('mark'=>$mark,'numbsign'=>$numbsign,'podr'=>$podr,'time_msg'=>date('H:i', strtotime($value['time_msg'])), 't_exit'=>$t_exit,
+                       't_arrival'=>$t_arrival, 'is_likv_before'=>$is_likv_before,'t_end'=>$t_end, 't_return'=>$t_return,'t_follow'=>$t_follow,
+                        't_distance'=>$t_distance,'t_is_return'=>$t_is_return);
+
+                    $silymchs[]=$row_data;
+                }
+            }
+             $data['silymchs'] = $silymchs;
+
+
+//
+//             /* inner service */
+
+             $innerservice=array();
+
+            $innerservice_m = new Model_Innerservice();
+            $arr = $innerservice_m->selectAllForCard($id_rig);
+
+            foreach ($arr as $row) {
+
+                if (!empty($row)) {
+                    $i++;
+
+                    /* fio - before # */
+                    $service_name = $row['service_name'];
+
+                    /* all  after # explode. time_msg,time_exit.... */
+
+                    $t_msg =(!empty($row['time_msg']) && $row['time_msg'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_msg']))  : '-';
+                    $t_arrival = (!empty($row['time_arrival']) && $row['time_arrival'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_arrival']))  : '-';
+
+
+                    $t_distance = (!empty($row['distance'])) ? $row['distance'] : '0';
+                    $t_note = $row['note'];
+
+
+                    $row_data=array('service_name'=>$service_name,'time_msg'=>$t_msg,
+                       't_arrival'=>$t_arrival,
+                        't_distance'=>$t_distance,'note'=>$t_note);
+
+                    $innerservice[]=$row_data;
+                }
+            }
+             $data['innerservice'] = $innerservice;
+
+//
+//
+//             /* informing */
+
+            $informing = array();
+            $i = 0;
+
+                   $informing_m = new Model_Informing();
+        $arr = $informing_m->selectAllByIdRig($id_rig);
+
+        foreach ($arr as $row) {
+                if (!empty($row)) {
+                    $i++;
+
+                    /* fio - before # */
+                    $fio = $row['fio'];
+
+                    /* all  after # explode. time_msg,time_exit.... */
+
+                $t_msg = (!empty($row['time_msg']) && $row['time_msg'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_msg']))  : '-';
+                $t_exit = (!empty($row['time_exit']) && $row['time_exit'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_exit'])) : '-';
+                $t_arrival = (!empty($row['time_arrival']) && $row['time_arrival'] != '0000-00-00 00:00:00') ? date('H:i', strtotime($row['time_arrival'])) : '-';
+
+                $row_data = array('fio' => $fio, 'time_msg'     => $t_msg, 't_exit'    => $t_exit,
+                        't_arrival'    => $t_arrival);
+
+                    $informing[] = $row_data;
+                }
+            }
+             $data['informing'] = $informing;
+        }
+
+       // print_r($silymchs);exit();
+
+
+        $data['result'] = $r;
+
+        return $data;
+}
 
 $app->run();

@@ -38,8 +38,22 @@
 <body>
 
     <div id="wrapper">
+        <?php
+        if (isset($no_btn_back) && $no_btn_back == 1) {
+            ?>
 
-        <a onclick="javascript:history.back();" style="color: black">  <button type="button" style="position: absolute; margin-left: 50px; margin-top: 25px;"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;назад</button></a>
+        <a onclick="window.close()" style="color: black">  <button type="button" style="position: absolute; margin-left: 50px; margin-top: 25px;"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;назад</button></a>
+        <?php
+
+        } else {
+
+            ?>
+            <a onclick="javascript:history.back();" style="color: black">  <button type="button" style="position: absolute; margin-left: 50px; margin-top: 25px;"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;назад</button></a>
+            <?php
+        }
+
+        ?>
+
         <!-- Page Content -->
         <div id="page-wrapper" style="    margin-left: 150px;">
             <div class="container-fluid">
@@ -107,7 +121,7 @@
                             </address>
 
 							<address>
-                                Данные заявителя: <?= (!empty($result['people'])) ? $result['people'] : '-' ?>
+                                 <?= (!empty($result['people'])) ? ('Данные заявителя: '.$result['people']) : '' ?>
 								<br>
 <!--                                Телефон: 209-27-51-->
 								<br>

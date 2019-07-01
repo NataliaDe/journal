@@ -188,7 +188,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                         }
 
                         ?>&nbsp;
-        <?= $row['id'] ?></td>
+                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">       <?= $row['id'] ?></a></td>
 
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= date('d.m.Y', strtotime($row['date_msg'])) ?><br><?= $row['time_msg'] ?>

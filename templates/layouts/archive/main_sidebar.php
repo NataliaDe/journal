@@ -53,8 +53,8 @@
                 </ul>
             </li>
 
-                        <li class="treeview">
-                   <a href="<?= $baseUrl ?>/archive_1/search_form" target="_blank">
+            <li class="treeview">
+                <a href="<?= $baseUrl ?>/archive_1/search_form" target="_blank">
                     <i class="fa fa-search"></i>
                     <span>Поиск по ID выезда</span>
 
