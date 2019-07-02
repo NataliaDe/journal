@@ -482,6 +482,14 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                                 ?>
 
+                                 <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
+                                <i class="fa fa-lg fa-male" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
+
+                                  <a href="<?= $baseUrl ?>/trunk/<?= $row['id'] ?>" target="_blank">
+                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
+
+
+
                                     <!--                        путевка-->
                                     <br><br>
                                     <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >

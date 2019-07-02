@@ -71,7 +71,7 @@
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
 
-
+<script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
 

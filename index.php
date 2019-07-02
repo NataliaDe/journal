@@ -7959,4 +7959,149 @@ function getCardByIdRigFromJournal($id_rig){
         return $data;
 }
 
+
+
+/* ----------- results battle -------------- */
+$app->group('/results_battle', function () use ($app,$log) {
+    // view form
+    $app->get('/:id_rig(/:is_success)', function ($id_rig,$is_success=0) use ($app) {
+
+
+        $bread_crumb = array('Результаты боевой работы');
+        $data['title'] = 'Результаты боевой работы';
+
+        $data['id_rig']=$id_rig;
+
+
+        /* select battle for rig from bd */
+        $battle = R::getRow('select * from results_battle WHERE id_rig = ? ', array($id_rig));
+
+        if (isset($battle) && !empty($battle))
+            $data['id_battle'] = $battle['id'];
+        else
+            $data['id_battle'] = 0;
+
+        $data['battle'] = $battle;
+
+
+        if(isset($is_success))
+        $data['is_success']=$is_success;
+
+        $data['bread_crumb'] = $bread_crumb;
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'results_battle/index.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+
+    });
+
+
+    $app->post('/:id_rig', function ($id_rig) use ($app) {
+
+
+        $save_data=array();
+        $save_data['dead_man'] = (empty($app->request()->post('dead_man'))) ? 0 : intval($app->request()->post('dead_man'));
+        $save_data['save_man'] = (empty($app->request()->post('save_man'))) ? 0 : intval($app->request()->post('save_man'));
+        $save_data['inj_man'] = (empty($app->request()->post('inj_man'))) ? 0 : intval($app->request()->post('inj_man'));
+        $save_data['ev_man'] = (empty($app->request()->post('ev_man'))) ? 0 : intval($app->request()->post('ev_man'));
+
+        $save_data['save_build'] = (empty($app->request()->post('save_build'))) ? 0 : intval($app->request()->post('save_build'));
+        $save_data['dam_build'] = (empty($app->request()->post('dam_build'))) ? 0 : intval($app->request()->post('dam_build'));
+        $save_data['des_build'] = (empty($app->request()->post('des_build'))) ? 0 : intval($app->request()->post('des_build'));
+
+        $save_data['save_teh'] = (empty($app->request()->post('save_teh'))) ? 0 : intval($app->request()->post('save_teh'));
+        $save_data['dam_teh'] = (empty($app->request()->post('dam_teh'))) ? 0 : intval($app->request()->post('dam_teh'));
+        $save_data['des_teh'] = (empty($app->request()->post('des_teh'))) ? 0 : intval($app->request()->post('des_teh'));
+
+        $save_data['save_an'] = (empty($app->request()->post('save_an'))) ? 0 : intval($app->request()->post('save_an'));
+        $save_data['dam_an'] = (empty($app->request()->post('dam_an'))) ? 0 : intval($app->request()->post('dam_an'));
+        $save_data['des_an'] = (empty($app->request()->post('des_an'))) ? 0 : intval($app->request()->post('des_an'));
+
+        $save_data['save_plan'] = (empty($app->request()->post('save_plan'))) ? 0 : $app->request()->post('save_plan');
+        $save_data['dam_plan'] = (empty($app->request()->post('dam_plan'))) ? 0 : $app->request()->post('dam_plan');
+        $save_data['des_plan'] = (empty($app->request()->post('des_plan'))) ? 0 : $app->request()->post('des_plan');
+
+
+
+
+        $id_battle = (empty($app->request()->post('id_battle'))) ? 0 : $app->request()->post('id_battle');
+
+        //save
+        $battle = R::load('results_battle', $id_battle);
+
+        if ($id_battle == 0) {//insert
+            $save_data['date_insert'] = date("Y-m-d H:i:s");
+            $save_data['id_user'] = $_SESSION['id_user'];
+            $save_data['id_rig'] = $id_rig;
+        }
+        $save_data['last_update'] = date("Y-m-d H:i:s");
+
+        $battle->import($save_data);
+
+        R::store($battle);
+
+        $app->redirect(BASE_URL . '/results_battle/'.$id_rig.'/1');
+    });
+});
+
+/* ----------- END results battle -------------- */
+
+
+
+
+/* ----------- trunk -------------- */
+$app->group('/trunk', function () use ($app,$log) {
+    // view form
+    $app->get('/:id_rig(/:is_success)', function ($id_rig,$is_success=0) use ($app) {
+
+
+        $bread_crumb = array('Подача стволов');
+        $data['title'] = 'Подача стволов';
+
+        $data['id_rig']=$id_rig;
+
+
+        /* select battle for rig from bd */
+        $rig_time = R::getRow('select * from rig WHERE id = ? ', array($id_rig));
+
+        $data['rig_time'] = $rig_time;
+
+
+        if(isset($is_success))
+        $data['is_success']=$is_success;
+
+        $data['bread_crumb'] = $bread_crumb;
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'trunk/index.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+
+    });
+
+
+    $app->post('/:id_rig', function ($id_rig) use ($app) {
+
+
+        $save_data=array();
+
+        $save_data['s_bef'] = (empty($app->request()->post('s_bef'))) ? 0 : $app->request()->post('s_bef');
+        $save_data['s_loc'] = (empty($app->request()->post('s_loc'))) ? 0 : $app->request()->post('s_loc');
+
+
+
+        //save
+        $rig = R::load('rig', $id_rig);
+
+        if ($id_rig != 0) {//update
+            $save_data['last_update'] = date("Y-m-d H:i:s");
+        }
+        $rig->import($save_data);
+        R::store($rig);
+
+        $app->redirect(BASE_URL . '/trunk/'.$id_rig.'/1');
+    });
+});
+
+/* ----------- END trunk -------------- */
+
 $app->run();
