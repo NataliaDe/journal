@@ -2010,6 +2010,7 @@ $(document).on('click', '#btn_del_action', function (e) {
 /*------------------------  archive -------------------------------- */
  $('#getArchiveData').on({
         'click': function (event) {
+
    // alert('123');
 
               // alert('1');
@@ -2445,6 +2446,22 @@ else if(id_rig == '')
     if (((key.charCode < 48)&& (key.charCode != 44)) || (key.charCode > 57) )
         return false;
 });
+
+
+    $('#id_local_archive_1').keydown(function(event){
+          //alert('ff');
+        if(event.keyCode == 13) {
+          event.preventDefault();
+          return false;
+      }
+   });
+
+
+
+
+
+
+
 
 
 

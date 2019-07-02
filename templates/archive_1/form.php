@@ -28,7 +28,7 @@ if (isset($msg) && !empty($msg)) {
 <br><br><br>
 
 <!-- action="< $_SERVER['REQUEST_URI'] ?>" -->
-<form  role="form" class="form" name="archiveForm" id="rep1Form" method="post" >
+<form  role="form" class="form" name="archiveForm1" id="rep1Form" method="post" >
 
     <div class="row">
 
@@ -132,7 +132,7 @@ if (isset($msg) && !empty($msg)) {
         <div class="col-lg-2">
             <div class="form-group">
                 <label for="id_local">Район</label>
-                <input class="form-control" type="text" name="id_local" placeholder="Введите первые символы">
+                <input class="form-control" type="text" name="id_local" id="id_local_archive_1" placeholder="Введите первые символы">
             </div>
         </div>
     </div>
@@ -158,3 +158,5 @@ if (isset($msg) && !empty($msg)) {
 <div id="ajax-content">
 
 </div>
+
+
