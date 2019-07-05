@@ -8061,11 +8061,25 @@ $app->group('/trunk', function () use ($app,$log) {
         $data['id_rig']=$id_rig;
 
 
-        /* select battle for rig from bd */
-        $rig_time = R::getRow('select * from rig WHERE id = ? ', array($id_rig));
+        /* select silymchs for rig from bd */
+        $sily_m = new Model_Jrig();
+        $data['sily'] = $sily_m->selectAllByIdRig($id_rig);
 
-        $data['rig_time'] = $rig_time;
+        $data['trunk_list']=R::getAll('select * from trunk_list ');
 
+        /* trunks for rig */
+        $trunk_edit=R::getAll('select tr.*, s.id_teh from trunkrig as tr left join silymchs as s on tr.id_silymchs=s.id where s.id_rig = ? ',array($id_rig));
+
+
+        $trunk_edit_arr=array();
+
+        if(!empty($trunk_edit)){
+        foreach ($trunk_edit as $value) {
+
+            $trunk_edit_arr[$value['id_teh']][]=$value;
+        }
+        }
+        $data['trunk_edit']=$trunk_edit_arr;
 
         if(isset($is_success))
         $data['is_success']=$is_success;
@@ -8081,7 +8095,60 @@ $app->group('/trunk', function () use ($app,$log) {
 
     $app->post('/:id_rig', function ($id_rig) use ($app) {
 
+       // print_r($_POST);        echo '<br><br>';
 
+        $sily=$app->request()->post('sily');
+
+
+        if(isset($sily) && !empty($sily)){
+
+            foreach ($sily as $id_teh=>$value) {
+
+                $id_silymchs=R::getCell('select id from silymchs where id_rig = ? and id_teh = ?',array($id_rig,$id_teh));
+
+                if(!empty($id_silymchs)){
+
+
+                    //delete current trunk for rig and car
+                    R::exec('DELETE FROM trunkrig  WHERE id_silymchs = ?', array($id_silymchs));
+
+                    //set new trunk
+
+                    $cnt_rows= count($value['time_pod']);
+                    for ($j = 0; $j < $cnt_rows; $j++) {
+
+                         $save_sily=array();
+
+                        if (isset($value['trunk'][$j]) && !empty($value['trunk'][$j]) && isset($value['means'][$j]) && !empty($value['means'][$j]) && $value['means'][$j] != 0) {
+
+                            $save_sily['id_silymchs'] = $id_silymchs;
+                            $save_sily['time_pod'] = $value['time_pod'][$j];
+                            $save_sily['id_trunk_list'] = $value['trunk'][$j];
+                            $save_sily['cnt'] = (isset($value['means'][$j]) && !empty($value['means'][$j])) ? intval($value['means'][$j]) : 0;
+                            $save_sily['water'] = $value['water'][$j];
+
+                            //save
+                            if(!empty($save_sily)){
+                             // print_r($save_sily); echo '<br><br>';
+                            $trunk = R::dispense('trunkrig');
+                            $save_sily['date_insert'] = date("Y-m-d H:i:s");
+                            $save_sily['id_user'] = $_SESSION['id_user'];
+                            $trunk->import($save_sily);
+                            R::store($trunk);
+                            }
+                        }
+
+                    }
+
+
+
+                }
+
+
+            }
+        }
+
+        //exit();
         $save_data=array();
 
         $save_data['s_bef'] = (empty($app->request()->post('s_bef'))) ? 0 : $app->request()->post('s_bef');
