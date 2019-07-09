@@ -32,7 +32,7 @@ if (isset($msg) && !empty($msg)) {
 
     <div class="row">
 
-                <div class="col-lg-2">
+                <div class="col-lg-1">
 <?php
 //print_r($archive_year);
 ?>
@@ -110,7 +110,7 @@ if (isset($msg) && !empty($msg)) {
 
 
 
-        <div class="col-lg-2">
+        <div class="col-lg-1">
             <div class="form-group">
                 <label for="id_region">Область</label>
                 <select class="form-control" name="id_region" id="id_region"  >
@@ -135,7 +135,27 @@ if (isset($msg) && !empty($msg)) {
                 <input class="form-control" type="text" name="id_local" id="id_local_archive_1" placeholder="Введите первые символы">
             </div>
         </div>
+
+
+            <div class="col-lg-2">
+        <div class="form-group">
+                        <label for="reasonrig">Причина вызова</label>
+            <select class=" js-example-basic-single form-control" name="reasonrig"   >
+                <option value="">Все</option>
+                <?php
+                foreach ($reasonrig as $row) {
+
+                    printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+                }
+
+                ?>
+            </select>
+        </div>
     </div>
+    </div>
+
+
+
 
 
     <div class="row">

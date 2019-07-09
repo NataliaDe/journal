@@ -45,7 +45,7 @@
 
 
 <!-- Chosen jquery js -->
-<!--<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.jquery.js" type="text/javascript"></script>-->
+<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.jquery.js" type="text/javascript"></script>
 <!--<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
 <script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script> -->
 
@@ -73,7 +73,7 @@
 
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_trunk.js"></script>
 
 <script type="text/javascript">
 	CKEDITOR.replace('myeditor1');

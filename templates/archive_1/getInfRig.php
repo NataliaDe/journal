@@ -127,7 +127,10 @@
         var region = $('select[name="id_region"]').val();
         var local = $('input[name="id_local"]').val();
 
-
+        var reasonrig=$('select[name="reasonrig"] option:selected').text();
+        if(reasonrig == 'Все')
+            var reasonrig='';
+       // alert(reasonrig);
 
         if (date_start && date_end) {
              $('#' + content).fadeOut("slow");
@@ -144,7 +147,8 @@
                     date_end: date_end,
                     archive_year: archive_year,
                     region: region,
-                    local: local
+                    local: local,
+                    reasonrig: reasonrig
 
                 },
 

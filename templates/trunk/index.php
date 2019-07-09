@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.css">
 
 <style>
-    #tags_del_chosen{
+    #tags_del_trunk_chosen, #id_edit_trunk_chosen{
         width: 50% !important;
     }
 </style>
@@ -137,14 +137,14 @@
                                         <div class="col-lg-2">
                                             <div class="form-group">
 
-                                                <input type="text" class="form-control" placeholder="12-30, 12-38" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
+                                                <input type="text" class="form-control time-pod-mask" placeholder="00-00" onkeypress="allowCntTimePod();" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
                                             </div>
                                         </div>
 
                                         <div class="col-lg-1" style="width: 5%">
                                             <div class="form-group">
 
-                                                <input  type="text" class="form-control" placeholder="1 ств. РСК-50, 3 ств. СПРУ" name="sily[<?= $row['id_teh'] ?>][means][]" value="<?= $tr_edit['cnt'] ?>" >
+                                                <input  type="text" class="form-control cnt_means" onkeypress="allowCntMeans();" placeholder="0" name="sily[<?= $row['id_teh'] ?>][means][]" value="<?= $tr_edit['cnt'] ?>" >
                                             </div>
 
                                         </div>
@@ -160,7 +160,7 @@
                                         <div class="col-lg-1"  >
 
                                             <div class="form-group">
-                                                <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?>" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
+                                                <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
                                                     <option value='' ><label></label></option>
 
 
@@ -168,7 +168,7 @@
                                                     foreach ($trunk_list as $present) {
                                                         if ($present['id'] == $tr_edit['id_trunk_list']) {
                                                             printf("<p><option value='%s' selected><label>%s</label></option></p>", $present['id'], $present['name']);
-                                                        } else {
+                                                        } elseif($present['is_delete'] == 0) {
                                                             printf("<p><option value='%s' ><label>%s</label></option></p>", $present['id'], $present['name']);
                                                         }
                                                     }
@@ -184,17 +184,17 @@
 
 
                                         <div class="col-lg-1" style="padding-top: 6px; ">
-                                            <a href="#" class="edit-link" data-toggle="modal" data-target="#modal-edit-tags" ><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:green"></i></a>
+                                            <a href="#" class="edit-link"  data-placement="right" title="Добавить новый тип" data-toggle="modal" data-target="#modal-edit-tags" ><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:green"></i></a>
                                         </div>
 
 
                                         <div class="col-lg-1">
                                             <div class="form-group">
 
-                                                <input type="text" class="form-control" placeholder="10.0" name="sily[<?= $row['id_teh'] ?>][water][]" value="<?= $tr_edit['water'] ?>" >
+                                                <input type="text" class="form-control" placeholder="0/0" onkeypress="allowCntWater();" name="sily[<?= $row['id_teh'] ?>][water][]" value="<?= $tr_edit['water'] ?>" >
                                             </div>
                                         </div>
-                                        <a href="#" class="del-teacher" data-idcar='<?= $row['id_teh'] ?>' ><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
+                                        <a href="#" class="del-teacher" style="padding-left: 120px;" data-toggle="tooltip" data-placement="right" title="Удалить строку" data-idcar='<?= $row['id_teh'] ?>' ><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
 
                                     </div>
 
@@ -228,14 +228,14 @@
                                     <div class="col-lg-2">
                                         <div class="form-group">
 
-                                            <input type="text" class="form-control" placeholder="12-30, 12-38" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="12-30, 12-38" >
+                                            <input type="text" class="form-control" placeholder="00-00" onkeypress="allowCntTimePod();" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="" >
                                         </div>
                                     </div>
 
                                     <div class="col-lg-1" style="width: 5%">
                                         <div class="form-group">
 
-                                            <input  type="text" class="form-control" placeholder="1 ств. РСК-50, 3 ств. СПРУ" name="sily[<?= $row['id_teh'] ?>][means][]" value="" >
+                                            <input  type="text" class="form-control cnt_means" onkeypress="allowCntMeans();" placeholder="0" name="sily[<?= $row['id_teh'] ?>][means][]" value="" >
                                         </div>
 
                                     </div>
@@ -251,13 +251,15 @@
                                     <div class="col-lg-1"  >
 
                                         <div class="form-group">
-                                            <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?>" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
-                                                <option value=''  ></option>
+                                            <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
+<!--                                                <option value=''  ></option>-->
 
                                                 <?php
                                                 foreach ($trunk_list as $present) {
 
+                                                    if($present['is_delete'] == 0) {
                                                     printf("<p><option value='%s' ><label>%s</label></option></p>", $present['id'], $present['name']);
+                                                    }
                                                 }
 
                                                 ?>
@@ -269,16 +271,16 @@
                                     </div>
 
                                     <div class="col-lg-1" style="padding-top: 6px; ">
-                                        <a href="#" class="edit-link" data-toggle="modal" data-target="#modal-edit-tags" ><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:green"></i></a>
+                                        <a href="#" class="edit-link"  data-placement="right" title="Добавить новый тип" data-toggle="modal" data-target="#modal-edit-tags" ><i class="fa fa-pencil-square-o" aria-hidden="true" style="color:green"></i></a>
                                     </div>
 
                                     <div class="col-lg-2">
                                         <div class="form-group">
 
-                                            <input type="text" class="form-control" placeholder="10.0" name="sily[<?= $row['id_teh'] ?>][water][]" value="10.0" >
+                                            <input type="text" class="form-control" placeholder="0/0" onkeypress="allowCntWater();" name="sily[<?= $row['id_teh'] ?>][water][]" value="" >
                                         </div>
                                     </div>
-                                    <a href="#" class="del-teacher" data-idcar='<?= $row['id_teh'] ?>' ><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
+                                    <a href="#" class="del-teacher" style="padding-left: 120px;" data-toggle="tooltip" data-placement="right" title="Удалить строку" data-idcar='<?= $row['id_teh'] ?>' ><i class="fa fa-times" aria-hidden="true" style="color:red"></i></a>
 
                                 </div>
 
@@ -329,12 +331,61 @@
                     <h4 class="modal-title ff-l" id="myModalLabel">Типы стволов</h4>
                 </div>
                 <div class="modal-body">
+
+<p class="line"><span>Добавление</span></p>
+
                     <div class="form-group">
+                        <h4>Добавить новый тип</h4>
+                        <input type="text" class="form-control" placeholder="Введите наименование типа" required="" id='tag_name' >
+                        <br>
+                        <div class="btn-modal">
+                            <button type="button" class="btn btn-bd-primary"  onclick="AddTag();return false;">Добавить</button>
+                        </div>
+                    </div>
+
+
+                    <br>
+                    <p class="line"><span>Редактирование</span></p>
+
+                     <div class="form-group">
+                        <h4>Выберите тип для редактирования</h4>
+                        <div class="tags-select">
+                            <select class="chzn-select" data-placeholder="Выберите из списка" id='id_edit_trunk' style="width:50%">
+                                <option value=''  ></option>
+                                <?php
+                                foreach ($trunk_for_del as $tr) {
+
+
+                                        printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
+
+                                }
+
+                                ?>
+                            </select>
+                        </div>
+                        <br>
+                         <input type="text" class="form-control" placeholder="Введите новое наименование" required="" id='edit_tag_name' >
+                         <br>
+                        <div class="btn-modal">
+                             <button type="button" class="btn btn-bd-primary"  onclick="editTag();return false;">Сохранить изменения</button>
+                        </div>
+                    </div>
+                    <br>
+<p class="line"><span>Удаление</span></p>
+                                        <div class="form-group">
                         <h4>Выберите тип для удаления</h4>
                         <div class="tags-select">
-                            <select class="chzn-select" data-placeholder="Выберите из списка" id='tags_del' style="width:50%">
+                            <select class="chzn-select" data-placeholder="Выберите из списка" id='tags_del_trunk' style="width:50%">
                                 <option value=''  ></option>
-                                 <option value=''  >123456</option>
+                                <?php
+                                foreach ($trunk_for_del as $tr) {
+
+
+                                        printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
+
+                                }
+
+                                ?>
                             </select>
                         </div>
                         <br>
@@ -343,14 +394,6 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <h4>Добавить новый тип</h4>
-                        <input type="text" class="form-control" placeholder="Введите наименование типа" required="" id='tag_name' >
-                         <br>
-                        <div class="btn-modal">
-                            <button type="button" class="btn btn-bd-primary"  onclick="AddTag();return false;">Добавить</button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>

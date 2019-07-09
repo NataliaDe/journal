@@ -352,6 +352,11 @@ class Model_Rigtable {
         } else {
             $y['date_end'] = date("Y-m-d");
         }
+
+
+        if (isset($x['reasonrig']) && !empty($x['reasonrig'])) {
+            $y['reasonrig'] = $x['reasonrig'];
+        }
         /*         * * END проверка на вшивость дат ** */
 
 //        print_r($y);
@@ -398,12 +403,21 @@ class Model_Rigtable {
             $param[] = $y['id_local'];
         }
 
+        if (isset($y['reasonrig'])) {
+            $reasonrig = ' AND id_reasonrig = ?  ';
+            $param[] = $y['reasonrig'];
+        }
+
         if (isset($region)) { //добавляем
             $sql = $sql . $region;
         }
 
         if (isset($local)) { //добавляем
             $sql = $sql . $local;
+        }
+
+        if (isset($reasonrig)) {
+            $sql = $sql . $reasonrig;
         }
 
 //            echo $sql;

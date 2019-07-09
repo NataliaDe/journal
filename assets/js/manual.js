@@ -2023,8 +2023,12 @@ $(document).on('click', '#btn_del_action', function (e) {
    var region=$('select[name="id_region"]').val();
    var local=$('input[name="id_local"]').val();
 
+   var reasonrig=$('select[name="reasonrig"] option:selected').text();
+
    var max_date=$('select[name="archive_year"]').find(':selected').attr('data-mad');
 
+            if(reasonrig == 'Все')
+            var reasonrig='';
 
    if(date_start && date_end && archive_year && (date_start !== date_end) && (date_start < max_date) ){
 
@@ -2042,7 +2046,8 @@ $(document).on('click', '#btn_del_action', function (e) {
            date_end: date_end,
            archive_year:archive_year,
            region:region,
-           local:local
+           local:local,
+           reasonrig: reasonrig
 
         },
 
@@ -2474,65 +2479,6 @@ else if(id_rig == '')
      if (((key.charCode < 48)&& (key.charCode != 44)) || (key.charCode > 57) )
         return false;
 });
-
-
-
-
-/*-------- trunk form ------------*/
-    $(".chzn-select").chosen();
-
-$(document).ready(function(){
-         $('body').on('click', '#add_teacher', function (e) {
-            e.preventDefault();
-
-             var  id_car_block = $(this).attr('data-idcar');
-             //alert(id_car_block);
-
-$('.teacher_row_'+id_car_block+' select').last().chosen("destroy");
-              // get the last DIV which ID starts with ^= "klon"
-  //var $div = $('div#'+id_car_block+' div[id^="klon"]:last');
-   var $div = $('div[id^="klon"]:last');
-    var $div_for_clon = $('.teacher_row_'+id_car_block+':last');
-  //alert($div);
-  // Read the Number from that DIV's ID (i.e: 3 from "klon3")
-  // And increment that number by 1
-   var prev_num=parseInt( $div.prop("id").match(/\d+/g), 10 );
-  var num = parseInt( $div.prop("id").match(/\d+/g), 10 ) +1;
-
-  var is=$('div #klon'+num);
-while ((is.length > 0)) {
-	 var num=num+1;
-      var  is=$('div #klon'+num);
-}
-
-  // Clone it and assign the new ID (i.e: from num 4 to ID "klon4")
-  var $klon = $div_for_clon.clone().prop('id', 'klon'+num );
-  // Finally insert $klon wherever you want
-  //$div.after( $klon.text('klon'+num) );
- // $div.after( $klon.text('klon'+num) );
-     $klon.insertAfter($('.teacher_row_'+id_car_block).last());
-     $(".chzn-select").chosen();
- //    var prev_val = $("#klon"+prev_num+" .tt option:selected").val();
-    // alert(prev_val);
-  //   $("#klon"+num+" .tt").val(prev_val).trigger('chosen:updated');
- //    $("#klon"+num+" .cal_a a").attr('data-klond','klon'+num);
-  //  var v=$("#klon"+num+" .cal_a a").attr('data-klond');
-    //alert(v);
-            return false;
-        });
-
-});
-
-        $('body').on('click', '.del-teacher', function (e) {
-
-            e.preventDefault();
-             var  id_car_block = $(this).attr('data-idcar');
-            if ($(".teacher-list_"+id_car_block).length > 1) {
-
-                $(this).parent().parent().remove();
-            }
-            return false;
-        });
 
 
 

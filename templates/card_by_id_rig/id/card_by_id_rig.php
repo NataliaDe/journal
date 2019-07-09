@@ -76,10 +76,11 @@
                             <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_loc'])) : '-' ?></p>
                             <p>Дата и время ликвидации: <?= ( !empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_likv'])) : '-' ?> </p>
 
+                            <br>
                             <h4>Адрес выезда</h4>
                             <address>
 <!--                                <strong>г. Пинск</strong>-->
-                                <br><strong>
+                                <strong>
                                     <?php
                                     echo $result['address'];
                                     if ($result['is_address'] == 0) {

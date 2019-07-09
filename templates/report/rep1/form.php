@@ -91,6 +91,22 @@
                 </div>
 
 
+        <div class="form-group">
+<!--            <label for="reasonrig">Причина вызова</label>-->
+            <select class=" js-example-basic-single form-control" name="reasonrig"   >
+                <option value="">Причина вызова</option>
+                <?php
+                foreach ($reasonrig as $row) {
+
+                        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'],  $row['name']);
+
+                }
+
+                ?>
+            </select>
+        </div>
+
+
                 <div class="form-group">
                     <button class="btn bg-purple" type="submit"   >Сформировать</button>
                 </div>

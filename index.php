@@ -2564,6 +2564,20 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             $local_name = 'все';
         }
 
+
+        if (isset($_POST['reasonrig']) && !empty($_POST['reasonrig'])) {
+            $reasonrig_n = $_POST['reasonrig'];
+        }
+
+        if(isset($reasonrig_n) && !empty($reasonrig_n)) {
+            $reasonrig_name=R::getCell('select name from reasonrig where id = ?',array($reasonrig_n));
+
+        }
+        else{
+            $reasonrig_name='все';
+        }
+
+
         /* ------- КОНЕЦ Запрошенные область и район------ */
 
 
@@ -2631,7 +2645,10 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
 
                       $sheet->setCellValue('A2', 'с '.$d1.' по '.$d2);//выбранный период
-                      $sheet->setCellValue('A3', 'область: '.$region_name.', район: '.$local_name);//выбранный область и район
+
+
+
+                      $sheet->setCellValue('A3', 'область: '.$region_name.', район: '.$local_name.', причина вызова: '.$reasonrig_name);//выбранный область и район
 
                     foreach ($result as $row) {
             $i++;
@@ -2868,6 +2885,9 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
         $data['region'] = $region->selectAll(); //области
         $local = new Model_Local();
         $data['local'] = $local->selectAll(); //районы
+
+
+        $data['reasonrig']=R::getAll('select * from reasonrig where is_delete = ?',array(0));
 
         /*         * *** КОНЕЦ Классификаторы **** */
 
@@ -4631,6 +4651,8 @@ $app->group('/archive_1','is_login','is_permis', function () use ($app) {
         }
         $data['archive_year'] = $archive_year_1;
 
+
+        $data['reasonrig']=R::getAll('select * from reasonrig where is_delete = ?',array(0));
         /*         * *** КОНЕЦ Классификаторы **** */
 
 
@@ -4735,6 +4757,8 @@ $date_end=$app->request()->post('date_end');
 $table_name_year=$app->request()->post('archive_year');
 $region_id=$app->request()->post('region');
 $local=$app->request()->post('local');
+$reasonrig=$app->request()->post('reasonrig');
+
 
 switch ($region_id) {
             case 1: $region = "Брестская";
@@ -4779,6 +4803,11 @@ switch ($region_id) {
         }
         if(isset($local) && !empty($local)){
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if(isset($reasonrig) && !empty($reasonrig)){
+              $sql=$sql.' AND reasonrig_name = "'.$reasonrig.'"';
              //$param[] = $local;
         }
 
@@ -4834,6 +4863,8 @@ $date_end=$app->request()->post('date_end');
 $table_name_year=$app->request()->post('archive_year');
 $region_id=$app->request()->post('region');
 $local=$app->request()->post('local');
+
+$reasonrig=$app->request()->post('reasonrig');
 
 $data['table_name_year']=$table_name_year;
 //$date_start='2018-12-03';
@@ -4895,6 +4926,18 @@ $data['table_name_year']=$table_name_year;
             $local_for_export='no';
         }
 
+
+         if(isset($reasonrig) && !empty($reasonrig)){
+              $sql=$sql.' AND reasonrig_name = "'.$reasonrig.'"';
+             //$param[] = $local;
+               $reasonrig_for_export=$reasonrig;
+        }
+         else{
+            $reasonrig_for_export='no';
+        }
+
+
+
         $sql=$sql.' ORDER BY id_rig ASC';
 
 if($id_tab=='table-content1'){//rig
@@ -4924,20 +4967,20 @@ $data['result']=R::getAll($sql, $param);
 
 
 if($id_tab=='table-content1'){
-  $data['link_excel']='archive_1/exportExcelTab1/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
-  $data['link_excel_hidden']='archive_1/exportExcelTab1/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export;
+  $data['link_excel']='archive_1/exportExcelTab1/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab1/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 elseif($id_tab=='table-content2'){
-  $data['link_excel']='archive_1/exportExcelTab2/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
-  $data['link_excel_hidden']='archive_1/exportExcelTab2/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export;
+  $data['link_excel']='archive_1/exportExcelTab2/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab2/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 elseif($id_tab=='table-content3'){
-  $data['link_excel']='archive_1/exportExcelTab3/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
-  $data['link_excel_hidden']='archive_1/exportExcelTab3/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export;
+  $data['link_excel']='archive_1/exportExcelTab3/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab3/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 elseif($id_tab=='table-content4'){
-  $data['link_excel']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
-  $data['link_excel_hidden']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export;
+  $data['link_excel']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 
 
@@ -4949,8 +4992,8 @@ elseif($id_tab=='table-content4'){
     });
 
 
-       $app->get('/exportExcelTab1/:id_tab/:table/:date_from/:date_to/:reg/:loc/:id_rig/:date_msg/:time_msg/:local_1/:addr/:reason/:work_view/:detail/:people/:time_loc/:time_likv',
-           function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$id_rig,$date_msg,$time_msg,$local_1,$addr,$reason,$work_view,$detail,$people,$time_loc,$time_likv) use ($app) {
+       $app->get('/exportExcelTab1/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/:reason/:work_view/:detail/:people/:time_loc/:time_likv',
+           function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr,$reason,$work_view,$detail,$people,$time_loc,$time_likv) use ($app) {
 
              /* get data */
 $date_start=$date_from;
@@ -4987,6 +5030,12 @@ $local=$loc;
         if( $local != 'no'){
 
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
              //$param[] = $local;
         }
 
@@ -5079,7 +5128,7 @@ $result=R::getAll($sql, $param);
 
 
         $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
-        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все')); //выбранный область и район
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
         $styleArray = array(
@@ -5265,8 +5314,8 @@ elseif($id_tab=='table-content4'){//innerservice
 
 
     /* teh info */
-      $app->get('/exportExcelTab2/:id_tab/:table/:date_from/:date_to/:reg/:loc/:id_rig/:date_msg/:time_msg/:local_1/:addr/:time_loc/:time_likv/:is_likv_before_arrival',
-          function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$id_rig,$date_msg,$time_msg,$local_1,$addr,$time_loc,$time_likv,$is_likv_before_arrival) use ($app) {
+      $app->get('/exportExcelTab2/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/:time_loc/:time_likv/:is_likv_before_arrival',
+          function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr,$time_loc,$time_likv,$is_likv_before_arrival) use ($app) {
 
              /* get data */
 $date_start=$date_from;
@@ -5304,6 +5353,11 @@ $local=$loc;
              //$param[] = $local;
         }
 
+                if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
+             //$param[] = $local;
+        }
 
 
         /*--------------- filter from datatables ------------- */
@@ -5387,7 +5441,7 @@ $result=R::getAll($sql, $param);
 
 
         $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
-        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все')); //выбранный область и район
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
         $styleArray = array(
@@ -5573,7 +5627,7 @@ elseif($id_tab=='table-content4'){//innerservice
 
 
       /* informing info */
-       $app->get('/exportExcelTab3/:id_tab/:table/:date_from/:date_to/:reg/:loc/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
+       $app->get('/exportExcelTab3/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
 
              /* get data */
 $date_start=$date_from;
@@ -5608,6 +5662,12 @@ $local=$loc;
         if( $local != 'no'){
 
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
              //$param[] = $local;
         }
 
@@ -5679,7 +5739,7 @@ $result=R::getAll($sql, $param);
 
 
         $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
-        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все')); //выбранный область и район
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
         $styleArray = array(
@@ -5865,7 +5925,7 @@ elseif($id_tab=='table-content4'){//innerservice
 
 
       /* innerservice info */
-       $app->get('/exportExcelTab4/:id_tab/:table/:date_from/:date_to/:reg/:loc/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
+       $app->get('/exportExcelTab4/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
 
              /* get data */
 $date_start=$date_from;
@@ -5900,6 +5960,12 @@ $local=$loc;
         if( $local != 'no'){
 
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
              //$param[] = $local;
         }
 
@@ -5972,7 +6038,7 @@ $result=R::getAll($sql, $param);
 
 
         $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
-        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все')); //выбранный область и район
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
         $styleArray = array(
@@ -7968,6 +8034,29 @@ $app->group('/results_battle', function () use ($app,$log) {
 
 
         $bread_crumb = array('Результаты боевой работы');
+
+
+
+         /* --------- добавить инф о редактируемом вызове ------------ */
+        $rig_table_m = new Model_Rigtable();
+        $inf_rig = $rig_table_m->selectByIdRig($id_rig); // дата, время, адрес объекта для редактируемого вызова по id
+        if ($id_rig != 0) {
+
+
+            if (isset($inf_rig) && !empty($inf_rig)) {
+                foreach ($inf_rig as $value) {
+                    $date_rig = $value['date_msg'] . ' ' . $value['time_msg'];
+                    $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
+
+                    $data['id_user'] = $value['id_user'];
+                }
+                $bread_crumb[] = $date_rig;
+                $bread_crumb[] = $adr_rig;
+            }
+        }
+        /* --------- добавить инф о редактируемом вызове ------------ */
+
+
         $data['title'] = 'Результаты боевой работы';
 
         $data['id_rig']=$id_rig;
@@ -7988,10 +8077,10 @@ $app->group('/results_battle', function () use ($app,$log) {
         $data['is_success']=$is_success;
 
         $data['bread_crumb'] = $bread_crumb;
-        $app->render('layouts/header.php', $data);
+        $app->render('layouts/trunk/header.php', $data);
         $data['path_to_view'] = 'results_battle/index.php';
         $app->render('layouts/div_wrapper.php', $data);
-        $app->render('layouts/footer.php');
+        $app->render('layouts/trunk/footer.php');
 
     });
 
@@ -8051,11 +8140,108 @@ $app->group('/results_battle', function () use ($app,$log) {
 
 /* ----------- trunk -------------- */
 $app->group('/trunk', function () use ($app,$log) {
+
+    /* add new trunk */
+    $app->post('/add_trunk_ajax', function () use ($app) {
+
+        $name = $app->request()->post('name');
+        //$name = urldecode($name);
+        $is_trunk = R::getAll('select * from trunklist where name = ?', array($name));
+
+
+
+        if (empty($is_trunk) && $name != '') {
+
+            $trunk = R::dispense('trunklist');
+            $save['name'] = $name;
+            $save['date_insert'] = date("Y-m-d H:i:s");
+            $save['id_user'] = $_SESSION['id_user'];
+            $save['last_update'] = date("Y-m-d H:i:s");
+
+            $trunk->import($save);
+            $id = R::store($trunk);
+
+            echo json_encode([
+                'id'       => $id,
+                'message'  => 'Тип был успешно добавлен в БД',
+                "tag_name" => $name
+                //'removeTagsForm' => getRemoveTagsForm()
+            ]);
+        }
+    });
+
+    /* edit new trunk */
+    $app->post('/edit_trunk_ajax', function () use ($app) {
+
+        $name = $app->request()->post('new_name');
+        $id = $app->request()->post('id');
+
+        $is_trunk = R::getAll('select * from trunklist where name = ?', array($name));
+
+
+
+        if (empty($is_trunk) && $name != '' && !empty($id)) {
+
+            $trunk = R::load('trunklist', $id);
+            $save['name'] = $name;
+            $save['last_update'] = date("Y-m-d H:i:s");
+
+            $trunk->import($save);
+            $id = R::store($trunk);
+
+            echo json_encode([
+                //'id' => $id,
+                'message'  => 'Редактирование выполнено успешно',
+                "tag_name" => $name
+                //'removeTagsForm' => getRemoveTagsForm()
+            ]);
+        }
+    });
+
+    /* delete trunk */
+    $app->post('/del_trunk_ajax', function () use ($app) {
+
+        $id = $app->request()->post('id');
+
+        if (isset($id) && !empty($id)) {
+
+            $trunk = R::load('trunklist', $id);
+
+            if ($trunk->id_user == $_SESSION['id_user']) {
+
+                R::trash($trunk);
+            }
+        }
+    });
+
+
     // view form
     $app->get('/:id_rig(/:is_success)', function ($id_rig,$is_success=0) use ($app) {
 
 
         $bread_crumb = array('Подача стволов');
+
+
+                           /* --------- добавить инф о редактируемом вызове ------------ */
+        $rig_table_m = new Model_Rigtable();
+        $inf_rig = $rig_table_m->selectByIdRig($id_rig); // дата, время, адрес объекта для редактируемого вызова по id
+        if ($id_rig != 0) {
+
+
+            if (isset($inf_rig) && !empty($inf_rig)) {
+                foreach ($inf_rig as $value) {
+                    $date_rig = $value['date_msg'] . ' ' . $value['time_msg'];
+                    $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
+
+                    $data['id_user'] = $value['id_user'];
+                }
+                $bread_crumb[] = $date_rig;
+                $bread_crumb[] = $adr_rig;
+            }
+        }
+        /* --------- добавить инф о редактируемом вызове ------------ */
+
+
         $data['title'] = 'Подача стволов';
 
         $data['id_rig']=$id_rig;
@@ -8065,11 +8251,13 @@ $app->group('/trunk', function () use ($app,$log) {
         $sily_m = new Model_Jrig();
         $data['sily'] = $sily_m->selectAllByIdRig($id_rig);
 
-        $data['trunk_list']=R::getAll('select * from trunk_list ');
+        $data['trunk_list']=R::getAll('select * from trunklist ');
 
         /* trunks for rig */
         $trunk_edit=R::getAll('select tr.*, s.id_teh from trunkrig as tr left join silymchs as s on tr.id_silymchs=s.id where s.id_rig = ? ',array($id_rig));
 
+        /* trunk for delete/edit */
+        $data['trunk_for_del']=R::getAll('select * from trunklist  where is_delete = ? and id_user = ? ',array(0,$_SESSION['id_user']));
 
         $trunk_edit_arr=array();
 
@@ -8085,10 +8273,10 @@ $app->group('/trunk', function () use ($app,$log) {
         $data['is_success']=$is_success;
 
         $data['bread_crumb'] = $bread_crumb;
-        $app->render('layouts/header.php', $data);
+        $app->render('layouts/trunk/header.php', $data);
         $data['path_to_view'] = 'trunk/index.php';
         $app->render('layouts/div_wrapper.php', $data);
-        $app->render('layouts/footer.php');
+        $app->render('layouts/trunk/footer.php');
 
     });
 
@@ -8119,7 +8307,7 @@ $app->group('/trunk', function () use ($app,$log) {
 
                          $save_sily=array();
 
-                        if (isset($value['trunk'][$j]) && !empty($value['trunk'][$j]) && isset($value['means'][$j]) && !empty($value['means'][$j]) && $value['means'][$j] != 0) {
+                        if (isset($value['trunk'][$j]) && !empty($value['trunk'][$j]) && isset($value['means'][$j]) && !empty($value['means'][$j]) && $value['means'][$j] > 0) {
 
                             $save_sily['id_silymchs'] = $id_silymchs;
                             $save_sily['time_pod'] = $value['time_pod'][$j];
@@ -8167,6 +8355,10 @@ $app->group('/trunk', function () use ($app,$log) {
 
         $app->redirect(BASE_URL . '/trunk/'.$id_rig.'/1');
     });
+
+
+
+
 });
 
 /* ----------- END trunk -------------- */
