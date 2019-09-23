@@ -222,6 +222,23 @@
                         <a href="<?= $baseUrl ?>/classif/destination"><i class="fa fa-chevron-circle-down"></i> Список лиц</a>
                     </li>
 
+                    <?php
+                    if (isset($item_active) && $item_active == 'guide_pasp') {
+
+                        ?>
+                        <li class="active">
+                            <?php
+                        } else {
+
+                            ?>
+                        <li>
+                            <?php
+                        }
+
+                        ?>
+                        <a href="<?= $baseUrl ?>/guide_pasp"><i class="fa fa-chevron-circle-down"></i> Справочник ПАСП</a>
+                    </li>
+
 
 
                 </ul>
@@ -242,6 +259,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
+                    <li><a href="<?= $baseUrl ?>/report/rep2" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа</a></li>
                     <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</span></a></li>
@@ -308,7 +326,7 @@ if (isset($_SESSION['id_user'])) {
                         </a>
                         <ul class="treeview-menu">
                             <li><a href="<?= $baseUrl ?>/settings/reason_rig_color" target="_blank"><i class="fa fa-chevron-circle-down"></i>Причина вызова</a></li>
-                             <li><a href="<?= $baseUrl ?>/settings/index" target="_blank"><i class="fa fa-chevron-circle-down"></i>Другие</a></li>
+                             <li><a href="<?= $baseUrl ?>/settings/index" ><i class="fa fa-chevron-circle-down"></i>Другие</a></li>
                         </ul>
 
 

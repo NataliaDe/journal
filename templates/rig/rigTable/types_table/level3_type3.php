@@ -16,26 +16,19 @@
             font-size: 13px !important;
             text-align: left !important;
     }
-    .teh-head{
-       color:  blue !important;
+    .br-head{
+       color:  #06610d !important;
     }
 
 </style>
-
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-    <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<link href="https://nightly.datatables.net/fixedheader/css/fixedHeader.dataTables.css?_=f0de745b101295e88f1504c17177ff49.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/fixedheader/js/dataTables.fixedHeader.js?_=f0de745b101295e88f1504c17177ff49"></script>
-
 
 <div class="noprint" id="conttabl">
     <b> Выберите столбец, чтобы скрыть/отобразить:  </b>
     <b>
 
-        <a class="toggle-vis-rig-table-type2" id="toggle-vis-rig-table-type1-0"  data-column="0" style="background-color: #fdee8d;  color: black">ID</a>&nbsp&nbsp
-        <a class="toggle-vis-rig-table-type2" id="toggle-vis-rig-table-type1-13"  data-column="16" style="background-color: #fdee8d;  color: black">Автор создания</a>
+        <a class="toggle-vis-rig-table-type3" id="toggle-vis-rig-table-type3-0"  data-column="0" style="background-color: #fdee8d;  color: black">ID</a>&nbsp&nbsp
+        <a class="toggle-vis-rig-table-type3" id="toggle-vis-rig-table-type3-5"  data-column="5" style="background-color: #fdee8d;  color: black">Привлекаемая техника</a>&nbsp&nbsp
+        <a class="toggle-vis-rig-table-type3" id="toggle-vis-rig-table-type3-13"  data-column="13" style="background-color: #fdee8d;  color: black">Автор создания</a>
 
     </b>
 
@@ -44,11 +37,12 @@
 <!--таблица выездов для уровня 3 и для уровня 2 (УМЧС) -->
 <br>
 <?php
+
 include dirname(dirname(__FILE__))  . '/header_rig_table.php';
-//print_r($result_icons);
+//print_r($rig);
 
 ?>
-<table class="table table-condensed   table-bordered table-custom " id="rigTableType2" style="width: 50%;" >
+<table class="table table-condensed   table-bordered table-custom " id="rigTableType3" style="width: 50%;" >
     <!-- строка 1 -->
     <thead>
         <tr>
@@ -59,18 +53,15 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
             <th style="width:80px;">Район</th>
             <th style="width:120px;">Адрес<br>(объект)</th>
 <!--            <th style="width:120px;" >Привлекаемые подразделения</th>-->
+            <th style="width:120px;" >Привлекаемые подразделения</th>
             <th style="width:224px !important;">Привлекаемая<br>техника</th>
 
-            <th style="width:45px;" class="teh-head">Выезд</th>
-            <th style="width:45px;" class="teh-head">Приб.</th>
+            <th style="width:45px;" class="br-head">Погибло<br>в т.ч. детей</th>
+            <th style="width:45px;" class="br-head">Спасено</th>
 
-            <th style="width:40px;">Время лок.</th>
-            <th style="width:40px;">Время ликв.</th>
+            <th style="width:40px;" class="br-head">Эвак.</th>
+            <th style="width:40px;" class="br-head">Травм.</th>
 
-            <th style="width:45px;" class="teh-head">След.</th>
-            <th style="width:45px;" class="teh-head">Оконч.<br>работ</th>
-            <th style="width:45px;" class="teh-head">Возв.</th>
-            <th style="width:45px;" class="teh-head">Расст, км</th>
 
 <!--            <th style="width:77px;">Этажность/этаж</th>-->
             <th style="width:125px;" ></th>
@@ -92,15 +83,13 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
 <!--            <th>Время</th>-->
             <th >Район</th>
             <th>Адрес объекта</th>
+             <th></th>
 <!--            <th></th>-->
             <th></th>
 <!--            <th>Этажность/этаж</th>-->
                         <th></th>
             <th></th>
-            <th></th>
-                        <th></th>
-            <th></th>
-            <th></th>
+
             <th></th>
             <th>Причина выезда</th>
             <th></th>
@@ -159,10 +148,28 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
                         }
 
                         ?>&nbsp;
-                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">       <?= $row['id'] ?></a></td>
+                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">       <?= $row['id'] ?></a>
+
+                    <!--                        is update rig now-->
+            <center>
+                <div  id="is_update_rig_now_<?= $row['id'] ?>">
 
 
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" id="<?= $row['id'] ?>" ><?= date('d.m.Y', strtotime($row['date_msg'])) ?><br><?= $row['time_msg'] ?>
+                    <?php
+                    if (isset($row['is_update_now']) && $row['is_update_now'] != '') {
+
+                        include dirname(dirname(__FILE__)) . '/div_is_update_rig_now.php';
+                    }
+
+                    ?>
+                </div>
+            </center>
+                    <!--              END          is update rig now-->
+
+                    </td>
+
+
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= date('d.m.Y', strtotime($row['date_msg'])) ?><br><?= $row['time_msg'] ?>
 
                         <?php
                                 if ($row['is_closed'] == 0) {//пожар не закрыт
@@ -187,32 +194,9 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
                                 }
 
                         ?>
-
-
-                                        <!--                        is update rig now-->
-            <center>
-                <div  id="is_update_rig_now_<?= $row['id'] ?>">
-
-
-                    <?php
-                    if (isset($row['is_update_now']) && $row['is_update_now'] != '') {
-
-                        include dirname(dirname(__FILE__)) . '/div_is_update_rig_now.php';
-                    }
-
-                    ?>
-                </div>
-            </center>
-            <!--              END          is update rig now-->
-
-
                     </td>
 <!--                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['time_msg'] ?></td>-->
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?>
-
-
-
-                    </td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
                         <!--                            если адрес пуст-выводим дополнит поле с адресом-->
                         <?php
@@ -230,6 +214,65 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
                         }
 
                         ?>
+                    </td>
+
+
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+
+                        <?php
+                        //            short on technic
+                        if (isset($sily_mchs[$row['id']]) && !empty($sily_mchs[$row['id']])) {
+
+                            ?>
+                            <ul class="dropdown" style="float: left; padding-left: 0px" data-toggle="tooltip" data-placement="left" title="Привлекаемая техника" >
+                                <a href="# "  style="color: #222d32;" class="dropdown-toggle " data-toggle="dropdown" ><i class="fa fa-eye" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
+                                <ul class="dropdown-menu" id="teh-menu">
+                                    <?php
+                                    foreach ($sily_mchs[$row['id']] as $si) {
+                                        //  $teh = '<b>'.$si['mark'] . '</b> (' . $si['numbsign'] . '), ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
+                                        $teh = '<b>' . $si['mark'] . '</b> ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
+
+                                        ?>
+
+
+                                        <li class="dropdown-submenu">
+                                            <i class="fa fa-chevron-right" aria-hidden="true"></i>   <?= $teh ?>
+                                        </li>
+
+                                        <?php
+                                    }
+
+                                    ?>
+
+
+                                </ul>
+                            </ul>
+                            <?php
+                        }
+
+                        ?>
+
+
+
+                        <?php
+                        /* GROCHS, who went */
+                        if (isset($sily_mchs[$row['id']]) && !empty($sily_mchs[$row['id']])) {
+
+                            $a = array();
+                            foreach ($sily_mchs[$row['id']] as $si) {
+                                $a[] = $si['locorg_name'];
+                            }
+                            $result = array_unique($a);
+
+                            foreach ($result as $si) {
+
+                                echo $si . '<br>';
+                            }
+                        }
+
+                        ?>
+
                     </td>
 
 
@@ -260,150 +303,44 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
 
 
                      <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+                         <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Погибло">
+                             <?= (isset($row['dead_man']) && $row['dead_man'] != 0) ? $row['dead_man'] : '' ?>
+                         </span>
 
-                        <?php
-                        //            short on technic
-                        if (isset($exit_time[$row['id']]) && !empty($exit_time[$row['id']])) {
+                                 <?php
+                                 if ((isset($row['dead_child']) && $row['dead_child'] != 0)) {
 
-                                    foreach ($exit_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                        ?>
-                         <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время выезда"><?= $si ?></p>
-
-                         <?php
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($arrival_time[$row['id']]) && !empty($arrival_time[$row['id']])) {
-
-                                    foreach ($arrival_time[$row['id']] as $si) {
-
-                                        //echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                        <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Локализация"><?= $time_loc ?></span></td>
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Ликвидация"><?= $time_likv ?></span></td>
-
-
-                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($follow_time[$row['id']]) && !empty($follow_time[$row['id']])) {
-
-                                    foreach ($follow_time[$row['id']] as $si) {
-
-                                        //echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
                                      ?>
-                         <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время следования"><?= $si ?></p>
-                         <?php
+                         <br>
+                                     <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="в т.ч. детей">
+                                         <?= $row['dead_child']  ?>
+                                     </span>
+                                     <?php
+                                 }
+
+                                 ?>
+
+                    </td>
 
 
-                                    }
-                                }
 
-                                ?>
 
+
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Спасено">
+                             <?= (isset($row['save_man']) && $row['save_man'] != 0) ? $row['save_man'] : '' ?>
+                        </span>
 
                     </td>
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($end_time[$row['id']]) && !empty($end_time[$row['id']])) {
-
-                                    foreach ($end_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                        //echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-<p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время окончания работ"><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($return_time[$row['id']]) && !empty($return_time[$row['id']])) {
-
-                                    foreach ($return_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                     <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время возвращения"><?= $si ?></p>
-                     <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Эвакуировано">
+                             <?= (isset($row['ev_man']) && $row['ev_man'] != 0) ? $row['ev_man'] : '' ?>
+                        </span></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($distance[$row['id']]) && !empty($distance[$row['id']])) {
-
-                                    foreach ($distance[$row['id']] as $si) {
-
-                                       // echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                        <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Расстояние, км."><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-
-
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Травмировано">
+                             <?= (isset($row['inj_man']) && $row['inj_man'] != 0) ? $row['inj_man'] : '' ?>
+                        </span></td>
 
 
 
@@ -601,35 +538,6 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
                             </tbody>
                             </table>
 
-
-
-<script>
-
-    $(document).ready(function() {
-    // Setup - add a text input to each footer cell
-    $('#example thead tr:eq(1) th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" class="column_search" />' );
-    } );
-
-    // DataTable
-    var table = $('#example').DataTable({
-      orderCellsTop: true,
-      fixedHeader: true,
-      pageLength: 100
-    });
-
-// Apply the search
-    $( '#example thead'  ).on( 'keyup', ".column_search",function () {
-
-        table
-            .column( $(this).parent().index() )
-            .search( this.value )
-            .draw();
-    } );
-
-} );
-    </script>
 
 
 

@@ -693,6 +693,10 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
         $data['active_tab'] = $active_tab; //number of active tab
         $data['id'] = $id; //id of rig
 
+        $data['settings_user'] = getSettingsUser();
+
+        $cp = array(8, 9, 12);
+
         /*         * *** Классификаторы **** */
         $region = new Model_Region();
         $data['region'] = $region->selectAll(); //области
@@ -734,13 +738,15 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
 
         if ($id != 0) {
 
-            $rig_table_m=new Model_Rigtable();
-            $inf_rig=$rig_table_m->selectByIdRig($id);// дата, время, адрес объекта для редактируемого вызова по id
+            $rig_table_m = new Model_Rigtable();
+            $inf_rig = $rig_table_m->selectByIdRig($id); // дата, время, адрес объекта для редактируемого вызова по id
+            // инф по вызову
+            $rig_m = new Model_Rig();
+            $rig = $rig_m->selectAllById($id);
+            $data['is_sily_mchs']=$rig['is_sily_mchs'];
 
             if ($active_tab != 2) {
-                // инф по вызову
-                $rig_m = new Model_Rig();
-                $rig = $rig_m->selectAllById($id);
+
                 $data['rig'] = $rig;
 
 
@@ -749,12 +755,11 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
 
                 if ($rig['id_local'] != 0) {
 
-                    $id_loc=($rig['id_local']<0) ? 123 :$rig['id_local'];
+                    $id_loc = ($rig['id_local'] < 0) ? 123 : $rig['id_local'];
 
                     $data['selsovet'] = $selsovet->selectAllByLocal($id_loc); //сельсоветы для района редактируемого вызова
-                     $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
-                }
-elseif ($rig['id_region'] != 0) {
+                    $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
+                } elseif ($rig['id_region'] != 0) {
                     $data['locality'] = $locality->selectAllByRegion($rig['id_region']); //нас.пункты области
                 }
 
@@ -770,8 +775,6 @@ elseif ($rig['id_region'] != 0) {
                 $data['people'] = $people->selectAllByIdRig($id);
             }
 
-
-
             //инф по привлекаемым СиС МЧС
             $silymchs = new Model_Silymchs();
             $data['silymchs'] = $silymchs->selectGroupByPasp($id);
@@ -785,21 +788,32 @@ elseif ($rig['id_region'] != 0) {
             //инф по СиС др ведомств
             $innerservice = new Model_Innerservice();
             $data['innerservice'] = $innerservice->selectAllByIdRig($id);
+
+
+            /* is updeting now ?  */
+
+            $is_update_now = is_update_rig_now($rig, $id);
+            //  echo $is_update_now;exit();
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['is_update_now'] = $is_update_now;
+            }
+            //  exit();
+
+            /* is updeting now ?  */
         }
 
-        /* ------------- КОНЕЦ Редактирование выезда -------------- */
-
-        else {
+        /* ------------- КОНЕЦ Редактирование выезда -------------- */ else {
 
             //если по умолчанию выбирать в адресе район - город( Витебск, Жодино,...), то надо подгрузить сразу нас.пункты и улицы
-            $city = array(21, 22,123,  124, 135, 136, 137, 138, 139, 140, 141);
+            $city = array(21, 22, 123, 124, 135, 136, 137, 138, 139, 140, 141);
 
 //$_SESSION['auto_local']<0 только для районов г.минска
-            if (in_array($_SESSION['auto_local'], $city) || ($_SESSION['auto_local']<0) ) {//если по умолчанию город выбран
+            if (in_array($_SESSION['auto_local'], $city) || ($_SESSION['auto_local'] < 0)) {//если по умолчанию город выбран
                 $data['auto_local_city'] = $city;
 
-                  //если районы г.Минска - выбрать нас пунктом г.Минск
-                    $id_loc=($_SESSION['auto_local']<0) ? 123 : $_SESSION['auto_local'];
+                //если районы г.Минска - выбрать нас пунктом г.Минск
+                $id_loc = ($_SESSION['auto_local'] < 0) ? 123 : $_SESSION['auto_local'];
 
                 $locality_result = $locality->selectAllByLocal($id_loc); //нас.пункты района
                 //print_r($locality_result);
@@ -815,7 +829,7 @@ elseif ($rig['id_region'] != 0) {
                 if ($_SESSION['auto_local'] != 0) {
 
                     //если районы г.Минска - выбрать нас пунктом г.Минск
-                    $id_loc=($_SESSION['auto_local']<0) ? 123 : $_SESSION['auto_local'];
+                    $id_loc = ($_SESSION['auto_local'] < 0) ? 123 : $_SESSION['auto_local'];
 
                     $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
 
@@ -828,7 +842,29 @@ elseif ($rig['id_region'] != 0) {
         }
 
 
-                if ($id == 0) {
+        if ($active_tab != 2) {
+            /* guide pasp  */
+            if ($_SESSION['id_level'] == 1 && $_SESSION['id_organ'] == 5) {//rcu
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name as pasp_name_1, concat(r.pasp_name,", ",r.locorg_name,", ",r.region_name) as pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp  ');
+            } elseif ($_SESSION['id_level'] == 3 && !in_array($_SESSION['id_organ'], $cp)) {//rochs
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp where r.id_loc_org = ? ', array($_SESSION['id_locorg']));
+            } elseif ($_SESSION['id_level'] == 3 && in_array($_SESSION['id_organ'], $cp)) {//rosn pinsk
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name  from guidepasp as g left join pasp as r on r.id=g.id_pasp  where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+                // $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+            } elseif ($_SESSION['id_level'] == 2 && in_array($_SESSION['id_organ'], $cp)) {//rosn, ugz,avia - all g. Minsk
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name  from guidepasp as g left join pasp as r on r.id=g.id_pasp  where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+                // $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+            } elseif ($_SESSION['id_level'] == 2 && $_SESSION['id_organ'] == 4 && $_SESSION['id_region'] == 3) {//umchs g.Minsk
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name as pasp_name_1, concat(r.pasp_name,", ",r.locorg_name) as pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp  where r.id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array(3));
+                // $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array(3));
+            } elseif ($_SESSION['id_level'] == 2 && $_SESSION['id_organ'] == 4 && $_SESSION['id_region'] != 3) {//umchs
+                $data['podr'] = R::getAll('select g.*, r.locorg_name, r.pasp_name as pasp_name_1, concat(r.pasp_name,", ",r.locorg_name) as pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp  where r.id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array($_SESSION['id_region']));
+                // $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array(3));
+            }
+        }
+        //print_r($data['podr']);exit();
+
+        if ($id == 0) {
             $bread_crumb = array('Создать выезд');
             $data['title'] = 'Новый выезд';
         } elseif ($active_tab == 2) {
@@ -839,24 +875,23 @@ elseif ($rig['id_region'] != 0) {
             $data['title'] = 'Редактирование выезда';
         }
 
-        /*--------- добавить инф о редактируемом вызове ------------*/
+        /* --------- добавить инф о редактируемом вызове ------------ */
 
-        if($id != 0){
+        if ($id != 0) {
 
-            if(isset($inf_rig) && !empty($inf_rig)){
+            if (isset($inf_rig) && !empty($inf_rig)) {
                 foreach ($inf_rig as $value) {
-                    $date_rig=$value['date_msg'].' '.$value['time_msg'];
-                    $adr_rig=(empty($value['address'])) ? $value['additional_field_address']: $value['address'];
+                    $date_rig = $value['date_msg'] . ' ' . $value['time_msg'];
+                    $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
 
-                     $data['id_user']=$value['id_user'];
+                    $data['id_user'] = $value['id_user'];
                 }
-                $bread_crumb[]=$date_rig;
-                $bread_crumb[]=$adr_rig;
+                $bread_crumb[] = $date_rig;
+                $bread_crumb[] = $adr_rig;
             }
-
         }
 
-         /*--------- добавить инф о редактируемом вызове ------------*/
+        /* --------- добавить инф о редактируемом вызове ------------ */
 
         $data['bread_crumb'] = $bread_crumb;
         $app->render('layouts/header.php', $data);
@@ -873,6 +908,8 @@ elseif ($rig['id_region'] != 0) {
         $data['title']='Информирование';
 
         $data['id_rig'] = $id;
+
+        $data['settings_user'] = getSettingsUser();
 
 
            $rig_table_m=new Model_Rigtable();
@@ -892,6 +929,19 @@ elseif ($rig['id_region'] != 0) {
                 $bread_crumb[]=$date_rig;
                 $bread_crumb[]=$adr_rig;
             }
+
+            /* is updeting now ?  */
+
+            $rig_m = new Model_Rig();
+            $rig = $rig_m->selectAllById($id);
+
+            $is_update_now = is_update_rig_now($rig, $id);
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['is_update_now'] = $is_update_now;
+            }
+
+            /* is updeting now ?  */
 
         }
          /*--------- добавить инф о редактируемом вызове ------------*/
@@ -939,11 +989,16 @@ elseif ($rig['id_region'] != 0) {
         $informing_m->save($post_info, $id); //
         /* ---------------------------- КОНЕЦ Сохранить информированных адресатов по данному вызову---------------------------- */
 
-				$log_post_info=json_encode($post_info,JSON_UNESCAPED_UNICODE);
- $log->info('Сессия -  :: Сохранение ИНФОРМИРОВАНИЕ - id_rig = ' . $id.' данные - : '.$log_post_info); //запись в logs
+        /* is updeting now ?  */
+        if ($id != 0) {//edit
+            unset_update_rig_now($id);
+        }
+
+	$log_post_info = json_encode($post_info, JSON_UNESCAPED_UNICODE);
+        $log->info('Сессия -  :: Сохранение ИНФОРМИРОВАНИЕ - id_rig = ' . $id . ' данные - : ' . $log_post_info); //запись в logs
 
 
-                             /* save log to bd */
+        /* save log to bd */
         $action = 'редактирование информирования по выезду';
         $arr = array('s_user_id' => $_SESSION['id_user'], 's_user_name' => $_SESSION['user_name'], 's_region_name' => $_SESSION['region_name'], 's_locorg_name' => $_SESSION['locorg_name'], 'id_rig' => $id, 'action' => $action);
         $logg = new Model_Logs();
@@ -960,6 +1015,8 @@ elseif ($rig['id_region'] != 0) {
 
         $data['title']='Временные характеристики выезда';
         $data['id'] = $id;
+
+        $data['settings_user'] = getSettingsUser();
 
 
            $rig_table_m=new Model_Rigtable();
@@ -982,6 +1039,18 @@ elseif ($rig['id_region'] != 0) {
                 $bread_crumb[]=$adr_rig;
             }
 
+            /* is updeting now ?  */
+
+            $rig_m = new Model_Rig();
+            $rig = $rig_m->selectAllById($id);
+
+            $is_update_now = is_update_rig_now($rig, $id);
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['is_update_now'] = $is_update_now;
+            }
+
+            /* is updeting now ?  */
         }
          /*--------- добавить инф о редактируемом вызове ------------*/
 
@@ -1040,6 +1109,12 @@ elseif ($rig['id_region'] != 0) {
               $jrig_m->save($post_jrig); //журнал вызова
          }
 
+
+        /* is updeting now ?  */
+        if ($id != 0) {//edit
+            unset_update_rig_now($id);
+        }
+
         /* ---------------------------- КОНЕЦ Сохранить---------------------------- */
 		$log_post_character=json_encode($post_character,JSON_UNESCAPED_UNICODE);
 		$log_post_jrig=json_encode($post_jrig,JSON_UNESCAPED_UNICODE);
@@ -1066,6 +1141,7 @@ elseif ($rig['id_region'] != 0) {
         $data['id_page']=$id;//номер вклдаки
 
         $data['settings_user'] = getSettingsUser();
+        $data['settings_user_br_table'] = getSettingsUserMode();
 
            $rig_m = new Model_Rigtable();
 
@@ -1075,6 +1151,9 @@ elseif ($rig['id_region'] != 0) {
         if ($id_rig != 0) {
             $rig = search_rig_by_id($rig_m, $id_rig);
             $data['rig'] = $rig;
+
+            $data['search_rig_by_id']=1;
+
         }
         /* -------------- END Поиск вызова по введенному id ---------------- */
         elseif ($id_rig == 0) {//обычная таблица
@@ -1148,7 +1227,35 @@ elseif ($rig['id_region'] != 0) {
         // empty fields
         $data['rig']=getEmptyFields($data['rig']);
 
+        /* is updeting now ?  */
+        foreach ($data['rig'] as $k=>$r) {
+            $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
+            //  echo $is_update_now;exit();
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['rig'][$k]['is_update_now'] = $is_update_now;
+            }
+            //  exit();
 
+
+        }
+         /* is updeting now ?  */
+
+
+         $data['rig']=getResultsBattle($data['rig']);//results battle
+
+         /*  mode  */
+        if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
+
+            $del_val = $data['settings_user_br_table'];
+            $data['rig'] = array_filter($data['rig'], function($e) use ($del_val) {
+                // return (in_array($e['id_reasonrig'], $del_val));
+                if (in_array($e['id_reasonrig'], $del_val)) {
+                    return true;
+                }
+                return false;
+            });
+        }
 
         $data['bread_crumb'] = $bread_crumb;
         $app->render('layouts/header.php');
@@ -1168,6 +1275,7 @@ elseif ($rig['id_region'] != 0) {
                         $data['id_page']=$id;//number of tabs
 
                         $data['settings_user'] = getSettingsUser();
+                        $data['settings_user_br_table'] = getSettingsUserMode();
 
           /* ++++++ proccessing of POST-data ++++++++ */
         $rig_m = new Model_Rigtable();
@@ -1185,6 +1293,7 @@ elseif ($rig['id_region'] != 0) {
             exit();
         }
         /* -------- END validate is success ------- */
+
 
 
                 /*-------- color of reasonrig ----------*/
@@ -1291,7 +1400,37 @@ elseif ($rig['id_region'] != 0) {
         // empty fields
         $data['rig']=getEmptyFields($data['rig']);
 
- //$app->render('aaa.php',$data);
+         /* is updeting now ?  */
+        foreach ($data['rig'] as $k=>$r) {
+            $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
+            //  echo $is_update_now;exit();
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['rig'][$k]['is_update_now'] = $is_update_now;
+            }
+            //  exit();
+
+
+        }
+         /* is updeting now ?  */
+
+
+         $data['rig']=getResultsBattle($data['rig']);//results battle
+         //print_r($data['settings_user_br_table']);exit();
+         //echo $_SESSION['br_table_mode'];exit();
+
+         /* mode */
+        if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
+
+            $del_val = $data['settings_user_br_table'];
+            $data['rig'] = array_filter($data['rig'], function($e) use ($del_val) {
+                // return (in_array($e['id_reasonrig'], $del_val));
+                if (in_array($e['id_reasonrig'], $del_val)) {
+                    return true;
+                }
+                return false;
+            });
+        }
 
         $app->render('layouts/header.php');
         $data['active_tab'] = $id; // active tab - id of region
@@ -1307,6 +1446,7 @@ elseif ($rig['id_region'] != 0) {
         $data['bread_crumb'] = $bread_crumb;
 
         $data['settings_user'] = getSettingsUser();
+        $data['settings_user_br_table'] = getSettingsUserMode();
 
         $rig_m = new Model_Rigtable();
 
@@ -1319,6 +1459,8 @@ elseif ($rig['id_region'] != 0) {
                 $organ = $r['id_organ_user']; //кто создал
             }
             $data['rig'] = $rig;
+
+            $data['search_rig_by_id']=1;
         }
         /* -------------- END Поиск вызова по введенному id ---------------- */
 
@@ -1492,6 +1634,34 @@ $id_rig_arr=array();
         $data['rig']=getEmptyFields($data['rig']);
 
 
+                                    /* is updeting now ?  */
+        foreach ($data['rig'] as $k => $r) {
+            $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
+            //  echo $is_update_now;exit();
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['rig'][$k]['is_update_now'] = $is_update_now;
+            }
+            //  exit();
+        }
+        /* is updeting now ?  */
+
+
+        $data['rig']=getResultsBattle($data['rig']);//results battle
+
+        /* mode */
+        if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
+
+            $del_val = $data['settings_user_br_table'];
+            $data['rig'] = array_filter($data['rig'], function($e) use ($del_val) {
+                // return (in_array($e['id_reasonrig'], $del_val));
+                if (in_array($e['id_reasonrig'], $del_val)) {
+                    return true;
+                }
+                return false;
+            });
+        }
+
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
         $app->render('layouts/div_wrapper.php', $data);
@@ -1505,6 +1675,7 @@ $id_rig_arr=array();
         $data['bread_crumb'] = $bread_crumb;
 
         $data['settings_user'] = getSettingsUser();
+        $data['settings_user_br_table'] = getSettingsUserMode();
 
        // echo $_SESSION['id_locorg'];
        // print_r($_POST);exit();
@@ -1530,7 +1701,6 @@ $id_rig_arr=array();
         /* -------- КОНЕЦ Прошла ли валидация ------- */
 
 
-        $data['settings_user'] = getSettingsUser();
         //print_r($data['settings_user']);exit();
 
         /* -------- таблица выездов в зависимости от авт пользователя -------- */
@@ -1685,6 +1855,37 @@ if(!empty($id_rig_arr)){
                 // empty fields
         $data['rig']=getEmptyFields($data['rig']);
 
+
+                            /* is updeting now ?  */
+        foreach ($data['rig'] as $k=>$r) {
+            $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
+            //  echo $is_update_now;exit();
+            if (!empty($is_update_now)) {
+                //  echo $is_update_now;
+                $data['rig'][$k]['is_update_now'] = $is_update_now;
+            }
+            //  exit();
+
+
+        }
+         /* is updeting now ?  */
+
+
+        $data['rig']=getResultsBattle($data['rig']);//results battle
+
+        /* mode */
+        if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
+
+            $del_val = $data['settings_user_br_table'];
+            $data['rig'] = array_filter($data['rig'], function($e) use ($del_val) {
+                // return (in_array($e['id_reasonrig'], $del_val));
+                if (in_array($e['id_reasonrig'], $del_val)) {
+                    return true;
+                }
+                return false;
+            });
+        }
+
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
         $app->render('layouts/div_wrapper.php', $data);
@@ -1756,10 +1957,30 @@ if(!empty($id_rig_arr)){
         $service = new Model_Innerservice();
         $post_service = $service->getPOSTData(); //данные по привлекаемым службам
         $silymchs = new Model_Silymchs();
-        $post_silymchs = $silymchs->getPOSTData(); //данные по силам МЧС
+
+
+         /* did sily mchs get involved or not */
+        $is_sily_mchs = $app->request()->post('is_sily_mchs');
+        if (isset($is_sily_mchs) && !empty($is_sily_mchs) && $is_sily_mchs == 1) {//no
+            $is_sily_mchs = 1;
+            $post_silymchs =array();
+        } else {//involved
+            $is_sily_mchs = 0;
+
+            $post_silymchs = $silymchs->getPOSTData(); //данные по силам МЧС
+        }
+        $post_rig['is_sily_mchs'] = $is_sily_mchs;
+
         //print_r($post_silymchs);
         //exit();
         /* -------- КОНЕЦ обработка POST-данных ---------- */
+
+
+         /* is updeting now ?  */
+        if ($id != 0) {//edit
+            unset_update_rig_now($id);
+        }
+
 
 
         /* ---------- сохранить вызов ----------- */
@@ -1768,6 +1989,7 @@ if(!empty($id_rig_arr)){
             $new_id = $rig->save($post_rig, $id); //id of rig
             $id = ($id == 0) ? $new_id : $id; //id of rig
         } else {//только вкладка "Техника"
+            $rig->save(array('is_sily_mchs'=>$is_sily_mchs), $id);
             $new_id = $id;
             $id = $id;
         }
@@ -2467,6 +2689,10 @@ $app->group('/settings', 'is_login','is_permis',  function () use ($app, $log) {
         $data['bread_crumb'] = $bread_crumb;
 
 
+          $reasonrig = new Model_Reasonrig();
+          $data['reasonrig'] = $reasonrig->selectAll(1);
+
+
 
         $all_settings=R::getAll('SELECT * FROM settings');
         $data['all_settings']=$all_settings;
@@ -2487,6 +2713,15 @@ $app->group('/settings', 'is_login','is_permis',  function () use ($app, $log) {
         }
         $data['settings_user']=$settings_user;
 
+        /* br table */
+        $settings_user_bd=R::getAll('SELECT * FROM settings_user_br_table WHERE id_user = ?',array($_SESSION['id_user']));
+        $reasonrig_by_user=array();
+        foreach ($settings_user_bd as $value) {
+            $reasonrig_by_user[]=$value['id_reasonrig'];
+        }
+        $data['settings_user_br_table']=$reasonrig_by_user;
+
+
 
         $app->render('layouts/header.php');
 
@@ -2499,16 +2734,33 @@ $app->group('/settings', 'is_login','is_permis',  function () use ($app, $log) {
 
     $app->post('/index/save', function () use ($app) {
 
-       // print_r($_POST['type']);exit();
+       // print_r($_POST);exit();
 
         $types=$_POST['type'];
+        $id_reasonrig_for_br_table=$_POST['id_reasonrig_for_br_table'];
+
          R::exec('DELETE FROM settings_user  WHERE id_user = ?', array($_SESSION['id_user']));
 
          foreach ($types as $value) {
 
              R::exec('INSERT INTO settings_user(id_user, id_settings_type) values(?,?) ', array($_SESSION['id_user'],$value));
          }
-//exit();
+
+
+         /* reason for br table */
+
+        R::exec('DELETE FROM settings_user_br_table  WHERE id_user = ?', array($_SESSION['id_user']));
+        if (isset($id_reasonrig_for_br_table) && !empty($id_reasonrig_for_br_table)) {
+            foreach ($id_reasonrig_for_br_table as $value) {
+                R::exec('INSERT INTO settings_user_br_table(id_user, id_settings, id_reasonrig) values(?,?,?) ', array($_SESSION['id_user'], 4, $value));
+            }
+        }
+        else{
+             if(isset($_SESSION['br_table_mode']))
+            unset($_SESSION['br_table_mode']);
+        }
+
+
          $app->redirect(BASE_URL . '/settings/index');
 
 
@@ -2692,8 +2944,8 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
  /*------------------- данные по вызову --------------------------*/
             $sheet->setCellValue('A' . $r, $i); //№ п/п
-            $sheet->setCellValue('B' . $r, $row['date_msg']);
-            $sheet->setCellValue('C' . $r, $row['time_msg']);
+            $sheet->setCellValue('B' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('C' . $r, date('H:i', strtotime($row['time_msg'])));
 
             $sheet->setCellValue('E' . $r, $row['description']);
 
@@ -2709,18 +2961,50 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
             $sheet->setCellValue('F' . $r, $adr_region.$adr_local. $adr);
 
-            $sheet->setCellValue('K' . $r, $row['time_loc']);
-            $sheet->setCellValue('L' . $r, $row['time_likv']);
+            $sheet->setCellValue('K' . $r, (($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc'])) ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+            $sheet->setCellValue('L' . $r, (($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv'])) ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
             $sheet->setCellValue('P' . $r, $row['inf_detail']);
             $sheet->setCellValue('Q' . $r, $row['view_work']);
              /*------------------- КОНЕЦ данные по вызову --------------------------*/
 
             /*------------------- данные по заявителю --------------------------*/
-            $tel= ($people[$row['id']]['phone'] == NULL || empty($people[$row['id']]['phone']) ) ? '': ('тел. '.$people[$row['id']]['phone']);
-          $sheet->setCellValue('D' . $r, $people[$row['id']]['fio'].chr(10).$tel.chr(10).$people[$row['id']]['address'].chr(10).$people[$row['id']]['position']);
+            //$tel= ($people[$row['id']]['phone'] == NULL || empty($people[$row['id']]['phone']) ) ? '': ('тел. '.$people[$row['id']]['phone']);
+          //$sheet->setCellValue('D' . $r, $people[$row['id']]['fio'].chr(10).$tel.chr(10).$people[$row['id']]['address'].chr(10).$people[$row['id']]['position']);
+
+            $tt = '';
+            if (isset($row['id']) && isset($people[$row['id']]) && isset($people[$row['id']]['phone'])) {
+                if ($people[$row['id']]['phone'] == NULL || empty($people[$row['id']]['phone'])) {
+                    $tt = '';
+                } else {
+                    $tt = 'тел. ' . $people[$row['id']]['phone'];
+                }
+            }
+
+            $tel = $tt;
+
+            if (isset($row['id']) && isset($people[$row['id']]['fio'])) {
+                $people_fio = $people[$row['id']]['fio'];
+            } else {
+                $people_fio = '';
+            }
+
+            if (isset($row['id']) && isset($people[$row['id']]['address'])) {
+                $people_address = $people[$row['id']]['address'];
+            } else {
+                $people_address = '';
+            }
+
+            if (isset($row['id']) && isset($people[$row['id']]['position'])) {
+                $people_position = $people[$row['id']]['position'];
+            } else {
+                $people_position = '';
+            }
 
 
-           /* ------------------- данные по СиС МЧС -------------------------- */
+
+            $sheet->setCellValue('D' . $r, $people_fio . chr(10) . $tel . chr(10) . $people_address . chr(10) . $people_position);
+
+            /* ------------------- данные по СиС МЧС -------------------------- */
             // Заполнение цветом
             $style_sily = array(
                 'fill' => array(
@@ -2757,10 +3041,10 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
                     $sheet->setCellValue('G' . $s, $si['locorg_name'] . ', ' . $si['pasp_name'] . ', ' . $si['mark'] . ' ( гос. номер ' . $si['numbsign'] . ')');
                     $sheet->setCellValue('H' . $s, '-');
-                    $sheet->setCellValue('I' . $s, $si['time_exit']);
-                    $sheet->setCellValue('J' . $s, $si['time_arrival']);
-                    $sheet->setCellValue('M' . $s, $si['time_end']);
-                    $sheet->setCellValue('N' . $s, $si['time_return']);
+                    $sheet->setCellValue('I' . $s, (($si['time_exit']=='0000-00-00 00:00:00' || empty($si['time_exit'])) ? '' : date('d.m.Y H:i', strtotime($si['time_exit']))) );
+                    $sheet->setCellValue('J' . $s, (($si['time_arrival']=='0000-00-00 00:00:00' || empty($si['time_arrival'])) ? '' : date('d.m.Y H:i', strtotime($si['time_arrival']))));
+                    $sheet->setCellValue('M' . $s, (($si['time_end']=='0000-00-00 00:00:00' || empty($si['time_end'])) ? '' : date('d.m.Y H:i', strtotime($si['time_end']))));
+                    $sheet->setCellValue('N' . $s, (($si['time_return']=='0000-00-00 00:00:00' || empty($si['time_return'])) ? '' : date('d.m.Y H:i', strtotime($si['time_return']))));
                     $sheet->setCellValue('O' . $s, $si['distance']);
 
 
@@ -2789,9 +3073,9 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             if (!empty($inner[$id_r])) {
                 foreach ($inner[$id_r] as $si) {
                     $sheet->setCellValue('G' . $s, $si['service_name']);
-                    $sheet->setCellValue('H' . $s, $si['time_msg']);
+                    $sheet->setCellValue('H' . $s, (($si['time_msg']=='0000-00-00 00:00:00' || empty($si['time_msg'])) ? '' : date('d.m.Y H:i', strtotime($si['time_msg']))));
                     $sheet->setCellValue('I' . $s, '-');
-                    $sheet->setCellValue('J' . $s, $si['time_arrival']);
+                    $sheet->setCellValue('J' . $s, (($si['time_arrival']=='0000-00-00 00:00:00' || empty($si['time_arrival'])) ? '' : date('d.m.Y H:i', strtotime($si['time_arrival']))));
                     $sheet->setCellValue('M' . $s, '-');
                     $sheet->setCellValue('N' . $s, '-');
                     $sheet->setCellValue('O' . $s, $si['distance']);
@@ -2828,9 +3112,9 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
                         $fio = $si['fio'] . ' ( ' . $si['position_name'] . ', ' . $si['rank_name'] . ' )';
                     }
                     $sheet->setCellValue('G' . $s, $fio);
-                    $sheet->setCellValue('H' . $s, $si['time_msg']);
-                    $sheet->setCellValue('I' . $s, $si['time_exit']);
-                    $sheet->setCellValue('J' . $s, $si['time_arrival']);
+                    $sheet->setCellValue('H' . $s, (($si['time_msg']=='0000-00-00 00:00:00' || empty($si['time_msg'])) ? '' : date('d.m.Y H:i', strtotime($si['time_msg']))));
+                    $sheet->setCellValue('I' . $s, (($si['time_exit']=='0000-00-00 00:00:00' || empty($si['time_exit'])) ? '' : date('d.m.Y H:i', strtotime($si['time_exit']))) );
+                    $sheet->setCellValue('J' . $s, (($si['time_arrival']=='0000-00-00 00:00:00' || empty($si['time_arrival'])) ? '' : date('d.m.Y H:i', strtotime($si['time_arrival']))));
                     $sheet->setCellValue('M' . $s, '-');
                     $sheet->setCellValue('N' . $s, '-');
                     $sheet->setCellValue('O' . $s, '-');
@@ -2895,6 +3179,132 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
         $data['path_to_view'] = 'report/rep1/form.php';
         $app->render('layouts/div_wrapper.php', $data);
         $app->render('layouts/footer.php');
+    });
+
+
+
+
+    /* ----- results battle report ------ */
+    //form
+    $app->get('/rep2(:is_error)', function ($is_error = 0) use ($app) {
+
+        $data['title'] = 'Отчеты/Боевая работа';
+
+        $bread_crumb = array('Отчеты', 'Боевая работа');
+        $data['bread_crumb'] = $bread_crumb;
+
+        /*         * *** Классификаторы **** */
+        $archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+
+        foreach ($archive_year as $value) {
+            $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
+            $archive_year_1[] = $value;
+        }
+        $data['archive_year'] = $archive_year_1;
+
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+        if (isset($is_error)) {
+            $data['is_error'] = $is_error;
+        }
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'report/rep2/form.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+    $app->post('/rep2', function () use ($app) {
+
+
+        $table_name_year = $app->request()->post('archive_year');
+        $month=$app->request()->post('archive_month');
+
+        $months=array('01'=>'январь', '02'=>'февраль', '03'=>'март', '04'=>'апрель', '05'=>'май', '06'=>'июнь', '07'=>'июль', '08'=>'август'
+    , '09'=>'сентябрь', '10'=>'октябрь', '11'=>'ноябрь', '12'=>'декабрь');
+
+        $year = $table_name_year;
+        $year = substr($year, 0, -1);
+
+        // echo $table_name_year;
+        if($month == ''){//all months
+             $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q GROUP BY q.`reasonrig_name`');
+        }
+        else{
+             $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q WHERE DATE_FORMAT( q.`date_msg`,"%m") ="'.$month.'" GROUP BY q.`reasonrig_name`');
+        }
+
+        // print_r($rigs);
+        //exit();
+        $result = array(0, 0, 0, 0, 0, 0, 0);
+        $no_cnt = 0;
+        $total = 0;
+
+        if (!empty($rigs)) {
+            foreach ($rigs as $row) {
+                if ($row['reasonrig_name'] == '09 другие ЧС') {
+                    $result[0] = $row['cnt'];
+                } elseif ($row['reasonrig_name'] == '12 пожар') {
+                    $result[2] = $row['cnt'];
+                } elseif ($row['reasonrig_name'] == '22 загорание в природных экосистемах') {
+                    $result[3] = $row['cnt'];
+                } elseif ($row['reasonrig_name'] == '04 другие загорания') {
+                    $result[4] = $row['cnt'];
+                } elseif ($row['reasonrig_name'] == '03 демеркуризация') {
+                    $result[5] = $row['cnt'];
+                } elseif ($row['reasonrig_name'] == 'не выбрано') {
+                    $no_cnt = $row['cnt'];
+                }
+
+                $total += $row['cnt'];
+            }
+
+            $result[1] = $result[2] + $result[3] + $result[4];
+            $result[6] = $total - $no_cnt - $result[1] - $result[0] - $result[5];
+        }
+
+
+        if (!isset($result) || empty($result)) {
+
+            $app->redirect(BASE_URL . '/report/rep2/1');
+        }
+
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/report/boevaya.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 9; //start row
+        $c = 0; //start col
+
+
+
+         if ($month == '') {//all months
+            $sheet->setCellValue('F3', $year . ' год');
+        } else {
+            $sheet->setCellValue('F3', ($months[$month] . chr(10) . $year));
+        }
+
+
+
+        $sheet->setCellValue('F6', $result[0]);
+        $sheet->setCellValue('F7', $result[1]);
+        $sheet->setCellValue('F8', $result[2]);
+        $sheet->setCellValue('F9', $result[3]);
+        $sheet->setCellValue('F10', $result[4]);
+        $sheet->setCellValue('F11', $result[5]);
+        $sheet->setCellValue('F12', $result[6]);
+
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="boevaya.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
     });
 });
 
@@ -3163,18 +3573,33 @@ $app->post('/select', function () use ($app) {
 
             /* ----------------- END техника из др ПАСЧ - пометить как (К) ----------------- */
 /* &#155; - on rig;  */
-			if (!empty($list_teh)) {
+	    if (!empty($list_teh)) {
                 foreach ($list_teh as $row) {
                     if (!empty($on_rig) && in_array($row['id_teh'], $on_rig)) {
                         if (!empty($on_reserve) && in_array($row['id_teh'], $on_reserve)) {
-                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br']. ' (К) &#155;</option>';
-                        } else
-                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br']. ' &#155; </option>';
+                            if (trim($row['is_br']) == '(ТО)')
+                                echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . ' (К) &#155;</option>';
+                            else
+                                echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . ' (К) &#155;</option>';
+                        } else {
+
+                            if (trim($row['is_br']) == '(ТО)')
+                                echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . ' &#155; </option>';
+                            else
+                                echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . ' &#155; </option>';
+                        }
                     }
                     elseif (!empty($on_reserve) && in_array($row['id_teh'], $on_reserve)) {
-                        echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . ' (К) </option>';
+
+                        if (trim($row['is_br']) == '(ТО)')
+                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . ' (К) </option>';
+                        else
+                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . ' (К) </option>';
                     } else {
-                        echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . '</option>';
+                        if (trim($row['is_br']) == '(ТО)')
+                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . '</option>';
+                        else
+                            echo '<option value="' . $row['id_teh'] . '" >' . $row['mark'] . ': ' . $row['numbsign'] . $row['is_br'] . '</option>';
                     }
                 }
             }
@@ -3228,14 +3653,14 @@ $app->post('/select', function () use ($app) {
         case "showReasonrigByWorkview":
 
 
-              $workview_m = new Model_Workview();
-              $id_reasonrig= $workview_m->selectIdReasonrig($_POST['id_workview']); //определяем причину выезда, к которой относится выбранный вид работ
+            $workview_m = new Model_Workview();
+            $id_reasonrig = $workview_m->selectIdReasonrig($_POST['id_workview']); //определяем причину выезда, к которой относится выбранный вид работ
 
             $reasonrig_m = new Model_Reasonrig();
             $reasonrig = $reasonrig_m->selectAll(0); //все причины
 
-            if(!isset($_POST['id_workview']))
-            echo '<option value="0">не выбрано</option>';
+            if (!isset($_POST['id_workview']))
+                echo '<option value="0">не выбрано</option>';
 
             foreach ($reasonrig as $row) {
                 if ($row['id'] == $id_reasonrig) {
@@ -3243,6 +3668,100 @@ $app->post('/select', function () use ($app) {
                 } else {
                     echo '<option value="' . $row['id'] . '" >' . $row['name'] . '</option>';
                 }
+            }
+            break;
+
+        /* select lang, lat for reason rig = zanyatia */
+        case "showAddrPasp":
+
+
+            $id_pasp = $_POST['pasp_id'];
+            $data['pasp_id_from_guide'] = $id_pasp;
+            // echo $id_pasp;
+
+            $coord = R::getRow('select id,pasp_name, locorg_name, latitude, longitude from pasp where id = ? ', array($id_pasp));
+            $address = R::getRow('select * from guidepasp where id_pasp = ? ', array($id_pasp));
+            // echo $coord['latitude'];
+
+            $length_lat = strlen($coord['latitude']);
+            $razn_lat = 9 - $length_lat;
+            if ($razn_lat > 0) {
+                $lat = str_pad($coord['latitude'], 9, 0);
+            } else {
+                $lat = $coord['latitude'];
+            }
+
+            $length_lon = strlen($coord['longitude']);
+            $razn_lon = 9 - $length_lon;
+            if ($razn_lon > 0) {
+                $lon = str_pad($coord['longitude'], 9, 0);
+            } else {
+                $lon = $coord['longitude'];
+            }
+
+
+//                            echo json_encode([
+//                'innerHtml' => $this->twig->render('student/profile/tabs/profile/process_study_chart', ['data' => $this->data], true),
+//                'innerHtml2' => $this->twig->render('student/profile/tabs/profile/how_go_chart', ['data' => $this->data], true),
+//                'innerHtml3' => $this->twig->render('student/profile/tabs/profile/line_intensivnost_study', ['data' => $this->data], true)
+//            ]);
+
+            $data['result'] = array("latitude"    => $lat,
+                "longitude"   => $lon,
+                "id_region"   => $address['id_region'],
+                "id_local"    => $address['id_local'],
+                "id_locality" => $address['id_locality'],
+                "id_selsovet" => $address['id_selsovet'],
+                "id_street"   => $address['id_street'],
+                "home_number" => $address['home_number'],
+                "housing"     => $address['housing']);
+
+
+            /* ------------------ address of pasp from guide pasp ------------------- */
+
+            $region = new Model_Region();
+            $data['region'] = $region->selectAll(); //области
+            $local = new Model_Local();
+            $locality = new Model_Locality();
+            $street = new Model_Street();
+            $selsovet = new Model_Selsovet();
+
+            $data['local'] = $local->selectAllByRegion($address['id_region']); //locals
+
+            if ($address['id_local'] != 0) {
+
+                $id_loc = ($address['id_local'] < 0) ? 123 : $address['id_local'];
+
+                $data['selsovet'] = $selsovet->selectAllByLocal($id_loc); //сельсоветы для района редактируемого вызова
+                $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
+            } elseif ($address['id_region'] != 0) {
+                $data['locality'] = $locality->selectAllByRegion($address['id_region']); //нас.пункты области
+            }
+
+            if ($address['id_locality'] != 0) {
+                $data['street'] = $street->selectAllByLocality($address['id_locality']); //улицы
+            }
+
+            /* ------------------ END address of pasp from guide pasp ------------------- */
+
+            if ($_POST['sign'] == 'street') {
+                $view = $app->render('guide_pasp/street_block.php', $data);
+                $response = json_encode(['success' => TRUE, 'view' => $view]);
+            } elseif ($_POST['sign'] == 'address') {
+                $view = $app->render('guide_pasp/address_block.php', $data);
+                $response = json_encode(['success' => TRUE, 'view' => $view]);
+            } else {
+                echo json_encode([
+                    "latitude"    => $lat,
+                    "longitude"   => $lon,
+                    "id_region"   => $address['id_region'],
+                    "id_local"    => $address['id_local'],
+                    "id_locality" => $address['id_locality'],
+                    "id_selsovet" => $address['id_selsovet'],
+                    "id_street"   => $address['id_street'],
+                    "home_number" => $address['home_number'],
+                    "housing"     => $address['housing']
+                ]);
             }
             break;
     }
@@ -4960,6 +5479,11 @@ elseif($id_tab=='table-content4'){//innerservice
     $sql='SELECT id_rig,date_msg,time_msg, local_name,address, innerservice '.$sql;
 
 }
+elseif($id_tab=='table-content5'){//results br
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, results_battle '.$sql;
+
+}
 
 //echo $sql;
 $data['result']=R::getAll($sql, $param);
@@ -4981,6 +5505,10 @@ elseif($id_tab=='table-content3'){
 elseif($id_tab=='table-content4'){
   $data['link_excel']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
   $data['link_excel_hidden']='archive_1/exportExcelTab4/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
+}
+elseif($id_tab=='table-content5'){
+  $data['link_excel']='archive_1/exportExcelTab5/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab5/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 
 
@@ -5146,16 +5674,16 @@ $result=R::getAll($sql, $param);
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])) );
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
             $sheet->setCellValue('H' . $r, $row['view_work']);
             $sheet->setCellValue('I' . $r, $row['inf_detail']);
             $sheet->setCellValue('J' . $r, $row['people']);
-            $sheet->setCellValue('K' . $r, $row['time_loc']);
-            $sheet->setCellValue('L' . $r, $row['time_likv']);
+            $sheet->setCellValue('K' . $r, (($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ));
+            $sheet->setCellValue('L' . $r, (($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv']) ||$row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
 
             $r++;
         }
@@ -5193,18 +5721,18 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $mark);
-            $sheet->setCellValue('H' . $r, $t_exit);
-            $sheet->setCellValue('I' . $r, $t_arrival );
-            $sheet->setCellValue('J' . $r, $row['time_loc']);
-            $sheet->setCellValue('K' . $r, $row['time_likv']);
+            $sheet->setCellValue('H' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+            $sheet->setCellValue('I' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))) );
+            $sheet->setCellValue('J' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+            $sheet->setCellValue('K' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
              $sheet->setCellValue('L' . $r, (($row['is_likv_before_arrival']) == 1 ? 'да':'нет'));
-              $sheet->setCellValue('M' . $r, $t_end);
-              $sheet->setCellValue('N' . $r, $t_return);
+              $sheet->setCellValue('M' . $r, (($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end=='-' ) ? '' : date('d.m.Y H:i', strtotime($t_end))));
+              $sheet->setCellValue('N' . $r, (($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return=='-') ? '' : date('d.m.Y H:i', strtotime($t_return))));
               $sheet->setCellValue('O' . $r, $t_distance);
               $sheet->setCellValue('P' . $r, $t_is_return);
 
@@ -5239,14 +5767,14 @@ elseif($id_tab=='table-content3'){//informing
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
                         $sheet->setCellValue('G' . $r, $fio);
-                        $sheet->setCellValue('H' . $r, $t_msg);
-                        $sheet->setCellValue('I' . $r, $t_exit);
-                        $sheet->setCellValue('J' . $r, $t_arrival);
+                        $sheet->setCellValue('H' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('I' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit=='-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+                        $sheet->setCellValue('J' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ));
 
                         $r++;
                     }
@@ -5283,12 +5811,12 @@ elseif($id_tab=='table-content4'){//innerservice
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
-                        $sheet->setCellValue('G' . $r, $t_msg);
-                        $sheet->setCellValue('H' . $r, $t_arrival);
+                        $sheet->setCellValue('G' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('H' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))));
                         $sheet->setCellValue('I' . $r, $service_name);
                         $sheet->setCellValue('J' . $r, $t_distance);
                         $sheet->setCellValue('K' . $r, $t_note);
@@ -5459,16 +5987,17 @@ $result=R::getAll($sql, $param);
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])) );
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
             $sheet->setCellValue('H' . $r, $row['view_work']);
             $sheet->setCellValue('I' . $r, $row['inf_detail']);
             $sheet->setCellValue('J' . $r, $row['people']);
-            $sheet->setCellValue('K' . $r, $row['time_loc']);
-            $sheet->setCellValue('L' . $r, $row['time_likv']);
+            $sheet->setCellValue('K' . $r, (($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ));
+            $sheet->setCellValue('L' . $r, (($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv']) ||$row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
+
 
             $r++;
         }
@@ -5506,18 +6035,18 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $mark);
-            $sheet->setCellValue('H' . $r, $t_exit);
-            $sheet->setCellValue('I' . $r, $t_arrival );
-            $sheet->setCellValue('J' . $r, $row['time_loc']);
-            $sheet->setCellValue('K' . $r, $row['time_likv']);
+            $sheet->setCellValue('H' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+            $sheet->setCellValue('I' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))) );
+            $sheet->setCellValue('J' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+            $sheet->setCellValue('K' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
              $sheet->setCellValue('L' . $r, (($row['is_likv_before_arrival']) == 1 ? 'да':'нет'));
-              $sheet->setCellValue('M' . $r, $t_end);
-              $sheet->setCellValue('N' . $r, $t_return);
+             $sheet->setCellValue('M' . $r, (($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end=='-' ) ? '' : date('d.m.Y H:i', strtotime($t_end))));
+              $sheet->setCellValue('N' . $r, (($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return=='-') ? '' : date('d.m.Y H:i', strtotime($t_return))));
               $sheet->setCellValue('O' . $r, $t_distance);
               $sheet->setCellValue('P' . $r, $t_is_return);
 
@@ -5552,14 +6081,15 @@ elseif($id_tab=='table-content3'){//informing
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
                         $sheet->setCellValue('G' . $r, $fio);
-                        $sheet->setCellValue('H' . $r, $t_msg);
-                        $sheet->setCellValue('I' . $r, $t_exit);
-                        $sheet->setCellValue('J' . $r, $t_arrival);
+                        $sheet->setCellValue('H' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('I' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit=='-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+                        $sheet->setCellValue('J' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ));
+
 
                         $r++;
                     }
@@ -5596,12 +6126,12 @@ elseif($id_tab=='table-content4'){//innerservice
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
-                        $sheet->setCellValue('G' . $r, $t_msg);
-                        $sheet->setCellValue('H' . $r, $t_arrival);
+                        $sheet->setCellValue('G' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('H' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))));
                         $sheet->setCellValue('I' . $r, $service_name);
                         $sheet->setCellValue('J' . $r, $t_distance);
                         $sheet->setCellValue('K' . $r, $t_note);
@@ -5757,16 +6287,16 @@ $result=R::getAll($sql, $param);
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])) );
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
             $sheet->setCellValue('H' . $r, $row['view_work']);
             $sheet->setCellValue('I' . $r, $row['inf_detail']);
             $sheet->setCellValue('J' . $r, $row['people']);
-            $sheet->setCellValue('K' . $r, $row['time_loc']);
-            $sheet->setCellValue('L' . $r, $row['time_likv']);
+            $sheet->setCellValue('K' . $r, (($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ));
+            $sheet->setCellValue('L' . $r, (($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv']) ||$row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
 
             $r++;
         }
@@ -5804,18 +6334,18 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $mark);
-            $sheet->setCellValue('H' . $r, $t_exit);
-            $sheet->setCellValue('I' . $r, $t_arrival );
-            $sheet->setCellValue('J' . $r, $row['time_loc']);
-            $sheet->setCellValue('K' . $r, $row['time_likv']);
+            $sheet->setCellValue('H' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+            $sheet->setCellValue('I' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))) );
+            $sheet->setCellValue('J' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+            $sheet->setCellValue('K' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
              $sheet->setCellValue('L' . $r, (($row['is_likv_before_arrival']) == 1 ? 'да':'нет'));
-              $sheet->setCellValue('M' . $r, $t_end);
-              $sheet->setCellValue('N' . $r, $t_return);
+             $sheet->setCellValue('M' . $r, (($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end=='-' ) ? '' : date('d.m.Y H:i', strtotime($t_end))));
+              $sheet->setCellValue('N' . $r, (($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return=='-') ? '' : date('d.m.Y H:i', strtotime($t_return))));
               $sheet->setCellValue('O' . $r, $t_distance);
               $sheet->setCellValue('P' . $r, $t_is_return);
 
@@ -5850,14 +6380,15 @@ elseif($id_tab=='table-content3'){//informing
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
                         $sheet->setCellValue('G' . $r, $fio);
-                        $sheet->setCellValue('H' . $r, $t_msg);
-                        $sheet->setCellValue('I' . $r, $t_exit);
-                        $sheet->setCellValue('J' . $r, $t_arrival);
+                        $sheet->setCellValue('H' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('I' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit=='-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+                        $sheet->setCellValue('J' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ));
+
 
                         $r++;
                     }
@@ -5894,12 +6425,12 @@ elseif($id_tab=='table-content4'){//innerservice
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
-                        $sheet->setCellValue('G' . $r, $t_msg);
-                        $sheet->setCellValue('H' . $r, $t_arrival);
+                        $sheet->setCellValue('G' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('H' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))));
                         $sheet->setCellValue('I' . $r, $service_name);
                         $sheet->setCellValue('J' . $r, $t_distance);
                         $sheet->setCellValue('K' . $r, $t_note);
@@ -6056,16 +6587,16 @@ $result=R::getAll($sql, $param);
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])) );
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
             $sheet->setCellValue('H' . $r, $row['view_work']);
             $sheet->setCellValue('I' . $r, $row['inf_detail']);
             $sheet->setCellValue('J' . $r, $row['people']);
-            $sheet->setCellValue('K' . $r, $row['time_loc']);
-            $sheet->setCellValue('L' . $r, $row['time_likv']);
+             $sheet->setCellValue('K' . $r, (($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ));
+            $sheet->setCellValue('L' . $r, (($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv']) ||$row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
 
             $r++;
         }
@@ -6103,18 +6634,18 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
 
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, $row['id_rig']);
-            $sheet->setCellValue('C' . $r, $row['date_msg']);
-            $sheet->setCellValue('D' . $r, $row['time_msg']);
+            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
             $sheet->setCellValue('E' . $r, $row['local_name']);
             $sheet->setCellValue('F' . $r, $row['address']);
             $sheet->setCellValue('G' . $r, $mark);
-            $sheet->setCellValue('H' . $r, $t_exit);
-            $sheet->setCellValue('I' . $r, $t_arrival );
-            $sheet->setCellValue('J' . $r, $row['time_loc']);
-            $sheet->setCellValue('K' . $r, $row['time_likv']);
+            $sheet->setCellValue('H' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+            $sheet->setCellValue('I' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))) );
+            $sheet->setCellValue('J' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+            $sheet->setCellValue('K' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
              $sheet->setCellValue('L' . $r, (($row['is_likv_before_arrival']) == 1 ? 'да':'нет'));
-              $sheet->setCellValue('M' . $r, $t_end);
-              $sheet->setCellValue('N' . $r, $t_return);
+              $sheet->setCellValue('M' . $r, (($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end=='-' ) ? '' : date('d.m.Y H:i', strtotime($t_end))));
+              $sheet->setCellValue('N' . $r, (($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return=='-') ? '' : date('d.m.Y H:i', strtotime($t_return))));
               $sheet->setCellValue('O' . $r, $t_distance);
               $sheet->setCellValue('P' . $r, $t_is_return);
 
@@ -6149,14 +6680,14 @@ elseif($id_tab=='table-content3'){//informing
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
                         $sheet->setCellValue('G' . $r, $fio);
-                        $sheet->setCellValue('H' . $r, $t_msg);
-                        $sheet->setCellValue('I' . $r, $t_exit);
-                        $sheet->setCellValue('J' . $r, $t_arrival);
+                        $sheet->setCellValue('H' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('I' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit=='-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+                        $sheet->setCellValue('J' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ));
 
                         $r++;
                     }
@@ -6193,12 +6724,12 @@ elseif($id_tab=='table-content4'){//innerservice
 
                         $sheet->setCellValue('A' . $r, $i); //№ п/п
                         $sheet->setCellValue('B' . $r, $row['id_rig']);
-                        $sheet->setCellValue('C' . $r, $row['date_msg']);
-                        $sheet->setCellValue('D' . $r, $row['time_msg']);
+                        $sheet->setCellValue('C' . $r, (date('d.m.Y', strtotime($row['date_msg']))));
+                        $sheet->setCellValue('D' . $r, (date('H:i', strtotime($row['time_msg']))));
                         $sheet->setCellValue('E' . $r, $row['local_name']);
                         $sheet->setCellValue('F' . $r, $row['address']);
-                        $sheet->setCellValue('G' . $r, $t_msg);
-                        $sheet->setCellValue('H' . $r, $t_arrival);
+                        $sheet->setCellValue('G' . $r, (($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg))));
+                        $sheet->setCellValue('H' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))));
                         $sheet->setCellValue('I' . $r, $service_name);
                         $sheet->setCellValue('J' . $r, $t_distance);
                         $sheet->setCellValue('K' . $r, $t_note);
@@ -6221,6 +6752,173 @@ elseif($id_tab=='table-content4'){//innerservice
         $objWriter->save('php://output');
     });
 
+
+
+
+      /* results battle */
+       $app->get('/exportExcelTab5/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
+
+             /* get data */
+$date_start=$date_from;
+$date_end=$date_to;
+$table_name_year=$table;
+$region=$reg;
+$local=$loc;
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql=' FROM jarchive.'.$table_name_year.'  WHERE date_msg between ? and ? and id_rig not in '
+                . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+      //  $param[]=0;
+
+//var_dump($region);
+        if($region != 'no' ){
+           // echo 'uuuuuu';
+           // $sql=$sql.' AND region_name like ?';
+              $sql=$sql.' AND region_name = ?';
+             $param[] = $region;
+        }
+
+        if( $local != 'no'){
+
+              $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
+             //$param[] = $local;
+        }
+
+
+
+         /*--------------- filter from datatables ------------- */
+            if ($id_rig != 'no') {
+            $sql = $sql . ' AND ( id_rig like "%' . $id_rig . '" OR id_rig like "' . $id_rig . '%" OR id_rig like "%' . $id_rig . '%"  ) ';
+        }
+        if ($date_msg != 'no') {
+            $sql = $sql . ' AND ( date_msg like "%' . $date_msg . '" OR date_msg like "' . $date_msg . '%" OR date_msg like "%' . $date_msg . '%"  ) ';
+        }
+        if ($time_msg != 'no') {
+            $sql = $sql . ' AND ( time_msg like "%' . $time_msg . '" OR time_msg like "' . $time_msg . '%" OR time_msg like "%' . $time_msg . '%"  ) ';
+        }
+        if ($local_1 != 'no') {
+            $sql = $sql . ' AND ( local_name like "%' . $local_1 . '" OR local_name like "' . $local_1 . '%" OR local_name like "%' . $local_1 . '%"  ) ';
+        }
+        if ($addr != 'no') {
+            $sql = $sql . ' AND ( address like "%' . $addr . '" OR address like "' . $addr . '%" OR address like "%' . $addr . '%"  ) ';
+        }
+
+
+        /*--------------- END filter from datatables ------------- */
+
+
+        $sql=$sql.' ORDER BY id_rig ASC';
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, results_battle '.$sql;
+
+
+
+
+
+$result=R::getAll($sql, $param);
+//$cnt_result=count($result);
+
+//echo $sql;
+//print_r($param);
+//echo $cnt_result;
+//exit();
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/archive/' . $id_tab . '.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 9; //strначальная строка для записи
+        $c = 0; // stolbec начальный столбец для записи
+
+        $i = 0; //счетчик кол-ва записей № п/п
+
+
+        $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
+
+          /* устанавливаем бордер ячейкам */
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if(!empty($result)){
+
+
+
+     foreach ($result as $row) {
+
+         $res_battle=array();
+         $res_battle= explode('#', $row['results_battle']);
+
+          if(isset($res_battle) && !empty($res_battle) && count($res_battle) > 1 && max($res_battle) > 1){
+            $i++;
+
+                    $sheet->setCellValue('A' . $r, $i); //№ п/п
+                    $sheet->setCellValue('B' . $r, $row['id_rig']);
+                    $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+                    $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
+                    $sheet->setCellValue('E' . $r, $row['local_name']);
+                    $sheet->setCellValue('F' . $r, $row['address']);
+                    $sheet->setCellValue('G' . $r, $res_battle[0]);
+                    $sheet->setCellValue('H' . $r, $res_battle[1]);
+                    $sheet->setCellValue('I' . $r, $res_battle[2]);
+                    $sheet->setCellValue('J' . $r, $res_battle[3]);
+                    $sheet->setCellValue('K' . $r, $res_battle[4]);
+                    $sheet->setCellValue('L' . $r, $res_battle[5]);
+                    $sheet->setCellValue('M' . $r, $res_battle[6]);
+                    $sheet->setCellValue('N' . $r, $res_battle[7]);
+                    $sheet->setCellValue('O' . $r, $res_battle[8]);
+                    $sheet->setCellValue('P' . $r, $res_battle[9]);
+                    $sheet->setCellValue('Q' . $r, $res_battle[10]);
+                    $sheet->setCellValue('R' . $r, $res_battle[11]);
+                    $sheet->setCellValue('S' . $r, $res_battle[12]);
+                    $sheet->setCellValue('T' . $r, $res_battle[13]);
+                    $sheet->setCellValue('U' . $r, $res_battle[14]);
+                    $sheet->setCellValue('V' . $r, $res_battle[15]);
+                    $sheet->setCellValue('W' . $r, $res_battle[16]);
+
+                    $r++;
+          }
+        }
+
+
+
+        $sheet->getStyleByColumnAndRow(0, 8, 22, $r - 1)->applyFromArray($styleArray);
+
+
+
+        }
+
+        /* Сохранить в файл */
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Архив_результ.боевой работы.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
 
 
 
@@ -6485,6 +7183,13 @@ $data['monday_next']=$date2_f;
 
 
         $cnt = R::getAssoc("CALL `cnt_reasonrig_by_period`('{$monday}','{$monday_next}');");
+
+//        $cnt_uborka = R::getAssoc("CALL `cnt_reasonrig_by_period_by_id_reason`('{$monday}','{$monday_next}',81);");
+//
+//        if (empty($cnt_uborka)) {
+//            $cnt_uborka = array("cnt" => 0, "reasonrig_name" => '24 обеспечение ПБ уборочная компания');
+//        }
+
         $data['cnt'] = $cnt;
 
 
@@ -6552,11 +7257,14 @@ $date_end=$date->format('Y-m-d');
             $rigs[$value]['vsego']=count($vsego);//without CP
             //print_r($vsego);            echo '<br><br>';
             //pogar
-            $counts_1 = array_count_values(array_column($vsego, 'id_reasonrig'));
 
+
+            $counts_1 = array_count_values(array_column($vsego, 'id_reasonrig'));
+//print_r($counts_1);            echo '<br>';
             $rigs[$value]['pogar']=(isset($counts_1[34])) ? $counts_1[34]:0;
             $rigs[$value]['hs']=(isset($counts_1[73])) ? $counts_1[73]:0;
-            $rigs[$value]['other']=$rigs[$value]['vsego']-$rigs[$value]['pogar']-$rigs[$value]['hs'];
+            $rigs[$value]['uborka']=(isset($counts_1[81])) ? $counts_1[81]:0;
+            $rigs[$value]['other']=$rigs[$value]['vsego']-$rigs[$value]['pogar']-$rigs[$value]['hs']-$rigs[$value]['uborka'];
 
         }
 
@@ -6572,17 +7280,19 @@ $date_end=$date->format('Y-m-d');
 
             $rigs[$value]['pogar']=(isset($counts_1[34])) ? $counts_1[34]:0;
             $rigs[$value]['hs']=(isset($counts_1[73])) ? $counts_1[73]:0;
-            $rigs[$value]['other']=$rigs[$value]['vsego']-$rigs[$value]['pogar']-$rigs[$value]['hs'];
+            $rigs[$value]['uborka']=(isset($counts_1[81])) ? $counts_1[81]:0;
+            $rigs[$value]['other']=$rigs[$value]['vsego']-$rigs[$value]['pogar']-$rigs[$value]['hs']-$rigs[$value]['uborka'];
 
 
         }
 $data['rigs']=$rigs;
-
-$itogo=array('vsego'=>0,'pogar'=>0,'hs'=>0,'other'=>0);
+//exit();
+$itogo=array('vsego'=>0,'pogar'=>0,'hs'=>0,'other'=>0,'uborka'=>0);
 foreach ($rigs as $value) {
     $itogo['vsego']+=$value['vsego'];
     $itogo['pogar']+=$value['pogar'];
     $itogo['hs']+=$value['hs'];
+    $itogo['uborka']+=$value['uborka'];
     $itogo['other']+=$value['other'];
 }
 $data['itogo']=$itogo;
@@ -7794,7 +8504,28 @@ function getCardByIdRig($table_name_year,$id_rig){
                 }
             }
              $data['informing'] = $informing;
+
+
+             /* results_battle */
+        $results_battle = array();
+        $i = 0;
+
+        if (!empty($value['results_battle'])) {
+            $arr = explode('#', $value['results_battle']);
+            if (!empty($arr)) {
+                $results_battle['dead_man'] = $arr[0];
+                $results_battle['dead_child'] = $arr[1];
+                $results_battle['save_man'] = $arr[2];
+                $results_battle['inj_man'] = $arr[3];
+                $results_battle['ev_man'] = $arr[4];
+                $results_battle['save_an'] = $arr[5];
+                $results_battle['save_plan'] = $arr[6];
+                $results_battle['save_build'] = $arr[7];
+                $results_battle['save_teh'] = $arr[8];
+            }
         }
+        $data['results_battle'] = $results_battle;
+    }
 
        // print_r($silymchs);exit();
 
@@ -7817,7 +8548,7 @@ function getCardByIdRigFromJournal($id_rig){
         foreach ($result as $value) {
             $r['id_rig']=$value['id'];
              $r['date_msg']=$value['date_msg'];
-             $r['time_msg']=$value['time_msg'];
+             $r['time_msg']=date('H:i', strtotime($value['time_msg']));
              $r['time_loc']=$value['time_loc'];
              $r['time_likv']=$value['time_likv'];
              $r['address']=(empty($value['address'])) ? ((!empty($value['additional_field_address'])) ? $value['additional_field_address'] : '') : $value['address'];
@@ -8015,6 +8746,12 @@ function getCardByIdRigFromJournal($id_rig){
                 }
             }
              $data['informing'] = $informing;
+
+
+
+             /* result battle */
+             $result_battle=R::getRow('select * from results_battle where id_rig = ?',array($id_rig));
+             $data['results_battle']=$result_battle;
         }
 
        // print_r($silymchs);exit();
@@ -8034,6 +8771,7 @@ $app->group('/results_battle', function () use ($app,$log) {
 
 
         $bread_crumb = array('Результаты боевой работы');
+        $data['settings_user'] = getSettingsUser();
 
 
 
@@ -8053,6 +8791,23 @@ $app->group('/results_battle', function () use ($app,$log) {
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
             }
+
+
+            /* is updeting now ?  */
+
+             if (isset($is_success) && $is_success == 0) {
+                $rig_m = new Model_Rig();
+                $rig = $rig_m->selectAllById($id_rig);
+
+                $is_update_now = is_update_rig_now($rig, $id_rig);
+                if (!empty($is_update_now)) {
+                    //  echo $is_update_now;
+                    $data['is_update_now'] = $is_update_now;
+                }
+            }
+
+
+            /* is updeting now ?  */
         }
         /* --------- добавить инф о редактируемом вызове ------------ */
 
@@ -8090,6 +8845,7 @@ $app->group('/results_battle', function () use ($app,$log) {
 
         $save_data=array();
         $save_data['dead_man'] = (empty($app->request()->post('dead_man'))) ? 0 : intval($app->request()->post('dead_man'));
+        $save_data['dead_child'] = (empty($app->request()->post('dead_child'))) ? 0 : intval($app->request()->post('dead_child'));
         $save_data['save_man'] = (empty($app->request()->post('save_man'))) ? 0 : intval($app->request()->post('save_man'));
         $save_data['inj_man'] = (empty($app->request()->post('inj_man'))) ? 0 : intval($app->request()->post('inj_man'));
         $save_data['ev_man'] = (empty($app->request()->post('ev_man'))) ? 0 : intval($app->request()->post('ev_man'));
@@ -8128,6 +8884,11 @@ $app->group('/results_battle', function () use ($app,$log) {
         $battle->import($save_data);
 
         R::store($battle);
+
+         /* is updeting now ?  */
+        if ($id_rig != 0) {//edit
+            unset_update_rig_now($id_rig);
+        }
 
         $app->redirect(BASE_URL . '/results_battle/'.$id_rig.'/1');
     });
@@ -8221,6 +8982,8 @@ $app->group('/trunk', function () use ($app,$log) {
 
         $bread_crumb = array('Подача стволов');
 
+         $data['settings_user'] = getSettingsUser();
+
 
                            /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
@@ -8238,6 +9001,26 @@ $app->group('/trunk', function () use ($app,$log) {
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
             }
+
+
+                $rig_m = new Model_Rig();
+                $rig = $rig_m->selectAllById($id_rig);
+                $data['rig_time']=$rig;
+                        /* is updeting now ?  */
+
+             if (isset($is_success) && $is_success == 0) {
+                $rig_m = new Model_Rig();
+                $rig = $rig_m->selectAllById($id_rig);
+
+                $is_update_now = is_update_rig_now($rig, $id_rig);
+                if (!empty($is_update_now)) {
+                    //  echo $is_update_now;
+                    $data['is_update_now'] = $is_update_now;
+                }
+            }
+
+
+            /* is updeting now ?  */
         }
         /* --------- добавить инф о редактируемом вызове ------------ */
 
@@ -8283,7 +9066,7 @@ $app->group('/trunk', function () use ($app,$log) {
 
     $app->post('/:id_rig', function ($id_rig) use ($app) {
 
-       // print_r($_POST);        echo '<br><br>';
+        //print_r($_POST);        echo '<br><br>';exit();
 
         $sily=$app->request()->post('sily');
 
@@ -8353,6 +9136,11 @@ $app->group('/trunk', function () use ($app,$log) {
         $rig->import($save_data);
         R::store($rig);
 
+        /* is updeting now ?  */
+        if ($id_rig != 0) {//edit
+            unset_update_rig_now($id_rig);
+        }
+
         $app->redirect(BASE_URL . '/trunk/'.$id_rig.'/1');
     });
 
@@ -8362,5 +9150,423 @@ $app->group('/trunk', function () use ($app,$log) {
 });
 
 /* ----------- END trunk -------------- */
+
+
+/*--------  guide pasp  --------*/
+
+$app->group('/guide_pasp', 'is_login', 'is_permis', function () use ($app, $log) {
+
+    // table
+    $app->get('/', function () use ($app) {
+
+        $data['title'] = 'Справочник ПАСП';
+
+        $bread_crumb = array('Справочник ПАСП');
+        $data['bread_crumb'] = $bread_crumb;
+
+        $cp = array(8, 9, 12);
+
+
+        if ($_SESSION['id_level'] == 1 && $_SESSION['id_organ'] == 5) {//rcu
+            $data['name_table'] = 'Подразделения по республике';
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp ');
+        } elseif ($_SESSION['id_level'] == 3 && !in_array($_SESSION['id_organ'], $cp)) {//rochs
+            $data['name_table'] = $_SESSION['locorg_name'];
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ not in(' . implode(',', $cp) . ')', array($_SESSION['id_locorg']));
+        } elseif ($_SESSION['id_level'] == 3 && in_array($_SESSION['id_organ'], $cp)) {//rosn pinsk, ugz gomel
+            $data['name_table'] = $_SESSION['locorg_name'];
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+        } elseif ($_SESSION['id_level'] == 2 && in_array($_SESSION['id_organ'], $cp)) {//rosn, ugz,avia - g. Minsk
+            $data['name_table'] = $_SESSION['locorg_name'];
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
+        } elseif ($_SESSION['id_level'] == 2 && $_SESSION['id_organ'] == 4 && $_SESSION['id_region'] == 3) {//umchs g.Minsk
+            $data['name_table'] = 'Подразделения г.Минска';
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array(3));
+        }
+        elseif ($_SESSION['id_level'] == 2 && $_SESSION['id_organ'] == 4 && $_SESSION['id_region'] != 3) {//umchs
+            $data['name_table'] = 'Подразделения области';
+
+            //all podr from kusis
+            $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_region = ? and id_organ not in(' . implode(',', $cp) . ')', array($_SESSION['id_region'] ));
+        }
+
+
+
+        foreach ($data['podr'] as $key => $value) {
+
+            $data['podr'][$key]['address'] = R::getCell('select address from guide_pasp_view where id_pasp = ?', array($value['id']));
+        }
+
+
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'guide_pasp/index.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+    //form edit
+    $app->get('/:id_pasp', function ($id_pasp) use ($app) {
+
+        $data['title'] = 'Справочник ПАСП/Редактировать';
+
+        $bread_crumb = array('Справочник ПАСП', 'Редактировать');
+        $data['bread_crumb'] = $bread_crumb;
+
+        $cp = array(8, 9, 12);
+
+        $region = new Model_Region();
+        $data['region'] = $region->selectAll(); //области
+
+        if ($_SESSION['id_level'] != 1) {
+            foreach ($data['region'] as $k => $value) {
+                if ($value['id'] != $_SESSION['id_region']) {
+                    unset($data['region'][$k]);
+                }
+            }
+        }
+
+
+
+
+        if ($_SESSION['id_level'] == 1 && $_SESSION['id_organ'] == 5) {//rcu
+            $data['name_table'] = 'Подразделения по республике';
+        } elseif ($_SESSION['id_level'] == 3 && !in_array($_SESSION['id_organ'], $cp)) {//rochs
+            $data['name_table'] = $_SESSION['locorg_name'];
+
+            // $data['podr'] = R::getRow('select id,pasp_name, locorg_name, latitude, longitude from pasp where id = ? ', array($id_pasp));
+        } elseif ($_SESSION['id_level'] == 3 && in_array($_SESSION['id_organ'], $cp)) {//rosn pinsk
+            $data['name_table'] = $_SESSION['locorg_name'];
+        } elseif ($_SESSION['id_level'] == 2 && in_array($_SESSION['id_organ'], $cp)) {//rosn, ugz,avia - g. Minsk
+            $data['name_table'] = $_SESSION['locorg_name'];
+        } elseif ($_SESSION['id_level'] == 2 && $_SESSION['id_organ'] == 4 && $_SESSION['id_region'] == 3) {//umchs g.Minsk
+            $data['name_table'] = 'Подразделения г.Минска';
+
+            // $data['podr'] = R::getRow('select id,pasp_name, locorg_name, latitude, longitude from pasp where id = ? ', array($id_pasp));
+        }
+
+        $data['podr'] = R::getRow('select id,pasp_name, locorg_name, latitude, longitude from pasp where id = ? ', array($id_pasp));
+
+        $edit_guide_pasp = R::findOne('guidepasp', ' id_pasp = ? ', [$id_pasp]);
+
+
+        $local = new Model_Local();
+        // $data['local'] = $local->selectAll(); //районы
+        $locality = new Model_Locality();
+        //$data['locality'] = $locality->selectAll(); //нас.пункты
+        $street = new Model_Street();
+        // $data['street'] = $street->selectAll(); //улицы
+        $selsovet = new Model_Selsovet();
+        //$data['selsovet'] = $selsovet->selectAll();
+        $vid_locality_m = new Model_Vid_Locality();
+        $data['vid_locality'] = $vid_locality_m->selectAll();
+
+        if (isset($edit_guide_pasp) && !empty($edit_guide_pasp)) {//edit
+            //echo $edit_guide_pasp['id_region'];
+            $data['edit_podr'] = R::getRow('select * from guidepasp where id_pasp = ?', array($id_pasp));
+
+
+
+            /* ------------------ выбор классификаторов с учетом редактируемого вызова ------------------- */
+            $data['local'] = $local->selectAllByRegion($edit_guide_pasp['id_region']); //районы для области редактируемого вызова
+
+            if ($edit_guide_pasp['id_local'] != 0) {
+
+                $id_loc = ($edit_guide_pasp['id_local'] < 0) ? 123 : $edit_guide_pasp['id_local'];
+
+                $data['selsovet'] = $selsovet->selectAllByLocal($id_loc); //сельсоветы для района редактируемого вызова
+                $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
+            } elseif ($edit_guide_pasp['id_region'] != 0) {
+                $data['locality'] = $locality->selectAllByRegion($edit_guide_pasp['id_region']); //нас.пункты области
+            }
+
+            if ($edit_guide_pasp['id_locality'] != 0) {
+                $data['street'] = $street->selectAllByLocality($edit_guide_pasp['id_locality']); //улицы
+            }
+
+            /* ------------------ END выбор классификаторов с учетом редактируемого вызова ------------------- */
+        }
+
+        /* ------------- КОНЕЦ Редактирование выезда -------------- */ else {
+            $data['edit_podr']['id'] = 0;
+
+            //если по умолчанию выбирать в адресе район - город( Витебск, Жодино,...), то надо подгрузить сразу нас.пункты и улицы
+            $city = array(21, 22, 123, 124, 135, 136, 137, 138, 139, 140, 141);
+
+//$_SESSION['auto_local']<0 только для районов г.минска
+            if (in_array($_SESSION['auto_local'], $city) || ($_SESSION['auto_local'] < 0)) {//если по умолчанию город выбран
+                $data['auto_local_city'] = $city;
+
+                //если районы г.Минска - выбрать нас пунктом г.Минск
+                $id_loc = ($_SESSION['auto_local'] < 0) ? 123 : $_SESSION['auto_local'];
+
+                $locality_result = $locality->selectAllByLocal($id_loc); //нас.пункты района
+                //print_r($locality_result);
+                $data['locality'] = $locality_result;
+                foreach ($locality_result as $value) {
+                    $id_locality = $value['id'];
+                }
+
+                //  echo $id_locality;
+                //exit();
+                $data['street'] = $street->selectAllByLocality($id_locality); //улицы района
+            } else {
+                if ($_SESSION['auto_local'] != 0) {
+
+                    //если районы г.Минска - выбрать нас пунктом г.Минск
+                    $id_loc = ($_SESSION['auto_local'] < 0) ? 123 : $_SESSION['auto_local'];
+
+                    $data['locality'] = $locality->selectAllByLocal($id_loc); //нас.пункты района
+
+                    $data['selsovet'] = $selsovet->selectAllByLocal($_SESSION['auto_local']); //сельсоветы для района
+                }
+            }
+
+
+            $data['local'] = $local->selectAllByRegion($_SESSION['id_region']); //районы авторизованной области
+        }
+
+
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'guide_pasp/edit_form.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+    //save
+    $app->post('/', function () use ($app) {
+
+//         print_r($_POST);exit();
+
+        $id_region = $app->request()->post('id_region');
+        $id_local = $app->request()->post('id_local');
+        $id_locality = $app->request()->post('id_locality');
+        $id_selsovet = $app->request()->post('id_selsovet');
+        $id_street = $app->request()->post('id_street');
+        $home_number = $app->request()->post('home_number');
+        $housing = $app->request()->post('housing');
+
+        $save['id_pasp'] = $app->request()->post('id_pasp');
+        $save['id_region'] = (isset($id_region) && !empty($id_region)) ? intval($id_region) : 0;
+        $save['id_local'] = (isset($id_local) && !empty($id_local)) ? intval($id_local) : 0;
+        $save['id_locality'] = (isset($id_locality) && !empty($id_locality)) ? intval($id_locality) : 0;
+
+        $save['id_selsovet'] = (isset($id_selsovet) && !empty($id_selsovet)) ? intval($id_selsovet) : 0;
+
+        $save['id_street'] = (isset($id_street) && !empty($id_street)) ? $id_street : 0;
+        $save['home_number'] = (isset($home_number) && !empty($home_number)) ? $home_number : '-';
+        $save['housing'] = (isset($housing) && !empty($housing)) ? $housing : '-'; //корпус, кв, подъезд
+
+
+        $guide_pasp = R::findOne('guidepasp', ' id_pasp = ? ', [$save['id_pasp']]);
+
+        if (empty($guide_pasp)) {
+
+            $guide_pasp = R::dispense('guidepasp');
+            $save['date_insert'] = date('Y-m-d H:i:s');
+            $save['id_user'] = $_SESSION['id_user'];
+        } else {
+            $guide_pasp = R::load('guidepasp', $guide_pasp['id']);
+        }
+        $save['last_update'] = date('Y-m-d H:i:s');
+
+        $guide_pasp->import($save);
+
+        R::store($guide_pasp);
+
+
+        $app->redirect(BASE_URL . '/guide_pasp');
+    });
+});
+
+/* ------------------------- END   guide pasp ------------------------------- */
+
+
+ /* is updeting now ?  */
+function is_update_rig_now($rig,$id)
+{
+
+   if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null && $rig['now_update_by_user'] != $_SESSION['id_user']) {
+        // if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null ) {
+//        $datetime1 = new DateTime(date('Y-m-d H:i:s'));
+//        $datetime2 = new DateTime($rig['date_start_update']);
+//        $interval = $datetime1->diff($datetime2);
+//        $raznost = $interval->i;
+//        $raznost_y = $interval->y;
+//        $raznost_d = $interval->d;
+//        $raznost_h = $interval->h;
+//        $raznost_m = $interval->m;
+
+        $datetime1 = strtotime(date('Y-m-d H:i:s'));
+        $datetime2 = strtotime($rig['date_start_update']);
+        $interval = abs($datetime2 - $datetime1);
+        $raznost = round($interval / 60);
+
+        //if ($raznost < 10 && $raznost_d == 0 && $raznost_h==0 && $raznost_m == 0 && $raznost_y==0) {
+        if ($raznost < 10) {
+            $name_user = R::getCell('select user_name from permissions where id_user = ?', array($rig['now_update_by_user']));
+
+            // update now
+            $is_update_now = 'На текущий момент данный выезд редактируется пользователем "' . $name_user . '". Внесите изменения позже.';
+        } elseif ($_SESSION['can_edit'] == 1 && $_SESSION['id_user'] != 2) {//set, that rig is update by user. OVPO is only see rig
+            R::exec('UPDATE rig SET now_update_by_user = ?, date_start_update = ? WHERE id = ?', array($_SESSION['id_user'], date('Y-m-d H:i:s'), $id));
+        }
+    } elseif ($_SESSION['can_edit'] == 1 && $_SESSION['id_user'] != 2) {//set, that rig is update by user. OVPO is only see rig
+        R::exec('UPDATE rig SET now_update_by_user = ?, date_start_update = ? WHERE id = ?', array($_SESSION['id_user'], date('Y-m-d H:i:s'), $id));
+    }
+
+    return (isset($is_update_now)) ? $is_update_now : '';
+}
+
+ /* unset updeting now   */
+function unset_update_rig_now($id)
+{
+                    $now_update_by_user = R::getCell('select now_update_by_user from rig where id = ?', array($id));
+
+                if ($now_update_by_user != null && $now_update_by_user == $_SESSION['id_user'])
+                    R::exec('UPDATE rig SET now_update_by_user = ?, date_start_update = ? WHERE id = ?', array(null, null, $id));
+}
+
+ /* is updeting now -refresh rig table ?  */
+function is_update_rig_now_refresh_table($rig,$id)
+{
+
+    if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null && $rig['now_update_by_user'] != $_SESSION['id_user']) {
+        //if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null ) {
+//        $datetime1 = new DateTime(date('Y-m-d H:i:s'));
+//        $datetime2 = new DateTime($rig['date_start_update']);
+//        $interval = $datetime1->diff($datetime2);
+//        $raznost = $interval->i;
+//        $raznost_y = $interval->y;
+//        $raznost_d = $interval->d;
+//        $raznost_h = $interval->h;
+//        $raznost_m = $interval->m;
+
+
+        $datetime1 = strtotime(date('Y-m-d H:i:s'));
+        $datetime2 = strtotime($rig['date_start_update']);
+        $interval = abs($datetime2 - $datetime1);
+        $raznost = round($interval / 60);
+       // echo 'Diff. in minutes is: ' . $minutes;
+
+        //echo $raznost;exit();
+        //if ($raznost < 10 && $raznost_d == 0 && $raznost_h==0 && $raznost_m == 0 && $raznost_y==0) {
+         if ($raznost < 10) {
+            $name_user = R::getCell('select user_name from permissions where id_user = ?', array($rig['now_update_by_user']));
+
+            // update now
+            $is_update_now = $name_user . ' редактирует вызов';
+        }
+        else{
+           // R::exec('UPDATE rig SET now_update_by_user = ?, date_start_update = ? WHERE id = ?', array(null, null, $id));
+        }
+    }
+
+    return (isset($is_update_now)) ? $is_update_now : '';
+
+}
+    /* is updeting now ?  */
+
+
+
+/* ------------- ajax is update rig now or no --------------- */
+$app->post('/is_update_rig_now', function () use ($app) {
+
+
+    $arr_id_rigs = $app->request()->post('id_rigs');
+
+    $arr_res = array();
+    foreach ($arr_id_rigs as $value) {
+        //$arr_res[$value] = 't' . $value;
+
+        $rig = R::getRow('select * from rig where id = ?', array($value));
+        $is_update_now = is_update_rig_now_refresh_table($rig, $value);
+        if (!empty($is_update_now)) {
+
+            $arr_res[$value] = '<div class="typing-indicator" aria-hidden="true" data-toggle="tooltip" data-placement="top" '
+                . 'title="' . $is_update_now . '">
+
+    <span></span>
+    <span></span>
+    <span></span>
+</div>';
+        } else {
+            $arr_res[$value] = '';
+        }
+    }
+    echo json_encode($arr_res);
+});
+/* ------------- END ajax is update rig now or no --------------- */
+
+
+
+/* get results battle */
+
+function getResultsBattle($rig)
+{
+    foreach ($rig as $k => $r) {
+        $result = R::getRow('select * from results_battle where id_rig = ?', array($r['id']));
+
+        if (!empty($result)) {
+            //  echo $is_update_now;
+            $rig[$k]['dead_man'] = $result['dead_man'];
+            $rig[$k]['dead_child'] = $result['dead_child'];
+            $rig[$k]['save_man'] = $result['save_man'];
+            $rig[$k]['inj_man'] = $result['inj_man'];
+            $rig[$k]['ev_man'] = $result['ev_man'];
+        }
+        else{
+            $rig[$k]['dead_man'] = 0;
+            $rig[$k]['save_man'] = 0;
+            $rig[$k]['inj_man'] = 0;
+            $rig[$k]['ev_man'] = 0;
+        }
+        //  exit();
+    }
+    return $rig;
+}
+/* END get results battle */
+
+
+function getSettingsUserMode()
+{
+    $settings_user_bd = R::getAll('SELECT  *
+ FROM settings_user_br_table  WHERE id_user = ?', array($_SESSION['id_user']));
+    $settings_user = array();
+    foreach ($settings_user_bd as $value) {
+        $settings_user[] = $value['id_reasonrig'];
+    }
+    return $settings_user;
+}
+/* ------------- ajax change mode --------------- */
+$app->post('/change_mode', function () use ($app) {
+
+
+    $is_change = $app->request()->post('val');
+
+    if($is_change == 1){
+        $_SESSION['br_table_mode']=1;
+    }
+    else{
+        if(isset($_SESSION['br_table_mode']))
+        unset($_SESSION['br_table_mode']);
+    }
+
+    $res=1;
+
+    echo json_encode($res);
+});
+/* ------------- END ajax change mode --------------- */
 
 $app->run();

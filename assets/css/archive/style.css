@@ -45,7 +45,7 @@ input {
   display: none;
 }
 
-label {
+label.label-archive {
   display: inline-block;
   margin: 0 0 -1px;
   padding: 15px 25px;
@@ -55,34 +55,38 @@ label {
   border: 1px solid transparent;
 }
 
-label:before {
+label.label-archive:before {
   font-family: fontawesome;
   font-weight: normal;
   margin-right: 10px;
 }
 
-label[for*='1']:before {
+label.label-archive[for*='1']:before {
   content: '\f1cb';
 }
 
-label[for*='2']:before {
+label.label-archive[for*='2']:before {
   content: '\f17d';
 }
 
-label[for*='3']:before {
+label.label-archive[for*='3']:before {
   content: '\f16b';
 }
 
-label[for*='4']:before {
+label.label-archive[for*='4']:before {
   content: '\f1a9';
 }
 
-label:hover {
+label.label-archive[for*='5']:before {
+  content: '\f1cb';
+}
+
+label.label-archive:hover {
   color: #888;
   cursor: pointer;
 }
 
-input:checked + label {
+input:checked + label.label-archive {
   color: #555;
   border: 1px solid #ddd;
   border-top: 2px solid orange;
@@ -92,22 +96,23 @@ input:checked + label {
 #tab1:checked ~ #content1,
 #tab2:checked ~ #content2,
 #tab3:checked ~ #content3,
-#tab4:checked ~ #content4 {
+#tab4:checked ~ #content4,
+#tab5:checked ~ #content5{
   display: block;
 }
 
 @media screen and (max-width: 650px) {
-  label {
+  label.label-archive {
     font-size: 0;
   }
 
-  label:before {
+  label.label-archive:before {
     margin: 0;
     font-size: 18px;
   }
 }
 @media screen and (max-width: 400px) {
-  label {
+  label.label-archive {
     padding: 15px;
   }
 }

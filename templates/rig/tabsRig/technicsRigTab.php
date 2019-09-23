@@ -1,6 +1,30 @@
 <p class="line"><span>Привлекаемые силы и средства МЧС</span></p>
-<br>
 
+<div class="row">
+<div class="col-lg-2">
+
+                <div class="form-group">
+                    <div class="checkbox checkbox-info">
+                      <?php
+                        if (isset($is_sily_mchs) && $is_sily_mchs == 1) {
+                                  ?>
+                        <input id="checkbox3" type="checkbox" name="is_sily_mchs" id="is_sily_mchs_id" value="1" checked="" onchange="toggleSilyMchs(this);" >
+                            <?php
+                        } else {
+                            ?>
+                            <input id="checkbox3" type="checkbox" name="is_sily_mchs" id="is_sily_mchs_id" value="1" onchange="toggleSilyMchs(this);" >
+                            <?php
+                        }
+                        ?>
+                        <label for="checkbox3">
+                          Силы МЧС не привлекались
+                        </label>
+                    </div>
+                </div>
+            </div>
+     </div>
+
+<br>
 <?php
 //$k = 3; //начало
 //$j = 2; //блок техники состоит из  3 единиц, шаг
@@ -10,6 +34,7 @@ $j = 3; //блок техники состоит из  3 единиц, шаг
 $k1 = 3; //начало-для техники из др ведомств
 ?>
 <!--По умолчанию выводить 3 единицы техники     -->
+<div id="div-sily-mchs" >
 <?php
 /* ------------------------ редактируемые СиС МЧС --------------------------- */
 //print_r($silymchs);
@@ -35,7 +60,7 @@ if (isset($silymchs) && !empty($silymchs)) {
             <div class="col-lg-2 ">
                 <div class="form-group ">
                     <label for="id_region">Область</label>
-                    <select class="form-control" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                    <select class="form-control sily_select" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');" >
 
                         <option value="">Выбрать</option>
                         <?php
@@ -55,7 +80,7 @@ if (isset($silymchs) && !empty($silymchs)) {
                 <div class="form-group">
 
                     <label for="id_locorg">Г(Р)ОЧС</label>
-                    <select class="js-example-basic-single form-control  " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                    <select class="js-example-basic-single form-control sily_select " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                         <option value="">Все</option>
                         <?php
@@ -76,7 +101,7 @@ if (isset($silymchs) && !empty($silymchs)) {
                 <div class="form-group">
 
                     <label for="id_pasp">ПАСЧ/ПАСП</label>
-                    <select class="js-example-basic-single form-control" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>"  onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
+                    <select class="js-example-basic-single form-control sily_select" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>"  onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
 
 <!--onchange="javascript:changePasp('silymchs[< $i ?>][id_pasp]', 'silymchs[< $i ?>][id_teh][]');"-->
                         <option value="">Выбрать</option>
@@ -97,7 +122,7 @@ if (isset($silymchs) && !empty($silymchs)) {
                 <div class="form-group">
 
                     <label for="id_teh">Выбор техники</label>
-                    <select class="js-example-basic-multiple  form-control" name="silymchs[<?= $i ?>][id_teh][]"  name="id_silymchs[<?= $i ?>]"  multiple="multiple"  >
+                    <select class="js-example-basic-multiple  form-control sily_select" name="silymchs[<?= $i ?>][id_teh][]"  name="id_silymchs[<?= $i ?>]"  multiple="multiple"  >
 
                         <?php
                         $select_teh = array();
@@ -193,7 +218,7 @@ for ($i = $i; $i <= $k; $i++) {
         <div class="col-lg-2">
             <div class="form-group">
                 <label for="id_region">Область</label>
-                <select class="form-control" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                <select class="form-control sily_select" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                     <option value="">Выбрать</option>
                     <?php
@@ -213,7 +238,7 @@ for ($i = $i; $i <= $k; $i++) {
             <div class="form-group">
 
                 <label for="id_locorg">Г(Р)ОЧС</label>
-                <select class="js-example-basic-single form-control  " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                <select class="js-example-basic-single form-control sily_select " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                     <option value="">Все</option>
     <?php
@@ -234,7 +259,7 @@ for ($i = $i; $i <= $k; $i++) {
             <div class="form-group">
 
                 <label for="id_pasp">ПАСЧ/ПАСП</label>
-                <select class="js-example-basic-single form-control" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>" onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
+                <select class="js-example-basic-single form-control sily_select" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>" onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
 <!--onchange="javascript:changePasp('silymchs[<?= $i ?>][id_pasp]', 'silymchs[<?= $i ?>][id_teh][]');"-->
   <option value="">Выбрать</option>
 <!--                    <option value="">Выбрать</option>-->
@@ -251,7 +276,7 @@ for ($i = $i; $i <= $k; $i++) {
             <div class="form-group">
 
                 <label for="id_teh">Выбор техники</label>
-                <select class="js-example-basic-multiple form-control" name="silymchs[<?= $i ?>][id_teh][]"  id="id_si<?= $i ?>"   multiple="multiple" >
+                <select class="js-example-basic-multiple form-control sily_select" name="silymchs[<?= $i ?>][id_teh][]"  id="id_si<?= $i ?>"   multiple="multiple" >
 
                     <!--                    ajax запрос-->
                 </select>
@@ -292,7 +317,7 @@ for ($i = $k; $i <= ($k + $j); $i++) {
             <div class="col-lg-2">
                 <div class="form-group">
                     <label for="id_region">Область</label>
-                    <select class="form-control" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                    <select class="form-control sily_select" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                         <option value="">Выбрать</option>
     <?php
@@ -312,7 +337,7 @@ for ($i = $k; $i <= ($k + $j); $i++) {
                 <div class="form-group">
 
                     <label for="id_locorg">Г(Р)ОЧС</label>
-                    <select class="js-example-basic-single form-control  " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
+                    <select class="js-example-basic-single form-control sily_select " name="silymchs[<?= $i ?>][id_locorg]" id="id_locorg<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                         <option value="">Все</option>
     <?php
@@ -333,7 +358,7 @@ for ($i = $k; $i <= ($k + $j); $i++) {
                 <div class="form-group">
 
                     <label for="id_pasp">ПАСЧ/ПАСП</label>
-                    <select class="js-example-basic-single form-control" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>" onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
+                    <select class="js-example-basic-single form-control sily_select" name="silymchs[<?= $i ?>][id_pasp]"  id="id_pasp<?= $i ?>" onchange="javascript:changePasp(this, 'silymchs[<?= $i ?>][id_teh][]');" >
 <!--                        onchange="javascript:changePasp('silymchs[< $i ?>][id_pasp]', 'silymchs[< $i ?>][id_teh][]');"-->
 
 
@@ -351,7 +376,7 @@ for ($i = $k; $i <= ($k + $j); $i++) {
                 <div class="form-group">
 
                     <label for="id_teh">Выбор техники</label>
-                    <select class="js-example-basic-multiple form-control" name="silymchs[<?= $i ?>][id_teh][]"  multiple="multiple" >
+                    <select class="js-example-basic-multiple form-control sily_select" name="silymchs[<?= $i ?>][id_teh][]"  multiple="multiple" >
 
                         <!--                    ajax запрос-->
                     </select>
@@ -364,12 +389,15 @@ for ($i = $k; $i <= ($k + $j); $i++) {
 ?>
 
 </div>
+</div>
 <br><br>
 <span class="glyphicon glyphicon-download-alt" style="color: red;" ></span>&nbsp;&nbsp;
 Техника берется из <a  href="/str " target="_blank" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Перейти" style="text-transform: uppercase" >
-    <span style="color:red;">строевой записки</span></a>, <b>(К) </b>- техника, заступившая из другого подразделения; <b>&#155; </b>- техника на выезде; <b>(Р) </b>- техника в ремонте; <b>(ТО) </b>- техника на ТО;
-    <b>(Бр) </b>- техника в боевом расчете; <b>(Рез) </b>- техника в резерве;
-
+    <span style="color:red;">строевой записки</span></a>, <b>(К) </b>- техника, заступившая из другого подразделения; <b>&#155; </b>- техника на выезде; <b>(Р) </b>- техника в ремонте;
+<!--    <b>(ТО) </b>- техника на ТО;-->
+    <b>(Бр) </b>- техника в боевом расчете; <b>(Рез) </b>- техника в резерве.
+<br>
+<b>*</b>Технику, находящуюся на ТО, можно использовать для высылки.
 <br><br><br>
 <!------------------------------------------------Привлекаемые силы и средства других ведомств----------------------------------------------------------->
 <p class="line"><span>Привлекаемые силы и средства других ведомств</span></p>

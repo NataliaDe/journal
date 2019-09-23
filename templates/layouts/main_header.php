@@ -31,6 +31,38 @@
                     <a href="<?= $baseUrl ?>/remark"  class="item-menu"><span>Книга замечаний</span></a>
                 </li>-->
 
+<?php
+/* br mode  */
+if(isset($settings_user_br_table) && !empty($settings_user_br_table)){
+    if(isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1){
+?>
+                <li>
+                    <div class="material-switch pull-right" style="padding-top: 15px; padding-right: 20px;">
+                        <span style="padding-right: 5px; color: wheat">Краткий вид</span>
+                        <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox" checked onchange="changeMode(this)" data-link="<?= $baseUrl ?>/change_mode">
+                        <label for="someSwitchOptionWarning" class="label-warning"></label>
+                    </div>
+
+                </li>
+<?php
+}
+else{
+    ?>
+                                <li>
+                    <div class="material-switch pull-right" style="padding-top: 15px; padding-right: 20px;">
+                        <span style="padding-right: 5px; color: wheat">Общий вид</span>
+                        <input id="someSwitchOptionWarning" name="someSwitchOption001" type="checkbox" onchange="changeMode(this)" data-link="<?= $baseUrl ?>/change_mode">
+                        <label for="someSwitchOptionWarning" class="label-warning"></label>
+                    </div>
+
+                </li>
+                <?php
+}
+}
+
+?>
+
+
                 <li>
                     <a href="<?= $baseUrl ?>/remark" class="logo">
                         <img src="<?= $baseUrl ?>/assets/images/feedback.png" width="50" height="50" >

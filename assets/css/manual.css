@@ -133,11 +133,72 @@
         #selrigFormType112{
             width: 100px;
         }
+
+
+/* rig table type 3 */
+        #inptrigFormType31, #inptrigFormType32{
+            width: 78px;
+        }
+         #inptrigFormType33{
+            width: 74px;
+        }
+         #inptrigFormType34{
+            width: 100px;
+        }
+          #inptrigFormType35{
+            width: 160px;
+        }
+         #inptrigFormType37{
+            width: 50px;
+        }
+          #inptrigFormType36,#inptrigFormType314{
+            width: 50px;
+        }
+        #inptrigFormType38{
+            width: 50px;
+        }
+
+         #selrigFormType38{
+            width: 80px;
+        }
+
+        #inptrigFormType311,#selrigFormType313{
+            width: 60px;
+        }
+        #inptrigFormType310{
+            width: 115px;
+        }
+         #inptrigFormType312{
+            width: 168px;
+        }
+         #inptrigFormType315,#inptrigFormType316,#inptrigFormType317{
+            width: 117px;
+        }
+
+        #inptrigFormType39{
+            width: 50px;
+        }
+
+         #inptrigFormType30{
+            width: 50px;
+        }
+
+        #selrigFormType312{
+            width: 100px;
+        }
+        #selrigFormType311{
+            width: 80px;
+        }
+
+
         #rigTableType1_wrapper{
             width: 98%;
         }
 
-        /* rig table type1 */
+        #rigTableType3_wrapper{
+            width: 93%;
+        }
+        /* rig table type 3 */
 
 
 
@@ -168,7 +229,7 @@
         }
 
         #selrigFormType213,#inptrigFormType213{
-            width: 86px;
+            width: 114px;
         }
          #inptrigFormType212{
             width: 60px;
@@ -495,3 +556,101 @@ top:2px;
             width: 92%;
         }
 
+
+
+        #guide_pasp_tbl_wrapper{
+            width: 75%;
+            margin-left: 100px;
+        }
+
+
+        .blue-border-input{
+            border: solid 2px blue !important;
+        }
+/*        #zanyatia-id .select2-selection{
+            border: solid 2px blue !important;
+        }*/
+
+
+
+
+
+/* typing indicator */
+
+  .typing-indicator {
+/*    background-color: #F5F5F5;*/
+/*    background-color:#f5f5f500;*/
+    width: 58px;
+    border-radius: 30%;
+    padding: 1rem 1.5rem 2rem;
+    position: relative;
+    animation: 2s pulse infinite ease-out;
+    padding-bottom: 15px;
+}
+
+.typing-indicator::before,
+.typing-indicator::after {
+     content: '';
+     position: absolute;
+     bottom: -5px;
+     left: -6px;
+     height: 14px;
+     width: 14px;
+     border-radius: 50%;
+    /* background-color: #F5F5F5;*/
+ }
+.typing-indicator::after {
+     height: 10px;
+     width: 10px;
+     left: -13px;
+     bottom: -11px;
+ }
+
+ .typing-indicator span {
+    height: 7px;
+    width: 7px;
+    float: left;
+    margin: 0 1px;
+/*    background-color: #9E9EA1;*/
+background-color: black;
+    display: block;
+    border-radius: 50%;
+    opacity: 0.4;
+}
+
+
+.typing-indicator span:nth-child(1)
+{
+    animation: 1s blink infinite .3333s;
+}
+
+.typing-indicator span:nth-child(2)
+{
+    animation: 1s blink infinite .6666s;
+}
+
+.typing-indicator span:nth-child(3)
+{
+    animation: 1s blink infinite .9999s;
+}
+
+
+
+@keyframes blink
+{
+    50%
+    {
+        opacity: 1;
+    }
+}
+
+
+@keyframes pulse
+{
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+
+/* END typing indicator */

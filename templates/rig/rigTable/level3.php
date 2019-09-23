@@ -9,6 +9,10 @@ elseif(isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']
      include dirname(__FILE__) . '/types_table/level3_type2.php';
 
 }
+elseif(isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']['name_sign'] == 'level3_type3'){//type1
+     include dirname(__FILE__) . '/types_table/level3_type3.php';
+
+}
 else{//standart table
 
 
@@ -22,6 +26,7 @@ else{//standart table
         border-bottom:  2px solid  #999 !important;
 
     }
+
 </style>
 
 <div class="noprint" id="conttabl">
@@ -38,35 +43,8 @@ else{//standart table
 <!--таблица выездов для уровня 3 и для уровня 2 (УМЧС) -->
 <br>
 <?php
-if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST['date_end']) && !empty($_POST['date_end'])) {
 
-    ?>
-    <center><b>
-            Выезды с 06:00 <?= $_POST['date_start'] ?> до 06:00 <?= $_POST['date_end'] ?>
-        </b></center>
-    <?php
-} else {
-
-    ?>
-    <center><b>
-            <?php
-            if (date("H:i:s") <= '06:00:00') {//до 06 утра
-
-                ?>
-                Выезды с 06:00 <?= date("Y-m-d", time() - (60 * 60 * 24)) ?>  до 06:00 <?= date("Y-m-d") ?>
-                <?php
-            } else {
-
-                ?>
-                Выезды с 06:00 <?= date("Y-m-d") ?>  до 06:00 <?= date("Y-m-d", time() + (60 * 60 * 24)) ?>
-                <?php
-            }
-
-            ?>
-
-        </b></center>
-    <?php
-}
+include dirname(__FILE__) . '/header_rig_table.php';
 //print_r($result_icons);
 
 ?>
@@ -164,7 +142,27 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                         }
 
                         ?>&nbsp;
-                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id'] ?></a></td>
+                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id'] ?></a>
+
+
+                    <!--                        is update rig now-->
+                <center>
+                    <div  id="is_update_rig_now_<?= $row['id'] ?>">
+
+
+                        <?php
+                        if (isset($row['is_update_now']) && $row['is_update_now'] != '') {
+
+                            include dirname(__FILE__) . '/div_is_update_rig_now.php';
+                        }
+
+                        ?>
+                    </div>
+                </center>
+                    <!--              END          is update rig now-->
+
+
+                    </td>
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"  >
                                     <?php
@@ -292,8 +290,9 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                 <!--                    <td>< $row['floor'] ?></td>-->
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
         <?php
+
         /* id of rigs, where silymschs/innerservice are not selected */
-        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car'])) {
+        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car']) && $row['is_sily_mchs'] != 1) {
 
             ?>
                             <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
@@ -312,7 +311,14 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                             <?php
                 /* id of rigs, where info are not selected */
-                                if (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
+                            if($row['id_reasonrig'] == 18) {//zanytia
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
+                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не требует заполнения для указанной причины выезда."></i></a>
+                                    <?php
+                                }
+                                elseif (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
 
                                     ?>
                                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
@@ -365,7 +371,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                 <i class="fa fa-lg fa-male" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
 
                                                             <a href="<?= $baseUrl ?>/trunk/<?= $row['id'] ?>" target="_blank">
-                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
+                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Подача стволов"></i></a>
 
 
 
@@ -426,7 +432,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                                         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"   ><span id="sp<?= $i ?>"><?= $locex ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="Читать далее"><b>...</b></span></span>
                                             <p id="collapse<?= $i ?>" class="panel-collapse collapse">
-            <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
+            <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer;"><b>...</b></span>
                                             </p>
 
 
@@ -484,4 +490,21 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
 }
 
-?>
+if ((isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')) {
+    if (isset($rig) && !empty($rig)) {
+        foreach ($rig as $row) {
+
+            ?>
+                             <input type="hidden" class="id_rig_input" value="<?= $row['id'] ?>">
+                     <?php
+                 }
+             }
+
+             ?>
+          <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/is_update_rig_now.js"></script>
+             <?php
+         }
+
+         ?>
+
+

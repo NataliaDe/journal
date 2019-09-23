@@ -20,14 +20,14 @@ $(function () {  //всплывающая подсказка
  $('#resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="save_man"], #resultsBattleForm input[name="inj_man"], #resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="ev_man"],\n\
  #resultsBattleForm input[name="save_build"], #resultsBattleForm input[name="dam_build"], #resultsBattleForm input[name="des_build"],\n\
 #resultsBattleForm input[name="save_teh"], #resultsBattleForm input[name="dam_teh"], #resultsBattleForm input[name="des_teh"],\n\
-#resultsBattleForm input[name="save_an"], #resultsBattleForm input[name="dam_an"], #resultsBattleForm input[name="des_an"], .cnt_means').keypress(function (key) {
+#resultsBattleForm input[name="save_an"], #resultsBattleForm input[name="dam_an"], #resultsBattleForm input[name="des_an"],#resultsBattleForm input[name="dead_child"], .cnt_means').keypress(function (key) {
 
    if ((key.charCode < 48) || (key.charCode > 57))
         return false;
 });
 
 
-    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"]').keypress(function (key) {
+    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"], #trunkForm input[name="s_bef"], #trunkForm input[name="s_loc"]').keypress(function (key) {
      if (((key.charCode < 48)&& (key.charCode != 44)) || (key.charCode > 57) )
         return false;
 });

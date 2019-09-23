@@ -31,6 +31,8 @@ if (isset($rig) && !empty($rig)) {
     $opg_text = $rig['opg_text'];
     $id_user=$rig['id_user'];
 
+    $podr_zanytia = $rig['podr_zanytia'];
+
     /* ------- выбор вида нас.п. -------- */
 	if(isset($locality) && !empty($locality)){
 		    foreach ($locality as $l) {
@@ -80,6 +82,8 @@ if (isset($rig) && !empty($rig)) {
     $is_opg = 0;
     $opg_text = NULL;
     $id_user=$_SESSION['id_user'];
+
+    $podr_zanytia=0;
 
 
     /* ------- выбор вида нас.п. -------- */
@@ -162,7 +166,7 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-    <div class="col-lg-2">
+    <div class="col-lg-1">
                 <?php
             include dirname(__FILE__) . '/buttonSaveRig.php';
 
@@ -244,6 +248,32 @@ foreach ($workview as $row) {
         </div>
     </div>
 
+    <?php
+    if (isset($podr) && !empty($podr)) {
+
+        ?>
+        <div class="col-lg-2" id="div_podr_zanytia" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && $id_reasonrig == 18) ? 'block' : 'none' ?> ">
+            <div class="form-group" id="zanyatia-id">
+                <label for="podr_zanytia">Выбор подразделения</label>
+                <select class="js-example-basic-single form-control" name="podr_zanytia" style=" border: solid 2px #e61010 !important;" >
+                    <option value="">Выбрать</option>
+                    <?php
+                    foreach ($podr as $row) {
+                        if (isset($podr_zanytia) && $podr_zanytia == $row['id_pasp'])
+                            printf("<p><option value='%s' selected ><label>%s</label></option></p>", $row['id_pasp'], $row['pasp_name']);
+                        else
+                            printf("<p><option value='%s'  ><label>%s</label></option></p>", $row['id_pasp'], $row['pasp_name']);
+                    }
+
+                    ?>
+                </select>
+            </div>
+        </div>
+        <?php
+    }
+
+    ?>
+
 
 
 </div>
@@ -252,7 +282,7 @@ foreach ($workview as $row) {
 
 
 
-<div class="row">
+<div class="row" id="div-address">
 
     <div class="col-lg-2">
         <div class="form-group">
@@ -396,7 +426,7 @@ if ($id != 0) {//редактирование - заполнить  по умо�
 <?php
 // echo $id_street;
 ?>
-    <div class="col-lg-3">
+    <div class="col-lg-3" id="div-street">
         <div class="form-group">
             <label for="id_street">Улица</label>
             <select class="js-example-basic-single form-control" id="id_street" name="id_street" data-placeholder="Выбрать" >

@@ -66,6 +66,9 @@ class Model_Rig {
           $y['is_opg'] = (isset($x['is_opg']) && !empty($x['is_opg'])) ? intval($x['is_opg']) : 0;
           $y['opg_text'] = (isset($y['is_opg']) && $y['is_opg'] == 1 ) ? $x['opg_text'] : NULL;//если не отмечен чекбокс-не записываем в БД описание
 
+          if(isset($y['id_reasonrig']) && $y['id_reasonrig'] == 18) {// zanyatia
+              $y['podr_zanytia'] = (isset($x['podr_zanytia']) && !empty($x['podr_zanytia'])) ? $x['podr_zanytia'] : 0;
+          }
 
 
         return $y;
@@ -82,6 +85,9 @@ class Model_Rig {
             $array['id_locorg'] = $_SESSION['id_locorg'];
             $array['date_insert'] = $this->setDateInsert();
              $array['id_user']=$_SESSION['id_user'];
+        }
+	elseif(isset($array['id_user'])){
+            unset( $array['id_user']);
         }
         $array['last_update'] = $this->setLastUpdate();
 

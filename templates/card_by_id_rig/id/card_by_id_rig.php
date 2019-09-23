@@ -67,14 +67,17 @@
             </div>
             <!-- /.container-fluid -->
 
-			 <div class="panel panel-default">
+            <div class="row">
+                <div class="col-lg-8">
+
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             Описание выезда
                         </div>
                         <div class="panel-body">
                             <p>Дата и время сообщения: <?= date('d.m.Y', strtotime($result['date_msg'])) ?> <?= $result['time_msg'] ?></p>
-                            <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_loc'])) : '-' ?></p>
-                            <p>Дата и время ликвидации: <?= ( !empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_likv'])) : '-' ?> </p>
+                            <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_loc'])) : '-' ?></p>
+                            <p>Дата и время ликвидации: <?= (!empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_likv'])) : '-' ?> </p>
 
                             <br>
                             <h4>Адрес выезда</h4>
@@ -100,44 +103,202 @@
 
 
                                 </strong>
-                                <br><?= (!empty($result['inf_region'])) ? implode(', ', $result['inf_region']) : ''?>
-                                <br> Объект: <?= (!empty($result['object'])) ? $result['object'] : '-' ?> <?= (!empty($result['office_name'])) ? (' ('.$result['office_name'].')') : '' ?>.
+                                <br><?= (!empty($result['inf_region'])) ? implode(', ', $result['inf_region']) : '' ?>
+                                <br> Объект: <?= (!empty($result['object'])) ? $result['object'] : '-' ?> <?= (!empty($result['office_name'])) ? (' (' . $result['office_name'] . ')') : '' ?>.
                                 <br> Координаты: <?= (!empty($result['coord'])) ? $result['coord'] : '-' ?>&nbsp;
 
                                 <?php
                                 if (!empty($result['coord_link'])) {
 
                                     $a = implode(', ', $result['coord_link']);
-                                                                    echo '('.$a.')';
+                                    echo '(' . $a . ')';
                                 }
-
-
 
                                 ?>
 
 
 
-<!--                                                                Координаты: 54.343444, 27.343444 (ссылка по возможности)-->
+                                <!--                                                                Координаты: 54.343444, 27.343444 (ссылка по возможности)-->
 
                             </address>
 
-							<address>
-                                 <?= (!empty($result['people'])) ? ('Данные заявителя: '.$result['people']) : '' ?>
-								<br>
-<!--                                Телефон: 209-27-51-->
-								<br>
-                                                                <strong><?= (!empty($result['reasonrig_name'])) ? ('Причина выезда: '.$result['reasonrig_name']) : '' ?><?= (!empty($result['view_work'])) ? (' ('.$result['view_work'].')') : '' ?> </strong>
-								<br>
-								<strong> <?= (!empty($result['firereason_name'])) ? ('Причина пожара: '.$result['firereason_name']) : '' ?> </strong>
-								<br>
-								 <?= (!empty($result['inspector'])) ? ('Инспектор: '.$result['inspector']) : '' ?>
+                            <address>
+<?= (!empty($result['people'])) ? ('Данные заявителя: ' . $result['people']) : '' ?>
+                                <br>
+                                <!--                                Телефон: 209-27-51-->
+                                <br>
+                                <strong><?= (!empty($result['reasonrig_name'])) ? ('Причина выезда: ' . $result['reasonrig_name']) : '' ?><?= (!empty($result['view_work'])) ? (' (' . $result['view_work'] . ')') : '' ?> </strong>
+                                <br>
+                                <strong> <?= (!empty($result['firereason_name'])) ? ('Причина пожара: ' . $result['firereason_name']) : '' ?> </strong>
+                                <br>
+<?= (!empty($result['inspector'])) ? ('Инспектор: ' . $result['inspector']) : '' ?>
 
                             </address>
                         </div>
                         <!-- /.panel-body -->
                     </div>
 
-			 <div class="row">
+                </div>
+
+
+                <div class="col-lg-4">
+
+<?php
+if (!empty($result['coord'])) {
+    $arr_coord = explode(', ', $result['coord']);
+
+    ?>
+
+
+<!-- apikey is NESSESARY-->
+<script src="http://api-maps.yandex.ru/2.1-dev/?apikey=f009fa81-ba29-4ad9-bdbd-4deb99c8b2b6&lang=ru-RU&load=package.full" type="text/javascript"></script>
+
+
+
+<!--<div class="left">"._GEOGPS.":</div><div class="center">-->
+<script type="text/javascript">
+ymaps.ready(init);
+function init() {
+    var myPlacemark,
+                        myMap = new ymaps.Map('YMapsIDgeopoint', {
+                        center: [<?=$result['coord']?>],
+                        zoom: 17
+                        //controls: ['zoomControl', 'searchControl', 'typeSelector', 'geolocationControl']
+
+                        });
+
+                           myMap.controls.remove('geolocationControl');
+                            myMap.controls.remove('searchControl');
+                             myMap.controls.remove('trafficControl');
+                             myMap.controls.remove('typeSelector');
+                              myMap.controls.remove('fullscreenControl');
+                                myMap.controls.remove('rulerControl');
+                          //  myMap.controls.remove('routeButtonControl');
+
+
+                            // Создаем геообъект с типом геометрии "Точка".
+                                myGeoObject = new ymaps.GeoObject({
+                                    // Описание геометрии.
+                                    geometry: {
+                                        type: "Point",
+                                        coordinates: [<?=$result['coord']?>]
+                                    },
+                                    // Свойства.
+                                    properties: {
+                                        // Контент метки.
+                        //                iconContent: 'Я тащусь',
+                        //                hintContent: 'Ну давай уже тащи'
+                                    }
+                                });
+
+
+var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
+                                   // balloonContent: 'цвет <strong>носика Гены</strong>',
+                                            // iconCaption: 'Очень длиннный, но невероятно интересный текст'
+                                        }, {
+                                            preset: 'islands#greenDotIconWithCaption'
+                                        });
+
+                         myMap.geoObjects
+                                .add(myGeoObject)
+                                .add(myPlacemark_1);
+
+
+       var coords_1 =[<?=$result['coord']?>];
+            myPlacemark_1.events.add('dragend', function () {
+                getAddress_1(myPlacemark_1.geometry.getCoordinates());
+            });
+        getAddress_1(coords_1);
+
+
+
+
+      // Слушаем клик на карте.
+    myMap.events.add('click', function (e) {
+        var coords = e.get('coords');
+
+        // Если метка уже создана – просто передвигаем ее.
+        if (myPlacemark) {
+            myPlacemark.geometry.setCoordinates(coords);
+        }
+        // Если нет – создаем.
+        else {
+            myPlacemark = createPlacemark(coords);
+            myMap.geoObjects.add(myPlacemark);
+            // Слушаем событие окончания перетаскивания на метке.
+            myPlacemark.events.add('dragend', function () {
+                getAddress(myPlacemark.geometry.getCoordinates());
+            });
+        }
+        getAddress(coords);
+    });
+
+    // Создание метки.
+    function createPlacemark(coords) {
+        return new ymaps.Placemark(coords, {
+            iconCaption: 'поиск...'
+        }, {
+          preset: 'islands#violetDotIconWithCaption',
+            //preset: 'islands#greenDotIconWithCaption',
+            draggable: true
+        });
+    }
+
+
+
+    // Определяем адрес по координатам (обратное геокодирование).
+    function getAddress(coords) {
+        myPlacemark.properties.set('iconCaption', 'поиск...');
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+
+            myPlacemark.properties
+                .set({
+                    // Формируем строку с данными об объекте.
+                    iconCaption: [
+                        // Название населенного пункта или вышестоящее административно-территориальное образование.
+                        firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                        // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                        firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                    ].filter(Boolean).join(', '),
+                    // В качестве контента балуна задаем строку с адресом объекта.
+                    balloonContent: firstGeoObject.getAddressLine()
+                });
+        });
+    }
+
+    function getAddress_1(coords) {
+        myPlacemark_1.properties.set('iconCaption', 'поиск...');
+        ymaps.geocode(coords).then(function (res) {
+            var firstGeoObject = res.geoObjects.get(0);
+
+            myPlacemark_1.properties
+                .set({
+                    // Формируем строку с данными об объекте.
+                    iconCaption: [
+                        // Название населенного пункта или вышестоящее административно-территориальное образование.
+                        firstGeoObject.getLocalities().length ? firstGeoObject.getLocalities() : firstGeoObject.getAdministrativeAreas(),
+                        // Получаем путь до топонима, если метод вернул null, запрашиваем наименование здания.
+                        firstGeoObject.getThoroughfare() || firstGeoObject.getPremise()
+                    ].filter(Boolean).join(', '),
+                    // В качестве контента балуна задаем строку с адресом объекта.
+                    balloonContent: firstGeoObject.getAddressLine()
+                            });
+                });
+            }
+
+    }
+</script>
+                        <div id="YMapsIDgeopoint" style="width:500px; height:420px;"></div>
+    <?php
+}
+
+?>
+                </div>
+            </div>
+
+
+      <div class="row">
                 <div class="col-lg-4">
                     <div class="well">
                         <h4>Содержание поступившей информации</h4>
@@ -338,6 +499,63 @@
             ?>
 
         <!-- /#page-wrapper -->
+
+
+<?php
+
+if(isset($results_battle) && !empty($results_battle)){
+    ?>
+<div class="panel panel-default">
+            <div class="panel-heading">
+                Результаты боевой работы
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive table-bordered">
+                    <table class="table">
+                        <thead>
+                            <tr>
+
+                                <th>Погибло</th>
+                                <th>в т.ч. детей</th>
+                                <th>Спасено людей</th>
+                                <th>Травмировано</th>
+                                <th>Эвакуировано</th>
+                                <th>Спасено голов скота</th>
+                                <th>Спасено кормов</th>
+                                <th>Спасено строений</th>
+                                <th>Спасено техники</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><?= $results_battle['dead_man'] ?></td>
+                                <td><?= $results_battle['dead_child'] ?></td>
+                                <td><?= $results_battle['save_man'] ?></td>
+                                <td><?= $results_battle['inj_man'] ?></td>
+                                <td><?= $results_battle['ev_man'] ?></td>
+                                <td><?= $results_battle['save_an'] ?></td>
+                                <td><?= $results_battle['save_plan'] ?></td>
+                                <td><?= $results_battle['save_build'] ?></td>
+                                <td><?= $results_battle['save_teh'] ?></td>
+
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <?php
+}
+?>
+
+
+
+
 
     </div>
     <!-- /#wrapper -->

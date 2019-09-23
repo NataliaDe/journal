@@ -3,6 +3,12 @@
 //если открываем вкладку по высылке техники ($active_tab = 2) - остальные вкладки не отображаем
 ?>
 <div class="box-body">
+
+    <?php
+    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
+           include dirname(__FILE__) . '/info_msg_now_update.php';
+    }
+    ?>
     <form  role="form" id="rigForm" method="POST" action="<?= $baseUrl ?>/rig/new/<?= $id ?>/<?= $active_tab ?>" >
  <input type="hidden" class="form-control datetime"  name="id" value="<?= $id ?>" />
         <ul class="nav nav-tabs">
@@ -204,5 +210,30 @@
          $("#reason-rig-id .select2-selection").addClass('red-border-input');
     }
 
+
+  <?php
+  if (isset($is_sily_mchs) && $is_sily_mchs == 1) {
+
+      ?>
+         $('.sily_select').attr('disabled', true);
+      <?php
+  }
+
+  ?>
+
   };
+
+
+
+  function toggleSilyMchs(t) {
+     
+    if ($(t).prop('checked') === true) {
+        $('.sily_select').attr('disabled', true);
+    } else {
+        $('.sily_select').removeAttr('disabled');
+    }
+}
+
+
+
 </script>

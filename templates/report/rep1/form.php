@@ -106,10 +106,33 @@
             </select>
         </div>
 
+        <div class="form-group">
+            <button class="btn bg-purple" type="submit"   >Сформировать</button>
+        </div>
 
+        <br> <br>
                 <div class="form-group">
-                    <button class="btn bg-purple" type="submit"   >Сформировать</button>
+                    <div class="checkbox checkbox-success">
+                      <?php
+                         if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
+                                  ?>
+                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1" checked=""  >
+                            <?php
+                        } else {
+                            ?>
+                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1"  >
+                            <?php
+                        }
+                        ?>
+                        <label for="checkbox2">
+                         Учесть выезды в соседний гарнизон
+                        </label>
+                    </div>
                 </div>
+
+
+
+
     </form>
 <br><br>
 

@@ -428,7 +428,7 @@ $('#destinationForm')
       fixedHeader: true,
 
             "pageLength": 50,
-             "order": [[ 1, "asc" ]],
+             "order": [[ 1, "desc" ]],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -471,6 +471,56 @@ $('#destinationForm')
 
         // Toggle the visibility
         column_type2.visible( ! column_type2.visible() );
+
+
+    } );
+
+
+
+/*  rigTable type3  */
+              var rig_table_vis_type3 =  $('#rigTableType3').DataTable({
+            "pageLength": 50,
+             "order": [[ 1, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+//                                 "columnDefs": [
+//            {
+//                "targets": [ 13 ],
+//                "visible": false
+//            }
+//        ]
+        });
+
+
+            $('a.toggle-vis-rig-table-type3').on( 'click', function (e) {
+        e.preventDefault();
+
+        // Get the column API object
+        var column_type3 = rig_table_vis_type3.column( $(this).attr('data-column') );
+
+        // Toggle the visibility
+        column_type3.visible( ! column_type3.visible() );
 
 
     } );
@@ -625,6 +675,35 @@ $('#destinationForm')
           $('#remarkTableRcu').DataTable({
             "pageLength": 50,
              "order": [[ 0, "desc" ]],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+        });
+
+
+                $('#guide_pasp_tbl').DataTable({
+            "pageLength": 50,
+             "order": [[ 1, "asc" ]],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -854,6 +933,55 @@ $(document).ready(function () {
     });
 
     /*---------- END rig table type2 ------------*/
+
+
+
+       /*---------- rig table type3 ------------*/
+    $('#rigTableType3 tfoot th').each(function (i) {
+        var table = $('#rigTableType3').DataTable();
+        if (i !== 14) {
+
+            if ( i==13 || i == 11 ) {
+                //выпадающий список
+                var y = 'rigFormType3';
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                        .appendTo($(this).empty())
+                        .on('change', function () {
+
+                            var val = $(this).val();
+
+                            table.column(i) //Only the first column
+                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    .draw();
+                        });
+
+                var x = $('#rigTableType3 tfoot th').index($(this));
+                table.column(i).data().unique().sort().each(function (d, j) {
+                    select.append('<option value="' + d + '" >' + d + '</option>');
+                });
+
+
+            }
+            else {
+                var title = $('#rigTableType3 tfoot th').eq($(this).index()).text();
+                var x = $('#rigTableType3 tfoot th').index($(this));
+                var y = 'rigFormType3';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+            }
+
+        }
+    });
+    $("#rigTableType3 tfoot input").on('keyup change', function () {
+        var table = $('#rigTableType3').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END rig table type3 ------------*/
 
 
 
@@ -1126,6 +1254,32 @@ $(document).ready(function () {
     });
     /* ------------- end remark table ---------------*/
 
+
+
+    /*---------- guide_pasp_tbl ------------*/
+    $('#guide_pasp_tbl tfoot th').each(function (i) {
+        var table = $('#guide_pasp_tbl').DataTable();
+        if (i !== 4) {
+
+                var title = $('#guide_pasp_tbl tfoot th').eq($(this).index()).text();
+                var x = $('#guide_pasp_tbl tfoot th').index($(this));
+                var y = 'guide_pasp_tbl';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+
+
+        }
+    });
+    $("#guide_pasp_tbl tfoot input").on('keyup change', function () {
+        var table = $('#guide_pasp_tbl').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END guide_pasp_tbl ------------*/
 
 });
 
@@ -1493,16 +1647,27 @@ function changeSelsovet() {
 /*------------- список техники выбранного ПАСЧ -------------------*/
 function changePasp(i,j) {
 
+$('select[name='+'"'+j+'"'+']').prop( "disabled", true );
+
 
   //var id_pasp = $('select[name='+'"'+i+'"'+']').val();
   var a=i.options[i.selectedIndex];
 
   if (typeof (a) === 'undefined') {
             $('select[name='+'"'+j+'"'+']').html('выбор');
+
   }
   else{
 
       var id_pasp =i.options[i.selectedIndex].value;
+
+      if(id_pasp){
+          $('select[name='+'"'+j+'"'+']').html('<option selected value="0"> идет загрузка... </option>');
+      }
+      else{
+          $('select[name='+'"'+j+'"'+']').html('');
+      }
+
 
     if (id_pasp) {
 
@@ -1515,13 +1680,17 @@ function changePasp(i,j) {
             success: function (responce) {
 
         /*--------- чтобы обновить технику --------*/
-         $('select[name='+'"'+j+'"'+']').select2("destroy");//уничтожаем
-           $('select[name='+'"'+j+'"'+']').select2();//создаем заново
+       //  $('select[name='+'"'+j+'"'+']').select2("destroy");//уничтожаем
+        //   $('select[name='+'"'+j+'"'+']').select2();//создаем заново
             /*--------- чтобы обновить технику --------*/
 
+
         $('select[name='+'"'+j+'"'+']').html(responce);
+        $('select[name='+'"'+j+'"'+']').select2().trigger('change');
+        $('select[name='+'"'+j+'"'+']').prop( "disabled", false );
        // $('select[name='+'"'+j+'"'+']').val(null).trigger('change.select2');
       // $('select[name='+'"'+j+'"'+']').select2('refresh');
+
            return;
 
             }
@@ -1977,6 +2146,11 @@ $( window ).load(function() {
     $( "#toggle-vis-rig-table-type1-0" ).trigger( "click" );
   $( "#toggle-vis-rig-table-type2-16" ).trigger( "click" );
 
+      /* rig table type3 */
+//    $( "#toggle-vis-rig-table-type3-0" ).trigger( "click" );
+//    $( "#toggle-vis-rig-table-type3-13" ).trigger( "click" );
+//    $( "#toggle-vis-rig-table-type3-5" ).trigger( "click" );
+
 
 });
 
@@ -2188,6 +2362,17 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
 
         $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
         //alert('jkl');
+    }
+
+
+/* podr for select */
+    if(reason == 18){
+
+        $('#rigForm #div_podr_zanytia').show();
+        $("#zanyatia-id .select2-selection").addClass('blue-border-input');
+    }
+    else{
+         $('#rigForm #div_podr_zanytia').hide();
     }
 
 });
@@ -2465,28 +2650,103 @@ else if(id_rig == '')
 
 
 
- $('#resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="save_man"], #resultsBattleForm input[name="inj_man"], #resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="ev_man"],\n\
- #resultsBattleForm input[name="save_build"], #resultsBattleForm input[name="dam_build"], #resultsBattleForm input[name="des_build"],\n\
-#resultsBattleForm input[name="save_teh"], #resultsBattleForm input[name="dam_teh"], #resultsBattleForm input[name="des_teh"],\n\
-#resultsBattleForm input[name="save_an"], #resultsBattleForm input[name="dam_an"], #resultsBattleForm input[name="des_an"]').keypress(function (key) {
+$('#rigForm select[name="podr_zanytia"]').on('change', function (e) {
 
-   if ((key.charCode < 48) || (key.charCode > 57))
-        return false;
+
+    var podr_zanytia = $('#rigForm select[name="podr_zanytia"]').val();
+//alert(podr_zanytia);
+
+if(podr_zanytia !== ''){
+    $("#zanyatia-id .select2-selection").removeClass('blue-border-input');
+    $.ajax({
+        //dataType: "json",
+        type: "POST",
+        url: "/journal/select",
+        data: {action: 'showAddrPasp', pasp_id: podr_zanytia, sign: 'address'},
+
+        success: function (response) {
+            $('#div-address').html();
+
+            $("#div-address").html(response);
+            $('#div-address').fadeIn("slow");
+            console.log("it Work");
+
+
+
+            /* street */
+            $.ajax({
+                //dataType: "json",
+                type: "POST",
+                url: "/journal/select",
+                data: {action: 'showAddrPasp', pasp_id: podr_zanytia, sign: 'street'},
+
+                success: function (response) {
+                    $('#div-street').html();
+
+                    $("#div-street").html(response);
+                    $('#div-street').fadeIn("slow");
+                    console.log("it Work");
+
+            $(document).ready(function () {
+               // $('.js-example-basic-single').select2();
+                $('.street-block-select-single').select2();
+
+            });
+
+
+                }
+
+            });
+
+            /* housing */
+            $.ajax({
+                dataType: "json",
+                type: "POST",
+                url: "/journal/select",
+                data: {action: 'showAddrPasp', pasp_id: podr_zanytia, sign: 'housing'}
+
+            }).done(function (data) {
+                $('#rigForm #coord_lat').val(data.latitude);
+                $('#rigForm #coord_lon').val(data.longitude);
+
+                $('#rigForm input[name="home_number"]').val(data.home_number);
+                $('#rigForm input[name="housing"]').val(data.housing);
+
+
+            });
+
+            $(document).ready(function () {
+               // $('.js-example-basic-single').select2();
+                $('.address-block-select-single').select2();
+
+            });
+
+        }
+    });
+}
+
+else{
+    $("#zanyatia-id .select2-selection").addClass('blue-border-input');
+}
+
+
+//// $('#rigForm select[name="id_street"]').val(data.id_street);
+////    $('#rigForm select[name="id_street"]').select2().trigger('change');
+
+
 });
 
 
-    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"]').keypress(function (key) {
-     if (((key.charCode < 48)&& (key.charCode != 44)) || (key.charCode > 57) )
-        return false;
-});
 
-
-
-
-
-
-
-
-
-
-
+//                function update() {
+//                    $.get('{{ base_url("student/profile") }}', $("#courses-filter").serialize(), function (res) {
+//                        $("#ajax-process-study").html('');
+//                        $("#ajax-process-study").html(JSON.parse(res)['innerHtml']);
+//
+//                        $("#ajax-how-go").html('');
+//                        $("#ajax-how-go").html(JSON.parse(res)['innerHtml2']);
+//
+//                         $("#ajax-intensivnost-study").html('');
+//                        $("#ajax-intensivnost-study").html(JSON.parse(res)['innerHtml3']);
+//                    })
+//                }

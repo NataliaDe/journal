@@ -116,13 +116,13 @@ $t_note=$note[1];
      <tr  style='background-color:rgb(<?=$_SESSION['colors'][$row['id_rig']]?>); '>
                     <td><?= $i ?></td>
                     <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"><?= $row['id_rig'] ?></a></b></td>
-                    <td><?= $row['date_msg'] ?></td>
-                    <td><?= $row['time_msg'] ?></td>
+                    <td><?= date('d.m.Y', strtotime($row['date_msg'])) ?></td>
+                    <td><?= date('H:i', strtotime($row['time_msg'])) ?></td>
                     <td><?= $row['local_name'] ?></td>
                     <td><?= $row['address'] ?></td>
-                    <td><?= $t_msg ?></td>
-                    <td><?= $t_arrival ?></td>
-                      <td><?= $service_name ?></td>
+                    <td><?= ($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg)) ?></td>
+                    <td><?= ($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ?></td>
+                    <td><?= $service_name ?></td>
                     <td><?= $t_distance ?></td>
                     <td><?= $t_note ?></td>
 

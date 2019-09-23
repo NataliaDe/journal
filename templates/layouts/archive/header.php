@@ -94,6 +94,7 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
   <link href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" rel="stylesheet"/>
+  <link href="<?= $baseUrl ?>/assets/css/archive/style.css" rel="stylesheet">
 
     </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">

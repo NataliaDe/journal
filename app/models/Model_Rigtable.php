@@ -331,6 +331,9 @@ class Model_Rigtable {
         $y['id_region'] = (isset($x['id_region']) && !empty($x['id_region'])) ? intval($x['id_region']) : 0; //куда был выезд
         $y['id_local'] = (isset($x['id_local']) && !empty($x['id_local'])) ? intval($x['id_local']) : 0;//куда был выезд
 
+        $y['is_neighbor'] = (isset($x['is_neighbor']) && !empty($x['is_neighbor'])) ? $x['is_neighbor'] : 0;//куда был выезд
+        //echo $y['is_neighbor'];exit();
+
 
         /*         * * проверка на вшивость дат - по умолч сег дата ставится ** */
         if (isset($x['date_start']) && !empty($x['date_start'])) {
@@ -408,6 +411,19 @@ class Model_Rigtable {
             $param[] = $y['reasonrig'];
         }
 
+
+        if($y['id_local'] != 0 && $y['is_neighbor'] == 0 && $y['id_region'] != 3 ){//not show neighbor rigs
+
+            $local_neigbor = ' AND id_local_user = ?  ';
+            $param[] = $y['id_local'];
+
+        }
+        elseif($y['id_region'] != 0 && $y['is_neighbor'] == 0 ){//not show neighbor rigs
+
+            $local_neigbor = ' AND id_region_user = ?  ';
+            $param[] = $y['id_region'];
+        }
+
         if (isset($region)) { //добавляем
             $sql = $sql . $region;
         }
@@ -418,6 +434,10 @@ class Model_Rigtable {
 
         if (isset($reasonrig)) {
             $sql = $sql . $reasonrig;
+        }
+
+        if (isset($local_neigbor)) {
+            $sql = $sql . $local_neigbor;
         }
 
 //            echo $sql;

@@ -50,6 +50,7 @@ if (isset($msg) && !empty($msg)) {
                             printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
                         }
                     }
+                    
                     ?>
 
                 </select>

@@ -92,7 +92,7 @@ function pieChart() {
   var maxPullOutDistance = 25;                      // How far, in pixels, to pull slices out when clicked
   var pullOutFrameStep = 4;                         // How many pixels to move a slice with each animation frame
   var pullOutFrameInterval = 40;                    // How long (in ms) between each animation frame
-  var pullOutLabelPadding = 65;                     // Padding between pulled-out slice and its label
+  var pullOutLabelPadding = 105;                     // Padding between pulled-out slice and its label
   var pullOutLabelFont = "bold 16px 'Trebuchet MS', Verdana, sans-serif";  // Pull-out slice label font
   var pullOutValueFont = "bold 12px 'Trebuchet MS', Verdana, sans-serif";  // Pull-out slice value font
   var pullOutValuePrefix = "";                     // Pull-out slice value prefix
@@ -459,7 +459,7 @@ $arr_color=array('#0DA068','#194E9C','#ED9C13','#ED5713','#057249',
 //    '#a001a3','#017ac6','#0154c6','#a2005f','#f46161');
 ?>
 
-<div id="container">
+<div id="container" style="width:55%">
     <br><br>
   <div class="wideBox">
 <!--    <h2>Тестовая версия диаграммы</h2>-->
@@ -468,7 +468,7 @@ $arr_color=array('#0DA068','#194E9C','#ED9C13','#ED5713','#057249',
      <p>с <?= $monday ?> по <?= $monday_next ?></p>
   </div>
 
-  <canvas id="chart" width="600" height="500"></canvas>
+  <canvas id="chart" width="750" height="500"></canvas>
 
   <table id="chartData">
 

@@ -1,3 +1,9 @@
+<br>
+ <?php
+    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
+           include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+    }
+    ?>
 
 <div class="box-body">
     <form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?=$id_rig ?>" >
@@ -41,6 +47,13 @@
 
                     <div class="col-lg-1">
                         <div class="form-group">
+                            <label for="dead_child">в т.ч. детей</label>
+                            <input type="text" class="form-control" placeholder="0" name="dead_child" value="<?= (isset($battle['dead_child'])) ? $battle['dead_child'] : 0 ?>" >
+                        </div>
+                    </div>
+
+                    <div class="col-lg-1">
+                        <div class="form-group">
                             <label for="save_man_l">Спасено</label>
                             <input type="text" class="form-control" placeholder="0" name="save_man" value="<?= (isset($battle['save_man'])) ? $battle['save_man'] : 0 ?>" >
                         </div>
@@ -61,7 +74,7 @@
                     </div>
 
 
-                     <div class="col-lg-3">
+                     <div class="col-lg-1">
 
                     </div>
 
@@ -216,7 +229,7 @@
 <script>
 
  if(<?= $is_success ?> === 1)
-        toastr.success('Информация сохранена', 'Успех!', {progressBar:     true,timeOut: 5000});
+        toastr.success('Информация сохранена.</br> Закройте вкладку браузера.', 'Успех!', {progressBar:     true,timeOut: 5000});
 </script>
 
 

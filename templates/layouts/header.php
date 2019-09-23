@@ -94,6 +94,7 @@
 
 
 <link href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="<?= $baseUrl ?>/assets/css/switch.css">
 
     </head>
 <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">

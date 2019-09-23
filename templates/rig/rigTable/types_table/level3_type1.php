@@ -28,37 +28,8 @@
 <!--таблица выездов для уровня 3 и для уровня 2 (УМЧС) -->
 <br>
 <?php
+include dirname(dirname(__FILE__))  . '/header_rig_table.php';
 //print_r($sily_mchs);
-if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST['date_end']) && !empty($_POST['date_end'])) {
-
-    ?>
-    <center><b>
-            Выезды с 06:00 <?= $_POST['date_start'] ?> до 06:00 <?= $_POST['date_end'] ?>
-        </b></center>
-    <?php
-} else {
-
-    ?>
-    <center><b>
-            <?php
-            if (date("H:i:s") <= '06:00:00') {//до 06 утра
-
-                ?>
-                Выезды с 06:00 <?= date("Y-m-d", time() - (60 * 60 * 24)) ?>  до 06:00 <?= date("Y-m-d") ?>
-                <?php
-            } else {
-
-                ?>
-                Выезды с 06:00 <?= date("Y-m-d") ?>  до 06:00 <?= date("Y-m-d", time() + (60 * 60 * 24)) ?>
-                <?php
-            }
-
-            ?>
-
-        </b></center>
-    <?php
-}
-//print_r($result_icons);
 
 ?>
 <table class="table table-condensed   table-bordered table-custom" id="rigTableType1" >
@@ -76,7 +47,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 <!--            <th style="width:77px;">Этажность/этаж</th>-->
             <th style="width:125px;" ></th>
             <th style="width:90px;">Причина вызова</th>
-            <th style="width:240px;">Детализированная информация</th>
+            <th style="width:240x;">Детализированная информация</th>
             <th style="width:40px;">Время лок.</th>
             <th style="width:40px;">Время ликв.</th>
             <th style="width:30px;">Создатель</th>
@@ -149,37 +120,55 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                             ?>
-                           !&nbsp; <i class="fa fa-share" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Выезд в соседний гарнизон"></i>
+                            !&nbsp;<i class="fa fa-share" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Выезд в соседний гарнизон"></i>
                             <?php
                         }
 
                         ?>&nbsp;
-                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">  <?= $row['id'] ?></a></td>
+           <b> <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id'] ?></a></b>
+
+
+           <!--                        is update rig now-->
+            <center>
+                <div id="is_update_rig_now">
+
+
+                    <?php
+                    if (isset($row['is_update_now']) && $row['is_update_now'] != '') {
+
+                        include dirname(dirname(__FILE__)) . '/div_is_update_rig_now.php';
+                    }
+
+                    ?>
+                </div>
+            </center>
+            <!--              END          is update rig now-->
+                    </td>
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"  >
-                                <?php
-                                if ($row['is_closed'] == 0) {//пожар не закрыт
-                                    if (!empty($row['empty_fields'])) {
+                                    <?php
+                                    if ($row['is_closed'] == 0) {//пожар не закрыт
+                                        if (!empty($row['empty_fields'])) {
+
+                                            ?>
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
+                                               title="Вызов не закрыт. Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
+                                               <?php
+                                           } else {
+
+                                               ?>
+                                            <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
+                                            <?php
+                                        }
+                                    } elseif (!empty($row['empty_fields'])) {
 
                                         ?>
                                         <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
-                                           title="Вызов не закрыт. Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
-                                           <?php
-                                       } else {
-
-                                           ?>
-                                        <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
+                                           title="Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
                                         <?php
                                     }
-                                } elseif (!empty($row['empty_fields'])) {
 
-                                    ?>
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
-                                       title="Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
-                                    <?php
-                                }
-
-                                ?></td>
+                        ?></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['date_msg'] ?></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['time_msg'] ?></td>
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?></td>
@@ -212,7 +201,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                             foreach ($sily_mchs[$row['id']] as $si) {
                                 //print_r($si);
-                                $teh = '<b>' . $si['mark'] . '</b> - '.$si['locorg_name'].', '.$si['pasp_name'].$i['time_exit'];
+                                $teh = '<b>' . $si['mark'] . '</b> - '.$si['locorg_name'].', '.$si['pasp_name'];
 
                                 //$teh = '<b>' . $si['mark'] . '</b> ' . $si['pasp_name'] . ', ' . $si['locorg_name'];
 
@@ -281,7 +270,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
         <?php
         /* id of rigs, where silymschs/innerservice are not selected */
-        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car'])) {
+        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car']) && $row['is_sily_mchs'] != 1) {
 
             ?>
                             <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
@@ -298,8 +287,15 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
 
                             <?php
-                     /* id of rigs, where info are not selected */
-                                if (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
+                /* id of rigs, where info are not selected */
+				                            if($row['id_reasonrig'] == 18) {//zanytia
+
+                                    ?>
+                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
+                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не требует заполнения для указанной причины выезда."></i></a>
+                                    <?php
+                                }
+                                elseif (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
 
                                     ?>
                                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
@@ -320,7 +316,7 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                 }
 
                                 ?>
-                                <?php
+<?php
                                 /* id of rigs, where silymschs/innerservice are not selected */
                                 if (isset($result_icons['character']) && in_array($row['id'], $result_icons['character'])) {
 
@@ -345,11 +341,11 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                 ?>
 
 
-                                 <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
+                            <!--     <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
                                 <i class="fa fa-lg fa-male" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
 
                                   <a href="<?= $baseUrl ?>/trunk/<?= $row['id'] ?>" target="_blank">
-                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
+                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Подача стволов"></i></a>-->
 
 
 
@@ -435,9 +431,9 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
                                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                                             ?>
-<!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
-                                           <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
- <?php
+											<a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
+                                       <!-- <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
+                                            <?php
                                         } else {
 
                                             ?>
@@ -463,3 +459,4 @@ if (isset($_POST['date_start']) && !empty($_POST['date_start']) && isset($_POST[
 
                             </tbody>
                             </table>
+

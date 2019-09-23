@@ -1,20 +1,23 @@
-<link href="<?= $baseUrl ?>/assets/css/archive/style.css" rel="stylesheet">
+
 <center>Результат</center>
 
 
 <main>
 
     <input id="tab1" type="radio" name="tabs" checked>
-    <label for="tab1">Информация по выездам</label>
+    <label for="tab1" class="label-archive">Информация по выездам</label>
 
     <input id="tab2" type="radio" name="tabs">
-    <label for="tab2">Информация по технике</label>
+    <label for="tab2" class="label-archive">Информация по технике</label>
 
     <input id="tab3" type="radio" name="tabs">
-    <label for="tab3">Информация по информированию</label>
+    <label for="tab3" class="label-archive">Информация по информированию</label>
 
     <input id="tab4" type="radio" name="tabs">
-    <label for="tab4">Информация по другим службам</label>
+    <label for="tab4" class="label-archive">Информация по другим службам</label>
+
+    <input id="tab5" type="radio" name="tabs">
+    <label for="tab5" class="label-archive">Результаты боевой работы</label>
 
     <section id="content1" class="sec">
         <p>
@@ -105,6 +108,31 @@
 
         <div id="table-content4">
             <button class="btn btn-default"   type="button" onclick="refreshTable('table-content4');">Выполнить запрос</button>
+            <br>
+            <br>
+
+        </div>
+
+
+    </section>
+
+
+    <section id="content5" class="sec">
+        <p>
+            В данной вкладке находится информация по боевой работе.
+            <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+ <span style="color: red; font-size: 13px">  После применения в таблице фильтра по количеству спасенных, эвакуированных и т.д. при экспорте в Excel данный фильтр не учитывается.</b></span>
+        </p>
+
+        <center>
+            <div id="preload-table-content5" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+            </div>
+        </center>
+
+        <div id="table-content5">
+            <button class="btn btn-default"   type="button" onclick="refreshTable('table-content5');">Выполнить запрос</button>
             <br>
             <br>
 

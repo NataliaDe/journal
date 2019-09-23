@@ -6,7 +6,13 @@
     }
 </style>
 
-
+<br>
+ <?php
+    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
+           include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+    }
+    //print_r($rig_time);
+    ?>
 <div class="box-body">
     <form  role="form" id="trunkForm" method="POST" action="<?= $baseUrl ?>/trunk/<?= $id_rig ?>" >
         <input type="hidden" class="form-control datetime"  name="id" value="0" />
@@ -135,10 +141,14 @@
                                     <div class="row">
                                         <input type="hidden" class="form-control"  name="id_car" value="<?= $row['id_teh'] ?>" >
                                         <div class="col-lg-2">
-                                            <div class="form-group">
 
-                                                <input type="text" class="form-control time-pod-mask" placeholder="00-00" onkeypress="allowCntTimePod();" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
+                                           <div class=" times">
+                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
                                             </div>
+
+<!--                                            <div class="form-group">
+                                                <input type="text" class="form-control time-pod-mask" placeholder="00-00" onkeypress="allowCntTimePod();" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
+                                            </div>-->
                                         </div>
 
                                         <div class="col-lg-1" style="width: 5%">
@@ -226,10 +236,12 @@
                                 <div class="row">
                                     <input type="hidden" class="form-control"  name="id_car" value="<?= $row['id_teh'] ?>" >
                                     <div class="col-lg-2">
-                                        <div class="form-group">
-
+                                           <div class=" times">
+                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="" >
+                                            </div>
+<!--                                        <div class="form-group">
                                             <input type="text" class="form-control" placeholder="00-00" onkeypress="allowCntTimePod();" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="" >
-                                        </div>
+                                        </div>-->
                                     </div>
 
                                     <div class="col-lg-1" style="width: 5%">

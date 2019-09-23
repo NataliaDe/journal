@@ -1,4 +1,10 @@
 <!--выгрузка данных в переменные-->
+<br>
+ <?php
+    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
+           include dirname(dirname(__FILE__)) . '/tabsRig/info_msg_now_update.php';
+    }
+    ?>
 <?php
 
 //print_r($time_character);
@@ -18,7 +24,7 @@ else{
 
 ?>
 <!-- КОНЕЦ выгрузка данных в переменные-->
-<br>
+
 <div class="box-body">
 
     <form  role="form" id="characterForm" method="POST" action="<?= $baseUrl ?>/rig/<?= $id ?>/character">

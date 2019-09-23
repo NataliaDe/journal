@@ -9,7 +9,7 @@
 <div style="width: 50%; margin-left: 30px">
 <h4>Настройки пользователя</h4>
 <form action="<?= $baseUrl ?>/settings/index/save" method="POST" >
-<table class="table table-condensed   table-bordered table-custom" id="classifTable" >
+<table class="table table-condensed   table-bordered table-custom"  >
 
         <!-- строка 1 -->
         <thead>
@@ -61,6 +61,34 @@
                 </div>
                     <?php
  }
+ elseif(isset($setting['type']) && $setting['type'] == 'br_table'){
+
+     $settings_user_br_table_1=array();
+     if(isset($settings_user_br_table))
+         $settings_user_br_table_1=$settings_user_br_table;
+
+     ?>
+
+                    <div class="form-group" id="reason-rig-id">
+                        <label for="id_reasonrig">Выберите необходимые причины</label>
+                        <select class="js-example-basic-multiple form-control" name="id_reasonrig_for_br_table[]" multiple="multiple" >
+<!--                            <option value="">Выбрать</option>-->
+                            <?php
+                            foreach ($reasonrig as $row) {
+                                if (in_array($row['id'], $settings_user_br_table_1)) {
+                                    printf("<p><option value='%s'selected ><label>%s</label></option></p>", $row['id'], $row['name']);
+                                } elseif ($row['is_delete'] != 1 && $row['id'] != 0) {//удаленные записи не отображать
+                                    printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+                                }
+                            }
+
+                            ?>
+                        </select>
+                    </div>
+
+                    <?php
+
+ }
 ?>
 
 
@@ -76,5 +104,8 @@
     <br> <br>
      <button class="btn btn-success" type="submit">Сохранить</button>
     <a href="<?= $baseUrl ?>/settings/index"> <button class="btn btn-default" type="button">Отмена</button></a>
+
+
 </form>
 </div>
+

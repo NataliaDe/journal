@@ -17,15 +17,18 @@ include 'parts/ghost_msg.php';
     </div>
 
 <?php
-if((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))){
-  $author=  $_SESSION['locorg_name'].', '.$_SESSION['user_name'];
+if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
+    if ($_SESSION['locorg_name'] == $_SESSION['user_name']) {
+        $author = $_SESSION['locorg_name'];
+    } else {
+        $author = $_SESSION['locorg_name'] . ', ' . $_SESSION['user_name'];
+    }
+} elseif (isset($_SESSION['id_ghost'])) {
+    $author = 'Гость';
+} else {
+    $author = '';
 }
-elseif(isset ($_SESSION['id_ghost'])){
-    $author='Гость';
-}
-else{
-    $author='';
-}
+
 ?>
     <div class="form-group">
         <label>Автор создания (УМЧС, подразделение)</label>

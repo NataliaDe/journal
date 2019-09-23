@@ -61,6 +61,7 @@
     <th>Всего выездов</th>
     <th>На пожары</th>
     <th>На ЧС</th>
+    <th>Обеспечение ПБ<br>(уборка урожая)</th>
     <th>Другие</th>
     </tr>
 
@@ -73,6 +74,7 @@
     <td><?= $value['vsego']  ?></td>
     <td><?= $value['pogar']  ?></td>
     <td><?= $value['hs']  ?></td>
+    <td><?= $value['uborka']  ?></td>
     <td><?= $value['other']  ?></td>
     </tr>
   <tr>
@@ -87,6 +89,7 @@
     <td><?= $itogo['vsego']  ?></td>
     <td><?= $itogo['pogar']  ?></td>
     <td><?= $itogo['hs']  ?></td>
+     <td><?= $itogo['uborka']  ?></td>
     <td><?= $itogo['other']  ?></td>
     </tr>
   <tr>
