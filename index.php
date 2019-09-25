@@ -1244,6 +1244,10 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
 
          $data['rig']=getResultsBattle($data['rig']);//results battle
 
+
+
+         $data['trunk_by_rig']=getTrunkByRigs($id_rig_arr);
+
          /*  mode  */
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
 
@@ -1418,6 +1422,8 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
          $data['rig']=getResultsBattle($data['rig']);//results battle
          //print_r($data['settings_user_br_table']);exit();
          //echo $_SESSION['br_table_mode'];exit();
+
+         $data['trunk_by_rig']=getTrunkByRigs($id_rig_arr);
 
          /* mode */
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
@@ -1649,6 +1655,8 @@ $id_rig_arr=array();
 
         $data['rig']=getResultsBattle($data['rig']);//results battle
 
+        $data['trunk_by_rig']=getTrunkByRigs($id_rig_arr);
+
         /* mode */
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
 
@@ -1872,6 +1880,8 @@ if(!empty($id_rig_arr)){
 
 
         $data['rig']=getResultsBattle($data['rig']);//results battle
+
+        $data['trunk_by_rig']=getTrunkByRigs($id_rig_arr);
 
         /* mode */
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {
@@ -5484,6 +5494,11 @@ elseif($id_tab=='table-content5'){//results br
     $sql='SELECT id_rig,date_msg,time_msg, local_name,address, results_battle '.$sql;
 
 }
+elseif($id_tab=='table-content6'){//trunk
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, trunk '.$sql;
+
+}
 
 //echo $sql;
 $data['result']=R::getAll($sql, $param);
@@ -5509,6 +5524,10 @@ elseif($id_tab=='table-content4'){
 elseif($id_tab=='table-content5'){
   $data['link_excel']='archive_1/exportExcelTab5/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
   $data['link_excel_hidden']='archive_1/exportExcelTab5/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
+}
+elseif($id_tab=='table-content6'){
+  $data['link_excel']='archive_1/exportExcelTab6/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no'.'/'.'no';
+  $data['link_excel_hidden']='archive_1/exportExcelTab6/'.$id_tab.'/'.$table_name_year.'/'.$date_start.'/'.$date_end.'/'.$region_for_export.'/'.$local_for_export.'/'.$reasonrig_for_export;
 }
 
 
@@ -6268,7 +6287,7 @@ $result=R::getAll($sql, $param);
         $i = 0; //счетчик кол-ва записей № п/п
 
 
-        $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
+        $sheet->setCellValue('A2', 'с ' . date('d.m.Y', strtotime($date_start)) . ' по ' . date('d.m.Y', strtotime($date_end))); //выбранный период
         $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
@@ -6568,7 +6587,7 @@ $result=R::getAll($sql, $param);
         $i = 0; //счетчик кол-ва записей № п/п
 
 
-        $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
+        $sheet->setCellValue('A2', 'с ' . date('d.m.Y', strtotime($date_start)) . ' по ' . date('d.m.Y', strtotime($date_end))); //выбранный период
         $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
@@ -6852,7 +6871,7 @@ $result=R::getAll($sql, $param);
         $i = 0; //счетчик кол-ва записей № п/п
 
 
-        $sheet->setCellValue('A2', 'с ' . $date_start . ' по ' . $date_end); //выбранный период
+        $sheet->setCellValue('A2', 'с ' . date('d.m.Y', strtotime($date_start)) . ' по ' . date('d.m.Y', strtotime($date_end))); //выбранный период
         $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
 
           /* устанавливаем бордер ячейкам */
@@ -6915,6 +6934,199 @@ $result=R::getAll($sql, $param);
         /* Сохранить в файл */
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="Архив_результ.боевой работы.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
+
+
+
+
+          /* trunk */
+       $app->get('/exportExcelTab6/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
+
+             /* get data */
+$date_start=$date_from;
+$date_end=$date_to;
+$table_name_year=$table;
+$region=$reg;
+$local=$loc;
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql=' FROM jarchive.'.$table_name_year.'  WHERE date_msg between ? and ? and id_rig not in '
+                . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+      //  $param[]=0;
+
+//var_dump($region);
+        if($region != 'no' ){
+           // echo 'uuuuuu';
+           // $sql=$sql.' AND region_name like ?';
+              $sql=$sql.' AND region_name = ?';
+             $param[] = $region;
+        }
+
+        if( $local != 'no'){
+
+              $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
+             //$param[] = $local;
+        }
+
+        if( $reasonrig_form != 'no'){
+
+              $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
+             //$param[] = $local;
+        }
+
+
+
+         /*--------------- filter from datatables ------------- */
+            if ($id_rig != 'no') {
+            $sql = $sql . ' AND ( id_rig like "%' . $id_rig . '" OR id_rig like "' . $id_rig . '%" OR id_rig like "%' . $id_rig . '%"  ) ';
+        }
+        if ($date_msg != 'no') {
+            $sql = $sql . ' AND ( date_msg like "%' . $date_msg . '" OR date_msg like "' . $date_msg . '%" OR date_msg like "%' . $date_msg . '%"  ) ';
+        }
+        if ($time_msg != 'no') {
+            $sql = $sql . ' AND ( time_msg like "%' . $time_msg . '" OR time_msg like "' . $time_msg . '%" OR time_msg like "%' . $time_msg . '%"  ) ';
+        }
+        if ($local_1 != 'no') {
+            $sql = $sql . ' AND ( local_name like "%' . $local_1 . '" OR local_name like "' . $local_1 . '%" OR local_name like "%' . $local_1 . '%"  ) ';
+        }
+        if ($addr != 'no') {
+            $sql = $sql . ' AND ( address like "%' . $addr . '" OR address like "' . $addr . '%" OR address like "%' . $addr . '%"  ) ';
+        }
+
+
+        /*--------------- END filter from datatables ------------- */
+
+
+        $sql=$sql.' ORDER BY id_rig ASC';
+
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address, trunk '.$sql;
+
+
+
+
+
+$result=R::getAll($sql, $param);
+//$cnt_result=count($result);
+
+//echo $sql;
+//print_r($param);
+//echo $cnt_result;
+//exit();
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/archive/' . $id_tab . '.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 9; //strначальная строка для записи
+        $c = 0; // stolbec начальный столбец для записи
+
+        $i = 0; //счетчик кол-ва записей № п/п
+
+
+        $sheet->setCellValue('A2', 'с ' . date('d.m.Y', strtotime($date_start)) . ' по ' . date('d.m.Y', strtotime($date_end))); //выбранный период
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no')?$region:'все') . ', район: ' . (($local != 'no')?$local:'все'). ', причина вызова: ' . (($reasonrig_form != 'no')?$reasonrig_form:'все')); //выбранный область и район
+
+          /* устанавливаем бордер ячейкам */
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if(!empty($result)){
+
+
+
+     foreach ($result as $row) {
+
+
+
+          $arr_trunk= explode('~', $row['trunk']);
+
+          if(isset($arr_trunk) && !empty($arr_trunk) ){
+            $i++;
+
+                foreach ($arr_trunk as $value) {
+        if (!empty($value)) {
+
+             /* mark#numsign$locorg_name%pasp_name?time_pod&trunk_name&cnt&water~mark#...... */
+            $arr_mark = explode('#', $value);
+
+            $mark = $arr_mark[0];
+
+
+            $arr_time = explode('?', $arr_mark[1]);
+
+            /* numsign$locorg_name%pasp_name */
+            $car = $arr_time[0];
+            $car_detail = explode('$', $car);
+            $numbsign = $car_detail[0];
+
+            $grochs_detail = explode('%', $car_detail[1]);
+            $locorg_name = $grochs_detail[0];
+            $pasp_name = $grochs_detail[1];
+
+
+            /* all  after ? explode.  time_pod, trunk_name, cnt, water */
+            $each_time = explode('&', $arr_time[1]);
+
+            $time_pod = $each_time[0];
+            $trunk_name = $each_time[1];
+            $cnt = $each_time[2];
+            $water = $each_time[3];
+
+
+
+                    $sheet->setCellValue('A' . $r, $i); //№ п/п
+                    $sheet->setCellValue('B' . $r, $row['id_rig']);
+                    $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+                    $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
+                    $sheet->setCellValue('E' . $r, $row['local_name']);
+                    $sheet->setCellValue('F' . $r, $row['address']);
+                    $sheet->setCellValue('G' . $r, $mark);
+                    $sheet->setCellValue('H' . $r, $numbsign);
+                    $sheet->setCellValue('I' . $r, ($locorg_name.', '.$pasp_name));
+                    $sheet->setCellValue('J' . $r, $time_pod);
+                    $sheet->setCellValue('K' . $r, $trunk_name);
+                    $sheet->setCellValue('L' . $r, $cnt);
+                    $sheet->setCellValue('M' . $r, $water);
+
+
+                    $r++;
+          }
+                }
+          }
+        }
+
+
+
+        $sheet->getStyleByColumnAndRow(0, 8, 22, $r - 1)->applyFromArray($styleArray);
+
+
+
+        }
+
+        /* Сохранить в файл */
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Архив_стволы.xlsx"');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
@@ -8900,7 +9112,7 @@ $app->group('/results_battle', function () use ($app,$log) {
 
 
 /* ----------- trunk -------------- */
-$app->group('/trunk', function () use ($app,$log) {
+$app->group('/trunk', 'is_login', function () use ($app,$log) {
 
     /* add new trunk */
     $app->post('/add_trunk_ajax', function () use ($app) {
@@ -9549,6 +9761,20 @@ function getSettingsUserMode()
     }
     return $settings_user;
 }
+
+
+
+function getTrunkByRigs($id_rig_arr)
+{
+    $trunk = R::getAll('select tr.*, s.id_rig, s.id_teh from trunkrig as tr left join silymchs as s on tr.id_silymchs=s.id where s.id_rig IN( ' . implode(',', $id_rig_arr) . ')');
+    $trunk_by_rig = array();
+    if (!empty($trunk)) {
+        foreach ($trunk as $value) {
+            $trunk_by_rig[$value['id_rig']][] = $value;
+        }
+    }
+    return $trunk_by_rig;
+}
 /* ------------- ajax change mode --------------- */
 $app->post('/change_mode', function () use ($app) {
 
@@ -9568,5 +9794,76 @@ $app->post('/change_mode', function () use ($app) {
     echo json_encode($res);
 });
 /* ------------- END ajax change mode --------------- */
+
+
+
+
+$app->group('/maps',  function () use ($app) {
+
+     $app->get('/', function () use ($app) {
+
+        $app->render('layouts/maps/header.php');
+        $data['path_to_view'] = 'maps/index.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/maps/footer.php');
+     });
+
+
+          $app->get('/getjson', function () use ($app) {
+
+         /* data for map */
+         //$points=R::getAll('select * from rigtable where  latitude is not null and longitude is not null AND latitude <> 0 AND longitude <> 0');
+
+              $rig_m = new Model_Rigtable();
+              $points=$rig_m->selectAllRigByReason(array(14,34),0);// only 34-12pogar, 14-04other fires
+$res1=array();
+
+         foreach ($points as $value) {
+             $res=array();
+            $res['location'] = array('type' => 'Point', 'coordinates' => array($value['longitude'],$value['latitude']));
+            $res['name'] = $value['reasonrig_name'];
+            $res['new_icon'] = 'assets/images/leaflet/coffee.png';
+            $res['card_by_rig_url'] = 'card_rig/0/'.$value['id'];
+
+$res1[]=$res;
+         }
+
+
+//
+//$res['location']=array('type'=>'Point','coordinates'=>array("27.546803", "53.855383"));
+//$res['name']='hh';
+//$res['new_icon']='assets/images/leaflet/coffee.png';
+//$res1[]=$res;
+
+
+         $data['points']= json_encode($res1);
+
+
+         echo $data['points'];
+     });
+
+      $app->post('/getjson', function () use ($app) {
+
+         /* data for map */
+
+$res1=array();
+$res=array();
+
+$res['location']=array('type'=>'Point','coordinates'=>array("27.546803", "53.855383"));
+$res['name']='hh';
+//$res['new_icon']='assets/images/leaflet/menu.png';
+$res1[]=$res;
+
+
+         $data['points']= json_encode($res1);
+
+
+         echo $data['points'];
+     });
+
+
+
+});
+
 
 $app->run();

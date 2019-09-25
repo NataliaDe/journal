@@ -19,6 +19,9 @@
     <input id="tab5" type="radio" name="tabs">
     <label for="tab5" class="label-archive">Результаты боевой работы</label>
 
+    <input id="tab6" type="radio" name="tabs">
+    <label for="tab6" class="label-archive">Стволы</label>
+
     <section id="content1" class="sec">
         <p>
             В данной вкладке находится общая информация по выездам.
@@ -133,6 +136,32 @@
 
         <div id="table-content5">
             <button class="btn btn-default"   type="button" onclick="refreshTable('table-content5');">Выполнить запрос</button>
+            <br>
+            <br>
+
+        </div>
+
+
+    </section>
+
+
+
+    <section id="content6" class="sec">
+        <p>
+            В данной вкладке находится информация по стволам.
+            <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+ <span style="color: red; font-size: 13px">  После применения в таблице фильтра по стволам при экспорте в Excel данный фильтр не учитывается.</b></span>
+        </p>
+
+        <center>
+            <div id="preload-table-content6" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+            </div>
+        </center>
+
+        <div id="table-content6">
+            <button class="btn btn-default"   type="button" onclick="refreshTable('table-content6');">Выполнить запрос</button>
             <br>
             <br>
 

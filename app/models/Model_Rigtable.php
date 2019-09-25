@@ -629,6 +629,22 @@ class Model_Rigtable {
            $this->setDateStart($start_date);
             $this->setDateEnd($end_date);
     }
+
+    public function selectAllRigByReason($reason_ids, $is_delete) {
+
+        $sql = 'SELECT * FROM journal.rigtable WHERE  is_delete = ?  AND latitude is not null and longitude is not null AND latitude <> 0 AND longitude <> 0';
+        $param = array($is_delete);
+
+        if (is_array($reason_ids) && !empty($reason_ids)) {
+            $sort_reasonrig = ' AND id_reasonrig IN('. implode(',', $reason_ids).') ';
+        }
+
+        if (isset($sort_reasonrig)) {
+            $sql = $sql . $sort_reasonrig;
+        }
+
+        return $this->getRigTable($sql, $param);
+    }
 }
 
 ?>
