@@ -1,12 +1,37 @@
 <header class="main-header">
     <!-- Logo -->
 
-    <a href="<?= $baseUrl ?>/rig" class="logo">
+
+    <?php
+    if (isset($_SESSION['id_level']) && $_SESSION['id_level'] == 1 && isset($id_page) && $id_page != 0) {
+        $path = $baseUrl . '/rig/table/for_rcu/' . $id_page . '/0';
+    } else {
+        $path = $baseUrl . '/rig/table';
+    }
+
+    if (isset($_SESSION['id_level']) && $_SESSION['id_level'] == 1) {//rcu
+
+        ?>
+        <a href="<?= $path ?>" class="logo">
+
+        <?php
+    } else {
+
+        ?>
+            <a href="<?= $path ?>/rig" class="logo">
+
+            <?php
+        }
+
+        ?>
+
+
+
         <img src="<?= $baseUrl ?>/assets/images/logo.png" width="50" height="50" style="float: left;">
         <!-- mini logo for sidebar mini 50x50 pixels -->
 <!--          <span class="logo-mini">Журнал</span>-->
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Журнал </b>ЦОУ <span style="font-size: 14px">2.0</span></span>
+        <span class="logo-lg"><b>Журнал </b>ЦОУ <span style="font-size: 14px"><?= VER ?></span></span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
 
@@ -20,12 +45,16 @@
 
 
         <a href="#" class="logo" style="width: 200px" id="title_for_ivanov">
-        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px">2.0</span></span>
+        <span class="logo-lg" style="display: block "><b>Журнал </b>ЦОУ <span style="font-size: 14px"><?= VER ?></span></span>
     </a>
 
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+
+
+
+
 
 <!--                <li class="dropdown tasks-menu">
                     <a href="<?= $baseUrl ?>/remark"  class="item-menu"><span>Книга замечаний</span></a>
@@ -61,6 +90,49 @@ else{
 }
 
 ?>
+
+
+
+<!--                <li>
+                    <a href="<?= $baseUrl ?>/maps" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
+                        <img src="<?= $baseUrl ?>/assets/images/leaflet/blue_globe.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                    </a>
+                </li>-->
+
+
+                <?php
+                if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
+
+                    ?>
+
+                    <li>
+                        <?php
+                        if (isset($_SESSION['id_region']) && $_SESSION['id_region'] == 6) {//minobl
+
+                            ?>
+                            <a href="<?= $baseUrl ?>/maps_for_min_obl" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
+                                <?php
+                            } else {
+
+                                ?>
+                                <a href="<?= $baseUrl ?>/maps" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
+                                    <?php
+                                }
+
+                                ?>
+
+                                <img src="<?= $baseUrl ?>/assets/images/leaflet/GoogleMaps.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                            </a>
+                    </li>
+
+
+                    <?php
+                }
+
+                ?>
+
 
 
                 <li>
@@ -100,7 +172,7 @@ else{
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-
+                            <i class="fa fa-user"></i>
                             <span class="hidden-xs"><?= $_SESSION['user_name'] ?></span>
                         </a>
                         <ul class="dropdown-menu">

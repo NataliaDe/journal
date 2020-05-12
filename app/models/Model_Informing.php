@@ -227,6 +227,23 @@ class Model_Informing {
             . ' (id_destination <> 0 OR destination_text <> "") AND (time_msg is null OR time_exit is null OR time_arrival is null)');
     }
 
+
+
+            public function copy_informing($array)
+    {
+        $sily = R::dispense('informing');
+        $sily->import($array);
+        R::store($sily);
+    }
+
+
+
+    public function get_informing_by_rigs($ids_rig)
+    {
+        $res = R::getAll('SELECT id_rig, fio, time_msg, time_exit, time_arrival FROM informingrep  WHERE id_rig IN (  ' . implode(',', $ids_rig) . ')');
+        return $res;
+    }
+
 }
 
 ?>

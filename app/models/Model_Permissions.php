@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational view `permissions` 
+ * Object model mapping for relational view `permissions`
  */
 
 namespace App\MODELS;
@@ -28,7 +28,7 @@ class Model_Permissions {
     public $can_edit_name;
     public $is_admin_name;
     public $auto_ate_name;
-    
+
         public function setLogin($login) {
         $this->login = $login;
     }
@@ -37,25 +37,24 @@ class Model_Permissions {
         $this->password = $password;
     }
 
-    
+
     public function selectAll() {
          return R::getAll('SELECT * FROM journal.permissions');
     }
-    
+
     public function selectPermisByLogin($login,$password) {
         $this->setLogin($login);
         $this->setPassword($password);
-        
-          //return R::findOne('permissions', 'login = ? AND password = ? ', [$this->login, $this->password]);
+
 		 return R::findOne('permissions', 'login = ? and password = ?', [$login, $password]);
 		 // return R::getAll('select * from permissions WHERE login = ? AND password = ? limit 1 ', array($this->login, $this->password));
     }
-    
+
         public function selectPermisByCookie($id_user,$cookie) {
-        
+
           return R::findOne('permissions', 'id_user = ? AND cookie = ?', [$id_user,$cookie]);
     }
-    
-    
-    
+
+
+
 }

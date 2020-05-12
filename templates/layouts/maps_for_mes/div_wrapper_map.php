@@ -1,28 +1,113 @@
-<div class="wrapper">
 
-    <!--        topmenu - main-header-->
+<div class="menu scrollable-form-filter" style="height: 100%">
+
+    <!-- Иконка меню -->
+    <div class="icon-close">
+<!--        <img src="<?= $baseUrl ?>/assets/jquery-side-menu/images/close-btn.png">-->
+        <img id="close-btn" src="<?= $baseUrl ?>/assets/jquery-side-menu/images/arrow_left.png" style="width: 45px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Скрыть фильтр" >
+        <img id="reset_filter" src="<?= $baseUrl ?>/assets/maps_for_mes/images/trash.png" style="width: 45px;     margin-left: 10px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Очистить фильтр" >
+    </div>
+
+
     <?php
-    include dirname(__FILE__) .'/main_header.php';
+    include dirname(dirname(dirname(__FILE__))) . '/maps_for_mes/' . 'form_search_car.php';
+
     ?>
 
-    <!--        leftmenu - main-sidebar-->
+    <!-- Меню -->
+
+</div>
+
+<!-- Main body -->
+
+<div class="background start-background" style="height: 5%">
+
+    <!--      <div class="icon-menu">
+
+            <img src="<?= $baseUrl ?>/assets/jquery-side-menu/images/question2.png">
+            <center><span id="bread_crumb">ИНФОРМАЦИЯ ПО ЗАПРОСУ: АЦ - <u>г.Минск</u></span></center>
+          </div>-->
+
+
+    <ul class="nav navbar-nav icon-menu" style="height: 50px;
+        padding-top: 2px;
+        padding-bottom: 2px;">
+        <li>
+            <div class="material-switch pull-left" style="padding-top: 3px; padding-right: 20px;">
+                <img src="<?= $baseUrl ?>/assets/jquery-side-menu/images/question2.png" style="width: 40px" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Показать фильтр" id="hide-sidebar-menu" >
+
+            </div>
+
+        </li>
+
+
+        <li>
+            <div class="material-switch pull-center" style="padding-top: 9px; padding-right: 20px;">
+                <center><span id="bread_crumb">ИНФОРМАЦИЯ ПО ЗАПРОСУ: АЦ - <u>г.Минск</u></span></center>
+
+            </div>
+
+        </li>
+
+
+
+
+
+        <li>
+            <div class="material-switch pull-right" style=" padding-top: 3px; padding-right: 20px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Скрыть меню">
+                <img src="<?= $baseUrl ?>/assets/maps_for_mes/images/logo1.png" style="width: 40px" id="hide-header-menu">
+
+            </div>
+
+        </li>
+    </ul>
+
+</div>
+
+
+<div class="div-map" style="height: 95%">
     <?php
-    include dirname(__FILE__) .'/main_sidebar.php';
-    ?>     
-    <!--        content - content-wrapper-->
- <?php
-    include dirname(__FILE__) .'/content/content_wrapper.php';
-    ?> 
+// echo dirname(__FILE__) ;
+// echo $path_to_view;
+    include dirname(dirname(dirname(__FILE__))) . '/' . $path_to_view;
 
-    <!--        footer - main-footer-->
-    <?php
-    include dirname(__FILE__) .'/main_footer.php';
-    ?> 
+    ?>
+</div>
 
-    <!--        rightmenu -->
-    <?php
-   // include dirname(__FILE__) .'/right_sidebar.php';
-    ?> 
+<!--<a id="show-menu"> <i class="fa fa-info-circle"></i> </a>-->
+<div id="star-mes-panel" class="fixed t-left close_panel hide" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Отобразить меню">
+    <img src="<?= $baseUrl ?>/assets/maps_for_mes/images/logo1.png"  id="star-mes">
+</div>
+
+<div id="theme_panel" class="fixed t-left open_panel">
 
 
-</div><!-- ./wrapper -->
+
+    <a id="theme_panel_button"> <i class="fa fa-info-circle"></i> </a>
+    <div class="theme_panel_inner">    </div>
+    <div class="theme_panel_inner scrollable" id="theme_panel_inner_table" >
+
+        <?php
+        include dirname(dirname(dirname(__FILE__))) . '/maps_for_mes/right_table.php';
+
+        ?>
+
+
+
+    </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

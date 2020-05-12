@@ -5,7 +5,7 @@ $(function () {
     $('#time_msg').datetimepicker({
         language: 'ru',
         defaultDate: new Date(),
-        format: 'YYYY-MM-DD HH:mm:ss'
+        format: 'YYYY-MM-DD HH:mm'
                 // autoclose: true
     });
 
@@ -61,6 +61,40 @@ $(function () {
         $('#date_start').data("DateTimePicker").setMaxDate(e.date);
     });
     /* ------- END начальная дата < конечная дата -------*/
+
+
+
+
+
+    /* report 4 */
+    $('#date_start_rep4').datetimepicker({
+        language: 'ru',
+        format: 'DD.MM',
+        //changeYear: false,
+        pickTime: false
+                // autoclose: true
+    });
+
+    $('#date_end_rep4').datetimepicker({
+        language: 'ru',
+        format: 'DD.MM',
+        //changeYear: false,
+        pickTime: false
+                // autoclose: true
+    });
+
+    $('#date_start_rep4').on("dp.change", function (e) {
+        $('#date_end_rep4').data("DateTimePicker").setMinDate(e.date);
+    });
+
+    $('#date_end_rep4').on("dp.change", function (e) {
+        $('#date_start_rep4').data("DateTimePicker").setMaxDate(e.date);
+    });
+
+
+    /* END report 4 */
+
+
 
 });
 

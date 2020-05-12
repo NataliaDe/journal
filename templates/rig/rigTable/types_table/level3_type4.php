@@ -5,27 +5,50 @@
 
     }
 
-    .sily_mchs_table_small tbody td{
-        padding: 0px 6px 0px 6px !important;
-    }
-        .sily_mchs_table_small  tr{
-       background-color: beige !important;
-    }
 
     .teh-cell{
-            font-size: 13px !important;
-            text-align: left !important;
+        font-size: 12px !important;
+        text-align: left !important;
+        padding-left: 2px !important;
+        padding-right: 2px !important;
+
     }
     .teh-head{
-       color:  blue !important;
+        color:  blue !important;
     }
+
+    .time-cell{
+        /*        text-align: left !important;*/
+    }
+
+
+
+    #selrigFormType42,#selrigFormType413,#selrigFormType415,#selrigFormType416,#inptrigFormType414{
+        width: 91px;
+    }
+    #inptrigFormType40,#inptrigFormType45,#inptrigFormType46,#inptrigFormType47,#inptrigFormType48,
+    #inptrigFormType49,#inptrigFormType410,#inptrigFormType411,#inptrigFormType412{
+        width: 50px;
+    }
+    #inptrigFormType41{
+        width: 77px;
+    }
+    #inptrigFormType43{
+        width: 120px;
+    }
+    #inptrigFormType44{
+        width: 340px;
+    }
+
+
+
 
 </style>
 
-    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 
-    <link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-    <script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
+<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
+<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
 <link href="https://nightly.datatables.net/fixedheader/css/fixedHeader.dataTables.css?_=f0de745b101295e88f1504c17177ff49.css" rel="stylesheet" type="text/css" />
 <script src="https://nightly.datatables.net/fixedheader/js/dataTables.fixedHeader.js?_=f0de745b101295e88f1504c17177ff49"></script>
 
@@ -34,8 +57,8 @@
     <b> Выберите столбец, чтобы скрыть/отобразить:  </b>
     <b>
 
-        <a class="toggle-vis-rig-table-type2" id="toggle-vis-rig-table-type1-0"  data-column="0" style="background-color: #fdee8d;  color: black">ID</a>&nbsp&nbsp
-        <a class="toggle-vis-rig-table-type2" id="toggle-vis-rig-table-type1-13"  data-column="16" style="background-color: #fdee8d;  color: black">Автор создания</a>
+        <a class="toggle-vis-rig-table-type4" id="toggle-vis-rig-table-type1-0"  data-column="0" style="background-color: #fdee8d;  color: black">ID</a>&nbsp&nbsp
+        <a class="toggle-vis-rig-table-type4" id="toggle-vis-rig-table-type1-13"  data-column="16" style="background-color: #fdee8d;  color: black">Автор создания</a>
 
     </b>
 
@@ -44,38 +67,34 @@
 <!--таблица выездов для уровня 3 и для уровня 2 (УМЧС) -->
 <br>
 <?php
-include dirname(dirname(__FILE__))  . '/header_rig_table.php';
-//print_r($result_icons);
+include dirname(dirname(__FILE__)) . '/header_rig_table.php';
+//print_r($rig_cars);exit();
 
 ?>
-<table class="table table-condensed   table-bordered table-custom " id="rigTableType2" style="width: 50%;" >
+<table class="table table-condensed   table-bordered table-custom " id="rigTableType4" style=" font-size: 12px" >
     <!-- строка 1 -->
     <thead>
         <tr>
             <th style="width:40px;">ID</th>
-<!--            <th></th>-->
-            <th style="width:57px;">Дата<br>Время</th>
-<!--            <th style="width:45px;">Время</th>-->
+
+            <th style="width:57px;">Дата</th>
             <th style="width:80px;">Район</th>
             <th style="width:120px;">Адрес<br>(объект)</th>
-<!--            <th style="width:120px;" >Привлекаемые подразделения</th>-->
-            <th style="width:224px !important;">Привлекаемая<br>техника</th>
+            <th style="width:224px !important;">Привлекаемая СиС МЧС, других ведомств.<br>
+                Информирование должностных лиц, аварийных служб</th>
 
+            <th style="width:80px;">Время<br>инф.<br>должн. лиц,<br>авар.<br>служб</th>
+            <th style="width:80px;">Время сообщ. о ЧС</th>
             <th style="width:45px;" class="teh-head">Выезд</th>
-            <th style="width:45px;" class="teh-head">Приб.</th>
-
+            <th style="width:45px;" class="teh-head">Приб. к месту ЧС</th>
             <th style="width:40px;">Время лок.</th>
             <th style="width:40px;">Время ликв.</th>
-
-            <th style="width:45px;" class="teh-head">След.</th>
-            <th style="width:45px;" class="teh-head">Оконч.<br>работ</th>
             <th style="width:45px;" class="teh-head">Возв.</th>
-            <th style="width:45px;" class="teh-head">Расст, км</th>
+            <th style="width:45px;" class="teh-head">Расст. до места ЧС, км</th>
 
-<!--            <th style="width:77px;">Этажность/этаж</th>-->
-            <th style="width:125px;" ></th>
             <th style="width:90px;">Причина вызова</th>
-            <th style="width:240px;">Детализированная информация</th>
+            <th style="width:240px;">Детализ.<br>информация</th>
+            <th style="width:90px;">Вид<br>работ</th>
 
             <th style="width:30px;">Созда-<br>тель</th>
             <th style="width:20px;">Ред./Уд.</th>
@@ -87,18 +106,15 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
     <tfoot>
         <tr>
             <th></th>
-<!--            <th></th>-->
             <th></th>
-<!--            <th>Время</th>-->
             <th >Район</th>
             <th>Адрес объекта</th>
-<!--            <th></th>-->
-            <th></th>
-<!--            <th>Этажность/этаж</th>-->
-                        <th></th>
             <th></th>
             <th></th>
-                        <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
             <th></th>
             <th></th>
             <th></th>
@@ -107,7 +123,7 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
             <th></th>
             <th></th>
             <th></th>
-            <th></th>
+
 
         </tr>
     </tfoot>
@@ -118,18 +134,22 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
             foreach ($rig as $row) {
                 $i++;
 
-                if ($row['time_loc'] != NULL) {
+                if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
                     $t_loc = new DateTime($row['time_loc']);
                     $time_loc = $t_loc->Format('H:i');
                 } else {
-                    $time_loc = '00:00';
+                    $time_loc = '';
                 }
 
-                if ($row['time_likv'] != NULL) {
+                if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
                     $t_likv = new DateTime($row['time_likv']);
                     $time_likv = $t_likv->Format('H:i');
+                } elseif ($row['is_likv_before_arrival'] == 1) {
+                    $time_likv = 'ликв.до прибытия';
+                } elseif ($row['is_closed'] == 1) {
+                    $time_likv = 'не учитывать даты';
                 } else {
-                    $time_likv = '00:00';
+                    $time_likv = '';
                 }
 
 
@@ -154,42 +174,55 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                             ?>
-                           !&nbsp; <i class="fa fa-share" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Выезд в соседний гарнизон"></i>
+                            !&nbsp; <i class="fa fa-share" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Выезд в соседний гарнизон"></i>
                             <?php
                         }
 
                         ?>&nbsp;
-                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">       <?= $row['id'] ?></a></td>
+                        <a href="<?= $baseUrl ?>/card_rig/0/<?= $row['id'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова">       <?= $row['id'] ?></a>
+                    </td>
 
 
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" id="<?= $row['id'] ?>" ><?= date('d.m.Y', strtotime($row['date_msg'])) ?><br><?= $row['time_msg'] ?>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" id="<?= $row['id'] ?>" >
+                        <?= date('d.m.Y', strtotime($row['date_msg'])) ?>
+
 
                         <?php
-                                if ($row['is_closed'] == 0) {//пожар не закрыт
-                                    if (!empty($row['empty_fields'])) {
+                        if ($row['is_copy'] == 1) {
 
-                                        ?>
-                                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
-                                           title="Вызов не закрыт. Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
-                                           <?php
-                                       } else {
-
-                                           ?>
-                                        <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
-                                        <?php
-                                    }
-                                } elseif (!empty($row['empty_fields'])) {
-
-                                    ?>
-                                    <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
-                                       title="Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
-                                    <?php
-                                }
+                            ?>
+                            <i class="fa fa-copyright" style="font-weight:600; color: red" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов создан по шаблону: ID = <?= $row['copy_rig_id'] ?>"></i>
+                            <br>
+                            <?php
+                        }
 
                         ?>
 
+                        <?php
+                        if ($row['is_closed'] == 0) {//пожар не закрыт
+                            if (!empty($row['empty_fields'])) {
 
-                                        <!--                        is update rig now-->
+                                ?>
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
+                                   title="Вызов не закрыт. Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
+                                   <?php
+                               } else {
+
+                                   ?>
+                                <i class="fa fa-exclamation-triangle" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Вызов не закрыт"></i>
+                                <?php
+                            }
+                        } elseif (!empty($row['empty_fields'])) {
+
+                            ?>
+                            <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red" data-toggle="tooltip" data-placement="right"
+                               title="Не заполнены поля: <?= implode(', ', $row['empty_fields']) ?>"></i>
+                               <?php
+                           }
+
+                           ?>
+
+                        <!--                        is update rig now-->
             <center>
                 <div  id="is_update_rig_now_<?= $row['id'] ?>">
 
@@ -206,430 +239,530 @@ include dirname(dirname(__FILE__))  . '/header_rig_table.php';
             <!--              END          is update rig now-->
 
 
-                    </td>
-<!--                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['time_msg'] ?></td>-->
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?>
+        </td>
 
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <?= $row['local_name'] ?>
 
+        </td>
 
-                    </td>
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-                        <!--                            если адрес пуст-выводим дополнит поле с адресом-->
-                        <?php
-                        if ($row['address'] != NULL) {
-                            echo $row['address'] . '<br>' . $row['additional_field_address'];
-                        } else {
-                            echo $row['additional_field_address'];
-                        }
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <!--                            если адрес пуст-выводим дополнит поле с адресом-->
+            <?php
+            if ($row['address'] != NULL) {
+                echo $row['address'] . '<br>' . $row['additional_field_address'];
+            } else {
+                echo $row['additional_field_address'];
+            }
 
 
 
-                        if (!empty($row['object'])) {
-                            echo '<br>';
-                            echo '(' . $row['object'] . ')';
-                        }
-
-                        ?>
-                    </td>
-
-
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?> teh-cell" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($teh_mark[$row['id']]) && !empty($teh_mark[$row['id']])) {
-
-                                    foreach ($teh_mark[$row['id']] as $si) {
-
-                                        //echo $si;
-                                        //echo '<br>';
-                                       ?>
-                        <p><?= $si  ?></p>
-                        <?php
-
-
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($exit_time[$row['id']]) && !empty($exit_time[$row['id']])) {
-
-                                    foreach ($exit_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                        ?>
-                         <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время выезда"><?= $si ?></p>
-
-                         <?php
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($arrival_time[$row['id']]) && !empty($arrival_time[$row['id']])) {
-
-                                    foreach ($arrival_time[$row['id']] as $si) {
-
-                                        //echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                        <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Локализация"><?= $time_loc ?></span></td>
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Ликвидация"><?= $time_likv ?></span></td>
-
-
-                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($follow_time[$row['id']]) && !empty($follow_time[$row['id']])) {
-
-                                    foreach ($follow_time[$row['id']] as $si) {
-
-                                        //echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                     ?>
-                         <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время следования"><?= $si ?></p>
-                         <?php
-
-
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($end_time[$row['id']]) && !empty($end_time[$row['id']])) {
-
-                                    foreach ($end_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                        //echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-<p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время окончания работ"><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($return_time[$row['id']]) && !empty($return_time[$row['id']])) {
-
-                                    foreach ($return_time[$row['id']] as $si) {
-
-                                       // echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                     <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время возвращения"><?= $si ?></p>
-                     <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                        <?php
-                        //            short on technic
-                        if (isset($distance[$row['id']]) && !empty($distance[$row['id']])) {
-
-                                    foreach ($distance[$row['id']] as $si) {
-
-                                       // echo $si;
-                                       // echo '<br>';
-                                        // if(isset($i['time_exit']) && !empty($i['time_exit']))
-                                        ?>
-                        <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Расстояние, км."><?= $si ?></p>
-                        <?php
-                                    }
-                                }
-
-                                ?>
-
-
-                    </td>
-
-
-
-
-
-
-
-
-
-                <!--                    <td>< $row['floor'] ?></td>-->
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-        <?php
-        /* id of rigs, where silymschs/innerservice are not selected */
-        if (isset($result_icons['car']) && in_array($row['id'], $result_icons['car']) && $row['is_sily_mchs'] != 1) {
+            if (!empty($row['object'])) {
+                echo '<br>';
+                echo '(' . $row['object'] . ')';
+            }
 
             ?>
-                            <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank" style="color: #c51a05 !important">
-                            <?php
-                        } else {
-
-                            ?>
-                                <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>/2" target="_blank">
-                                <?php
-                            }
-
-                            ?>
-                                <i class="fa fa-lg fa-car" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Техника"></i></a>
-
-
-                            <?php
-/* id of rigs, where silymschs/innerservice are not selected */
-                                                        if($row['id_reasonrig'] == 18) {//zanytia
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
-                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не требует заполнения для указанной причины выезда."></i></a>
-                                    <?php
-                                }
-                                elseif (isset($result_icons['informing']) && in_array($row['id'], $result_icons['informing'])) {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
-                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не заполнено."></i></a>
-                                    <?php
-                                } elseif (isset($not_full_info) && in_array($row['id'], $not_full_info)) {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank"  style="color: #f39c12 !important">
-                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Заполнено частично."></i></a>
-                                    <?php
-                                } else {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
-                                        <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
-                                    <?php
-                                }
-
-                                ?>
-                                <?php
-                                /* id of rigs, where silymschs/innerservice are not selected */
-                                if (isset($result_icons['character']) && in_array($row['id'], $result_icons['character'])) {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank" style="color: #c51a05 !important">
-                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
-                                    <?php
-                                } elseif (isset($not_full_sily) && in_array($row['id'], $not_full_sily)) {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank"  style="color: #f39c12 !important">
-                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики. Не заполнено время возвращения"></i></a>
-                                    <?php
-                                } else {
-
-                                    ?>
-                                    <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
-                                        <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
-                                    <?php
-                                }
-
-                                ?>
-
-                                 <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
-                                <i class="fa fa-lg fa-male" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
-
-                                  <a href="<?= $baseUrl ?>/trunk/<?= $row['id'] ?>" target="_blank">
-                                <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Подача стволов" style="color: <?= (isset($trunk_by_rig) && isset($trunk_by_rig[$row['id']]) && !empty($trunk_by_rig[$row['id']])) ? 'green':''?>"></i></a>
+        </td>
 
 
 
-                                    <!--                        путевка-->
-                                    <br><br>
-                                    <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >
-                                        <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa  fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
-                                        <ul class="dropdown-menu" id="waybill-menu">
-                                            <?php
-                                            // if ($_SESSION['ulevel'] == 1) {
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?> teh-cell" >
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
 
-                                            ?>
+                foreach ($rig_cars[$row['id']] as $val) {
 
-                                            <!--                          <li class="dropdown-submenu">
-                                                                          <a tabindex="-1" href="<?= $baseUrl ?>/waybill/mail/<?= $row['id'] ?>" class="caret-spr_inf" target="_blank"><i class="fa fa-envelope-open-o" aria-hidden="true" style="color:blue"></i>Отправить на почту (pdf)</a>
-                                                                    </li>-->
-
-                                            <li class="dropdown-submenu">
-                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf)</a>
-                                            </li>
-
-                                            <li class="dropdown-submenu">
-                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/0" class="caret-spr_inf" target="_blank"><i class="fa fa-print" aria-hidden="true"></i>Печать (pdf + меры)</a>
-                                            </li>
-                                            <?php
-                                            // }
-
-                                            ?>
-
-                                            <li class="dropdown-submenu">
-                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/0/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf)</a>
-                                            </li>
-
-                                            <li class="dropdown-submenu">
-                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/html_pdf_print/<?= $row['id'] ?>/1/1" class="caret-spr_inf" ><i class="fa fa-file-pdf-o" aria-hidden="true" style="color:red;"></i> Скачать (pdf + меры)</a>
-                                            </li>
-
-                                            <li class="dropdown-submenu">
-                                                <a tabindex="-1" href="<?= $baseUrl ?>/waybill/excel_download/<?= $row['id'] ?>" class="caret-spr_inf" ><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green;"></i>Скачать (excel)</a>
-                                            </li>
+                    ?>
+                    <p><?= $val['mark'] ?><?= ' ' . $val['pasp_name'] ?><?= ' ' . $val['locorg_name'] ?></p>
+                    <?php
+                }
+            }
 
 
-                                        </ul>
-                                    </ul>
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                    ?>
+                    <p><?= $val['service_name'] ?></p>
+                    <?php
+                }
+            }
+
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                $loop = 0;
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    $loop++;
+
+                    $length_name = mb_strlen($val['fio'], 'utf-8');
+
+                    if ($length_name > 50) {
+
+                        $part_name = mb_substr($val['fio'], 0, 50, 'utf-8');
+
+                        ?>
+                        <span id="span_inf<?= $loop ?>">
+                            <p><?= $part_name ?>
+                                <span onclick="see_informing(<?= $loop ?>);" data-toggle="collapse" data-target="#collapse_inf<?= $loop ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="<?= $val['fio'] ?>">
+                                    <b>...</b>
+                                </span>
+                            </p>
+                        </span>
+                        <p id="collapse_inf<?= $loop ?>" class="panel-collapse collapse">
+                            <?= $val['fio'] ?>     <span onclick="see_informing(<?= $loop ?>);" data-toggle="collapse" data-target="#collapse_inf<?= $loop ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
+                        </p>
+                        <?php
+                    } else {
+
+                        ?>
+                        <p><?= $val['fio'] ?></p>
+                        <?php
+                    }
+
+                    ?>
+
+                    <?php
+                }
+            }
+
+            ?>
+        </td>
+
+
+        <td class=" time-cell <?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                foreach ($rig_cars[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время информирования">
+                        -
+
+                    </p>
+                    <?php
+                }
+            }
+
+
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время информирования"><?= ($val['time_msg'] != null) ? date('H:i', strtotime($val['time_msg'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время информирования"><?= ($val['time_msg'] != null) ? date('H:i', strtotime($val['time_msg'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+            ?>
+
+
+        </td>
+
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время сообщения о ЧС"><?= date('H:i', strtotime($row['time_msg'])) ?></p>
+        </td>
+
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                foreach ($rig_cars[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время выезда"><?= ($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время выезда">-</p>
+                    <?php
+                }
+            }
+
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время выезда"><?= ($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+            ?>
+
+
+        </td>
+
+
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                foreach ($rig_cars[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия">
+                        <?= ($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '') ?>
+                    </p>
+                    <?php
+                }
+            }
+
+
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '' ?></p>
+                    <?php
+                }
+            }
+
+            ?>
+
+
+        </td>
 
 
 
 
-                                    </td>
-                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['reasonrig_name'] ?></td>
-                                    <?php
-                                    $mb_str_len = mb_strlen($row['inf_detail'], 'utf-8');
-                                    if ($mb_str_len >= 100) {// обрезать текст
-                                        $locex = mb_substr($row['inf_detail'], 0, 80, 'utf-8');
-
-                                        ?>
-
-                                        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"   ><span id="sp<?= $i ?>"><?= $locex ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="Читать далее"><b>...</b></span></span>
-                                            <p id="collapse<?= $i ?>" class="panel-collapse collapse">
-            <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
-                                            </p>
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Локализация">
+                <?= $time_loc ?>
+            </span>
+        </td>
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <span aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Ликвидация">
+                <?= $time_likv ?>
+            </span>
+        </td>
 
 
 
 
-                                        </td>
-                                        <?php
-                                    } else {// не обрезать
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 
-                                        ?>
-                                        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span> </td>
-                                        <?php
-                                    }
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                foreach ($rig_cars[$row['id']] as $val) {
 
-                                    ?>
-
-                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?></td>
-
-                                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
-
-                                        <?php
-                                        if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
-
-                                            ?>
-<!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
-                                           <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
- <?php
-                                        } else {
-
-                                            ?>
- <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
- <a href="<?= $baseUrl ?>/rig/delete/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Удалить вызов"></i></button></a>
-                                                    <?php
-                                                }
-
-                                                ?>
-
-                                    </td>
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время возвращения"><?= ($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '' ?></p>
+                    <?php
+                }
+            }
 
 
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
 
-                                    </tr>
-                                    <?php
-                                }
-                            }
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время возвращения">-</p>
+                    <?php
+                }
+            }
 
-                            ?>
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время возвращения">-</p>
+                    <?php
+                }
+            }
+
+            ?>
+
+
+        </td>
 
 
 
-                            </tbody>
-                            </table>
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+            <?php
+            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                foreach ($rig_cars[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Расстояние, км."><?= $val['distance'] ?></p>
+                    <?php
+                }
+            }
+
+
+            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Расстояние, км."><?= $val['distance'] ?></p>
+                    <?php
+                }
+            }
+
+            if (isset($rig_informing[$row['id']]) && !empty($rig_informing[$row['id']])) {
+                foreach ($rig_informing[$row['id']] as $val) {
+
+                    ?>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Расстояние, км.">-</p>
+                    <?php
+                }
+            }
+
+            ?>
+
+
+        </td>
+
+
+
+
+
+
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+            <?= $row['reasonrig_name'] ?>
+        </td>
+
+
+        <?php
+        $mb_str_len = mb_strlen($row['inf_detail'], 'utf-8');
+        if ($mb_str_len >= 100) {// обрезать текст
+            $locex = mb_substr($row['inf_detail'], 0, 80, 'utf-8');
+
+            ?>
+
+            <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"   >
+                <span id="sp<?= $i ?>">
+                    <?= $locex ?>
+                    <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" style="cursor: pointer" data-toggle="tooltip" data-placement="left" title="Читать далее">
+                        <b>...</b>
+                    </span>
+                </span>
+                <p id="collapse<?= $i ?>" class="panel-collapse collapse">
+                    <?= $row['inf_detail'] ?>     <span onclick="see(<?= $i ?>);" data-toggle="collapse" data-target="#collapse<?= $i ?>" data-toggle="tooltip" data-placement="left" title="Свернуть" style="cursor: pointer"><b>...</b></span>
+                </p>
+
+
+
+
+            </td>
+            <?php
+        } else {// не обрезать
+
+            ?>
+            <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span> </td>
+            <?php
+        }
+
+        ?>
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>">
+            <?= $row['view_work'] ?>
+        </td>
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>">
+            <?= $row['auth_locorg'] ?>
+        </td>
+
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
+            <?php
+            if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
+
+                ?>
+                                                                                    <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
+                <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa <?= ($_SESSION['can_edit'] == 0) ? 'fa-eye' : 'fa-pencil' ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
+                <?php
+            } else {
+
+                ?>
+                <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank" > <button class="btn btn-xs btn-warning " type="button"><i class="fa <?= ($_SESSION['can_edit'] == 0) ? 'fa-eye' : 'fa-pencil' ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
+                <br><br>
+                <a class="<?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" href="<?= $baseUrl ?>/rig/delete/<?= $row['id'] ?>" target="_blank" > <button class="btn btn-xs btn-danger" type="button"><i class="fa fa-trash" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Удалить вызов"></i></button></a>
+
+
+                <?php
+            }
+
+            ?>
+            <br><br>
+            <a  href="#" class="create-copy-link <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal-create-copy" data-id="<?= $row['id'] ?>" data-url="<?= $baseUrl ?>/copy_rig/<?= $row['id'] ?>"  aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Создать копию выезда" > <button class="btn btn-xs btn-info" type="button"><i class="fa fa-copy" ></i></button></a>
+        </td>
+
+
+
+        </tr>
+        <?php
+    }
+}
+
+?>
+
+
+
+</tbody>
+</table>
+
+
 
 
 
 <script>
 
-    $(document).ready(function() {
-    // Setup - add a text input to each footer cell
-    $('#example thead tr:eq(1) th').each( function () {
-        var title = $(this).text();
-        $(this).html( '<input type="text" placeholder="Search '+title+'" class="column_search" />' );
-    } );
+    $(document).ready(function () {
 
-    // DataTable
-    var table = $('#example').DataTable({
-      orderCellsTop: true,
-      fixedHeader: true,
-      pageLength: 100
+        var rig_table_vis_type4 = $('#rigTableType4').DataTable({
+            //fixedHeader: true,
+            // fixedHeader: {
+            //header: true,
+            //  footer:true
+            //headerOffset: 15
+            //$('#fixed').height()
+            //  },
+//           "fixedHeader": {
+//      header: true
+//    },
+            orderCellsTop: true,
+            fixedHeader: true,
+
+            "pageLength": 50,
+            "order": [],
+            language: {
+                "processing": "Подождите...",
+                "search": "Поиск:",
+                "lengthMenu": "Показать _MENU_ записей",
+                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                "infoPostFix": "",
+                "loadingRecords": "Загрузка записей...",
+                "zeroRecords": "Записи отсутствуют.",
+                "emptyTable": "В таблице отсутствуют данные",
+                "paginate": {
+                    "first": "Первая",
+                    "previous": "Предыдущая",
+                    "next": "Следующая",
+                    "last": "Последняя"
+                },
+                "aria": {
+                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                    "sortDescending": ": активировать для сортировки столбца по убыванию"
+                }
+
+            }
+//                                 "columnDefs": [
+//            {
+//                "targets": [ 13 ],
+//                "visible": false
+//            }
+//        ]
+        });
+
+        $("tfoot").css("display", "table-header-group");//tfoot of table
+
+
+        $('a.toggle-vis-rig-table-type4').on('click', function (e) {
+            e.preventDefault();
+
+            // Get the column API object
+            var column_type4 = rig_table_vis_type4.column($(this).attr('data-column'));
+
+            // Toggle the visibility
+            column_type4.visible(!column_type4.visible());
+
+
+        });
+
+
+        $('#rigTableType4 tfoot th').each(function (i) {
+            var table = $('#rigTableType4').DataTable();
+            if (i != 17) {
+
+                if (i == 15 || i == 16 || i == 13 || i == 2) {
+                    //выпадающий список
+                    var y = 'rigFormType4';
+                    var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                            .appendTo($(this).empty())
+                            .on('change', function () {
+
+                                var val = $(this).val();
+
+                                table.column(i) //Only the first column
+                                        .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                        .draw();
+                            });
+
+                    var x = $('#rigTableType4 tfoot th').index($(this));
+                    table.column(i).data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '" >' + d + '</option>');
+                    });
+
+
+                } else {
+                    var title = $('#rigTableType4 tfoot th').eq($(this).index()).text();
+                    var x = $('#rigTableType4 tfoot th').index($(this));
+                    var y = 'rigFormType4';
+                    //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                    $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                    // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+                }
+
+            }
+        });
+        $("#rigTableType4 tfoot input").on('keyup change', function () {
+            var table = $('#rigTableType4').DataTable();
+            table
+                    .column($(this).parent().index() + ':visible')
+                    .search(this.value)
+                    .draw();
+        });
+
     });
 
-// Apply the search
-    $( '#example thead'  ).on( 'keyup', ".column_search",function () {
 
-        table
-            .column( $(this).parent().index() )
-            .search( this.value )
-            .draw();
-    } );
 
-} );
-    </script>
+    function see_informing(i) {// скрыть/показать детализ инф в табл выездов
+
+        var p = document.getElementById('span_inf' + i);
+
+        if (p.style.display == "none") {
+            p.style.display = "block";
+
+        } else {
+            p.style.display = "none";
+        }
+
+    }
+</script>
 
 
 

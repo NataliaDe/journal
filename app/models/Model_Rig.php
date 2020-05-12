@@ -30,8 +30,8 @@ class Model_Rig {
 
                             /*             * * проверка на вшивость Время сообщения  ** */
             if (isset($x['time_msg']) && !empty($x['time_msg'])) {
-                if ($this->isDateTimeValid($x['time_msg'], "Y-m-d H:i:s")) {
-                   $y['time_msg'] = $x['time_msg'];
+                if ($this->isDateTimeValid($x['time_msg'], "Y-m-d H:i")) {
+                   $y['time_msg'] = $x['time_msg'].':00';
                 } else {
                     $y['time_msg'] = date("Y-m-d H:i:s");
                 }
@@ -66,9 +66,11 @@ class Model_Rig {
           $y['is_opg'] = (isset($x['is_opg']) && !empty($x['is_opg'])) ? intval($x['is_opg']) : 0;
           $y['opg_text'] = (isset($y['is_opg']) && $y['is_opg'] == 1 ) ? $x['opg_text'] : NULL;//если не отмечен чекбокс-не записываем в БД описание
 
-          if(isset($y['id_reasonrig']) && $y['id_reasonrig'] == 18) {// zanyatia
+          if(isset($y['id_reasonrig']) && ($y['id_reasonrig'] == 18 || $y['id_reasonrig'] == 47 || $y['id_reasonrig'] == 75)) {// zanyatia, hoz work, ptv
               $y['podr_zanytia'] = (isset($x['podr_zanytia']) && !empty($x['podr_zanytia'])) ? $x['podr_zanytia'] : 0;
           }
+
+          $y['fio_head_check'] = (isset($x['fio_head_check']) && !empty($x['fio_head_check'])) ? trim($x['fio_head_check']) : '';
 
 
         return $y;
@@ -179,7 +181,7 @@ class Model_Rig {
 
 
         //время ликв д б больше вр лакализации
-        if( $y['time_loc']!= NULL && $y['time_likv'] != NULL && $y['time_loc'] >$y['time_likv'] ){
+        if( isset($y['time_loc']) && $y['time_loc']!= NULL && isset($y['time_likv']) && $y['time_likv'] != NULL && $y['time_loc'] >$y['time_likv'] ){
              $error['time_loc_likv'] = ' Время ликвидации не может превышать время локализации ';
 //            $a=$y['time_loc'] ;
 //            $y['time_loc'] =$y['time_likv'] ;

@@ -66,7 +66,7 @@ include 'parts/ghost_msg.php';
 
 
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
-    <input type="hidden" name="MAX_FILE_SIZE" value="300000" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
 
     <?php

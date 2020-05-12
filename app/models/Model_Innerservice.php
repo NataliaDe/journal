@@ -1,19 +1,19 @@
 <?php
-
 /**
  * Object model mapping for relational table `ss.regions`
  */
-
 namespace App\MODELS;
 
 use \RedBeanPHP\Facade as R;
 
-class Model_Innerservice {
+class Model_Innerservice
+{
 
     public $id;
     public $id_rig;
 
-    public function setIdRig($id_rig) {
+    public function setIdRig($id_rig)
+    {
         $this->id_rig = $id_rig;
     }
 
@@ -22,28 +22,28 @@ class Model_Innerservice {
 //
 //    }
 
-    public function getPOSTData() {
+    public function getPOSTData()
+    {
         $x = $_POST['service'];
-        $y=array();
-		$error=array();
+        $y = array();
+        $error = array();
 
         foreach ($x as $key => $value) {
             //не учитывать,если служба не выбрана
             if ($x [$key]['id_service'] == '') {
                 unset($x[$key]);
-            }
-            else{
+            } else {
 
                 $y[$key]['id'] = intval($x [$key]['id']);
 
-                 $y[$key]['id_service'] = intval($x [$key]['id_service']); // id of service- int
-                 $y[$key]['distance'] = intval($x [$key]['distance']);
-                 $y[$key]['note'] = intval($x [$key]['note']);
+                $y[$key]['id_service'] = intval($x [$key]['id_service']); // id of service- int
+                $y[$key]['distance'] = intval($x [$key]['distance']);
+                $y[$key]['note'] = $x [$key]['note'];
 
-                                /*                 * * проверка на вшивость Время сообщения  ** */
+                /*                 * * проверка на вшивость Время сообщения  ** */
                 if (isset($x [$key]['time_msg']) && !empty($x [$key]['time_msg'])) {
                     if ($this->isDateTimeValid($x [$key]['time_msg'], "Y-m-d H:i") == true) {
-                        $y[$key]['time_msg'] = $x [$key]['time_msg'].':00';
+                        $y[$key]['time_msg'] = $x [$key]['time_msg'] . ':00';
                     } else {
                         $error['time_msg'] = ' Поле "Время сообщения" должно быть датой. Формат без секунд! ';
                     }
@@ -52,10 +52,10 @@ class Model_Innerservice {
                 }
                 /*                 * * END проверка на вшивость Время сообщения  ** */
 
-                                /*                 * * проверка на вшивость Время прибытия  ** */
+                /*                 * * проверка на вшивость Время прибытия  ** */
                 if (isset($x [$key]['time_arrival']) && !empty($x [$key]['time_arrival'])) {
                     if ($this->isDateTimeValid($x [$key]['time_arrival'], "Y-m-d H:i") == true) {
-                        $y[$key]['time_arrival'] = $x [$key]['time_arrival'].':00';
+                        $y[$key]['time_arrival'] = $x [$key]['time_arrival'] . ':00';
                     } else {
                         $error['time_arrival'] = ' Поле "Время прибытия" должно быть датой. Формат без секунд! ';
                     }
@@ -64,30 +64,31 @@ class Model_Innerservice {
                 }
                 /*                 * * END проверка на вшивость Время прибытия  ** */
 
-                     //Время сообщения не может превышать время прибытия
-                  if(isset($y[$key]['time_msg']) && $y[$key]['time_msg'] != NULL && isset($y[$key]['time_arrival']) && $y[$key]['time_arrival'] != NULL ){
-                        if ($y[$key]['time_msg'] > $y[$key]['time_arrival']) {
-                    $error['time_exit_arrival'] = ' Время сообщения не может превышать время прибытия ';
+                //Время сообщения не может превышать время прибытия
+                if (isset($y[$key]['time_msg']) && $y[$key]['time_msg'] != NULL && isset($y[$key]['time_arrival']) && $y[$key]['time_arrival'] != NULL) {
+                    if ($y[$key]['time_msg'] > $y[$key]['time_arrival']) {
+                        $error['time_exit_arrival'] = ' Время сообщения не может превышать время прибытия ';
+                    }
                 }
-                  }
             }
         }
-           $y['error'] = $error;
+        $y['error'] = $error;
 
         return $y;
     }
 
-        //проверка на формат дата-время
-    public function isDateTimeValid($field,$format) {
-                $t_exit = \DateTime::createFromFormat($format, $field);
-                if($t_exit)
-                    return true;
-                else
-                    return false;
-
+    //проверка на формат дата-время
+    public function isDateTimeValid($field, $format)
+    {
+        $t_exit = \DateTime::createFromFormat($format, $field);
+        if ($t_exit)
+            return true;
+        else
+            return false;
     }
 
-    public function save($array, $id_rig) {
+    public function save($array, $id_rig)
+    {
 
         $this->setIdRig($id_rig);
 
@@ -126,41 +127,39 @@ class Model_Innerservice {
                 //если на форме было > служб, чем в БД- добавить оставшихся
                 if (!empty($array)) {
                     foreach ($array as $key => $value) {
-                        if(!empty($value)){
-                        //новая служба
-                        $this->updateById($value);
-
+                        if (!empty($value)) {
+                            //новая служба
+                            $this->updateById($value);
                         }
-
                     }
                 }
 
                 //удалить из БД оставшихся-лишних, (если на форме выбрано меньше служб, чем было в БД)
                 if (!empty($service_from_bd)) {
                     //очистить
-                   $this->deleteById($service_from_bd);
+                    $this->deleteById($service_from_bd);
                 }
             } else {//в БД было пусто
                 //добавление
                 foreach ($array as $value) {
-                      if(!empty($value)){
-                                              //новая служба
-                    $this->updateById($value);
-                      }
-
+                    if (!empty($value)) {
+                        //новая служба
+                        $this->updateById($value);
+                    }
                 }
             }
         }
-                //exit();
+        //exit();
     }
 
-    public function selectAllByIdRig($id_rig) {
+    public function selectAllByIdRig($id_rig)
+    {
         $this->setIdRig($id_rig);
-    return R::getAll('SELECT * FROM journal.innerservice WHERE id_rig = ?', array($this->id_rig));
-
+        return R::getAll('SELECT * FROM journal.innerservice WHERE id_rig = ?', array($this->id_rig));
     }
 
-    public function updateById($array) {
+    public function updateById($array)
+    {
 
         $innerservice = R::findOne('innerservice', 'id = ? ', [$array['id']]);
 
@@ -174,15 +173,16 @@ class Model_Innerservice {
         R::store($innerservice);
     }
 
-    function deleteById($array) {
+    function deleteById($array)
+    {
         foreach ($array as $key => $value) {
             $s = R::load('innerservice', $value['id']);
             R::trash($s);
         }
     }
 
-
-    public function selectAllInIdRig($id_rig) {
+    public function selectAllInIdRig($id_rig)
+    {
 
         $str_id_rig = implode(',', $id_rig);
         $new_result = array();
@@ -197,15 +197,26 @@ class Model_Innerservice {
         return $new_result;
     }
 
+    public function selectAllForCard($id_rig)
+    {
 
-
-    public function selectAllForCard($id_rig) {
-
-        $result = R::getAll('SELECT i.id,i.id_rig, i.time_msg, i.time_arrival, i.distance, i.note, s.name as service_name FROM innerservice as i left join service as s ON s.id=i.id_service WHERE i.id_rig =  ' . $id_rig );
+        $result = R::getAll('SELECT i.id,i.id_rig, i.time_msg, i.time_arrival, i.distance, i.note, s.name as service_name FROM innerservice as i left join service as s ON s.id=i.id_service WHERE i.id_rig =  ' . $id_rig);
 
         return $result;
     }
 
+    public function copy_innerservice($array)
+    {
+        $sily = R::dispense('innerservice');
+        $sily->import($array);
+        R::store($sily);
+    }
+
+    public function get_innerservice_by_rigs($ids_rig)
+    {
+        $res = R::getAll('SELECT i.id_rig, i.time_msg, i.time_arrival, i.distance, i.note, s.name as service_name FROM innerservice as i left join service as s ON s.id=i.id_service WHERE i.id_rig IN (  ' . implode(',', $ids_rig) . ')');
+        return $res;
+    }
 }
 
 ?>

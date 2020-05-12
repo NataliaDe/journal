@@ -104,7 +104,7 @@
                         <?php
                     }
                     ?>
-                       
+
                     </div>
                 </div>
                 <?php
@@ -132,11 +132,11 @@
                         <?php
                         if (isset($user['can_edit']) && $user['can_edit'] == 1) {
                             ?>
-                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" checked="" >   
+                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" checked="" >
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" >                  
+                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" >
                             <?php
                         }
                         ?>
@@ -157,7 +157,7 @@
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox2" type="checkbox" name="is_admin" value="1" >                 
+                            <input id="checkbox2" type="checkbox" name="is_admin" value="1" >
                             <?php
                         }
                         ?>
@@ -179,7 +179,7 @@
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox3" type="checkbox" name="auto_ate" value="1" >             
+                            <input id="checkbox3" type="checkbox" name="auto_ate" value="1" >
                             <?php
                         }
                         ?>
@@ -194,7 +194,7 @@
         </div>
 <!---------------------- Адрес выезда, заполняемый по умолчанию --------------------------------------->
         <p class="line"><span>Адрес выезда, заполняемый по умолчанию</span></p>
-        
+
             <div class="col-lg-2">
         <div class="form-group" name="local">
             <label for="id_local">Район/Город</label>
@@ -215,7 +215,7 @@
 
         </div>
     </div>
-        
+
         <div class="col-lg-3">
         <div class="form-group">
             <label for="id_locality">Населенный пункт</label>
@@ -227,7 +227,7 @@
                                 printf("<p><option  value='%s' class='%s' selected ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']);
                             }
                             else{
-                                 printf("<p><option  value='%s' class='%s' ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']); 
+                                 printf("<p><option  value='%s' class='%s' ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']);
                             }
                         }
 
@@ -257,6 +257,116 @@
         </div>
 
 
+        <p class="line"><span>Информация для специального донесения</span></p>
+
+
+        <div class="row">
+            <div class="form-group col-md-3">
+                <label for="hs_vid" >Связать с пользователем СД</label>
+                <select class="form-control select2-single" name="id_user_sd" id="id_user_sd"  >
+                    <option></option>
+                    <?php
+                     foreach ($users_sd as $usd) {?>
+                     <option value="<?=$usd['id_user']?>"
+                             <?=(isset($user['id_user_sd']) && $usd['id_user'] == $user['id_user_sd']) ? "selected" : ''?>
+                             ><?= $usd['auth_fio']?> <?=$usd['auth_organ_full']?></option>
+                    <?php
+
+                     }?>
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row row-data-for-sd <?=(isset($user['id_user_sd']) && !empty($user['id_user_sd'])) ? "hide" : ''?>">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="fio_for_speciald">Ф.И.О.</label>
+                    <?php
+                    if (isset($user['fio_for_speciald']) && !empty($user['fio_for_speciald'])) {
+
+                        ?>
+                        <input type="text" class="form-control"  placeholder="Ф.И.О." name="fio_for_speciald" value="<?= $user['fio_for_speciald'] ?>" >
+                        <?php
+                    } else {
+
+                        ?>
+                        <input type="text" class="form-control"  placeholder="Ф.И.О." name="fio_for_speciald" >
+                        <?php
+                    }
+
+                    ?>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="position_for_speciald">Должность</label>
+                    <?php
+                    if (isset($user['fio_for_speciald']) && !empty($user['fio_for_speciald'])) {
+
+                        ?>
+                        <input type="text" class="form-control" placeholder="Должность"  name="position_for_speciald" value="<?= $user['position_for_speciald'] ?>" >
+                        <?php
+                    } else {
+
+                        ?>
+                        <input type="text" class="form-control" placeholder="Должность"  name="position_for_speciald" >
+                        <?php
+                    }
+
+                    ?>
+                </div>
+            </div>
+
+
+            <div class="col-lg-2">
+                <div class="form-group" name="local">
+                    <label for="id_rank">Звание</label>
+                    <select class="js-example-basic-single form-control" name="id_rank"  data-placeholder="Выбрать"   >
+                        <option value="" >не выбрано</option>
+                        <?php
+                        foreach ($ranks as $rank) {
+                            if (isset($user['id_rank']) && $user['id_rank'] == $rank['id']) {
+                                printf("<p><option value='%s' selected ><label>%s</label></option></p>", $rank['id'], $rank['name']);
+                            } else {
+                                printf("<p><option value='%s'  ><label>%s</label></option></p>", $rank['id'], $rank['name']);
+                            }
+                        }
+
+                        ?>
+                    </select>
+
+                </div>
+            </div>
+
+
+        </div>
+
+        <div class="row row-data-for-sd <?=(isset($user['id_user_sd']) && !empty($user['id_user_sd'])) ? "hide" : ''?>">
+            <div class="col-lg-4">
+                <div class="form-group">
+                    <label for="creator_name_for_speciald">Подразделение (отображается в форме создания спец.донесения как Создатель)</label>
+                    <?php
+                    if (isset($user['creator_name_for_speciald']) && !empty($user['creator_name_for_speciald'])) {
+
+                        ?>
+                        <input type="text" class="form-control" placeholder=""  name="creator_name_for_speciald" value="<?= $user['creator_name_for_speciald'] ?>" >
+                        <?php
+                    } else {
+
+                        ?>
+                        <input type="text" class="form-control" placeholder=""  name="creator_name_for_speciald" >
+                        <?php
+                    }
+
+                    ?>
+                </div>
+            </div>
+
+        </div>
+
+
         <br>
         <div class="row">
             <div class="col-lg-2">
@@ -278,4 +388,5 @@
 
     </form>
 </div>
+
 

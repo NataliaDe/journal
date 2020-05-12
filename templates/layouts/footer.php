@@ -44,10 +44,7 @@
 <script src="<?= $baseUrl ?>/assets/dist/js/app.min.js"></script>
 
 
-<!-- Chosen jquery js -->
-<!--<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.jquery.js" type="text/javascript"></script>-->
-<!--<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script> -->
+
 
 <!-- select2 jquery js - поиск в выпад списке -->
 <script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
@@ -69,11 +66,26 @@
 
 
 
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js?<?php echo time();?>"></script>
 
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js?<?php echo time();?>"></script>
+
+
+<!-- Chosen jquery js -->
+<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.jquery.js" type="text/javascript"></script>
+<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
+
+
+<script src="<?= $baseUrl ?>/assets/bootstrap_tour/bootstrap-tooltip.js"></script>
+<script src="<?= $baseUrl ?>/assets/bootstrap_tour/bootstrap-popover.js"></script>
+
+
+
+
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_report.js?<?php echo time();?>"></script>
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/switch_mode.js"></script>
 
@@ -81,7 +93,13 @@
 	CKEDITOR.replace('myeditor1');
         CKEDITOR.replace('myeditor2');
         CKEDITOR.replace('myeditor3');
+
+
 </script>
+
+
+<!--preloader-->
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/preloader/preloader.js"></script>
 
 </body>
 </html>

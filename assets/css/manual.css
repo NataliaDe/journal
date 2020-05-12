@@ -654,3 +654,37 @@ background-color: black;
 
 
 /* END typing indicator */
+
+
+@media (max-width: 1300px) {
+    #title_for_ivanov{
+       display: none !important;
+    }
+
+
+
+}
+
+
+
+
+
+@media (max-width: 991px){}
+.navbar-custom-menu .navbar-nav > li > .logo {
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    line-height: 20px;
+}
+
+
+.hide{
+    display: none;
+}
+
+
+    .disabled-link {
+        pointer-events: none;
+        cursor: default;
+        opacity: 0.5;
+    }
+

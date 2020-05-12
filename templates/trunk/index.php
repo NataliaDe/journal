@@ -11,7 +11,9 @@
     if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
            include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
     }
-    //print_r($rig_time);
+
+
+include dirname(dirname(__FILE__)) . '/rig/title_block.php';
     ?>
 <div class="box-body">
     <form  role="form" id="trunkForm" method="POST" action="<?= $baseUrl ?>/trunk/<?= $id_rig ?>" >
@@ -349,11 +351,24 @@
                     <div class="form-group">
                         <h4>Добавить новый тип</h4>
                         <input type="text" class="form-control" placeholder="Введите наименование типа" required="" id='tag_name' >
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="checkbox checkbox-success">
+                            <input id="is_water" type="checkbox" name="is_water" value="1" >
+                            <label for="is_water">
+                                ствол водяной
+                            </label>
+                        </div>
+                    </div>
+
+
                         <br>
                         <div class="btn-modal">
                             <button type="button" class="btn btn-bd-primary"  onclick="AddTag();return false;">Добавить</button>
                         </div>
-                    </div>
 
 
                     <br>
@@ -366,18 +381,35 @@
                                 <option value=''  ></option>
                                 <?php
                                 foreach ($trunk_for_del as $tr) {
+                                    ?>
+<option data-is-water="<?=$tr['is_water']?>" value='<?=$tr['id']?>'  ><?=$tr['name']?></option>
+<?php
 
-
-                                        printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
+                                        //printf("<p><option value='%s' ><label>%s %s</label></option></p>", $tr['id'], $tr['name'],(($tr['is_water'] == 1) ? ' (водяной)':''));
 
                                 }
 
                                 ?>
                             </select>
                         </div>
+
+                        <div class="form-group">
+                            <div class="checkbox checkbox-success">
+                                <input id="is_water_edit" type="checkbox" name="is_water_edit" value="1" >
+                                <label for="is_water_edit">
+                                    ствол водяной
+                                </label>
+                            </div>
+                        </div>
+
+
                         <br>
                          <input type="text" class="form-control" placeholder="Введите новое наименование" required="" id='edit_tag_name' >
                          <br>
+
+
+
+
                         <div class="btn-modal">
                              <button type="button" class="btn btn-bd-primary"  onclick="editTag();return false;">Сохранить изменения</button>
                         </div>
@@ -391,9 +423,11 @@
                                 <option value=''  ></option>
                                 <?php
                                 foreach ($trunk_for_del as $tr) {
+?>
+           <option data-is-water="<?=$tr['is_water']?>" value='<?=$tr['id']?>'  ><?=$tr['name'].(($tr['is_water'] == 1) ? ' (водяной)':'')?></option>
+                                <?php
 
-
-                                        printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
+                                       // printf("<p><option value='%s' ><label>%s %s</label></option></p>", $tr['id'], $tr['name'],(($tr['is_water'] == 1) ? ' (водяной)':''));
 
                                 }
 

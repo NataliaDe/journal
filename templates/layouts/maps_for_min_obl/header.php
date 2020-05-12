@@ -8,10 +8,12 @@
         <?php
         //автоматическое обновление страницы general
         if (isset($delay)) {
+
             ?>
             <meta http-equiv="Refresh" content="<?= $delay ?>" />
             <?php
         }
+
         ?>
 
         <link rel="icon" href="<?= $baseUrl ?>/favicon.ico" type="image/x-icon" />
@@ -20,17 +22,17 @@
 
 
         <title>
-                    <?php
-  if(isset($title) && !empty($title))  {
-      $name_title=$title;
-  }
-  else{
-      $name_title=' Журнал ЦОУ';
-  }
-  echo $name_title;
-?>
+            <?php
+            if (isset($title) && !empty($title)) {
+                $name_title = $title;
+            } else {
+                $name_title = ' Журнал ЦОУ';
+            }
+            echo $name_title;
 
-           </title>
+            ?>
+
+        </title>
 
 
         <!-- Bootstrap 3.3.5 -->
@@ -42,7 +44,7 @@
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/bootstrapValidator/css/bootstrapValidator.min.css">
 
 
-         <!--datepicker -->
+        <!--datepicker -->
         <link href="<?= $baseUrl ?>/assets/css/datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
         <!--        adminLTE-->
@@ -68,27 +70,26 @@
         <!--     end   adminLTE-->
 
 
+        <!-- select2 css - поиск в выпад списке -->
+        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2_1.css">
+
+
+
+        <link href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" rel="stylesheet"/>
+
 
         <!-- Chosen CSS -->
-<!--        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.css">-->
-
-        <!-- select2 css - поиск в выпад списке -->
-                <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2_1.css">
-
+        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.css">
 
 
         <!-- manual -->
-        <link href="<?= $baseUrl ?>/assets/css/manual.css" rel="stylesheet">
-        <link href="<?= $baseUrl ?>/assets/css/signin.css" rel="stylesheet">
+<!--        <link href="<?= $baseUrl ?>/assets/css/manual.css" rel="stylesheet">
+        <link href="<?= $baseUrl ?>/assets/css/signin.css" rel="stylesheet">-->
 
 
-
-        <!-- DataTable CSS -->
-        <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/css/jquery.dataTables.css">
 
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/leaflet/leaflet.css" />
-
-         <link href="<?= $baseUrl ?>/assets/css/manual_leaflet.css" rel="stylesheet">
+        <link href="<?= $baseUrl ?>/assets/css/min_obl_manual_leaflet.css" rel="stylesheet">
 
 
 
@@ -102,10 +103,10 @@
 
 
     </head>
-<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
 
 
-<!--    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">-->
+        <!--    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">-->
 
 
 

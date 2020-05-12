@@ -132,10 +132,10 @@
                                 <td><?= $mark ?></td>
                                 <td><?= $numbsign ?></td>
                                 <td><?= $locorg_name ?>, <?= $pasp_name ?></td>
-                                <td><?= ($time_pod == '0000-00-00 00:00:00' || empty($time_pod) || $time_pod == '-') ? '' : date('d.m.Y H:i', strtotime($time_pod)) ?></td>
+                                <td><?= ($time_pod == '00:00' || empty($time_pod) || $time_pod == '-') ? '' : $time_pod ?></td>
                                 <td><?= (empty($trunk_name) || $trunk_name == '-') ? '' : $trunk_name ?></td>
                                 <td><?= (empty($cnt) || $cnt == '-' || $cnt == 0) ? '' : $cnt ?></td>
-                                <td><?= (empty($water) || $water == '-' || $water == 0) ? '' : $water ?></td>
+                                <td><?= (empty($water) || $water == '-' ) ? '' : $water ?></td>
                             </tr>
             <?php
         }

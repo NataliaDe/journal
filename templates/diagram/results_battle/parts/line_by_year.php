@@ -1,143 +1,199 @@
+<!-- line by RB by year -->
 
-<!--<div class="box-body">-->
+<ul class="dropdown download-diagram" id="save-as-img-menu-line_by_rb_year_id" style="float: right;" data-toggle="tooltip" data-placement="left" title="Скачать график" >
+    <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa fa-download" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
+    <ul class="dropdown-menu save-as-img-ul" id="waybill-menu">
+
+        <li class="dropdown-submenu" id="save-as-png-line_by_rb_year_id">
+            <a tabindex="-1" href="#" class="caret-spr_inf save-as-img-li" ><i class="fa fa-file-image-o save-as-img-i" aria-hidden="true" style="color:red;"></i> Скачать (png)</a>
+        </li>
+
+        <li class="dropdown-submenu" id="save-as-jpg-line_by_rb_year_id">
+            <a tabindex="-1" href="#" class="caret-spr_inf save-as-img-li" ><i class="fa fa-file-image-o save-as-img-i" aria-hidden="true" style="color:red;"></i> Скачать (jpg)</a>
+        </li>
+
+
+    </ul>
+</ul>
+<canvas id="line_by_rb_year_id" ></canvas>
+
+
+
+
+<script>
+
+   $('#save-as-png-line_by_rb_year_id').click(function(){
+       $("#line_by_rb_year_id").get(0).toBlob(function(blob){
+           saveAs(blob, "Линейный по РБ за год.png");
+       });
+   });
+
+   $('#save-as-jpg-line_by_rb_year_id').click(function(){
+       $("#line_by_rb_year_id").get(0).toBlob(function(blob){
+           saveAs(blob, "Линейный по РБ за год.jpg");
+       });
+   });
+
+
+    d = [];
+
+    cnt_per_month_by_year_dead_man = {
+        label: 'Погибло всего',
+        //data: [{{ data.procent_process_study|join(',') }}],
+        data: [<?= $cnt_per_month_by_year['dead_man'][1] ?>, <?= $cnt_per_month_by_year['dead_man'][2] ?>, <?= $cnt_per_month_by_year['dead_man'][3] ?>,
+<?= $cnt_per_month_by_year['dead_man'][4] ?>, <?= $cnt_per_month_by_year['dead_man'][5] ?>, <?= $cnt_per_month_by_year['dead_man'][6] ?>,
+<?= $cnt_per_month_by_year['dead_man'][7] ?>,
+<?= $cnt_per_month_by_year['dead_man'][8] ?>,
+<?= $cnt_per_month_by_year['dead_man'][9] ?>,
+<?= $cnt_per_month_by_year['dead_man'][10] ?>,
+<?= $cnt_per_month_by_year['dead_man'][11] ?>,
+<?= $cnt_per_month_by_year['dead_man'][12] ?>],
+        "fill": false,
+        "borderColor": "rgb(255, 99, 132, 0.7)",
+        "lineTension": 0.1
+
+    };
+
+
+    cnt_per_month_by_year_dead_child = {
+        label: 'Погибло детей',
+        //data: [{{ data.procent_process_study|join(',') }}],
+        data: [<?= $cnt_per_month_by_year['dead_child'][1] ?>, <?= $cnt_per_month_by_year['dead_child'][2] ?>,
+<?= $cnt_per_month_by_year['dead_child'][3] ?>,
+<?= $cnt_per_month_by_year['dead_child'][4] ?>, <?= $cnt_per_month_by_year['dead_child'][5] ?>,
+<?= $cnt_per_month_by_year['dead_child'][6] ?>,
+<?= $cnt_per_month_by_year['dead_child'][7] ?>,
+<?= $cnt_per_month_by_year['dead_child'][8] ?>,
+<?= $cnt_per_month_by_year['dead_child'][9] ?>,
+<?= $cnt_per_month_by_year['dead_child'][10] ?>,
+<?= $cnt_per_month_by_year['dead_child'][11] ?>,
+<?= $cnt_per_month_by_year['dead_child'][12] ?>],
+        "fill": false,
+        "borderColor": "rgb(255, 159, 64, 0.7)",
+        "lineTension": 0.1
+
+    };
+
+
+
+
+    cnt_per_month_by_year_save_man = {
+        label: 'Спасено всего',
+        //data: [{{ data.procent_process_study|join(',') }}],
+        data: [<?= $cnt_per_month_by_year['save_man'][1] ?>,
+<?= $cnt_per_month_by_year['save_man'][2] ?>,
+<?= $cnt_per_month_by_year['save_man'][3] ?>,
+<?= $cnt_per_month_by_year['save_man'][4] ?>,
+<?= $cnt_per_month_by_year['save_man'][5] ?>,
+<?= $cnt_per_month_by_year['save_man'][6] ?>,
+<?= $cnt_per_month_by_year['save_man'][7] ?>,
+<?= $cnt_per_month_by_year['save_man'][8] ?>,
+<?= $cnt_per_month_by_year['save_man'][9] ?>,
+<?= $cnt_per_month_by_year['save_man'][10] ?>,
+<?= $cnt_per_month_by_year['save_man'][11] ?>,
+<?= $cnt_per_month_by_year['save_man'][12] ?>],
+        "fill": false,
+        "borderColor": "rgb(255, 205, 86, 0.7)",
+        "lineTension": 0.1
+
+
+    };
+
+
+    cnt_per_month_by_year_save_child = {
+        label: 'Спасено детей',
+        //data: [{{ data.procent_process_study|join(',') }}],
+        data: [<?= $cnt_per_month_by_year['save_child'][1] ?>,
+<?= $cnt_per_month_by_year['save_child'][2] ?>,
+<?= $cnt_per_month_by_year['save_child'][3] ?>,
+<?= $cnt_per_month_by_year['save_child'][4] ?>,
+<?= $cnt_per_month_by_year['save_child'][5] ?>,
+<?= $cnt_per_month_by_year['save_child'][6] ?>,
+<?= $cnt_per_month_by_year['save_child'][7] ?>,
+<?= $cnt_per_month_by_year['save_child'][8] ?>,
+<?= $cnt_per_month_by_year['save_child'][9] ?>,
+<?= $cnt_per_month_by_year['save_child'][10] ?>,
+<?= $cnt_per_month_by_year['save_child'][11] ?>,
+<?= $cnt_per_month_by_year['save_child'][12] ?>],
+        "fill": false,
+        "borderColor": "rgb(75, 192, 192)",
+        "lineTension": 0.1
+
+    };
+
 <?php
-//echo $_SERVER['REQUEST_URI'];
+if (isset($filter['type_save']) && !empty($filter['type_save'])) {
+
+    ?>
+    <?php
+    if (in_array(1, $filter['type_save'])) {
+
+        ?>
+            d.push(cnt_per_month_by_year_dead_man);
+        <?php
+    }
+    if (in_array(2, $filter['type_save'])) {
+
+        ?>
+            d.push(cnt_per_month_by_year_dead_child);
+        <?php
+    }
+    if (in_array(3, $filter['type_save'])) {
+
+        ?>
+            d.push(cnt_per_month_by_year_save_man);
+        <?php
+    }
+    if (in_array(4, $filter['type_save'])) {
+
+        ?>
+            d.push(cnt_per_month_by_year_save_child);
+        <?php
+    }
+} else {
+
+    ?>
+        d.push(cnt_per_month_by_year_dead_man);
+        d.push(cnt_per_month_by_year_dead_child);
+        d.push(cnt_per_month_by_year_save_man);
+        d.push(cnt_per_month_by_year_save_child);
+
+    <?php
+}
+
 ?>
-<br>
-<center><b>Форма для журнала регистрации поступающих сообщений в ЦОУ Г(Р)ОЧС (ПСЧ)</b></center>
 
-<br><br>
-    <form  role="form" class="form-inline" name="rep1Form" id="rep1Form" method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+sum_year=0;
+$.map( d, function( val, i ) {
+  // Do something
+  $.map( val.data, function( val, i ) {
+  // Do something
+  sum_year=sum_year+val;
+});
 
-                <div class="form-group">
-                    <label for="date_start" >с</label>
-                    <div class="input-group date" id="date_start">
-                        <?php
-                              if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
-                                  ?>
-                        <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
-
-                        <?php
-                              }
-                              else{
-                                  ?>
-                            <input type="text" class="form-control datetime"  name="date_start" />
-                        <?php
-                              }
-                        ?>
-
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
+});
 
 
-                <div class="form-group">
-                    <label for="date_end">&nbsp;по</label>
-                    <div class="input-group date" id="date_end">
-                            <?php
-                              if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {
-                                  ?>
-                        <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
+if(sum_year > 0){
+     $('#empty-data-diag-by-rb-year-div').hide();
+     $('#save-as-img-menu-line_by_rb_year_id').show();
 
-                        <?php
-                              }
-                              else{
-                                  ?>
-                       <input type="text" class="form-control datetime"  name="date_end" />
-                        <?php
-                              }
-                        ?>
+    var ctx = document.getElementById("line_by_rb_year_id").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
 
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
-
-
-        <div class="form-group">
-                    <label for="id_region">Область</label>
-                    <select class="form-control" name="id_region" id="id_region"  >
-   <?php
-   if($_SESSION['id_level'] == 1){
-       ?>
-<!--                        <option value="">все</option>              -->
-                        <?php
-   }
-                        foreach ($region as $re) {
-                            if ( $re['id'] == $_SESSION['id_region'] && $_SESSION['id_level'] != 1) {
-                                printf("<p><option value='%s' selected ><label>%s</label></option></p>", $re['id'], $re['name']);
-                            } elseif($_SESSION['id_level']==1) {
-                                printf("<p><option value='%s' ><label>%s</label></option></p>", $re['id'], $re['name']);
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_local">Район</label>
-                    <select class="form-control" name="id_local" id="auto_local"  >
-                        <option value="">Все</option>
-                        <?php
-
-                        foreach ($local as $row) {
-                            if ( $row['id'] == $_SESSION['id_local']  && $_SESSION['id_level'] != 1) {
-                                printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
-                            } else {
-                                printf("<p><option value='%s'   class='%s' ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-
-
-        <div class="form-group">
-<!--            <label for="reasonrig">Причина вызова</label>-->
-            <select class=" js-example-basic-single form-control" name="reasonrig"   >
-                <option value="">Причина вызова</option>
-                <?php
-                foreach ($reasonrig as $row) {
-
-                        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'],  $row['name']);
-
-                }
-
-                ?>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <button class="btn bg-purple" type="submit"   >Сформировать</button>
-        </div>
-
-        <br> <br>
-                <div class="form-group">
-                    <div class="checkbox checkbox-success">
-                      <?php
-                         if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
-                                  ?>
-                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1" checked=""  >
-                            <?php
-                        } else {
-                            ?>
-                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1"  >
-                            <?php
-                        }
-                        ?>
-                        <label for="checkbox2">
-                         Учесть выезды в соседний гарнизон
-                        </label>
-                    </div>
-                </div>
-
-
-
-
-    </form>
-<br><br>
-
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
-в соответствии с формой 2 Приложения 5 к Уставу службы органов и подразделений по чрезвычайным ситуациям Республики Беларусь.
-<br>
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
-    рекомендуем строить отчет за период не больше 1 недели в связи с большим объемом данных.</span>
+            labels: ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
+            datasets: d
+        },
+        "options": {
+            "scales": {"yAxes": [{"ticks": {"beginAtZero": true}
+                    }]}
+        }
+    });
+}
+else{
+    $('#empty-data-diag-by-rb-year-div').show();
+    $('#save-as-img-menu-line_by_rb_year_id').hide();
+}
+</script>

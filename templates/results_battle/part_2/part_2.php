@@ -1,237 +1,106 @@
-<br>
- <?php
-    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
-           include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+<style>
+    .check-result-battle-part-1{
+        margin-bottom: 0px;
     }
-    ?>
+</style>
 
-<div class="box-body">
-    <form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?=$id_rig ?>" >
+<?php
+//print_r($part_2);
+//echo $id_part_2;
 
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a  href="#1" data-toggle="tab">Результаты боевой работы</a>
-            </li>
+?>
+<form  role="form" id="resultsBattleFormPart_2" method="POST" action="<?= $baseUrl ?>/results_battle_part_2/<?= $id_rig ?>" >
+    <input type="hidden" class="form-control"  name="id_part_2" value="<?= (isset($id_part_2) && !empty($id_part_2)) ? $id_part_2 : 0 ?>" >
 
-        </ul>
-        <!--------------------------------------------------- содержимое вкладок------------------------------------------>
-        <div class="tab-content ">
-            <br>
-            <!--            Обработка вызова-->
-            <div class="tab-pane active" id="1">
-
-                <div class="row">
-
-
-                    <!-- <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="time_msg">Дата и время сообщения</label>
-                            <div class="input-group date" id="time_msg">
-                                <input type="text" class="form-control datetime"  name="time_msg" />
-
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                            </div>
-                        </div>
-                    </div>
-                    -->
-
-
-                    <input type="hidden" class="form-control"  name="id_battle" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0  ?>" >
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="dead_man_l">Погибло</label>
-                            <input type="text" class="form-control" placeholder="0" name="dead_man" value="<?= (isset($battle['dead_man'])) ? $battle['dead_man'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="dead_child">в т.ч. детей</label>
-                            <input type="text" class="form-control" placeholder="0" name="dead_child" value="<?= (isset($battle['dead_child'])) ? $battle['dead_child'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="save_man_l">Спасено</label>
-                            <input type="text" class="form-control" placeholder="0" name="save_man" value="<?= (isset($battle['save_man'])) ? $battle['save_man'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="inj_man_l">Травмировано</label>
-                            <input type="text" class="form-control" placeholder="0" name="inj_man" value="<?= (isset($battle['inj_man'])) ? $battle['inj_man'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="ev_man_l">Эвакуировано</label>
-                            <input type="text" class="form-control" placeholder="0" name="ev_man" value="<?= (isset($battle['ev_man'])) ? $battle['ev_man'] : 0 ?>" >
-                        </div>
-                    </div>
-
-
-                     <div class="col-lg-1">
-
-                    </div>
-
-                    <div class="col-lg-2">
-                        <div class="box-body">
-                            <button type="submit" class="btn-save-rig">  <div class="i2Style">Сохранить данные</div></button>
-                        </div>    </div>
-
-
-                </div>
-
-
-                <p class="line"><span>Строения</span></p>
-                <!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
-
-                <div class="row">
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="dam_build_l">Спасено</label>
-                            <input type="text" class="form-control" placeholder="0" name="save_build" value="<?= (isset($battle['save_build'])) ? $battle['save_build'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="dam_build_l">Повреждено</label>
-                            <input type="text" class="form-control" placeholder="0" name="dam_build" value="<?= (isset($battle['dam_build'])) ? $battle['dam_build'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="des_build_l">Уничтожено</label>
-                            <input type="text" class="form-control" placeholder="0" name="des_build" value="<?= (isset($battle['des_build'])) ? $battle['des_build'] : 0 ?>" >
-                        </div>
-                    </div>
-
-
-
-
-                </div>
-
-                <p class="line"><span>Техника</span></p>
-<!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
-
-                <div class="row">
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="save_teh_l">Спасено</label>
-                            <input type="text" class="form-control" placeholder="0" name="save_teh" value="<?= (isset($battle['save_teh'])) ? $battle['save_teh'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="dam_teh_l">Повреждено</label>
-                            <input type="text" class="form-control" placeholder="0" name="dam_teh" value="<?= (isset($battle['dam_teh'])) ? $battle['dam_teh'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-1">
-                        <div class="form-group">
-                            <label for="des_teh_l">Уничтожено</label>
-                            <input type="text" class="form-control" placeholder="0" name="des_teh" value="<?= (isset($battle['des_teh'])) ? $battle['des_teh'] : 0 ?>" >
-                        </div>
-                    </div>
-
-
-
-                </div>
-
-
-                <p class="line"><span>Животные</span></p>
-<!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
-
-                <div class="row">
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="save_an_l">Спасено (голов скота)</label>
-                            <input type="text" class="form-control" placeholder="0" name="save_an" value="<?= (isset($battle['save_an'])) ? $battle['save_an'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="dam_an_l">Повреждено (голов скота)</label>
-                            <input type="text" class="form-control" placeholder="0" name="dam_an" value="<?= (isset($battle['dam_an'])) ? $battle['dam_an'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="des_an_l">Уничтожено (голов скота)</label>
-                            <input type="text" class="form-control" placeholder="0" name="des_an" value="<?= (isset($battle['des_an'])) ? $battle['des_an'] : 0 ?>" >
-                        </div>
-                    </div>
-
-
-
-
-                </div>
-
-                <p class="line"><span>Корма и технические культуры</span></p>
-<!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
-
-                <div class="row">
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="save_plan_l">Спасено (тонн)</label>
-                            <input type="text" class="form-control" placeholder="0" name="save_plan" value="<?= (isset($battle['save_plan'])) ? $battle['save_plan'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="dam_plan_l">Повреждено (тонн)</label>
-                            <input type="text" class="form-control" placeholder="0" name="dam_plan" value="<?= (isset($battle['dam_plan'])) ? $battle['dam_plan'] : 0 ?>" >
-                        </div>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <div class="form-group">
-                            <label for="des_plan_l">Уничтожено (тонн)</label>
-                            <input type="text" class="form-control" placeholder="0" name="des_plan" value="<?= (isset($battle['des_plan'])) ? $battle['des_plan'] : 0 ?>" >
-                        </div>
-                    </div>
-
-
-
-
-                </div>
-
-
-
-
-
-            </div>
-
+    <div class="row">
+        <div class="col-lg-3">
+            <label>Результаты боевой работы на ЧС:</label>
         </div>
-        <!--                    tab-content-->
-
-    </form>
-</div>
+    </div>
+    <br>
 
 
-<script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
-<script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
-<script>
+    <div class="row">
 
- if(<?= $is_success ?> === 1)
-        toastr.success('Информация сохранена.</br> Закройте вкладку браузера.', 'Успех!', {progressBar:     true,timeOut: 5000});
-</script>
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="pred_build_4s">Предотвращено уничтожение строений</label>
+                <input type="text" class="form-control int-cnt" placeholder="0" name="pred_build_4s" value="<?= (isset($part_2['pred_build_4s'])) ? $part_2['pred_build_4s'] : 0 ?>" >
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="form-group">
+                <label for="pred_vehicle_4s">Предотвращено уничтожение единиц техники</label>
+                <input type="text" class="form-control int-cnt" placeholder="0" name="pred_vehicle_4s" value="<?= (isset($part_2['pred_vehicle_4s'])) ? $part_2['pred_vehicle_4s'] : 0 ?>" >
+            </div>
+        </div>
 
 
 
+        <div class="col-lg-2"></div>
 
+        <div class="col-lg-2">
+            <div class="box-body">
+                <button type="submit" class="btn-save-rig">  <div class="i2Style">Сохранить данные</div></button>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <p class="line"></p>
+     <br> <br>
+    <label>При ликвидации использовались:</label>
+
+ <br> <br>
+    <p class="line"><span>Авиационная техника на ЧС</span></p>
+    <div class="row">
+
+        <div class="col-lg-3">
+
+
+            <div class="form-group">
+                <label for="avia_4s">Количество привлеченной авиационной техники</label>
+                <input type="text" class="form-control" placeholder="0" name="avia_4s" value="<?= (isset($part_2['avia_4s'])) ? $part_2['avia_4s'] : 0 ?>" >
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <p class="line"><span>Аварийно-спасательный и механизированнный инструмент</span></p>
+
+    <div class="row">
+
+        <div class="col-lg-1">
+            <div class="form-group">
+                <label for="dam_build_l">Механизированный</label>
+                <input type="text" class="form-control int-cnt" placeholder="0" name="tool_meh" value="<?= (isset($part_2['tool_meh'])) ? $part_2['tool_meh'] : 0 ?>" >
+            </div>
+        </div>
+
+        <div class="col-lg-1">
+            <div class="form-group">
+                <label for="dam_build_l">Пневматический</label>
+                <input type="text" class="form-control int-cnt" placeholder="0" name="tool_pnev" value="<?= (isset($part_2['tool_pnev'])) ? $part_2['tool_pnev'] : 0 ?>" >
+            </div>
+        </div>
+
+        <div class="col-lg-1">
+            <div class="form-group">
+                <label for="des_build_l">Гидравлический</label>
+                <input type="text" class="form-control int-cnt" placeholder="0" name="tool_gidr" value="<?= (isset($part_2['tool_gidr'])) ? $part_2['tool_gidr'] : 0 ?>" >
+            </div>
+        </div>
+
+
+
+    </div>
+
+
+
+</form>

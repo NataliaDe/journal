@@ -1,17 +1,80 @@
 
-        var map = L.map('mapid', {attributionControl: false});
-        map.setView([53.900000, 27.566670], 13);
+/* types of layers */
+var internetlayer =
+         L.tileLayer('http://tiles.maps.sputnik.ru/{z}/{x}/{y}.png', {id:'mapid',
+            maxZoom: 14,
+            minZoom: 6
+        });
+
+	baselayer   =
+                   L.tileLayer('http://172.26.200.45/tile/map/{x}/{y}/{z}.png', {id:'mapid',
+            maxZoom: 14,
+            minZoom: 6
+// L.tileLayer('/journal/assets/tiles/{z}/{x}/{y}.png', {id:'mapid',
+//            maxZoom: 14,
+//            minZoom: 6
+        });
+
+
+
+        var map = L.map('mapid', {attributionControl: false,
+                layers: [internetlayer]
+        });
+        map.setView([53.900000, 27.566670],6);
 //        L.control.attribution({prefix:''}).addAttribution('<a href="http://maps.sputnik.ru/">Спутник</a> | &copy; Ростелеком | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>').addTo(map);
 //        L.tileLayer('http://tiles.maps.sputnik.ru/{z}/{x}/{y}.png', {
 //            maxZoom: 19
 //        }).addTo(map);
        // L.control.attribution({prefix:''}).addAttribution('<a href="http://maps.sputnik.ru/">Спутник</a> | &copy; Ростелеком | &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>').addTo(map);
-        L.tileLayer('http://172.26.200.45/tile/map/{x}/{y}/{z}.png', {
-            maxZoom: 19
-        }).addTo(map);
+//        L.tileLayer('http://172.26.200.45/tile/map/{x}/{y}/{z}.png', {
+//            maxZoom: 14,
+//            minZoom: 6
+//        }).addTo(map);
 // L.tileLayer('/journal/assets/Tiles/{z}/{x}/{y}.png', {
 //            maxZoom: 19
 //        }).addTo(map);
+
+/* types of layers */
+var baseMaps = {
+	"Интернет-карта": internetlayer,
+	"Базовая карта": baselayer
+};
+L.control.layers(baseMaps).addTo(map);
+var baseMaps = {
+	"<span style='color: gray'>Интернет-карта</span>": internetlayer,
+	"Базовая карта": baselayer
+};
+
+
+/*------ Legend specific -------*/
+var legend = L.control({ position: "bottomleft" });
+
+
+
+legend.onAdd = function(map) {
+  var div = L.DomUtil.create("div", "legend");
+//  div.innerHTML += "<h4>Обозначения</h4>";
+//  div.innerHTML += '<i style="background: #477AC2"></i><span>Water</span><br>';
+//  div.innerHTML += '<i style="background: #448D40"></i><span>Forest</span><br>';
+//  div.innerHTML += '<i style="background: #E6E696"></i><span>Land</span><br>';
+//  div.innerHTML += '<i style="background: #E8E6E0"></i><span>Residential</span><br>';
+//  div.innerHTML += '<i style="background: #FFFFFF"></i><span>Ice</span><br>';
+//  div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+
+  div.innerHTML += "<h4>Обозначения</h4>";
+  div.innerHTML += '<img src="assets/images/leaflet/fire.png"></i><span>Пожар</span><br>';
+  div.innerHTML += '<img src="assets/images/leaflet/other.png"></i><span>Другие загорания</span><br>';
+  div.innerHTML += '<img src="assets/images/leaflet/help.png"></i><span>Помощь организациям, населению</span><br>';
+  div.innerHTML += '<img src="assets/images/leaflet/priroda.png"></i><span>ЛТТ - ЧС природного характера</span><br>';
+//  div.innerHTML += '<i style="background: #FFFFFF"></i><span>Ice</span><br>';
+//  div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
+
+
+  return div;
+};
+
+legend.addTo(map);
+/*------ END Legend specific ------*/
 
 
         var greenIcon = L.icon({
@@ -69,14 +132,45 @@ function show (){
 
 }
 
+
+/* show podrazdelenia from kusis */
+        $('body').on('click', '#show_podr', function (e) {
+            e.preventDefault();
+            $.post('/journal/maps/getjson', $('#showPodrForm').serialize(), function (response) {
+
+                if (response.length>0) {
+                    addPodrDataToMap(response, map,1);
+                     toastr.success('Данные успешно получены', 'Успех!', {progressBar: true, timeOut: 5000});
+                } else {
+
+                    toastr.error(response.error, 'Ошибка!', {progressBar: true, timeOut: 5000});
+                }
+            }, 'json');
+        });
+
+
+        /* reset filter */
+        $('body').on('click', '#reset_filter', function (e) {
+
+        if (markerPodr !== undefined) {
+             map.removeLayer(markerPodr);
+             $('#id_local_map').empty().trigger('chosen:updated');
+             $('#div_id_local_map').css('display','none');
+             $('#id_region_map').val('').trigger('chosen:updated');
+            }
+        });
+
+
+/* default markers - rigs */
 $.getJSON("/journal/maps/getjson", function(data) { addDataToMap(data, map); });
 
  var theMarker = {};
+ var markerPodr={};
 function addDataToMap(data, map) {
 
 /* remove old markers */
 if (theMarker !== undefined) {
- map.removeLayer(theMarker);
+ //map.removeLayer(theMarker);
 }
 
 
@@ -114,7 +208,7 @@ if (theMarker !== undefined) {
  if(data[i].hasOwnProperty('new_icon') && data[i].hasOwnProperty('new_icon') !== ''){
 geojsonFeature.properties.icon= {
         iconUrl: data[i].new_icon,
-        iconSize: [50, 64],
+        iconSize: [24, 24],
         iconAnchor: [0, 0],
         popupAnchor: [0, 0],
         className: 'dot'
@@ -122,8 +216,19 @@ geojsonFeature.properties.icon= {
       }
 
  var content_popup='';
-            if(data[i].hasOwnProperty('name'))
-                var content_popup=data[i].name;
+            if(data[i].hasOwnProperty('reasonrig_name'))
+                var content_popup='<b>'+data[i].reasonrig_name+'</b>';
+
+
+            if(data[i].hasOwnProperty('address') && data[i].hasOwnProperty('address') !== '') {
+                var content_popup=content_popup+'</br>'+data[i].address;
+            }
+
+            if(data[i].hasOwnProperty('object') && data[i].hasOwnProperty('object') !== '') {
+                var content_popup=content_popup+'</br>'+ data[i].object;
+            }
+
+
 
                 //geojsonFeature.popupContent = data[i].name;
 
@@ -193,11 +298,255 @@ if(feature.hasOwnProperty('properties') &&  feature.properties.hasOwnProperty('i
 
         theMarker = s;
 
+}
+
+
+/* add podr to map */
+function addPodrDataToMap(data, map,mark_podr=0) {
+
+/* remove old markers */
+if (markerPodr !== undefined) {
+ map.removeLayer(markerPodr);
+}
+
+
+    var dataLayer = L.geoJson(data);
+    dataLayer.addTo(map);
+
+     var featureArr = [];
+
+        for(var i in data){
+
+            var geojsonFeature = {
+
+                "type": "Feature",
+
+                "geometry": data[i].location,
+
+                   properties: {
+//      title: 'Title',
+//      description: 'Text, text...',
+//      image: 'http://link...',
+      icon: {
+        iconUrl: data[i].new_icon,
+        iconSize: [50, 64],
+        iconAnchor: [0, 0],
+        popupAnchor: [0, 0],
+        className: 'dot'
+      }
+    },
+
+                "customizeView":Math.floor(Math.random()*2) // случайно 0 или 1
+
+            };
+
+
+ if(data[i].hasOwnProperty('new_icon') && data[i].hasOwnProperty('new_icon') !== ''){
+geojsonFeature.properties.icon= {
+        iconUrl: data[i].new_icon,
+        iconSize: [50, 64],
+        iconAnchor: [0, 0],
+        popupAnchor: [0, 0],
+        className: 'dot'
+      };
+      }
+
+    var content_popup='';
+    var ss_url_text='ссылка';
+
+            if(data[i].hasOwnProperty('locorg_name'))
+                var content_popup='<b>'+data[i].locorg_name+'</b>';
+
+            if(data[i].hasOwnProperty('pasp_name'))
+                var content_popup=content_popup+'<b>, '+data[i].pasp_name+'</b>';
+
+            if(data[i].hasOwnProperty('address_disloc'))
+                var content_popup=content_popup+'</br>'+data[i].address_disloc;
+
+           if(data[i].hasOwnProperty('ss_url_text') && data[i].hasOwnProperty('ss_url_text') !== '')
+                var ss_url_text=data[i].ss_url_text;
+
+            if(data[i].hasOwnProperty('ss_url'))
+                var content_popup=content_popup+'</br>'+'<a href="'+ data[i].ss_url+'" target="_blank">'+ss_url_text+' </a>';
+
+
+geojsonFeature.popupContent =content_popup;
+            featureArr.push(geojsonFeature);
+
+        }
+
+        function onEachFeature(feature, layer) {
+
+            if(feature.hasOwnProperty('popupContent'))
+
+                layer.bindPopup(feature.popupContent);
+
+if(feature.hasOwnProperty('properties') &&  feature.properties.hasOwnProperty('icon') &&  feature.properties.icon.hasOwnProperty('iconUrl') && feature.properties.icon.iconUrl !== 'undefined' && feature.properties.icon.iconUrl !== undefined ){
+            layer.setIcon(L.icon(feature.properties.icon));
+        }
+
+        }
+
+               var geojsonMarkerOptions = {
+
+            radius: 8, //радиус в пикселях
+
+            fillColor: "#ff7800",
+
+            color: "#000",
+
+            weight: 1,
+
+            opacity: 1,
+
+            fillOpacity: 0.8
+
+        };
+
+         function pointToLayer(feature, latlng) {
+
+           // if(feature.customizeView)
+//theMarker.push(L.marker(latlng)) ;
+
+                return  L.marker(latlng);
+
+          //  else
+
+                //return L.circleMarker(latlng, geojsonMarkerOptions);
+                   // return L.marker(latlng, {icon: greenIcon});
+
+        };
+
+
+
+
+      var s=  L.geoJson(featureArr, {
+
+            onEachFeature: onEachFeature,
+
+            pointToLayer: pointToLayer
+
+        }).addTo(map);
+
+/* centered */
+map.fitBounds(s.getBounds());
+
+        if(mark_podr === 1){
+            markerPodr=s;
+        }
+
 
 }
 
 
 
+
+
+
+/*-------------------------  manual js --------------------------------------- */
+$(document).ready(function () {  // поиск значения в выпад меню
+$(".chosen-select-deselect").chosen({
+   allow_single_deselect: true,
+   width: '100%'
+
+});
+});
+
+
+    $('#id_region_map').on('change', function(e) {
+        var ids_region=$('#id_region_map').val();
+$('#id_local_map').empty().trigger('chosen:updated');
+
+var current_locals=$('#current_local_map').val();
+var arr_current_local = current_locals.split(",");
+console.log(arr_current_local);
+
+        if(ids_region !== null){
+            //get locals by region
+            $.ajax({
+                dataType: "json",
+                url: '/journal/maps/get_locals_by_region',
+                method: 'POST',
+                data: {
+                    ids_region: ids_region
+                },
+             success: function (data) {
+
+                  $(data).each(function(index, value) {
+
+
+                  if(arr_current_local.includes(value.id)){
+                      $("#id_local_map").append($("<option selected></option>").attr("value", value.id).text(value.name+' ('+value.region_name+')')).trigger('chosen:updated');
+                  }
+                  else{
+                      $("#id_local_map").append($("<option></option>").attr("value", value.id).text(value.name+' ('+value.region_name+')')).trigger('chosen:updated');
+                  }
+
+
+                    });
+
+//                $('.trunk-select-on-form').append('<option value="' + data.id + '">' + data.tag_name + '</option>');
+//                $('.trunk-select-on-form').trigger("chosen:updated");
+//                $('#tags_del_trunk').append('<option value="' + data.id + '">' + data.tag_name + '</option>');
+//                $('#tags_del_trunk').trigger("chosen:updated");
+//
+//
+//                $('#id_edit_trunk').append('<option value="' + data.id + '">' + data.tag_name + '</option>');
+//                $('#id_edit_trunk').trigger("chosen:updated");
+//
+//                $('#tag_name').val('');
+//
+//                $('.md-close').click();
+
+            },
+            error:function(){
+                 console.log('jj');
+            }
+        });
+
+
+$('#id_local_map_chosen').css('width','215px');
+            //show select local
+            $('#div_id_local_map').css('display','inline');
+
+        }
+        else{
+
+            $('#div_id_local_map').css('display','none');
+        }
+
+    });
+
+
+    $('#id_local_map').on('change', function(e) {
+        var ids_local=$('#id_local_map').val();
+
+        $('#current_local_map').val(ids_local);
+
+
+    });
+
+
+
+
+        $("a[data-toggle=collapse]").click(function (e) {
+
+            if (!$(this).hasClass('clicked')) { // если класса нет
+                $(this).addClass('clicked'); // добавляем класс
+                $(this).children('i').removeClass('fa-chevron-circle-down');
+                $(this).children('i').addClass('fa-chevron-circle-up');
+
+
+                 $(this).children('span').text('Скрыть фильтр');
+
+            } else { // если есть
+                $(this).removeClass('clicked'); // убираем класс
+                $(this).children('i').removeClass('fa-chevron-circle-up');
+                $(this).children('i').addClass('fa-chevron-circle-down');
+
+                $(this).children('span').text('Показать фильтр');
+            }
+        });
 
 
 

@@ -1,4 +1,4 @@
-function changeMode(el) {
+function changeMapView(el) {
 
     let val = el.checked;
     if (val===true) val = 1; else  val = 0;

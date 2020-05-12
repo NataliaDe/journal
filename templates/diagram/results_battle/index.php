@@ -1,143 +1,164 @@
+<div class="box-body">
+<!--    filter 1-->
+    <?php
+    include 'form_year.php';
 
-<!--<div class="box-body">-->
-<?php
-//echo $_SERVER['REQUEST_URI'];
-?>
-<br>
-<center><b>Форма для журнала регистрации поступающих сообщений в ЦОУ Г(Р)ОЧС (ПСЧ)</b></center>
+    ?>
 
-<br><br>
-    <form  role="form" class="form-inline" name="rep1Form" id="rep1Form" method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+<style>
+    .empty-data{
+        color: red;
+        font-weight: 700;
+        text-align: center;
+    }
 
-                <div class="form-group">
-                    <label for="date_start" >с</label>
-                    <div class="input-group date" id="date_start">
-                        <?php
-                              if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
-                                  ?>
-                        <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
+    .download-diagram{
+        padding-left: 90px;
+        padding-right: 15px;
+    }
 
-                        <?php
-                              }
-                              else{
-                                  ?>
-                            <input type="text" class="form-control datetime"  name="date_start" />
-                        <?php
-                              }
-                        ?>
+    .border-diag{
+        border: 1px solid #00a65a;
+        padding: 10px 0px 10px 0px;
+    }
+    .save-as-img-ul{
+        min-width: 127px !important;
 
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
+    }
+    .save-as-img-li{
+        padding-left: 5px !important;
+        padding-right: 5px !important;
+    }
+    .save-as-img-i{
+        margin-right: 5px !important;
+    }
+</style>
 
+    <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2.min.css">
 
-                <div class="form-group">
-                    <label for="date_end">&nbsp;по</label>
-                    <div class="input-group date" id="date_end">
-                            <?php
-                              if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {
-                                  ?>
-                        <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
+    <script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+    <script src="<?= $baseUrl ?>/assets/js/Chart.bundle.js"></script>
+    <script src="<?= $baseUrl ?>/assets/js/FileSaver.js"></script>
+    <script src="<?= $baseUrl ?>/assets/js/canvas-toBlob.js"></script>
+    <script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
 
-                        <?php
-                              }
-                              else{
-                                  ?>
-                       <input type="text" class="form-control datetime"  name="date_end" />
-                        <?php
-                              }
-                        ?>
+    <div class="tab-content " id="year-diag-div">
 
-                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-                    </div>
-                </div>
+        <?php
+        include 'parts/div-year-diag.php';
 
+        ?>
+    </div>
+    <br>
+    <hr>
+<!--    filter 2-->
+    <?php
+    include 'form.php';
 
-        <div class="form-group">
-                    <label for="id_region">Область</label>
-                    <select class="form-control" name="id_region" id="id_region"  >
-   <?php
-   if($_SESSION['id_level'] == 1){
-       ?>
-<!--                        <option value="">все</option>              -->
-                        <?php
-   }
-                        foreach ($region as $re) {
-                            if ( $re['id'] == $_SESSION['id_region'] && $_SESSION['id_level'] != 1) {
-                                printf("<p><option value='%s' selected ><label>%s</label></option></p>", $re['id'], $re['name']);
-                            } elseif($_SESSION['id_level']==1) {
-                                printf("<p><option value='%s' ><label>%s</label></option></p>", $re['id'], $re['name']);
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="id_local">Район</label>
-                    <select class="form-control" name="id_local" id="auto_local"  >
-                        <option value="">Все</option>
-                        <?php
-
-                        foreach ($local as $row) {
-                            if ( $row['id'] == $_SESSION['id_local']  && $_SESSION['id_level'] != 1) {
-                                printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
-                            } else {
-                                printf("<p><option value='%s'   class='%s' ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
+    ?>
 
 
-        <div class="form-group">
-<!--            <label for="reasonrig">Причина вызова</label>-->
-            <select class=" js-example-basic-single form-control" name="reasonrig"   >
-                <option value="">Причина вызова</option>
-                <?php
-                foreach ($reasonrig as $row) {
 
-                        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'],  $row['name']);
+    <div class="tab-content " id="all-diag-div">
+        <?php
+        include 'parts/div-all-diag.php';
 
+        ?>
+    </div>
+
+</div>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('.select2-single-form').select2();
+    });
+
+    $(document).ready(function () {
+        $('.select2-multiple-form').select2();
+    });
+
+    function update(all = 0) {
+
+        var data = {};
+
+        if (all === 1 || all === 2) {
+
+            data = $("#diagramResBattleForm").serializeArray();
+            var arr_obl_local = $("#diag-by-obl-form").serializeArray();
+            data = $.merge(data, arr_obl_local);
+
+            data.push({name: 'all', value: all});
+            // data.push({name: 'reset_filter',  value: reset_filter});
+
+            // $.post('/diagram_results_battle', $("#courses-filter").serialize(), function (res) {
+            $.post('<?= $baseUrl ?>/diagram_results_battle', data, function (res) {
+
+                if (all === 1) {//update all diags
+
+                    $("#all-diag-div").html('');
+                    $("#all-diag-div").html(res);
+
+
+                } else if (all === 2) {//update div by obl
+
+                    $("#diag-by-obl-div").html('');
+                    $("#diag-by-obl-div").html(res);
                 }
 
-                ?>
-            </select>
-        </div>
+            });
 
-        <div class="form-group">
-            <button class="btn bg-purple" type="submit"   >Сформировать</button>
-        </div>
+        } else if (all === 3) {//update div by year
 
-        <br> <br>
-                <div class="form-group">
-                    <div class="checkbox checkbox-success">
-                      <?php
-                         if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
-                                  ?>
-                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1" checked=""  >
-                            <?php
-                        } else {
-                            ?>
-                            <input id="checkbox2" type="checkbox" name="is_neighbor" value="1"  >
-                            <?php
-                        }
-                        ?>
-                        <label for="checkbox2">
-                         Учесть выезды в соседний гарнизон
-                        </label>
-                    </div>
-                </div>
+            data = $("#diagramResBattleFormYear").serializeArray();
+            data.push({name: 'all', value: all});
+
+            $.post('<?= $baseUrl ?>/diagram_results_battle', data, function (res) {
+                $("#diag-by-rb-year-div").html('');
+                $("#diag-by-rb-year-div").html(res);
+            });
+    }
+    }
 
 
+    function resetFilter(all = 0) {
+
+        var cur_year = new Date().getFullYear();
+        var cur_month =<?= date('m') ?>;
+
+        if (all === 1) {//update all diags
+
+            $('form#diagramResBattleForm #id-year').val(cur_year);
+            $('form#diagramResBattleForm #id-year').trigger('change');
+
+            $('form#diagramResBattleForm #id-month').val(cur_month);
+            $('form#diagramResBattleForm #id-month').trigger('change');
+
+            $('form#diagramResBattleForm #type-save-id').val([]).trigger('change');
+            //  $('form#diagramResBattleForm #type-save-id').trigger('change');
+
+        } else if (all === 2) {//update div by obl
+
+            $('form#diag-by-obl-form #id_region_diag').val('');
+            $('form#diag-by-obl-form #id_region_diag').trigger('change');
 
 
-    </form>
-<br><br>
 
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
-в соответствии с формой 2 Приложения 5 к Уставу службы органов и подразделений по чрезвычайным ситуациям Республики Беларусь.
-<br>
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
-    рекомендуем строить отчет за период не больше 1 недели в связи с большим объемом данных.</span>
+        } else if (all === 3) {//update div by year - block 1
+
+            $('form#diagramResBattleFormYear #id-year-year').val(cur_year);
+            $('form#diagramResBattleFormYear #id-year-year').trigger('change');
+
+            $('form#diagramResBattleFormYear #type-save-id-year').val([]).trigger('change');
+
+
+
+        }
+        update(all);
+
+    }
+</script>
+
+
+

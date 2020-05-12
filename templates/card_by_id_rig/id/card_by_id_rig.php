@@ -75,7 +75,7 @@
                             Описание выезда
                         </div>
                         <div class="panel-body">
-                            <p>Дата и время сообщения: <?= date('d.m.Y', strtotime($result['date_msg'])) ?> <?= $result['time_msg'] ?></p>
+                            <p>Дата и время сообщения: <?= date('d.m.Y', strtotime($result['date_msg'])) ?> <?= date('H:i', strtotime($result['time_msg'])) ?></p>
                             <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_loc'])) : '-' ?></p>
                             <p>Дата и время ликвидации: <?= (!empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_likv'])) : '-' ?> </p>
 
@@ -502,8 +502,7 @@ var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
 
 
 <?php
-
-if(isset($results_battle) && !empty($results_battle)){
+if(isset($results_battle) && !empty($results_battle) && (isset(array_count_values($results_battle)[0]) && array_count_values($results_battle)[0]<count($results_battle))){
     ?>
 <div class="panel panel-default">
             <div class="panel-heading">
@@ -543,6 +542,82 @@ if(isset($results_battle) && !empty($results_battle)){
                             </tr>
 
                         </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <?php
+}
+?>
+
+
+
+        <?php
+
+if(isset($trunk) && !empty($trunk)){
+    ?>
+<div class="panel panel-default">
+            <div class="panel-heading">
+                Подача стволов
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                <div class="table-responsive table-bordered">
+                    <table class="table">
+                        <thead>
+                            <tr>
+
+                                <th>Техника</th>
+                                    <th>Ном.знак</th>
+                                    <th>Подразд.</th>
+                                    <th>Вр.подачи<br>ствола</th>
+                                    <th>Тип</th>
+                                    <th>Кол-во</th>
+                                    <th>Израсх.воды/ПО<br>(тонн)</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                                <?php
+                                foreach ($trunk as $key => $value) {
+                                    $k = 0;
+
+                                    ?>
+
+                                    <?php
+                                    foreach ($trunk[$key] as $t) {
+                                        $k++;
+
+                                        ?>
+                                        <tr >
+                                            <?php
+                                            if ($k == 1) {
+
+                                                ?>
+                                                <td rowspan="<?= count($trunk[$key]) ?>"><?= $key ?></td>
+                                                <td rowspan="<?= count($trunk[$key]) ?>"><?= $t['numbsign'] ?></td>
+                                                <td rowspan="<?= count($trunk[$key]) ?>"><?= $t['podr'] ?></td>
+                                                <?php
+                                            }
+
+                                            ?>
+                                            <td><?= $t['time_pod'] ?></td>
+                                            <td><?= $t['type'] ?></td>
+                                            <td><?= $t['cnt'] ?></td>
+                                            <td><?= $t['water'] ?></td>
+
+                                        </tr>
+
+                                        <?php
+                                    }
+                                    ?>
+
+    <?php }
+    ?>
+
+                            </tbody>
                     </table>
                 </div>
                 <!-- /.table-responsive -->

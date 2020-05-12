@@ -1,652 +1,440 @@
 
-            <br>
-            <center> <u><b>НОВОСТИ</b></u></center>
-            <br>
-
-
-            <div class="container">
-
-                <div class='row'>
-
-                    <div class='col-lg-4'>
-                        <div id="dumka1877" poll-id="1877" width="300" height="300"></div>
-                        <script type="text/javascript" src="https://takadumka.info/poll/1877.js"></script>
-
-                    </div>
-
-                    <div class='col-lg-4'>
-
-                        <div id="dumka1886" poll-id="1886" width="300" height="300"></div>
-                        <script type="text/javascript" src="https://takadumka.info/poll/1886.js"></script>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-            <br><br>
-
-
-
-            																				<div class="container">
-                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 29.08.2019</b></i></span>
-                <br>
-
-            </div>
-
-
-													  <div class="container">
-			                              <div class="alert alert-success alert-success-custom">
+ <div class="alert alert-success alert-success-custom">
                     <strong>
-             Добавлен краткий вид главной таблицы с отображением выездов с конкретными причинами выезда. <br>Причины выезда задаются в Настройки->Другие->Вывод в общую таблицу выездов по конкретным причинам. Если в настройках не заданы причины выезда - в таблице отображаются выезды со всеми причинами.<br>
-			 После того, как причины выезда заданы - в верхнем меню появится переключатель между общим видом и кратким - <img src='/journal/assets/images/switch.png'>.<br>
+<p class="block_"style="color:red"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 1. ВНИМАНИЕ!
+    В архивной базе данных за <span class="text_" ><u><b>2019</b></u></span> год в период <u><b>с
+    <span class="text_">01.01.2020 00:00 по 01.01.2020 05:59</span></b></u> находятся выезды на пожары (12 пожар):</p>
 
-			 Для корректного отображения нового вида требуется очистить кэш браузера.
+
+
+	<table class="table_">
+		<tbody class="table table-condensed   table-bordered table-custom"><tr class="calibre2">
+			<td class="td_"><p class="block_1">ID</p></td>
+			<td class="td_1"><p class="block_1">Дата поступления сообщения</p></td>
+			<td class="td_2"><p class="block_1">Время поступления сообщения</p></td>
+			<td class="td_3"><p class="block_1">Описание</p></td>
+			<td class="td_2"><p class="block_1">Причина выезда</p></td>
+			<td class="td_4"><p class="block_1">Адрес выезда</p></td>
+
+			<td class="td_6"><p class="block_1">Область</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327061</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">02:27:00</p></td>
+			<td class="td_10"><p class="block_3">загорание пластикового мусорного контейнера</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3"> г. Брест, Улица Гоголя, дом 81А</p></td>
+
+			<td class="td_13"><p class="block_3">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327017</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">01:09:00</p></td>
+			<td class="td_10"><p class="block_3">Загорание в хозяйственном строении (бане) </p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3"> г. Барановичи, Улица Гастелло, дом 17</p></td>
+
+			<td class="td_13"><p class="block_3">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327114</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">03:05:00</p></td>
+			<td class="td_10"><p class="block_4">&nbsp;</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3"> г. Витебск, Проспект Московский, дом 16</p></td>
+
+			<td class="td_13"><p class="block_3">Витебская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327021</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">02:26:00</p></td>
+			<td class="td_10"><p class="block_3">ул.Уборевича,126</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3"> г. Минск, Улица Уборевича, дом 126</p></td>
+
+			<td class="td_13"><p class="block_3">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327016</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">00:52:00</p></td>
+			<td class="td_10"><p class="block_3">Горит грузовой автомобиль в гараже</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">г. Рогачёв, Улица Генерала Петровского, дом 26</p></td>
+
+			<td class="td_13"><p class="block_3">Гомельская</p></td>
+		</tr>
+		<tr class="calibre2">
+                    <td class="td_7"><p class="block_2" style="color:red; font-weight: 600;"><a name="327107" style="color:red;">327107</a></p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">05:15:00</p></td>
+			<td class="td_10"><p class="block_3">горит баня</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">д. Меляховичи, дом 45</p></td>
+
+			<td class="td_13"><p class="block_3">Гродненская</p></td>
+		</tr>
+		<tr class="calibre2">
+                    <td class="td_7"><p class="block_2" style="color:red; font-weight: 600;"><a name="327103" style="color:red;">327103</a></p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">04:30:00</p></td>
+			<td class="td_10"><p class="block_3">горит жилой дом</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">аг. Большие Шиловичи, Улица Анны Король, дом 76</p></td>
+
+			<td class="td_13"><p class="block_3">Гродненская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327042</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">02:00:00</p></td>
+			<td class="td_10"><p class="block_3">после запуска фейерверка</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">г. Старые Дороги, Улица Пролетарская, дом 31</p></td>
+
+			<td class="td_13"><p class="block_3">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">326996</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">01:20:00</p></td>
+			<td class="td_10"><p class="block_3">Загорание гаража</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">г. Борисов, Улица Коллективная, дом 40</p></td>
+
+			<td class="td_13"><p class="block_3">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327097</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">05:52:00</p></td>
+			<td class="td_10"><p class="block_3">загорание квартиры</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3"> г. Могилев, Улица Каштановая, дом 29, 85</p></td>
+
+			<td class="td_13"><p class="block_3">Могилевская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_7"><p class="block_2">327092</p></td>
+			<td class="td_8"><p class="block_2">2020-01-01</p></td>
+			<td class="td_9"><p class="block_2">03:42:00</p></td>
+			<td class="td_10"><p class="block_3">загорание дома</p></td>
+			<td class="td_9"><p class="block_3">12 пожар</p></td>
+			<td class="td_11"><p class="block_3">д. Ильинка, Улица Лесная, дом 13</p></td>
+
+			<td class="td_13"><p class="block_3">Могилевская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_14"><p class="block_2">326999</p></td>
+			<td class="td_15"><p class="block_2">2020-01-01</p></td>
+			<td class="td_16"><p class="block_2">01:28:00</p></td>
+			<td class="td_17"><p class="block_3">Загорание пластикового мусорного контейнера</p></td>
+			<td class="td_16"><p class="block_3">12 пожар</p></td>
+			<td class="td_18"><p class="block_3"> г. Могилев, Проспект Пушкинский, дом 16</p></td>
+
+			<td class="td_20"><p class="block_3">Могилевская</p></td>
+		</tr>
+	</tbody></table>
+	<p class="block_5">&nbsp;</p>
+        <p class="block_" style="color: red"><b>(04 другие загорания):</b></p>
+	<p class="block_"></p>
+	<table class="table_1">
+		<tbody class="calibre1"><tr class="calibre2">
+						<td class="td_"><p class="block_1">ID</p></td>
+			<td class="td_1"><p class="block_1">Дата поступления сообщения</p></td>
+			<td class="td_2"><p class="block_1">Время поступления сообщения</p></td>
+			<td class="td_3"><p class="block_1">Описание</p></td>
+			<td class="td_2"><p class="block_1">Причина выезда</p></td>
+			<td class="td_4"><p class="block_1">Адрес выезда</p></td>
+
+			<td class="td_6"><p class="block_1">Область</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327068</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">03:10:00</p></td>
+			<td class="td_27"><p class="block_7">горит солома</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">д. Толково, Улица Заречная, дом 9</p></td>
+
+			<td class="td_13"><p class="block_7">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327054</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:55:00</p></td>
+			<td class="td_27"><p class="block_7">Загорание мусорного контейнера</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Барановичи, Улица Багрима, дом 23</p></td>
+
+			<td class="td_13"><p class="block_7">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327036</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">01:32:00</p></td>
+			<td class="td_27"><p class="block_7">горит дом</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">гп. Ружаны, Улица Интернациональная, дом 10, кв.2</p></td>
+
+			<td class="td_13"><p class="block_7">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327005</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">00:43:00</p></td>
+			<td class="td_27"><p class="block_7">Горит дом</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">д. Трушево, Улица Советская, дом 14</p></td>
+
+			<td class="td_13"><p class="block_7">Брестская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327083</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">04:37:00</p></td>
+			<td class="td_27"><p class="block_7">Задымление в доме</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">г. Орша, Переулок Заводской 2-й, дом 6а</p></td>
+
+			<td class="td_13"><p class="block_7">Витебская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327071</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">03:08:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">г. Новолукомль, Улица Набережная, дом 13</p></td>
+
+			<td class="td_13"><p class="block_7">Витебская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327112</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:08:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Витебск, Улица 11-я Социалистическая, дом 8, корп.1</p></td>
+
+			<td class="td_13"><p class="block_7">Витебская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327086</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">05:33:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Голубева, дом 22 корп.1 кв.323</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327069</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">04:03:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Кольцова, дом 37 (напротив)</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327051</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">03:23:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Налибокская, дом 36 (напротив)</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327020</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:21:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Уборевича, дом 126 под.1, кв. 11</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">326971</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">00:54:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Петра Мстиславца, дом 20 (напротив)</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">326942</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">00:20:00</p></td>
+			<td class="td_27"><p class="block_8">&nbsp;</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Минск, Улица Слободская, дом 111 под.2</p></td>
+
+			<td class="td_13"><p class="block_7">г.Минск</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327053</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">03:20:00</p></td>
+			<td class="td_27"><p class="block_7">Горение мусорного контейнера во дворе</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Гомель, Улица Бородина Т.С., дом 14</p></td>
+
+			<td class="td_13"><p class="block_7">Гомельская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327088</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">05:18:00</p></td>
+			<td class="td_27"><p class="block_7">Загорание мусора в контейнере</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Гродно, Улица Владимира Короткевича</p></td>
+
+			<td class="td_13"><p class="block_7">Гродненская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327022</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:26:00</p></td>
+			<td class="td_27"><p class="block_7">загорание мусора в контейнере</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Гродно, Улица Поповича, дом 12, А</p></td>
+
+			<td class="td_13"><p class="block_7">Гродненская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327019</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:04:00</p></td>
+			<td class="td_27"><p class="block_7">запах гари</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Гродно, Проспект Космонавтов, дом 6Б</p></td>
+
+			<td class="td_13"><p class="block_7">Гродненская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327072</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">04:05:00</p></td>
+			<td class="td_27"><p class="block_7">Задымление в доме</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">гп. Холопеничи, Улица Ленинская, дом 26</p></td>
+
+			<td class="td_13"><p class="block_7">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327050</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">03:06:00</p></td>
+			<td class="td_27"><p class="block_7">горит жилой дом</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">аг. Задорье, Улица Центральная, дом 1</p></td>
+
+			<td class="td_13"><p class="block_7">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327070</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:40:00</p></td>
+			<td class="td_27"><p class="block_7">Загорание мусорного контейнера</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">гп. Свислочь, Улица Строителей, дом 11</p></td>
+
+			<td class="td_13"><p class="block_7">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327000</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">01:36:00</p></td>
+			<td class="td_27"><p class="block_7">запах дыма в подъезде</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Жодино, Улица Советская, дом 35</p></td>
+
+			<td class="td_13"><p class="block_7">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">326982</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">00:59:00</p></td>
+			<td class="td_27"><p class="block_7">Горит мусорный контейнер</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7">г. Молодечно, Улица Магистральная, дом 1</p></td>
+
+			<td class="td_13"><p class="block_7">Минская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327044</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">02:39:00</p></td>
+			<td class="td_27"><p class="block_7">Что-то горит</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Бобруйск, Улица Социалистическая, дом 199</p></td>
+
+			<td class="td_13"><p class="block_7">Могилевская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_26"><p class="block_7">327028</p></td>
+			<td class="td_9"><p class="block_7">2020-01-01</p></td>
+			<td class="td_9"><p class="block_7">01:58:00</p></td>
+			<td class="td_27"><p class="block_7">Загорание мусора в мусорном подземном контейнере</p></td>
+			<td class="td_28"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_29"><p class="block_7"> г. Могилев, Улица Грюнвальдская, дом 5</p></td>
+
+			<td class="td_13"><p class="block_7">Могилевская</p></td>
+		</tr>
+		<tr class="calibre2">
+			<td class="td_31"><p class="block_7">326962</p></td>
+			<td class="td_16"><p class="block_7">2020-01-01</p></td>
+			<td class="td_16"><p class="block_7">00:39:00</p></td>
+			<td class="td_32"><p class="block_7">горит баня</p></td>
+			<td class="td_33"><p class="block_7">04 другие загорания</p></td>
+			<td class="td_34"><p class="block_7">г. Славгород, Улица Шабловского, дом 20А</p></td>
+
+			<td class="td_20"><p class="block_7">Могилевская</p></td>
+		</tr>
+	</tbody></table>
 
 
                     </strong>
-                </div>
-				 </div>
-
-            <div class="container">
-                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 04.01.2019</b></i></span>
-                <br>
-
-            </div>
-
-
-            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>По предложению Гомельского областного УМЧС в классификатор "Вид работ" добавлена позиция "открывание дверей" для причины вызова "Помощь населению".
-                    </strong>
-                </div>
+ </div>
+        <br>
 
                 <div class="alert alert-success alert-success-custom">
                     <strong>
-                        По запросу Гомельского областного УМЧС созданы пользователи для:<br>
-                        - Гомельского ПАСО<br>
-                        - ПАСО №4 Мозырского ГРОЧС<br>
-                        - ПАСО №3 Речицкого РОЧС<br> с правом создавать/редактировать выезды.
+
+	<p class="block_"></p>
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 2.  При необходимости
+            учета их в боевой работе за <span class="text_">2020</span> год обращайтесь в ОВПО для переноса конкретных выездов
+            в архивную базу данных за <span class="text_1">2020 год </span>(укажите конкретные <b lang="en" class="calibre3">ID</b>).
+            Другие выезды с другими причинами выезда за этот период (кроме пожара, ЧС, другие загорания) могут быть рассмотрены в индивудуальном порядке.</p>
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>  3.  При этом будет автоматически пересчитана статистика за <b class="calibre3">2020 год</b> по боевой работе.</p>
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 4.  Также обращаем внимание,
+            что в некоторых УМЧС выезды, которые случились в ночь с 31 на 01 (например, выезды в Гродненском ОУМЧС с ID: <span style="color:red; font-weight: 600;"><a href="#327107" style="color:red;">327107</a>, <a href="#327103" style="color:red;">327103</a></span>), были самостоятельно продублированы позже
+            в оперативной базе данных текущего года.</p>
+
+
+
+
+
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 5.  В 2021 году выезды с 01.01.2021 00:00 и далее будут рассматриваться и использоваться статистикой как выезды 2021 года по предложениям УМЧС (до этого выезды с 31 по 01 относились к прошлому году).</p>
+
+
+        <p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 6.
+            В связи с разночтениями учета данных по выездам и начала заполнения сведений с октября 2019 года отчет по боевой работе за 2019 год может выдавать некорректные данные.</p>
+
                     </strong>
                 </div>
 
 
-                <div class="alert alert-info alert-info-custom">
-                    <strong>При создании пользователя в поле "ФИО пользователя" разрешено вводить цифры.
-                    </strong>
-                </div>
-            </div>
-
-
-        <div class="container">
-                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 26.12.2018</b></i></span>
-                <br>
-
-            </div>
-
-
-            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>26.12.2018 была восстановлена работоспособность ПС в связи с переходом на другое
-                        серверное программное обеспечение. <br>
-                    </strong>
-                </div>
-
-                              <div class="alert alert-info alert-info-custom">
-                    <strong>
-                        Выезды до 26.12.2018 удалены из БД. <br><br>В дальнейшем в целях экономии серверного пространства и увеличения скорости обработки данных 1 раз в
-                        месяц будет производиться очистка старых данных. <br><br>В 2019 году будет разрабатываться механизм,
-                        позволяющий сохранять старые данные в архив для дальнейшей выборки и аналитики.
-                    </strong>
-                </div>
-
-                                <div class="alert alert-success alert-success-custom">
-                                    <strong>В классификатор "Причина выезда" добавлены позиции "другие загорания" (тушение пожара), "демеркуризация" (замеры ПДК, сбор ртути),
-                                        "помощь организациям" (взаимодействие с другими организациями, помощь ГАИ, помощь горгаз, помощь ЖКХ), "выезд в соседний гарнизон" (тушение пожара в соседнем гарнизоне, тушение других загораний).
-</strong>
-
-                </div>
-
-
-            </div>
-
-
-
-
-            <div class="container">
-                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 06.12.2018</b></i></span>
-                <br>
-
-            </div>
-
-
-            <div class="container"><br>
-                <div class="alert alert-danger alert-danger-custom">
-                    <strong>06.12.2018 проводится обновление ПС "Журнал ЦОУ" до версии 1.6. Не забываем очищать кэш браузера. <br>Возможна некорректная работа ПС.
-                    </strong>
-                </div>
-
-
-                <div class="alert alert-success alert-success-custom">
-                    <strong>В главной таблице выездов добавлена возможность отобразить/скрыть столбец с информацией об авторе-создателе выезда.
-</strong>
-
-                </div>
-
-				                <div class="alert alert-success alert-success-custom">
-                    <strong>В главной таблице выездов добавлен функционал по отображению иконок "Техника", "Информирование", "Временные характеристики" красным цветом, если информация на данных вкладках не заполнена.
-</strong>
-
-                </div>
-
-								                <div class="alert alert-success alert-success-custom">
-                    <strong>В главной таблице выездов в поле "Адрес" выводится содержимое поля "Дополнительное поле, если нет адреса", если оно заполнено.
-</strong>
-
-                </div>
-
-											                <div class="alert alert-success alert-success-custom">
-                    <strong>При высылке техники есть возможность выбирать технику ЦОУ.
-</strong>
-
-                </div>
-
-											                <div class="alert alert-success alert-success-custom">
-                    <strong>На вкладке "Высылка техники" по каждой единице технике отображается ее статус: боевая, резерв, ТО, ремонт.
-</strong>
-
-                </div>
-
-            </div>
-
-
-
-																														            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 16.11.2018</b></i></span>
- <br>
-
-            </div>
-
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>По результатам встречи в ЦОУ г. Минска в очередной раз переработан классификатор "Причина вызова" и связанный с ним классификатор "Вид работ". Предложения и замечания направьте в ОВПО РЦУРЧС в устной (8-017-209-27-51) или письменной форме.
-</strong>
-
-                </div>
-            </div>
-
-
-
-																											            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 15.11.2018</b></i></span>
- <br>
-
-            </div>
-
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>ПС обновлено до версии 1.5. Работает зависимость видов работ от выбранной причины вызова. Обратная зависимость отменена.
-</strong>
-
-                </div>
-            </div>
-
-
-
-
-																								            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 09.11.2018</b></i></span>
- <br>
-
-            </div>
-
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Добавлена причина вызова "служебный" и связанные с ней виды работ (покраска фасада, проверка ПФС).
-</strong>
-
-                </div>
-            </div>
-
-
-																					            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 05.11.2018</b></i></span>
- <br>
-
-            </div>
-
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>РЦУРЧС предлагает обсуждать спорные вопросы разработки и нового функционала путем голосования, использую сервис Taka Dumka (пример приведен выше).
-</strong>
-
-                </div>
-            </div>
-
-
-														 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Добавлено 2 новых вида работ (испытания рукавов, испытания оборудования) для причины вызова "ремонт, ТО, испытания".
-</strong>
-
-                </div>
-            </div>
-
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>По предложению Гомельского областного УМЧС реализован функционал по зависимостям между причиной вызова и видами работ.
-</strong>
-
-                </div>
-            </div>
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>В главной таблице вызовов отображается краткая информация о привлекаемых подразделениях и техники.
-</strong>
-
-                </div>
-            </div>
-
-
-														 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                       <strong>Реализован функционал по назначению различным причинам вызовов своего цвета.
-					<br>Для этого необходимо обратиться в ОВПО РЦУРЧС для получения учетных данных для каждого диспетчера, кому нужен этот функционал.
-					<br>Данный функционал находится в главном меню, раздел "Настройки", подраздел "Причина вызова".
-					<br><span style="color: red; ">Функционал по назначению различным статусам вызовов своего цвета ОТМЕНЕН (отменено поле "Статус выезда" на вкладке "Дополнительно" при создании вызова).</span>
-</strong>
-
-                </div>
-            </div>
-
-
-
-																		            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 05.11.2018</b></i></span>
- <br>
-
-            </div>
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-danger alert-danger-custom">
-                    <strong>05.10.2018 будет проводиться обновление ПС "Журнал ЦОУ" до версии 1.4. Не забываем очищать кэш браузера. <br>Возможна некорректная работа ПС.<br>При возникновении ошибок - сообщать по телефону 8 (017) 209 27 51.
-</strong>
-
-                </div>
-            </div>
-
-
-
-																		            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 05.10.2018</b></i></span>
- <br>
-
-            </div>
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-danger alert-danger-custom">
-                    <strong>Диспетчеру г.Минска не отображаются выезды, созданные пользователями РОСН.
-</strong>
-
-                </div>
-            </div>
-
-
-															            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 18.09.2018</b></i></span>
- <br>
-
-            </div>
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-danger alert-danger-custom">
-                    <strong>Проведено обновление ПС "Журнал ЦОУ" до версии 1.3. Не забываем очищать кэш браузера.<br>При возникновении ошибок - сообщать по телефону 8 (017) 209 27 51.
-</strong>
-
-                </div>
-            </div>
-
-
-												 <div class="container"><br>
-			                <div class="alert alert-success alert-success-custom">
-                    <strong>Исправлена ошибка обнуления адреса после высылки техники при переходе через кнопку "Редактировать выезд".
-</strong>
-
-                </div>
-            </div>
-
-
-									 <div class="container"><br>
-			                <div class="alert alert-success alert-success-custom">
-                    <strong>Устранена ошибка по отображению выездов за текущие сутки в г.Новополоцке.
-</strong>
-
-                </div>
-            </div>
-
-
-									 <div class="container"><br>
-			                <div class="alert alert-success alert-success-custom">
-                    <strong>Исправлена орфографическая ошибка в названии улицы Иосифа Гашкевича (Уручье, г.Минск).
-</strong>
-
-                </div>
-            </div>
-
-
-						 <div class="container"><br>
-			                <div class="alert alert-success alert-success-custom">
-                    <strong>По предложениям диспетчеров ЦОУ 101 г.Минска на вкладке "Высылка техники" все подразделения отсортированы в указанном порядке.
-</strong>
-
-                </div>
-            </div>
-
-
-			 <div class="container"><br>
-			                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализован вывод объекта (при его наличии) в поле "Адрес объекта" в общей таблице выездов.
-</strong>
-
-                </div>
-            </div>
-
-
-																	 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализовано предложение диспетчеров ЦОУ 101 г. Минска по назначению различным типам выездов своего цвета по предпочтениям диспетчера.
-					<br>Для этого необходимо обратиться в ОВПО РЦУРЧС для получения учетных данных для каждого диспетчера, кому нужен этот функционал.
-					<br>Данный функционал находится в главном меню, раздел "Настройки", подраздел "Статус выезда".
-</strong>
-
-                </div>
-            </div>
-
-														 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализована функция по сокращенному выводу текста в поле "Детализированная информация" общей таблицы выездов в целях экономии пространства монитора.
-</strong>
-
-                </div>
-            </div>
-
-
-														 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>В общей таблице выездов не отображается сокращение корпус, квартира, если они не заполнены.
-</strong>
-
-                </div>
-            </div>
-
-											 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Во вкладке "Высылка техники" с текущей версии разрешено выбирать технику, находящуюся в ремонте и ТО.
-</strong>
-
-                </div>
-            </div>
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализовано формирование путевки в формате pdf и excel (в соответствии с уставом).
-</strong>
-
-                </div>
-            </div>
-
-
-								 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализован функционал по учету выезда оперативной группы.
-</strong>
-
-                </div>
-            </div>
-
-
-						 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Устранена ошибка неотображения адреса при отсутствии улицы.
-</strong>
-
-                </div>
-            </div>
-
-
-
-															            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 05.09.2018</b></i></span>
- <br>
-
-            </div>
-
-
-
-						 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Все выезды до 01.09.2018 заархивированы и удалены из БД.
-</strong>
-
-                </div>
-            </div>
-
-
-
-
-												            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 24.08.2018</b></i></span>
- <br>
-
-            </div>
-
-
-
-						 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>В таблице выездов вместо содержания поступившей информации отображается детализированная информация о выезде.
-</strong>
-
-                </div>
-            </div>
-
-
-						 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>На вкладке "Обработка выезда" добавлена сортировка районов г.Минска по предпочтениям диспетчеров г.Минска.
-</strong>
-
-                </div>
-            </div>
-
-
-						 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>На вкладке "Обработка выезда" этажность, этаж объединены в единое поле.
-</strong>
-
-                </div>
-            </div>
-
-
-			 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>На вкладке "Обработка выезда" корпус, квартира, подъезд объединены в единое поле.
-</strong>
-
-                </div>
-            </div>
-
-
-			 			            <div class="container"><br>
-                <div class="alert alert-success alert-danger-custom">
-                    <strong>В связи с обновлением версии программного средства - просьба СБРОСИТЬ КЭШ БРАУЗЕРА.
-</strong>
-
-                </div>
-            </div>
-
-									            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 23.08.2018</b></i></span>
- <br>
-
-            </div>
-
-
-
-
- 			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Добавлена позиция "ГАИ" в классификатор "службы взаимодействия".
-</strong>
-
-                </div>
-            </div>
-
-
-			            <div class="container"><br>
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализован выбор позиции "Ликвидация пожара до прибытия" во вкладке "Временные характеристики".
-</strong>
-
-                </div>
-            </div>
-
-			 									<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Устранена ошибка выбора высылки техники после регистрации вызова (предложения Гомельского областного УМЧС).
-</strong>
-
-                </div>
-            </div>
-
-			 									<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Реализовано отображение выездов при фильтрации и отчете с 06:00 до 06:00 указанных дат.
-</strong>
-
-                </div>
-            </div>
-
-
- 									<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Проведено обновление программного средства.
-</strong>
-
-                </div>
-            </div>
-
-
-
-
-						<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>Возможна некорректная работа программного средства в связи с обновлением функционала.
-</strong>
-
-                </div>
-            </div>
-			<br>
-
-
-
-
-						            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 26.06.2018</b></i></span>
-            </div>
-						<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>7. В классификатор "Службы" добавлен ГИМС (раздел "Привлекаемые силы и средства других ведомств").
-</strong>
-
-                </div>
-            </div>
-			<br>
-			            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>6. Реализована функция для постановки техники в состояние "отбой". При выборе данного переключателя активными являются только поля "Время выезда" и "Время возвращения".
-					Техника отображается красным цветом, а в журнале выделяется зачеркнутым текстом.
-</strong>
-
-                </div>
-            </div>
-
-
-
-			            <div class="container">
- <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 14.06.2018</b></i></span>
-            </div>
-
-			            <br>
-
-
-
-
-          <!--   <center style="color: #a94442; font-size: 15px;"> <i><b>  Глобальные изменения в версии 1.6:</b></i></center> -->
-            <br>
-
-            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>5. Реализована функция для г. Минска по отображению выездов по умолчанию за текущие сутки (с 6-00 утра до 6-00 ночи).
-Эта функция будет работать по умолчанию для всех подразделений.</strong>
-
-                </div>
-            </div>
-
-            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>4. Реализована функция для г. Минска для выбора сначала района, а затем улицы.
-Также улицу г. Минска можно выбрать не выбирая район. </strong>
-                </div>
-            </div>
-
-
-
-            <div class="container">
-                <div class="alert alert-danger alert-danger-custom">
-                    <strong>
-3. <u>Важно!</u> При отсутствии конкретной улицы в населенном пункте - можно использовать поле "Дополнительное поле" (если нет адреса или улицы).
-Если справочник улиц необходимо расширить - направляйте официальное письмо в РЦУРЧС с указанием отсутствующих улиц в разрезе населенных пунктов,
-т.к. все улицы в программном средстве формируются на основе данных РУП "Национальное кадастровое агентство". </strong>
-                </div>
-            </div>
-
-
-
-
-            <div class="container">
-                <div class="alert alert-info alert-info-custom">
-                    <strong>2. 12.06.2018 рассмотрены первые предложения Гомельского ГОЧС (в работу взята только ошибка, связанная с редактированием выездов).
-На перспективу учтено предложение по установке параметра-переключателя "отбой техники" на вкладке "Временные характеристики"
-(необходимо продумать, разработать и направить в РЦУРЧС чёткий алгоритм работы данного функционала). </strong>
-                </div>
-            </div>
-
-
-
-            <div class="container">
-                <div class="alert alert-success alert-success-custom">
-                    <strong>1. С 08.06.2018 по 29.06.2018 будет проведена первая опытная эксплуатация опытного образца программного средства "Журнал ЦОУ"
-в опытной зоне г. Минск, Пинский ГРОЧС, Гомельский ГОЧС.</strong>
-
-                </div>
-            </div>
 

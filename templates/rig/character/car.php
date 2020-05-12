@@ -213,16 +213,16 @@ if(isset($sily)&& !empty($sily)){
             <label for="distance<?= $i ?>">Расстояние, км</label>
             <?php
 
-            if (isset($row['is_return']) && $row['is_return'] == 1) {//отбита
+           // if (isset($row['is_return']) && $row['is_return'] == 1) {//отбита
                 ?>
-            <input disabled="" type="text" class="form-control"   name="sily[<?= $row['id_sily'] ?>][distance]"  placeholder="км"  value="<?= $row['distance']  ?>">
+<!--            <input disabled="" type="text" class="form-control"   name="sily[<?= $row['id_sily'] ?>][distance]"  placeholder="км"  value="<?= $row['distance']  ?>">-->
             <?php
-            }
-            else{
+           // }
+            //else{
                 ?>
               <input type="text" class="form-control"   name="sily[<?= $row['id_sily'] ?>][distance]"  placeholder="км"  value="<?= $row['distance']  ?>">
             <?php
-            }
+            //}
             ?>
 
         </div>

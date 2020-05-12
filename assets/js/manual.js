@@ -2038,7 +2038,7 @@ function setReturnCar(i, n) {
     var t_arr = 'sily[' + i + '][time_arrival]';
     var t_follow = 'sily[' + i + '][time_follow]';
     var t_end = 'sily[' + i + '][time_end]';
-    var distance = 'sily[' + i + '][distance]';
+    //var distance = 'sily[' + i + '][distance]';
 
 
     var is_return = $('input[name="' + is_return_name + '"]').prop('checked');
@@ -2049,18 +2049,18 @@ function setReturnCar(i, n) {
         $('input[name="' + t_arr + '"]').prop('disabled', true); // disable
         $('input[name="' + t_follow + '"]').prop('disabled', true); // disable
         $('input[name="' + t_end + '"]').prop('disabled', true); // disable
-        $('input[name="' + distance + '"]').prop('disabled', true); // disable
+       // $('input[name="' + distance + '"]').prop('disabled', true); // disable
 
         $('input[name="' + t_arr + '"]').val('');
         $('input[name="' + t_follow + '"]').val('');
         $('input[name="' + t_end + '"]').val('');
-        $('input[name="' + distance + '"]').val('');
+       // $('input[name="' + distance + '"]').val('');
     }
     else {
         $('input[name="' + t_arr + '"]').prop('disabled', false); // enabled
         $('input[name="' + t_follow + '"]').prop('disabled', false); // enabled
         $('input[name="' + t_end + '"]').prop('disabled', false); // enabled
-        $('input[name="' + distance + '"]').prop('disabled', false); // enabled
+       // $('input[name="' + distance + '"]').prop('disabled', false); // enabled
     }
 
 }
@@ -2365,8 +2365,8 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
     }
 
 
-/* podr for select */
-    if(reason == 18){
+/* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
+    if(reason == 18 || reason == 47 || reason == 75 ){
 
         $('#rigForm #div_podr_zanytia').show();
         $("#zanyatia-id .select2-selection").addClass('blue-border-input');
@@ -2375,7 +2375,32 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
          $('#rigForm #div_podr_zanytia').hide();
     }
 
+
 });
+
+
+/* change work view */
+$('#rigForm #id_workview').on('change', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var work_view = $('#rigForm #id_workview').val();
+
+
+
+    /* fio head check:  18 - zanytia + proverka boegotovnosty*/
+    if(reason == 18 && work_view == 254){
+
+        $('#rigForm #div_fio_head_check').show();
+        $("#fio-head-check-id input").addClass('blue-border-input');
+    }
+    else{
+        $("#fio-head-check-id input").val('');
+         $('#rigForm #div_fio_head_check').hide();
+    }
+
+});
+
+
 
 
 $('#rigForm #object_id').on('keyup', function (e) {
@@ -2654,6 +2679,7 @@ $('#rigForm select[name="podr_zanytia"]').on('change', function (e) {
 
 
     var podr_zanytia = $('#rigForm select[name="podr_zanytia"]').val();
+    var podr_zanytia_text = $('#rigForm select[name="podr_zanytia"] option:selected').text();
 //alert(podr_zanytia);
 
 if(podr_zanytia !== ''){
@@ -2713,6 +2739,10 @@ if(podr_zanytia !== ''){
                 $('#rigForm input[name="housing"]').val(data.housing);
 
 
+                /* set coords to map */
+                setCoordToMap(data.latitude, data.longitude, podr_zanytia_text);
+
+
             });
 
             $(document).ready(function () {
@@ -2750,3 +2780,85 @@ else{
 //                        $("#ajax-intensivnost-study").html(JSON.parse(res)['innerHtml3']);
 //                    })
 //                }
+
+
+/*  SD */
+$('.select2-single').select2({
+    placeholder: "Выберите из списка",
+    allowClear: true,
+    "language": {
+        "noResults": function () {
+            return "Ничего не найдено";
+        }
+    }
+});
+
+
+$('body').on('change', '#userForm #id_user_sd', function (e) {
+
+    e.preventDefault();
+
+    var user_sd = $(this).val();
+
+    if (user_sd !== '') {
+        $('#userForm').find('.row-data-for-sd').removeClass("show");
+        $('#userForm').find('.row-data-for-sd').addClass("hide");
+    } else {
+
+        $('#userForm').find('.row-data-for-sd').removeClass("hide");
+        $('#userForm').find('.row-data-for-sd').addClass("show");
+    }
+    // alert(user_sd);
+
+});
+
+
+
+jQuery("#id_local_bokk").chained("#id_region_bokk");
+
+
+function changeModeRep1(el) {
+
+    let val = el.checked;
+    if (val===true) val = 1; else  val = 0;
+    let link = $(el).data('link');
+    let by_place = $(el).data('place-descr');
+    let by_podr = $(el).data('podr-descr');
+
+    if(val === 1){
+       // $('#block-mode-rep1-descr').text(by_podr);
+        $('input[name="is_neighbor"]').prop('disabled',true);
+        $('#block-neighbor-descr').css('opacity','0.5');
+    }
+    else{
+       // $('#block-mode-rep1-descr').text(by_place);
+        $('input[name="is_neighbor"]').prop('disabled',false);
+        $('#block-neighbor-descr').css('opacity','1');
+
+    }
+
+}
+
+
+
+function changeNeighborRep1(el) {
+
+    let val = el.checked;
+    if (val===true) val = 1; else  val = 0;
+    let link = $(el).data('link');
+    let not_neighbor_descr = $(el).data('not-neighbor-descr');
+    let neighbor_descr = $(el).data('neighbor-descr');
+
+    if(val === 1){
+       // $('#block-neighbor-descr').text(neighbor_descr);
+       $('#lable-for-neighbor').attr('data-original-title',neighbor_descr);
+    }
+    else{
+        //$('#block-neighbor-descr').text(not_neighbor_descr);
+        $('#lable-for-neighbor').attr('data-original-title',not_neighbor_descr);
+
+    }
+}
+
+
+

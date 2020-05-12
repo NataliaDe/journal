@@ -2,7 +2,7 @@
 <section class="content-header">
 
     <!--            bread crumb-->
-    
+
     <ol class="breadcrumb">
         <li><a href="<?= $baseUrl ?>"><i class="fa fa-lg fa-home"></i> Журнал ЦОУ</a></li>
         <?php

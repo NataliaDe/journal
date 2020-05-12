@@ -8,16 +8,23 @@
 
                 <div class='row'>
 
+
                     <div class='col-lg-4'>
-                        <div id="dumka1877" poll-id="1877" width="300" height="300"></div>
-                        <script type="text/javascript" src="https://takadumka.info/poll/1877.js"></script>
+
+<div id="dumka1991" poll-id="1991" width="300" height="300"></div>
+<script type="text/javascript" src="https://takadumka.info/poll/1991.js"></script>
 
                     </div>
 
                     <div class='col-lg-4'>
+<div id="dumka1992" poll-id="1992" width="300" height="300"></div>
+<script type="text/javascript" src="https://takadumka.info/poll/1992.js"></script>
 
-                        <div id="dumka1886" poll-id="1886" width="300" height="300"></div>
-                        <script type="text/javascript" src="https://takadumka.info/poll/1886.js"></script>
+                    </div>
+
+                    <div class='col-lg-4'>
+<div id="dumka1993" poll-id="1993" width="300" height="300"></div>
+<script type="text/javascript" src="https://takadumka.info/poll/1993.js"></script>
 
                     </div>
 
@@ -26,6 +33,41 @@
             </div>
 
             <br><br>
+
+
+            <div class="container">
+                <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 11.02.2020</b></i></span>
+                <br>
+
+            </div>
+
+            <div class="container">
+                <div class="alert alert-info alert-info-custom">
+                    <strong>
+                        Выезды с 01.01.2020 00:00 до 01.02.2020 06:00 перенесены в архив.<br>
+
+                        <p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>  Дополнительно были удалены 4 выезда с датой поступления сообщения больше чем текущая дата (например с годом 2038).</p>
+
+
+                        <!--Для корректной работы функционала требуется очистить кэш браузера.-->
+
+
+                    </strong>
+                </div>
+                <?php
+                include 'news_archive_2020.php';
+
+                ?>
+
+
+            </div>
+
+
+
+
+
+
+
 
 
 
@@ -47,7 +89,16 @@
 
                     </strong>
                 </div>
-				 </div>
+
+
+                                                                                                          </div>
+
+
+
+
+
+
+
 
             <div class="container">
                 <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 04.01.2019</b></i></span>

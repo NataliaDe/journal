@@ -252,18 +252,19 @@
 
 
             <li class="treeview">
-                <a href="#">
+                <a href="#" style="width:300px">
                     <i class="fa fa-file-o" aria-hidden="true"></i>
                     <span>Отчеты</span>
                     <i class="fa fa-angle-left pull-right"></i>
                 </a>
-                <ul class="treeview-menu">
+                <ul class="treeview-menu" style="width:250px">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
                     <li><a href="<?= $baseUrl ?>/report/rep2" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа</a></li>
                     <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</span></a></li>
                     <li><a href="<?= $baseUrl ?>/table_close_rigs" target="_blank"><i class="fa fa-chevron-circle-down"></i> Выезды за сутки</a></li>
+                    <li><a href="<?= $baseUrl ?>/report/rep4" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа</a></li>
 <!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
                 </ul>
             </li>
