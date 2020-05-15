@@ -29,7 +29,7 @@
             if (date("H:i:s") <= '06:00:00') {//до 06 утра
 
                 ?>
-                Выезды <?= (isset($cnt_rigs) && !empty($cnt_rigs)) ? ('(' . $cnt_rigs . ')') : '' ?> с 06:00 <?= date("m.d.Y", time() - (60 * 60 * 24)) ?>  до 06:00 <?= date("d.m.Y") ?>
+                Выезды <?= (isset($cnt_rigs) && !empty($cnt_rigs)) ? ('(' . $cnt_rigs . ')') : '' ?> с 06:00 <?= date("d.m.Y", time() - (60 * 60 * 24)) ?>  до 06:00 <?= date("d.m.Y") ?>
                 <?php
             } else {
 

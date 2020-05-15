@@ -478,5 +478,5 @@ if (isset($is_informing) && $is_informing == 1) {
 
 
 
-    
+
 </script>

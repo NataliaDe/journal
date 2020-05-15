@@ -30,7 +30,7 @@ else{
     } else {
 
         if (date("H:i:s") <= '06:00:00') {//до 06 утра
-            $start_date = date("m.d.Y", time() - (60 * 60 * 24));
+            $start_date = date("d.m.Y", time() - (60 * 60 * 24));
             $end_date = date("d.m.Y");
 
 

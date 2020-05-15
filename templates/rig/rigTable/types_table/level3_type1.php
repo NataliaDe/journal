@@ -468,7 +468,11 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
         ?>
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_loc ?></td>
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_likv ?></td>
-        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?></td>
+        <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?>
+
+        <br>
+            <?= (isset($row['date_insert']) && !empty($row['date_insert'])) ? (date('d.m.Y H:i:s', strtotime($row['date_insert']))) : '' ?>
+        </td>
 
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 

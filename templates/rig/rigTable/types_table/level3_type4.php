@@ -24,14 +24,14 @@
 
 
     #selrigFormType42,#selrigFormType413,#selrigFormType415,#selrigFormType416,#inptrigFormType414{
-        width: 91px;
+        width: 73px;
     }
     #inptrigFormType40,#inptrigFormType45,#inptrigFormType46,#inptrigFormType47,#inptrigFormType48,
     #inptrigFormType49,#inptrigFormType410,#inptrigFormType411,#inptrigFormType412{
         width: 50px;
     }
-    #inptrigFormType41{
-        width: 77px;
+    #inptrigFormType41,#inptrigFormType416{
+        width: 66px;
     }
     #inptrigFormType43{
         width: 120px;
@@ -71,7 +71,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 //print_r($rig_cars);exit();
 
 ?>
-<table class="table table-condensed   table-bordered table-custom " id="rigTableType4" style=" font-size: 12px" >
+<table class="table table-condensed   table-bordered table-custom " id="rigTableType4" style="width: 100%; font-size: 12px" >
     <!-- строка 1 -->
     <thead>
         <tr>
@@ -274,7 +274,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 foreach ($rig_cars[$row['id']] as $val) {
 
                     ?>
-                    <p><?= $val['mark'] ?><?= ' ' . $val['pasp_name'] ?><?= ' ' . $val['locorg_name'] ?></p>
+                    <p><?=($val['is_return'] == 1) ? '<del>': ''?><?= $val['mark'] ?><?= ' ' . $val['pasp_name'] ?><?= ' ' . $val['locorg_name'] ?><?=($val['is_return'] == 1) ? '</del>': ''?></p>
                     <?php
                 }
             }
@@ -590,7 +590,8 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
         </td>
 
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>">
-            <?= $row['auth_locorg'] ?>
+            <?= $row['auth_locorg'] ?><br>
+            <?= (isset($row['date_insert']) && !empty($row['date_insert'])) ? (date('d.m.Y H:i:s', strtotime($row['date_insert']))) : '' ?>
         </td>
 
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
@@ -616,6 +617,17 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
             ?>
             <br><br>
             <a  href="#" class="create-copy-link <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal-create-copy" data-id="<?= $row['id'] ?>" data-url="<?= $baseUrl ?>/copy_rig/<?= $row['id'] ?>"  aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Создать копию выезда" > <button class="btn btn-xs btn-info" type="button"><i class="fa fa-copy" ></i></button></a>
+
+                <?php
+                if ($is_show_link_sd == 1) {
+                    ?>
+            <br><br>
+                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
+                        <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
+                    </a>
+                    <?php
+                }
+                ?>
         </td>
 
 
@@ -707,7 +719,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
             var table = $('#rigTableType4').DataTable();
             if (i != 17) {
 
-                if (i == 15 || i == 16 || i == 13 || i == 2) {
+                if (i == 15  || i == 13 || i == 2) {
                     //выпадающий список
                     var y = 'rigFormType4';
                     var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')

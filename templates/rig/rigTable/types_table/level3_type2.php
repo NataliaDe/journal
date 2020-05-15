@@ -48,7 +48,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 //print_r($result_icons);
 
 ?>
-<table class="table table-condensed   table-bordered table-custom " id="rigTableType2" style="width: 50%;" >
+<table class="table table-condensed   table-bordered table-custom " id="rigTableType2" style="width: 100%;" >
     <!-- строка 1 -->
     <thead>
         <tr>
@@ -609,7 +609,10 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
                 ?>
 
-                <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?></td>
+                <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?>
+                <br>
+            <?= (isset($row['date_insert']) && !empty($row['date_insert'])) ? (date('d.m.Y H:i:s', strtotime($row['date_insert']))) : '' ?>
+                </td>
 
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 

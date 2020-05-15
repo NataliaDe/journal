@@ -1222,8 +1222,10 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         /* if likv before arrival - set results_battle_part_1 : people_help = 1 */
         if (isset($post_character['is_likv_before_arrival']) && $post_character['is_likv_before_arrival'] == 1) {
             $save_data['people_help'] = 1;
+            $save_data['no_water'] = 1;
         } else {
             $save_data['people_help'] = 0;
+            $save_data['no_water'] = 0;
         }
         $id_battle = R::getCell('select id from rb_chapter_1 where id_rig = ? limit 1', array($id));
 
@@ -1397,12 +1399,12 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         foreach ($data['rig'] as $value) {//id of rigs
-            if ($value['id'] != null)
+            if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
-
-            if ($value['is_informing'] != 1 && $value['id'] != null) {
                 $id_rig_informing[] = $value['id'];
             }
+
+
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
             }
@@ -1641,12 +1643,10 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         foreach ($data['rig'] as $value) {//id of rigs
-            if ($value['id'] != null)
+            if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
-
-            if ($value['is_informing'] != 1 && $value['id'] != null) {
                 $id_rig_informing[] = $value['id'];
-            }
+        }
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
             }
@@ -1939,12 +1939,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         foreach ($data['rig'] as $value) {//id of rigs
-            if ($value['id'] != null)
+            if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
-
-            if ($value['is_informing'] != 1 && $value['id'] != null) {
                 $id_rig_informing[] = $value['id'];
             }
+
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
             }
@@ -2163,6 +2162,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {//type1
                 $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
                 $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
+                //print_r($rig_neighbor_id);exit();
                 $data['rig'] = array_merge($rig, $rig_neighbor);
             } else {
                 $data['rig'] = $rig;
@@ -2212,12 +2212,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         foreach ($data['rig'] as $value) {//id of rigs
-            if ($value['id'] != null)
+            if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
-
-            if ($value['is_informing'] != 1 && $value['id'] != null) {
                 $id_rig_informing[] = $value['id'];
             }
+
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
             }
@@ -14275,29 +14274,9 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
         $bread_crumb = array('Диаграммы', 'Боевая работа');
         $data['bread_crumb'] = $bread_crumb;
 
-        /*         * *** classif **** */
 
-        /*  from monday 06 00 till mobday 06 00 */
-//        $monday = date('Y-m-d', strtotime('monday this week'));
-//        $monday_next = date('Y-m-d', strtotime('monday next week'));
-//
-//
-//        $date1 = new DateTime($monday);
-//        $date1_f = $date1->Format('d.m');
-//
-//        $date2 = new DateTime($monday_next);
-//        $date2_f = $date2->Format('d.m');
-//
-//        $data['monday'] = $date1_f.'.'.date('Y');
-//        $data['monday_next'] = $date2_f.'.'.date('Y');
-//
-//        $data['monday_cal'] = $date1_f;
-//        $data['monday_next_cal'] = $date2_f;
 
         $data['head_date'] = LIST_MONTH[(date('n'))] . ' ' . date('Y');
-
-        //date("F", strtotime(date('Y-m-d'))).' '.date('Y');
-
 
 
         $region = new Model_Region();
@@ -14318,17 +14297,13 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
 
         /* ----- get data  from BD - by month by RB ------ */
         $data['cnt_by_month_per_region'] = getCntDeadManByMonthPerRegion($filter);
-        //print_r($data['cnt_by_month_per_region']);
-        // exit();
         /* ----- END get data  from BD - by month by RB ------ */
 
 
         /* ----- get data  from BD - by days in month by RB ------ */
-//exit();
         $data['cnt_per_days'] = getCntDeadManByDay($filter);
         /* ----- END get data  from BD - by days in month by RB ------ */
 
-        //print_r($data['cnt_by_month_per_region']);exit();
 
         $app->render('diagram/results_battle/header.php', $data);
         $data['path_to_view'] = 'diagram/results_battle/index.php';
@@ -14351,15 +14326,6 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
         $rig_m = new Model_Rig();
 
 
-        /*  from monday 06 00 till mobday 06 00 */
-//        $monday = date('Y-m-d', strtotime('monday this week'));
-//        $monday_next = date('Y-m-d', strtotime('monday next week'));
-//        $date1 = new DateTime($monday);
-//        $date1_f = $date1->Format('d.m');
-//        $date2 = new DateTime($monday_next);
-//        $date2_f = $date2->Format('d.m');
-
-
         $is_ajax = $app->request->isAjax();
         if ($is_ajax) {
 
@@ -14377,53 +14343,6 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
 
             if ($filter['month'] < 10)
                 $filter['month'] = '0' . $filter['month'];
-
-//            if(empty($filter['date_start']) && empty($filter['date_end'])){// by year
-//
-//                $data['by_year']=$filter['year'];
-//            }
-//            else{
-//                 if (isset($filter['date_start']) && !empty($filter['date_start'])) {
-//                $filter['date_start'] = ($rig_m->isDateTimeValid($filter['date_start'], 'd.m')) ? $filter['date_start'] : $date1_f;
-//            } else {
-//                $filter['date_start'] = $date1_f;
-//            }
-//
-//
-//            if (isset($filter['date_end']) && !empty($filter['date_end'])) {
-//                $filter['date_end'] = ($rig_m->isDateTimeValid($filter['date_end'], 'd.m')) ? $filter['date_end'] : $date2_f;
-//            } else {
-//                $filter['date_end'] = $date2_f;
-//            }
-//
-//            $f_date_start = $filter['date_start'] . '.' . $filter['year'];
-//            $f_date_end = $filter['date_end'] . '.' . $filter['year'];
-//            $a = new DateTime($f_date_start);
-//            $b = new DateTime($f_date_end);
-//            // echo $a->Format('Y-m-d');
-//
-//            if ($a->Format('Y-m-d') > $b->Format('Y-m-d')) {
-//                $filter['date_start'] = $date1_f;
-//                $filter['date_end'] = $date2_f;
-//
-//                $f_date_start = $date1_f . '.' . $filter['year'];
-//                $f_date_end = $date2_f . '.' . $filter['year'];
-//                $a = new DateTime($f_date_start);
-//                $b = new DateTime($f_date_end);
-//
-//                $filter['date_start_y'] = $a->Format('Y-m-d');
-//                $filter['date_end_y'] = $b->Format('Y-m-d');
-//            } else {
-//
-//                $filter['date_start_y'] = $a->Format('Y-m-d');
-//                $filter['date_end_y'] = $b->Format('Y-m-d');
-//            }
-////            echo $filter['date_start_y'];            echo ' - ';
-////            echo $filter['date_end_y'];
-//
-//            $data['monday'] = $filter['date_start'].'.'.$filter['year'];
-//            $data['monday_next'] =  $filter['date_end'].'.'.$filter['year'];
-//            }
 
 
             $type_save_name = array();

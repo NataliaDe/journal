@@ -795,7 +795,7 @@ $(document).ready(function () {
         var table = $('#rigTable').DataTable();
         if (i !== 1 && i != 8 && i != 14) {
 
-            if (i == 9 || i==13 ) {
+            if (i == 9 ) {
                 //выпадающий список
                 var y = 'rigForm';
                 var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
@@ -844,7 +844,7 @@ $(document).ready(function () {
         var table = $('#rigTableType1').DataTable();
         if (i !== 1 && i != 7 && i != 13) {
 
-            if (i == 8 || i==12 ) {
+            if (i == 8 ) {
                 //выпадающий список
                 var y = 'rigFormType1';
                 var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
@@ -892,7 +892,7 @@ $(document).ready(function () {
         var table = $('#rigTableType2').DataTable();
         if (  i != 17) {
 
-            if (i == 14 || i==16 ) {
+            if (i == 14 ) {
                 //выпадающий список
                 var y = 'rigFormType2';
                 var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
@@ -941,7 +941,7 @@ $(document).ready(function () {
         var table = $('#rigTableType3').DataTable();
         if (i !== 14) {
 
-            if ( i==13 || i == 11 ) {
+            if (i == 11 ) {
                 //выпадающий список
                 var y = 'rigFormType3';
                 var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')

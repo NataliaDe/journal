@@ -231,14 +231,15 @@ class Model_Rigtable
             $param[] = $this->date1 . ' ' . $this->time1;
             $param[] = $this->date2 . ' ' . $this->time2;
         }
-
+       // echo $sql;        print_r($param);
         if (isset($date_filter)) { //добавляем
             $sql = $sql . $date_filter;
         }
 
+
 //            print_r($sql);
 //            print_r($param);
-//            exit();
+           // exit();
         return R::getAll($sql, $param);
     }
     /* ---------------------------------- КОНЕЦ Выборка выездов ------------------------------------ */

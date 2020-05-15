@@ -3,19 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/D:/OSPanel/domains/localhost/journal/share/config/default.php</file>
             <file>file:/D:/OSPanel/domains/localhost/journal/index.php</file>
             <file>file:/D:/OSPanel/domains/localhost/journal/app/models/Model_Informing.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/rigTable/types_table/level3_type1.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/tabsRig/rigForm.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/rigTable/level3.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/app/models/Model_Jrig.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/rigTable/types_table/level3_type3.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/assets/css/manual.css</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/share/config/default.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/rigTable/types_table/level3_type2.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/rigTable/types_table/level3_type4.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/app/models/Model_Innerservice.php</file>
-            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/tabsRig/processRigTab.php</file>
+            <file>file:/D:/OSPanel/domains/localhost/journal/templates/rig/info/infoForm.php</file>
         </group>
     </open-files>
 </project-private>

@@ -1,19 +1,20 @@
 <br>
 <style>
-.li-tabs{
-	border: 1px solid #bcc4c7;
-	border-radius: 4px 4px 0 0;
-}
-
-</style>
- <?php
-    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
-           include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+    .li-tabs{
+        border: 1px solid #bcc4c7;
+        border-radius: 4px 4px 0 0;
     }
 
+</style>
+<?php
+if (isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')) {
+    include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+}
 
-    include dirname(dirname(__FILE__)) . '/rig/title_block.php';
-    ?>
+
+include dirname(dirname(__FILE__)) . '/rig/title_block.php';
+
+?>
 <div class="box-body">
 
 
@@ -36,7 +37,7 @@
             <a  href="#1" data-toggle="tab">Результаты боевой работы</a>
         </li>
 
-                <?php
+        <?php
         if ($active_tab == 2) {
 
             ?>
@@ -92,13 +93,13 @@
         </li>
 
     </ul>
-        <!--------------------------------------------------- содержимое вкладок------------------------------------------>
-        <div class="tab-content ">
-            <br>
+    <!--------------------------------------------------- содержимое вкладок------------------------------------------>
+    <div class="tab-content ">
+        <br>
 
-             <div class="tab-pane <?= ($active_tab == 1) ? 'active': ''?>" id="1">
+        <div class="tab-pane <?= ($active_tab == 1) ? 'active' : '' ?>" id="1">
 
-			<form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?=$id_rig ?>" >
+            <form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?= $id_rig ?>" >
                 <div class="row">
 
 
@@ -115,7 +116,7 @@
                     -->
 
 
-                    <input type="hidden" class="form-control"  name="id_battle" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0  ?>" >
+                    <input type="hidden" class="form-control"  name="id_battle" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0 ?>" >
 
                     <div class="col-lg-1">
                         <div class="form-group">
@@ -124,7 +125,7 @@
                         </div>
                     </div>
 
-				     <div class="col-lg-1">
+                    <div class="col-lg-1">
                         <div class="form-group">
                             <label for="dead_child">в т.ч. детей</label>
                             <input type="text" class="form-control" placeholder="0" name="dead_child" value="<?= (isset($battle['dead_child'])) ? $battle['dead_child'] : 0 ?>" >
@@ -139,14 +140,14 @@
                     </div>
 
 
-					 <div class="col-lg-1">
+                    <div class="col-lg-1">
                         <div class="form-group">
                             <label for="save_child">в т.ч. детей</label>
                             <input type="text" class="form-control" placeholder="0" name="save_child" value="<?= (isset($battle['save_child'])) ? $battle['save_child'] : 0 ?>" >
                         </div>
                     </div>
 
-					<div class="col-lg-2">
+                    <div class="col-lg-2">
                         <div class="form-group">
                             <label for="save_mchs">в т.ч. подразделениями МЧС</label>
                             <input type="text" class="form-control" placeholder="0" name="save_mchs" value="<?= (isset($battle['save_mchs'])) ? $battle['save_mchs'] : 0 ?>" >
@@ -154,7 +155,7 @@
                     </div>
 
 
-					<div class="col-lg-2"></div>
+                    <div class="col-lg-2"></div>
 
 
                     <div class="col-lg-2">
@@ -167,9 +168,9 @@
                 </div>
 
 
-				 <div class="row">
+                <div class="row">
 
-				  <div class="col-lg-1">
+                    <div class="col-lg-1">
                         <div class="form-group">
                             <label for="inj_man_l">Травмировано</label>
                             <input type="text" class="form-control" placeholder="0" name="inj_man" value="<?= (isset($battle['inj_man'])) ? $battle['inj_man'] : 0 ?>" >
@@ -183,7 +184,7 @@
                         </div>
                     </div>
 
-					<div class="col-lg-1">
+                    <div class="col-lg-1">
                         <div class="form-group">
                             <label for="ev_child">в т.ч. детей</label>
                             <input type="text" class="form-control" placeholder="0" name="ev_child" value="<?= (isset($battle['ev_child'])) ? $battle['ev_child'] : 0 ?>" >
@@ -198,7 +199,7 @@
                     </div>
 
 
-				  </div>
+                </div>
 
 
                 <p class="line"><span>Строения</span></p>
@@ -337,7 +338,7 @@
 
 
 
-				              <p class="line"><span>Ущерб (прямые потери) и материальные ценности</span></p>
+                <p class="line"><span>Ущерб (прямые потери) и материальные ценности</span></p>
 <!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
 
                 <div class="row">
@@ -360,15 +361,15 @@
                 </div>
 
 
-    </form>
-</div>
+            </form>
+        </div>
 
 
 
 
 
         <!--  -------------------------          PART 2 --------------------------------->
-        <div class="tab-pane <?= ($active_tab == 2) ? 'active': ''?>" id="2">
+        <div class="tab-pane <?= ($active_tab == 2) ? 'active' : '' ?>" id="2">
 
             <?php
             include dirname(__FILE__) . '/part_1/part_1.php';
@@ -376,7 +377,7 @@
             ?>
         </div>
 
-<!--------------------------------        END PART 1 ----------------------------------------->
+        <!--------------------------------        END PART 1 ----------------------------------------->
 
 
 
@@ -415,8 +416,100 @@
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 <script>
 
- if(<?= $is_success ?> === 1)
-        toastr.success('Информация сохранена.', 'Успех!', {progressBar:     true,timeOut: 5000});
+
+
+    $(document).ready(function () {
+        $('body').on('change', '#resultsBattleFormPart_1 input[name="alone_otd"]', function (e) {
+
+            e.preventDefault();
+
+            var is_check = $(this).is(":checked");
+            var alone_shift = $('#resultsBattleFormPart_1 input[name="alone_shift"]');
+            var dop_mes = $('#resultsBattleFormPart_1 input[name="dop_mes"]');
+            if (is_check === true) {
+                alone_shift.prop('checked', false);
+                dop_mes.prop('checked', false);
+            } else {
+
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('body').on('change', '#resultsBattleFormPart_1 input[name="alone_shift"]', function (e) {
+
+            e.preventDefault();
+
+            var is_check = $(this).is(":checked");
+            var alone_otd = $('#resultsBattleFormPart_1 input[name="alone_otd"]');
+            var dop_mes = $('#resultsBattleFormPart_1 input[name="dop_mes"]');
+            if (is_check === true) {
+                alone_otd.prop('checked', false);
+                dop_mes.prop('checked', false);
+            } else {
+
+            }
+        });
+    });
+
+
+
+
+    $(document).ready(function () {
+        $('body').on('change', '#resultsBattleFormPart_1 input[name="dop_mes"]', function (e) {
+
+            e.preventDefault();
+
+            var is_check = $(this).is(":checked");
+            var alone_shift = $('#resultsBattleFormPart_1 input[name="alone_shift"]');
+            var alone_otd = $('#resultsBattleFormPart_1 input[name="alone_otd"]');
+            if (is_check === true) {
+                alone_shift.prop('checked', false);
+                alone_otd.prop('checked', false);
+            } else {
+
+            }
+        });
+    });
+
+
+
+
+    $(document).ready(function () {
+        $('body').on('change', '#resultsBattleFormPart_1 input[name="one_gdzs"]', function (e) {
+
+            e.preventDefault();
+
+            var is_check = $(this).is(":checked");
+            var many_gdzs = $('#resultsBattleFormPart_1 input[name="many_gdzs"]');
+            if (is_check === true) {
+                many_gdzs.prop('checked', false);
+            } else {
+
+            }
+        });
+    });
+
+
+    $(document).ready(function () {
+        $('body').on('change', '#resultsBattleFormPart_1 input[name="many_gdzs"]', function (e) {
+
+            e.preventDefault();
+
+            var is_check = $(this).is(":checked");
+            var one_gdzs = $('#resultsBattleFormPart_1 input[name="one_gdzs"]');
+            if (is_check === true) {
+                one_gdzs.prop('checked', false);
+            } else {
+
+            }
+        });
+    });
+
+
+    if (<?= $is_success ?> === 1)
+        toastr.success('Информация сохранена.', 'Успех!', {progressBar: true, timeOut: 5000});
 </script>
 
 
