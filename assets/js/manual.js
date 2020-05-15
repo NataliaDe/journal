@@ -316,7 +316,7 @@ $('#destinationForm')
 /*  rigTable  */
               var rig_table_vis =  $('#rigTable').DataTable({
             "pageLength": 50,
-             "order": [[ 2, "desc" ]],
+             "order": [],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -366,7 +366,7 @@ $('#destinationForm')
 /*  rigTable type1  */
               var rig_table_vis_type1 =  $('#rigTableType1').DataTable({
             "pageLength": 50,
-             "order": [[ 2, "desc" ]],
+             "order": [],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -428,7 +428,7 @@ $('#destinationForm')
       fixedHeader: true,
 
             "pageLength": 50,
-             "order": [[ 1, "desc" ]],
+             "order": [],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -480,7 +480,7 @@ $('#destinationForm')
 /*  rigTable type3  */
               var rig_table_vis_type3 =  $('#rigTableType3').DataTable({
             "pageLength": 50,
-             "order": [[ 1, "desc" ]],
+             "order": [],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
