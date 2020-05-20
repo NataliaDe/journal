@@ -29,6 +29,8 @@ CONST LIST_MONTH = array(1  => 'январь', 2  => 'февраль', 3  => 'м
 
 define(ID_BOKK, 23); // = journal.service.id
 
+const REASONRIG_WITH_INFORMING=array(34,14,69,79,74,64,73);
+
 /* ----------------- END CONSTANT ------------------- */
 
 use \RedBeanPHP\Facade as R;
@@ -765,7 +767,7 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
 
         $cp = array(8, 9, 12);
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /*         * *** Классификаторы **** */
         $region = new Model_Region();
@@ -998,7 +1000,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id); // дата, время, адрес объекта для редактируемого вызова по id
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* --------- добавить инф о редактируемом вызове ------------ */
         if ($id != 0) {
@@ -1138,7 +1140,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id); // дата, время, адрес объекта для редактируемого вызова по id
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
         /* --------- добавить инф о редактируемом вызове ------------ */
         if ($id != 0) {
 
@@ -1338,7 +1340,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $data['settings_user'] = getSettingsUser();
         $data['settings_user_br_table'] = getSettingsUserMode();
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
@@ -1590,7 +1592,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
 
         /* ++++++ proccessing of POST-data ++++++++ */
@@ -1848,7 +1850,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
@@ -2168,7 +2170,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $informing_m = new Model_Informing();
         $sily_mchs_m = new Model_Silymchs();
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* ++++++ обработка POST-данных ++++++++ */
         $post_date = $rig_m->getPOSTData(); //даты для фильтра
@@ -12107,7 +12109,7 @@ $app->group('/results_battle', function () use ($app, $log) {
 
         $data['active_tab'] = $active_tab;
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
@@ -12755,7 +12757,7 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
 
         $data['settings_user'] = getSettingsUser();
 
-        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
 
         /* --------- добавить инф о редактируемом вызове ------------ */
