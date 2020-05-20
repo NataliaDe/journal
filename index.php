@@ -290,13 +290,13 @@ function search_rig_by_id($rig_m, $id_rig)
 
 /* empty or no technics, time character, informing in rig. If empty - icon is red */
 
-function empty_icons($id_rig_arr)
+function empty_icons($id_rig_arr, $tab=null)
 {
     $result = array();
 
     /* id of rigs, where silymschs/innerservice are not selected */
 
-    if (!empty($id_rig_arr)) {
+    if (!empty($id_rig_arr) && $tab==null) {
 
         /* silymchs is empty */
         $id_rig_empty_sily = R::getAll('SELECT id_rig FROM countsily WHERE c=? AND id_rig IN (' . implode(',', $id_rig_arr) . ')', array(0));
@@ -335,7 +335,7 @@ function empty_icons($id_rig_arr)
 
 
     /* id of rigs, where informing are not selected */
-    if (!empty($id_rig_arr)) {
+    if (!empty($id_rig_arr) && $tab == 'informing') {
 
         $id_rig_empty_informing = R::getAll('SELECT id_rig FROM countinforming WHERE c=? AND id_rig IN(' . implode(',', $id_rig_arr) . ')', array(0));
         $informing = array();
@@ -351,7 +351,7 @@ function empty_icons($id_rig_arr)
 
 
     /* id of rigs, where time character are not selected */
-    if (!empty($id_rig_arr)) {
+    if (!empty($id_rig_arr) && $tab==null) {
 
         $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
         $character = array();
@@ -765,6 +765,8 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
 
         $cp = array(8, 9, 12);
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+
         /*         * *** Классификаторы **** */
         $region = new Model_Region();
         $data['region'] = $region->selectAll(); //области
@@ -996,6 +998,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id); // дата, время, адрес объекта для редактируемого вызова по id
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+
         /* --------- добавить инф о редактируемом вызове ------------ */
         if ($id != 0) {
 
@@ -1006,6 +1010,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                     $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
 
                     $data['id_user'] = $value['id_user'];
+                    $data['current_reason_rig']=$value['id_reasonrig'];
                 }
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
@@ -1133,6 +1138,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id); // дата, время, адрес объекта для редактируемого вызова по id
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
         /* --------- добавить инф о редактируемом вызове ------------ */
         if ($id != 0) {
 
@@ -1145,6 +1151,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                     $data['id_user'] = $value['id_user'];
 
                     $data['id_reasonrig'] = $value['id_reasonrig'];
+                    $data['current_reason_rig']=$value['id_reasonrig'];
                 }
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
@@ -1331,6 +1338,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $data['settings_user'] = getSettingsUser();
         $data['settings_user_br_table'] = getSettingsUserMode();
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
 
         /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
@@ -1398,7 +1406,15 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
+        $id_rig_with_informing = array();//rigs with informing
+
         foreach ($data['rig'] as $value) {//id of rigs
+
+
+            if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
+                $id_rig_with_informing[] = $value['id'];// rigs with informing
+            }
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
                 $id_rig_informing[] = $value['id'];
@@ -1481,15 +1497,22 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
 
             /* fill or no icons */
-            $data['result_icons'] = empty_icons($id_rig_arr);
+            $informing_empty=array();
+            if (!empty($id_rig_with_informing)) {
+                $informing_empty = empty_icons($id_rig_with_informing, 'informing');
+            }
+            $result_icons_empty=empty_icons($id_rig_arr);
+            $data['result_icons'] =  array_merge($result_icons_empty,$informing_empty);
             /* END fill or no icons */
 
-            if (!empty($id_rig_arr)) {
-
-                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_arr);
+            if (!empty($id_rig_with_informing)) {
+                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
+            }
+
+            if (!empty($id_rig_arr)) {
 
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
@@ -1567,6 +1590,9 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+
+
         /* ++++++ proccessing of POST-data ++++++++ */
 
         $post_date = $rig_m->getPOSTData(); //dates for filter
@@ -1642,7 +1668,14 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
+        $id_rig_with_informing = array();//rigs with informing
+
         foreach ($data['rig'] as $value) {//id of rigs
+
+            if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
+                $id_rig_with_informing[] = $value['id'];// rigs with informing
+            }
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
                 $id_rig_informing[] = $value['id'];
@@ -1726,15 +1759,24 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
 
             /* fill or no icons */
-            $data['result_icons'] = empty_icons($id_rig_arr);
+            $informing_empty=array();
+            if (!empty($id_rig_with_informing)) {
+                $informing_empty = empty_icons($id_rig_with_informing, 'informing');
+            }
+            $result_icons_empty=empty_icons($id_rig_arr);
+            $data['result_icons'] =  array_merge($result_icons_empty,$informing_empty);
             /* END fill or no icons */
 
-            if (!empty($id_rig_arr)) {
 
-                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_arr);
+            if (!empty($id_rig_with_informing)) {
+
+                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
+            }
+
+            if (!empty($id_rig_arr)) {
 
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
@@ -1805,6 +1847,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $data['settings_user_br_table'] = getSettingsUserMode();
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
 
         /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
@@ -1938,8 +1982,14 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
+        $id_rig_with_informing = array(); //rigs with informing
+
         foreach ($data['rig'] as $value) {//id of rigs
-            if ($value['id'] != null){
+            if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
+                $id_rig_with_informing[] = $value['id']; // rigs with informing
+            }
+
+            if ($value['id'] != null) {
                 $id_rig_arr[] = $value['id'];
                 $id_rig_informing[] = $value['id'];
             }
@@ -2029,15 +2079,22 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
             /* fill or no icons */
-            $data['result_icons'] = empty_icons($id_rig_arr);
+            $informing_empty = array();
+            if (!empty($id_rig_with_informing)) {
+                $informing_empty = empty_icons($id_rig_with_informing, 'informing');
+            }
+            $result_icons_empty = empty_icons($id_rig_arr);
+            $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_arr);
+            if (!empty($id_rig_with_informing)) {
+                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
+            }
 
+            if (!empty($id_rig_arr)) {
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
@@ -2110,6 +2167,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $inner_m = new Model_Innerservice();
         $informing_m = new Model_Informing();
         $sily_mchs_m = new Model_Silymchs();
+
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
 
         /* ++++++ обработка POST-данных ++++++++ */
         $post_date = $rig_m->getPOSTData(); //даты для фильтра
@@ -2211,7 +2270,14 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
+        $id_rig_with_informing = array();//rigs with informing
         foreach ($data['rig'] as $value) {//id of rigs
+
+
+            if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
+                $id_rig_with_informing[] = $value['id'];// rigs with informing
+            }
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
                 $id_rig_informing[] = $value['id'];
@@ -2297,17 +2363,22 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
        if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
             /* fill or no icons */
-            $data['result_icons'] = empty_icons($id_rig_arr);
+            $informing_empty = array();
+            if (!empty($id_rig_with_informing)) {
+                $informing_empty = empty_icons($id_rig_with_informing, 'informing');
+            }
+            $result_icons_empty = empty_icons($id_rig_arr);
+            $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
-
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_arr);
+            if (!empty($id_rig_with_informing)) {
+                $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
+            }
 
-
+            if (!empty($id_rig_arr)) {
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
@@ -12036,6 +12107,8 @@ $app->group('/results_battle', function () use ($app, $log) {
 
         $data['active_tab'] = $active_tab;
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+
         /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id_rig); // дата, время, адрес объекта для редактируемого вызова по id
@@ -12048,6 +12121,7 @@ $app->group('/results_battle', function () use ($app, $log) {
                     $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
 
                     $data['id_user'] = $value['id_user'];
+                    $data['current_reason_rig']=$value['id_reasonrig'];
                 }
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
@@ -12681,6 +12755,8 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
 
         $data['settings_user'] = getSettingsUser();
 
+        $data['reasonrig_with_informing'] = array(34,14,69,79,74,64,73);
+
 
         /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
@@ -12694,6 +12770,7 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
                     $adr_rig = (empty($value['address'])) ? $value['additional_field_address'] : $value['address'];
 
                     $data['id_user'] = $value['id_user'];
+                    $data['current_reason_rig']=$value['id_reasonrig'];
                 }
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;

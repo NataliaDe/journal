@@ -83,13 +83,24 @@
                 if (isset($rig) && !empty($rig) && isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']['name_sign'] == 'level3_type4') {
 
                     ?>
-                <li >
+
+
+                    <?php
+                    if (isset($rig['id_reasonrig']) && in_array($rig['id_reasonrig'], $reasonrig_with_informing)) {
+
+                        ?>
+                    <li >
                         <a class="title-icon" href="<?= $baseUrl ?>/rig/<?= $rig['id'] ?>/info" aria-hidden='true' data-toggle="tooltip" data-placement="bottom" title="Информирование">
                             <i class="fa fa-lg fa-info-circle" ></i>
                         </a>
 
 
                     </li>
+
+                    <?php
+                    }
+                    ?>
+
 
                     <li >
 
@@ -99,13 +110,18 @@
                         </a>
                     </li>
 
-                    <li>
-
-                        <a class="title-icon" href="<?= $baseUrl ?>/results_battle/<?= $rig['id'] ?>" aria-hidden='true' data-toggle="tooltip" data-placement="bottom" title="Результаты боевой работы">
-                            <i class="fa fa-lg fa-male" ></i></a>
 
 
-                    </li>
+                        <li>
+
+                            <a class="title-icon" href="<?= $baseUrl ?>/results_battle/<?= $rig['id'] ?>" aria-hidden='true' data-toggle="tooltip" data-placement="bottom" title="Результаты боевой работы">
+                                <i class="fa fa-lg fa-male" ></i></a>
+
+
+                        </li>
+
+
+
                     <li>
 
 
@@ -115,8 +131,6 @@
                     </li>
                     <?php
                 }
-
-
             }
 
             ?>
@@ -125,59 +139,59 @@
         <div class="tab-content ">
             <br>
             <!--            Обработка вызова-->
-            <?php
-            if (($active_tab == 1 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 10)) {
+<?php
+if (($active_tab == 1 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 10)) {
+
+    ?>
+                <div class="tab-pane active" id="1">
+                <?php
+            } elseif ($active_tab != 2) {
 
                 ?>
-                <div class="tab-pane active" id="1">
-                    <?php
-                } elseif ($active_tab != 2) {
-
-                    ?>
                     <div class="tab-pane " id="1">
-                        <?php
-                    }
-                    if ($active_tab != 2)
-                        include dirname(__FILE__) . '/processRigTab.php';
+                    <?php
+                }
+                if ($active_tab != 2)
+                    include dirname(__FILE__) . '/processRigTab.php';
 
-                    ?>
+                ?>
                 </div>
 
                 <!--Высылка техники-->
-                <?php
-                if (($active_tab == 2 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 20)) {
+<?php
+if (($active_tab == 2 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 20)) {
+
+    ?>
+                    <div class="tab-pane active" id="2">
+                    <?php
+                } else {
 
                     ?>
-                    <div class="tab-pane active" id="2">
-                        <?php
-                    } else {
-
-                        ?>
                         <div class="tab-pane" id="2">
-                            <?php
-                        }
-                        include dirname(__FILE__) . '/technicsRigTab.php';
+                        <?php
+                    }
+                    include dirname(__FILE__) . '/technicsRigTab.php';
 
-                        ?>
+                    ?>
                     </div>
 
                     <!--Дополнительно-->
-                    <?php
-                    if (($active_tab == 3 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 30)) {
+<?php
+if (($active_tab == 3 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 30)) {
+
+    ?>
+                        <div class="tab-pane active" id="3">
+                        <?php
+                    } elseif ($active_tab != 2) {
 
                         ?>
-                        <div class="tab-pane active" id="3">
-                            <?php
-                        } elseif ($active_tab != 2) {
-
-                            ?>
                             <div class="tab-pane" id="3">
-                                <?php
-                            }
-                            if ($active_tab != 2)
-                                include dirname(__FILE__) . '/additionalRigTab.php';
+                            <?php
+                        }
+                        if ($active_tab != 2)
+                            include dirname(__FILE__) . '/additionalRigTab.php';
 
-                            ?>
+                        ?>
                         </div>
 
                     </div>

@@ -385,6 +385,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
         <?php
+        if (in_array($row['id_reasonrig'], $reasonrig_with_informing)) {
         /* reasonrig: 18 - zanyatia,
           47 - hoz work
          * 75 - ispitania PTV
@@ -427,7 +428,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                         <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
                     <?php
                 }
-
+        }
                 ?>
                 <?php
                 /* id of rigs, where silymschs/innerservice are not selected */

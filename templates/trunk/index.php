@@ -172,7 +172,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                         <div class="col-lg-1"  >
 
                                             <div class="form-group">
-                                                <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
+                                                <select class="chzn-select-trunk form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
                                                     <option value='' ><label></label></option>
 
 
@@ -265,8 +265,8 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                     <div class="col-lg-1"  >
 
                                         <div class="form-group">
-                                            <select class="chzn-select form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
-<!--                                                <option value=''  ></option>-->
+                                            <select class="chzn-select-trunk form-control teacher-list_<?= $row['id_teh'] ?> trunk-select-on-form" name="sily[<?= $row['id_teh'] ?>][trunk][]"  tabindex="2" data-placeholder="Выбрать"  >
+                                                <option value=''  ></option>
 
                                                 <?php
                                                 foreach ($trunk_list as $present) {
@@ -419,7 +419,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                         <div class="form-group">
                         <h4>Выберите тип для удаления</h4>
                         <div class="tags-select">
-                            <select class="chzn-select" data-placeholder="Выберите из списка" id='tags_del_trunk' style="width:50%">
+                            <select class="chzn-select-trunk" data-placeholder="Выберите из списка" id='tags_del_trunk' style="width:50%">
                                 <option value=''  ></option>
                                 <?php
                                 foreach ($trunk_for_del as $tr) {

@@ -10,6 +10,9 @@
 
 ?>
 <form  role="form" id="resultsBattleFormPart_3" method="POST" action="<?= $baseUrl ?>/results_battle_part_3/<?= $id_rig ?>" >
+
+    <a href="#" class="validate_href" data-form="resultsBattleFormPart_3" data-toggle="modal"  data-target="#validate_modal"></a>
+
     <input type="hidden" class="form-control"  name="id_part_3" value="<?= (isset($id_part_3) && !empty($id_part_3)) ? $id_part_3 : 0 ?>" >
 
 
@@ -157,14 +160,14 @@
         <div class="col-lg-2">
             <div class="form-group">
                 <label for="col_arg">Собрано ртути, кг</label>
-                <input type="text" class="form-control str-cnt" placeholder="0" name="col_arg" value="<?= (isset($part_3['col_arg'])) ? $part_3['col_arg'] : 0 ?>" >
+                <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 68 && (!isset($part_3['col_arg']) || $part_3['col_arg'] == 0)) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 68) ? 'required' : '' ?>" placeholder="0" name="col_arg" value="<?= (isset($part_3['col_arg'])) ? $part_3['col_arg'] : 0 ?> " >
             </div>
         </div>
 
         <div class="col-lg-2">
             <div class="form-group">
                 <label for="col_was">Собрано ртутьсодержащих отходов, кг</label>
-                <input type="text" class="form-control str-cnt" placeholder="0" name="col_was" value="<?= (isset($part_3['col_was'])) ? $part_3['col_was'] : 0 ?>" >
+                <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 68 && (!isset($part_3['col_was']) || $part_3['col_was'] == 0)) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 68) ? 'required' : '' ?>" placeholder="0" name="col_was" value="<?= (isset($part_3['col_was'])) ? $part_3['col_was'] : 0 ?>" >
             </div>
         </div>
 
@@ -183,8 +186,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_free" value="1" id="defaultCheckPart3_1" <?= ((isset($part_3['ins_kill_free'])) && $part_3['ins_kill_free'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_1">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free" value="1" id="defaultCheckPart3_1" <?= ((isset($part_3['ins_kill_free'])) && $part_3['ins_kill_free'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_1" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_free']) || $part_3['ins_kill_free'] == 0)) ) ? 'label-fire':'' ?>">
                     на безвозмездной основе
                 </label>
             </div>
@@ -195,8 +198,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_free_threat" value="1" id="defaultCheckPart3_3" <?= ((isset($part_3['ins_kill_free_threat'])) && $part_3['ins_kill_free_threat'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_3">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free_threat" value="1" id="defaultCheckPart3_3" <?= ((isset($part_3['ins_kill_free_threat'])) && $part_3['ins_kill_free_threat'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_3" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_free_threat']) || $part_3['ins_kill_free_threat'] == 0)) ) ? 'label-fire':'' ?>">
                     наличие прямой угрозы жизни
                 </label>
             </div>
@@ -207,8 +210,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_free_before_school" value="1" id="defaultCheckPart3_6" <?= ((isset($part_3['ins_kill_free_before_school'])) && $part_3['ins_kill_free_before_school'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_6">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free_before_school" value="1" id="defaultCheckPart3_6" <?= ((isset($part_3['ins_kill_free_before_school'])) && $part_3['ins_kill_free_before_school'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_6" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_free_before_school']) || $part_3['ins_kill_free_before_school'] == 0)) ) ? 'label-fire':'' ?>">
                     дошкольных учреждениях, больницах и т.д (класс Ф 1.1 ТКП 45-2.02-315-2018)
                 </label>
             </div>
@@ -219,8 +222,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_free_school" value="1" id="defaultCheckPart3_7" <?= ((isset($part_3['ins_kill_free_school'])) && $part_3['ins_kill_free_school'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_7">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free_school" value="1" id="defaultCheckPart3_7" <?= ((isset($part_3['ins_kill_free_school'])) && $part_3['ins_kill_free_school'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_7" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_free_school']) || $part_3['ins_kill_free_school'] == 0)) ) ? 'label-fire':'' ?>">
                     школах и внешкольных учебных заведениях и т.д (класс Ф 4.1 ТКП 45-2.02-315-2018)
                 </label>
             </div>
@@ -239,8 +242,8 @@
           <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_charge" value="1" id="defaultCheckPart3_2" <?= ((isset($part_3['ins_kill_charge'])) && $part_3['ins_kill_charge'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_2">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_charge" value="1" id="defaultCheckPart3_2" <?= ((isset($part_3['ins_kill_charge'])) && $part_3['ins_kill_charge'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_2" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_charge']) || $part_3['ins_kill_charge'] == 0)) ) ? 'label-fire':'' ?>">
                     на платной основе
                 </label>
             </div>
@@ -252,8 +255,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_charge_estate" value="1" id="defaultCheckPart3_4" <?= ((isset($part_3['ins_kill_charge_estate'])) && $part_3['ins_kill_charge_estate'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_4">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_charge_estate" value="1" id="defaultCheckPart3_4" <?= ((isset($part_3['ins_kill_charge_estate'])) && $part_3['ins_kill_charge_estate'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_4" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_charge_estate']) || $part_3['ins_kill_charge_estate'] == 0)) ) ? 'label-fire':'' ?>">
                     объекты находящиеся в личной собственности граждан
                 </label>
             </div>
@@ -264,8 +267,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="ins_kill_charge_dog" value="1" id="defaultCheckPart3_5" <?= ((isset($part_3['ins_kill_charge_dog'])) && $part_3['ins_kill_charge_dog'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_5">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_charge_dog" value="1" id="defaultCheckPart3_5" <?= ((isset($part_3['ins_kill_charge_dog'])) && $part_3['ins_kill_charge_dog'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_5" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_charge_dog']) || $part_3['ins_kill_charge_dog'] == 0)) ) ? 'label-fire':'' ?>">
                     организации по ранее заключенным договорам
                 </label>
             </div>
@@ -288,8 +291,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-success check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="hero_in" value="1" id="defaultCheckPart3_8" <?= ((isset($part_3['hero_in'])) && $part_3['hero_in'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_8">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="hero_in" value="1" id="defaultCheckPart3_8" <?= ((isset($part_3['hero_in'])) && $part_3['hero_in'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_8" class="<?=(isset($current_reason_rig) && $current_reason_rig == 34 && ((!isset($part_3['hero_in']) || $part_3['hero_in'] == 0) )  ) ? 'label-fire':'' ?>">
                     в районе выезда подразделения
                 </label>
             </div>
@@ -300,8 +303,8 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-success check-result-battle-part-3">
-                <input class="form-check-input" type="checkbox" name="hero_out" value="1" id="defaultCheckPart3_9" <?= ((isset($part_3['hero_out'])) && $part_3['hero_out'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_9">
+                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="hero_out" value="1" id="defaultCheckPart3_9" <?= ((isset($part_3['hero_out'])) && $part_3['hero_out'] == 1) ? 'checked' : '' ?>>
+                <label for="defaultCheckPart3_9" class="<?=(isset($current_reason_rig) && $current_reason_rig == 34 && ((!isset($part_3['hero_out']) || $part_3['hero_out'] == 0)  ) ) ? 'label-fire':'' ?>">
                     вне района выезда подразделения
                 </label>
             </div>

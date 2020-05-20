@@ -324,6 +324,7 @@ else {//standart table
 
 
                             <?php
+                            if (in_array($row['id_reasonrig'], $reasonrig_with_informing)) {
                             /* reasonrig: 18 - zanyatia,
                               47 - hoz work
                              * 75 - ispitania PTV
@@ -365,6 +366,7 @@ else {//standart table
                                 <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
                                     <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
                                 <?php
+                            }
                             }
 
                             ?>
