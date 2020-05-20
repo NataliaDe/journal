@@ -66,6 +66,12 @@ function allowCntTimePod(){
 
 /*-------- trunk form ------------*/
     $(".chzn-select").chosen();
+
+    $(".chzn-select-trunk").chosen({
+        allow_single_deselect: true
+    });
+
+
      jQuery(".time-pod-mask").mask("99-99");//долгота
 
 $(document).ready(function(){
@@ -98,7 +104,10 @@ while ((is.length > 0)) {
   //$div.after( $klon.text('klon'+num) );
  // $div.after( $klon.text('klon'+num) );
      $klon.insertAfter($('.teacher_row_'+id_car_block).last());
-     $(".chzn-select").chosen();
+     //$(".chzn-select").chosen();
+         $(".chzn-select-trunk").chosen({
+        allow_single_deselect: true
+    });
       jQuery(".time-pod-mask").mask("99-99");//долгота
  //    var prev_val = $("#klon"+prev_num+" .tt option:selected").val();
     // alert(prev_val);
