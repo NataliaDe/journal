@@ -1,0 +1,100 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/png" href="favicon12.ico">
+</head>
+
+<title>Соседние гарнизоны</title>
+<style>
+div {
+  width: 500px;
+  margin: 10px
+}
+
+ol {
+  color: #555;
+  list-style-type: none;
+}
+
+ol li {
+  position: relative;
+  font: bold italic 45px/1.5 Helvetica, Verdana, sans-serif;
+  margin-bottom: 20px;
+}
+
+li p {
+  font: 17px/1.5 Helvetica, sans-serif;
+  padding-left: 30px;
+  color: #00008B;
+}
+
+span {
+  position: absolute;
+  font-size: 20px;
+}
+.bg-container{
+  
+  border: 0px solid #000;
+  
+}
+.bg-container .content{
+  position: absolute;
+  z-index:999;
+  text-align: center;
+  width: 100%;
+}
+.bg-container::after{
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index:99;
+  background-image: url(rcu.jpg);
+  background-size: cover;
+  opacity: 0.10;
+}
+.txt {
+    width: 1600px;
+	margin-top: 50px;
+	    margin-left: 100px;
+}
+</style>
+<body class="bg-container">
+
+<div class="txt">
+
+  <ol>
+    <li><p style="color:#458B74;"><i>Рекомендации по выезду в соседний гарнизон: </i></p></li>
+	
+	
+	<li><span>1.</span><p>По согласованию с дежурной сменой РЦУРЧС на сегодняшний день принято следующее организационное решение по учету выездов в соседние гарнизоны.
+<br>Выезд в соседний гарнизон создает и в дальнейшем ведет диспетчер, на территории которого случилась ЧС при взаимодействии с соседними районами, привлекая и выбирая их технику.
+<br>Соответственно, для исключения дублирования выезд не создается в районе, техника которого уехала в соседний гарнизон.
+<br>На уровне района/области/РЦУРЧС можно при необходимости дополнить (изменить) информацию по данному выезду (например, временные характеристики только по своей технике).
+<br> Напоминаем, что в общей таблице такие выезды отображаются с подсветкой и дополнительным знаком.
+
+
+</p></li>
+    <li><span>2.</span><p><i>Для примера:</i> произошла ЧС на территории Ошмянского района. Ошмянский РОЧС привлекает технику из Сморгонского РОЧС.
+Ошмянский РОЧС СОЗДАЕТ выезд; Сморгонский РОЧС НЕ СОЗДАЕТ выезд, а видит выезд, созданный Ошмянским РОЧС (если установлена настройка отображения подобных выездов в пункте меню Настройки->Другие), и дополняет его информацией по необходимости.</p></li>
+    
+	
+	<!-- <li><span>3.</span><p>если технике дан возврат, то ставим соответствующую галочку и заполняем время выезда и время возвращения</p></li>
+     -->
+    
+	
+	
+  </ol> 
+
+  <center><img style="width:1000px" src="neighbour.jpg"></center>
+  
+  
+</div>
+
+</body>
+
+
+</html>

@@ -21,21 +21,19 @@ if (isset($msg) && !empty($msg)) {
 }
 ?>
 <h2>Архив выездов</h2>
+
 <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 15px" ></span>
-<span style="color: red; font-size: 15px">  При выборе большого диапазона (больше 1 недели) из-за большого объема данных запрос может быть НЕ ОБРАБОТАН.</b></span><br>
+ <span style="color: red; font-size: 15px">  При выборе большого диапазона (больше 1 недели) из-за большого объема данных запрос может быть НЕ ОБРАБОТАН.</b></span><br>
 <i class="fa fa-book" aria-hidden="true"></i>&nbsp;
 При необходимости построения специализированных запросов - обращаться в ОВПО для их реализации.
 <br><br><br>
-
 <!-- action="< $_SERVER['REQUEST_URI'] ?>" -->
-<form  role="form" class="form" name="archiveForm1" id="rep1Form" method="post" >
+<form  role="form" class="form" name="archiveForm" id="rep1Form" method="post" >
 
     <div class="row">
 
-                <div class="col-lg-1">
-<?php
-//print_r($archive_year);
-?>
+                <div class="col-lg-2">
+
             <div class="form-group">
                 <label for="year">Год</label>
                 <select class="form-control" name="archive_year" id="id_archive_year" >
@@ -43,14 +41,21 @@ if (isset($msg) && !empty($msg)) {
                     <option value="">Не выбран</option>
                     <?php
                     foreach ($archive_year as $ay) {
-                        $period=' (с 01.01 '.' по '. date('d.m', strtotime($ay['max_date'])).')';
+                         $period=' (с 01.01 '.' по '. date('d.m', strtotime($ay['max_date'])).' 06:00:00)';
+						 if(mb_substr($ay['table_name'], 0, -1) == '2019'){
+							 $period=' (с 01.01 06:00:00'.' по '. date('d.m', strtotime($ay['max_date'])).' 06:00:00*)';
+						 }
+						 elseif(mb_substr($ay['table_name'], 0, -1) == '2020'){
+							 $period=' (с 01.01 00:00:00*'.' до '. date('d.m', strtotime($ay['max_date'])).' 06:00:00)';
+						 }
+						 
+						 
                         if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
                             printf("<p><option data-mad='%s' value='%s' selected ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
                         } else {
                             printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
                         }
                     }
-                    
                     ?>
 
                 </select>
@@ -136,9 +141,8 @@ if (isset($msg) && !empty($msg)) {
                 <input class="form-control" type="text" name="id_local" id="id_local_archive_1" placeholder="Введите первые символы">
             </div>
         </div>
-
-
-            <div class="col-lg-2">
+		
+		            <div class="col-lg-2">
         <div class="form-group">
                         <label for="reasonrig">Причина вызова</label>
             <select class=" js-example-basic-single form-control" name="reasonrig"   >
@@ -153,10 +157,8 @@ if (isset($msg) && !empty($msg)) {
             </select>
         </div>
     </div>
+		
     </div>
-
-
-
 
 
     <div class="row">
@@ -179,5 +181,3 @@ if (isset($msg) && !empty($msg)) {
 <div id="ajax-content">
 
 </div>
-
-

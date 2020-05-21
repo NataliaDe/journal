@@ -66,14 +66,13 @@ else{
 
 ?>
 
+                   <li>
+ <a href="http://172.26.200.15/peopleSearch" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Поиск людей" target='_blank'>
 
-<!--                <li>
-                    <a href="<?= $baseUrl ?>/maps" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
-                        <img src="<?= $baseUrl ?>/assets/images/leaflet/blue_globe.png" width="50" height="50" style="padding-bottom: 5px;">
+                                <img src="<?= $baseUrl ?>/assets/images/search_people/Sharepoint.png" width="50" height="50" style="padding-bottom: 5px;">
 
-                    </a>
-                </li>-->
-
+                            </a>
+                    </li>
 
 
 <?php
@@ -88,6 +87,14 @@ if (isset($_SESSION['id_region']) && $_SESSION['id_region'] == 6) {//minobl
     <?php }
 
 ?>
+
+
+<!--                <li>
+                    <a href="<?= $baseUrl ?>/maps" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
+                        <img src="<?= $baseUrl ?>/assets/images/leaflet/blue_globe.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                    </a>
+                </li>-->
 
                 <li>
                     <?php

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational view `Destinationlist`
+ * Object model mapping for relational view `Destinationlist` 
  */
 
 namespace App\MODELS;
@@ -17,7 +17,7 @@ class Model_Destinationlist {
 
 
 
-
+    
     public function selectAll() {
                 $id_level = $_SESSION['id_level'];
         $id_locorg = $_SESSION['id_locorg'];
@@ -51,12 +51,13 @@ class Model_Destinationlist {
         return R::getAll($sql, $param);
          return R::getAll('SELECT * FROM journal.destinationlist');
     }
+   
 
 
         public function select_destinations() {
          return R::getAll('SELECT * FROM journal.destinationlist');
-    }
-
-
-
+    }   
+    
+    
+    
 }

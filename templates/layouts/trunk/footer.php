@@ -73,7 +73,7 @@
 
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_trunk.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_trunk.js?<?php echo time();?>"></script>
 
 <script type="text/javascript">
 	CKEDITOR.replace('myeditor1');

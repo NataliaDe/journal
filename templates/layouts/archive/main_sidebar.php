@@ -13,7 +13,7 @@
                     </div>
                 </div>-->
         <!-- search form -->
-<!--        <form  class="sidebar-form" method="POST" action="<?= $baseUrl ?>/archive_1/search/rig">
+<!--        <form  class="sidebar-form" method="POST" action="<?= $baseUrl ?>/search/rig">
             <div class="input-group">
 
                 <input type="text" name="id_rig" class="form-control" placeholder="Поиск по ID выезда...">
@@ -48,12 +48,12 @@
                             <i class="fa fa-file"></i><span>Архив (json)<br>для ОВПО</span>
                         </a>
                     </li>
-
-
+					
                 </ul>
             </li>
 
-            <li class="treeview">
+
+					<li class="treeview">
                 <a href="<?= $baseUrl ?>/archive_1/search_form" target="_blank">
                     <i class="fa fa-search"></i>
                     <span>Поиск по ID выезда</span>
@@ -62,7 +62,6 @@
                 </a>
 
             </li>
-
 
 
 

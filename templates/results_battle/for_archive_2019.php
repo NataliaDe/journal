@@ -9,7 +9,7 @@
 
         <ul class="nav nav-tabs">
             <li class="active">
-                <a  href="#1" data-toggle="tab">Результаты боевой работы </a>
+                <a  href="#1" data-toggle="tab">Результаты боевой работы (для УМЧС)</a>
             </li>
 
         </ul>
@@ -17,12 +17,12 @@
         <div class="tab-content ">
             <br>
             <input type="hidden" class="form-control"  name="id_battle_2019" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0  ?>" >
-            * более полная форма будет доступна 01.11.2019, текущую форму можно заполнять
+            * заполняется на уровне области после авторизации под своей учетной записью (логин и пароль должен быть областного уровня!)
             <center>
-                <caption>С января по сентябрь 2019 года</caption>
+                <caption>С января по сентябрь 2019 года </caption>
             <table class="table table-condensed   table-bordered table-custom" style="width: 50%">
                 <thead>
-                    <tr >
+                    <tr>
                         <th style="width: 57px;">№ п/п</th>
                         <th>Наименование показателя</th>
                         <th>Кол-во</th>

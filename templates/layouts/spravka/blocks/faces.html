@@ -1,0 +1,95 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/png" href="favicon12.ico">
+</head>
+
+<title>Список лиц</title>
+<style>
+div {
+  width: 500px;
+  margin: 10px
+}
+
+ol {
+  color: #555;
+  list-style-type: none;
+}
+
+ol li {
+  position: relative;
+  font: bold italic 45px/1.5 Helvetica, Verdana, sans-serif;
+  margin-bottom: 20px;
+}
+
+li p {
+  font: 17px/1.5 Helvetica, sans-serif;
+  padding-left: 30px;
+  color: #00008B;
+}
+
+span {
+  position: absolute;
+  font-size: 20px;
+}
+.bg-container{
+  
+  border: 0px solid #000;
+  
+}
+.bg-container .content{
+  position: absolute;
+  z-index:999;
+  text-align: center;
+  width: 100%;
+}
+.bg-container::after{
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index:99;
+  background-image: url(gomel.jpg);
+  background-size: cover;
+  opacity: 0.12;
+}
+.txt {
+    width: 1600px;
+	margin-top: 50px;
+	    margin-left: 100px;
+}
+</style>
+<body class="bg-container">
+
+<div class="txt">
+
+  <ol>
+    <li><p style="color:#458B74;"><i>Список должностных лиц</i></p></li>
+	
+	
+	<li><span>1.</span><p>
+	Для ускорения ввода первичных данных при обработке вызова реализована сервисная функция «Список лиц» (раздел Меню->Классификаторы->Список лиц).
+	</p></li>
+
+    <li><span>2.</span><p>Любой пользователь на уровне района может внести туда единовременно информацию о своих должностных лицах и в дальнейшем в разделе «Информирование» выбирать должностные лица из списка, что значительно экономит время и позволяет избежать ошибок.</p></li>
+	
+    
+	
+    
+	
+	
+  </ol> 
+
+   <center><img style="width:1500px" src="faces.png"></center>
+
+  
+  
+</div>
+
+</body>
+
+
+</html>

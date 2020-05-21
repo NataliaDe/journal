@@ -74,7 +74,8 @@ if(isset($save_remark) && $save_remark == 1){
             <tr style="background-color: <?= (isset($value['color_type_rcu']) && $value['color_type_rcu'] != NULL) ? $value['color_type_rcu'] : '' ?>">
         <td><?= $value['id'] ?></td>
         <td><?= $value['description'] ?>
-            <br>
+		
+		            <br>
                 <?php
                 if (isset($value['file_basename']) && !empty($value['file_basename'])) {
                     $path1 = $baseUrl . '/' . $value['file_name'];
@@ -86,8 +87,7 @@ if(isset($save_remark) && $save_remark == 1){
                 }
 
                 ?>
-
-        </td>
+		</td>
         <td><?= $value['date_insert'] ?></td>
         <td><?= $value['author'] ?></td>
         <td><?= $value['contact'] ?></td>

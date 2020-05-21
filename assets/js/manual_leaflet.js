@@ -46,6 +46,10 @@ var baseMaps = {
 };
 
 
+
+
+
+
 /*------ Legend specific -------*/
 var legend = L.control({ position: "bottomleft" });
 
@@ -65,7 +69,7 @@ legend.onAdd = function(map) {
   div.innerHTML += '<img src="assets/images/leaflet/fire.png"></i><span>Пожар</span><br>';
   div.innerHTML += '<img src="assets/images/leaflet/other.png"></i><span>Другие загорания</span><br>';
   div.innerHTML += '<img src="assets/images/leaflet/help.png"></i><span>Помощь организациям, населению</span><br>';
-  div.innerHTML += '<img src="assets/images/leaflet/priroda.png"></i><span>ЛТТ - ЧС природного характера</span><br>';
+  div.innerHTML += '<img src="assets/images/leaflet/priroda.png"></i><span>ЛТТ</span><br>';
 //  div.innerHTML += '<i style="background: #FFFFFF"></i><span>Ice</span><br>';
 //  div.innerHTML += '<i class="icon" style="background-image: url(https://d30y9cdsu7xlg0.cloudfront.net/png/194515-200.png);background-repeat: no-repeat;"></i><span>Grænse</span><br>';
 
@@ -75,6 +79,8 @@ legend.onAdd = function(map) {
 
 legend.addTo(map);
 /*------ END Legend specific ------*/
+
+
 
 
         var greenIcon = L.icon({
@@ -428,8 +434,7 @@ if(feature.hasOwnProperty('properties') &&  feature.properties.hasOwnProperty('i
 
         }).addTo(map);
 
-/* centered */
-map.fitBounds(s.getBounds());
+
 
         if(mark_podr === 1){
             markerPodr=s;

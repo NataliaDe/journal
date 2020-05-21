@@ -1,0 +1,98 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/png" href="favicon12.ico">
+</head>
+
+<title>Совместная работа</title>
+<style>
+div {
+  width: 500px;
+  margin: 10px
+}
+
+ol {
+  color: #555;
+  list-style-type: none;
+}
+
+ol li {
+  position: relative;
+  font: bold italic 45px/1.5 Helvetica, Verdana, sans-serif;
+  margin-bottom: 20px;
+}
+
+li p {
+  font: 17px/1.5 Helvetica, sans-serif;
+  padding-left: 30px;
+  color: #00008B;
+}
+
+span {
+  position: absolute;
+  font-size: 20px;
+}
+.bg-container{
+  
+  border: 0px solid #000;
+  
+}
+.bg-container .content{
+  position: absolute;
+  z-index:999;
+  text-align: center;
+  width: 100%;
+}
+.bg-container::after{
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  z-index:99;
+  background-image: url(rcu.jpg);
+  background-size: cover;
+  opacity: 0.10;
+}
+.txt {
+    width: 1600px;
+	margin-top: 50px;
+	    margin-left: 100px;
+}
+</style>
+<body class="bg-container">
+
+<div class="txt">
+
+  <ol>
+    <li><p style="color:#458B74;"><i>Одновременная работа с выездами (данный функционал работает в нескольких режимах)</i></p></li>
+	
+	
+	<li><span>1.</span><p>Отображение знака в столбце ID главной таблицы выездов. При наведении на иконку становится доступна информация о том, кто редактирует выезд в данный момент.<br>
+	 <center><img src="together_work1.png"></center>
+	 
+	
+
+
+</p></li>
+    <li><span>2.</span><p>При нажатии на кнопку <img src="together_work2.png">     выезда (либо на <img src="together_work3.png">, <img src="together_work4.png">     , <img src="together_work5.png">    ) в верхней части экрана выводится сообщение о том, что выезд в текущий момент времени редактируется другим пользователем (с указанием его имени).</p></li>
+    
+	
+	<li><span>3.</span><p>Для использования обоих режимов необходимо в настройках (левое меню -> Настройки -> Другие) установить соответствующее разрешение.</p></li>
+    
+    <li><span>4.</span><p>Особенность использования данного режима заключается в том, что если пользователь нажал на  кнопку <img src="together_work2.png">  выезда и в течение 10 минут не нажал "сохранить выезд" - считается, что пользователь закончил редактировать выезд.</p></li>
+	
+	
+  </ol> 
+
+  
+  
+  
+</div>
+
+</body>
+
+
+</html>

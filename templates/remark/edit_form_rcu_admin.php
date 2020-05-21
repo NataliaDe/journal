@@ -1,6 +1,6 @@
 <!-- <div class="container">-->
 
-<form enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/<?= $id_remark ?>">
+<form enctype="multipart/form-data"  class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/<?= $id_remark ?>">
 
     <h3 class="form-signin-heading" id="signin-heading">Новое замечание</h3>
 
@@ -89,8 +89,8 @@
     <?php
     }
 
-
-    if(isset($value['file_basename']) && !empty($value['file_basename'])){
+	
+	    if(isset($value['file_basename']) && !empty($value['file_basename'])){
             $path1=$baseUrl.'/'.$value['file_name'];
         ?>
     Вы загрузили файл:<a href='<?= $path1 ?>'><b> <?= $value['file_basename'] ?></b></a>.<br><br>
@@ -100,8 +100,7 @@
     }
     ?>
 
-
-
+	
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
     <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->

@@ -20,16 +20,14 @@ $(function () {  //всплывающая подсказка
  $('#resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="save_man"], #resultsBattleForm input[name="inj_man"], #resultsBattleForm input[name="dead_man"], #resultsBattleForm input[name="ev_man"],\n\
  #resultsBattleForm input[name="save_build"], #resultsBattleForm input[name="dam_build"], #resultsBattleForm input[name="des_build"],\n\
 #resultsBattleForm input[name="save_teh"], #resultsBattleForm input[name="dam_teh"], #resultsBattleForm input[name="des_teh"],\n\
-#resultsBattleForm input[name="save_an"], #resultsBattleForm input[name="dam_an"], #resultsBattleForm input[name="des_an"],#resultsBattleForm input[name="dead_child"], .cnt_means,\n\
-#resultsBattleForm input[name="save_child"],#resultsBattleForm input[name="ev_child"],#resultsBattleForm input[name="save_mchs"],#resultsBattleForm input[name="ev_mchs"],#resultsBattleForm input[name="save_an_mchs"], .int-cnt').keypress(function (key) {
+#resultsBattleForm input[name="save_an"], #resultsBattleForm input[name="dam_an"], #resultsBattleForm input[name="des_an"],#resultsBattleForm input[name="dead_child"], .cnt_means, #resultsBattleForm input[name="save_child"],#resultsBattleForm input[name="ev_child"],#resultsBattleForm input[name="save_mchs"],#resultsBattleForm input[name="ev_mchs"],#resultsBattleForm input[name="save_an_mchs"]').keypress(function (key) {
 
    if ((key.charCode < 48) || (key.charCode > 57))
         return false;
 });
 
 
-    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"], #trunkForm input[name="s_bef"], #trunkForm input[name="s_loc"], \n\
-    #resultsBattleForm input[name="dam_money"], #resultsBattleForm input[name="save_wealth"], .str-cnt').keypress(function (key) {
+    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"], #trunkForm input[name="s_bef"], #trunkForm input[name="s_loc"], #resultsBattleForm input[name="dam_money"], #resultsBattleForm input[name="save_wealth"]').keypress(function (key) {
      if (((key.charCode < 48)&& (key.charCode != 46)) || (key.charCode > 57) )
         return false;
 });
@@ -66,12 +64,10 @@ function allowCntTimePod(){
 
 /*-------- trunk form ------------*/
     $(".chzn-select").chosen();
-
-    $(".chzn-select-trunk").chosen({
+	    $(".chzn-select-trunk").chosen({
         allow_single_deselect: true
     });
-
-
+	
      jQuery(".time-pod-mask").mask("99-99");//долгота
 
 $(document).ready(function(){
@@ -105,7 +101,7 @@ while ((is.length > 0)) {
  // $div.after( $klon.text('klon'+num) );
      $klon.insertAfter($('.teacher_row_'+id_car_block).last());
      //$(".chzn-select").chosen();
-         $(".chzn-select-trunk").chosen({
+	     $(".chzn-select-trunk").chosen({
         allow_single_deselect: true
     });
       jQuery(".time-pod-mask").mask("99-99");//долгота
@@ -134,11 +130,12 @@ while ((is.length > 0)) {
 
                    /* add tags to bd */
         function AddTag() {
-
-            if($('#is_water').prop('checked'))
+			
+			 if($('#is_water').prop('checked'))
                 var is_water= 1;
             else
                 var is_water= 0;
+			
             //alert($('#tag_name').val());
             $.ajax({
                 dataType: "json",
@@ -146,12 +143,12 @@ while ((is.length > 0)) {
                 method: 'POST',
                 data: {
                     name: $('#tag_name').val(),
-                    is_water: is_water
+					is_water: is_water
                 }
             }).done(function (data) {
                 $('.trunk-select-on-form').append('<option value="' + data.id + '">' + data.tag_name + '</option>');
                 $('.trunk-select-on-form').trigger("chosen:updated");
-                $('#tags_del_trunk').append('<option data-is-water="'+data.is_water+'" value="'+data.id+'">' + data.tag_name + data.water_text+ '</option>');
+                $('#tags_del_trunk').append('<option data-is-water="'+data.is_water+'" value="' + data.id + '">' + data.tag_name + data.water_text+ '</option>');
                 $('#tags_del_trunk').trigger("chosen:updated");
 
 
@@ -159,7 +156,6 @@ while ((is.length > 0)) {
                 $('#id_edit_trunk').trigger("chosen:updated");
 
                 $('#tag_name').val('');
-                $('#is_water').prop('checked', false);
 
                 $('.md-close').click();
                 toastr.info(data.message, 'Info:', {timeOut: 5000});
@@ -171,12 +167,13 @@ while ((is.length > 0)) {
 
                     /* edit tags to bd */
         function editTag() {
-
-            if($('#is_water_edit').prop('checked'))
+			
+			
+			if($('#is_water_edit').prop('checked'))
                 var is_water= 1;
             else
                 var is_water= 0;
-
+			
             //alert($('#tag_name').val());
             $.ajax({
                 dataType: "json",
@@ -185,14 +182,15 @@ while ((is.length > 0)) {
                 data: {
                     new_name: $('#edit_tag_name').val(),
                     id: $('#id_edit_trunk').val(),
-                    is_water: is_water
+					is_water: is_water
                 }
             }).done(function (data) {
 
                 $('#id_edit_trunk option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name);
-                $('#tags_del_trunk option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name+ data.water_text);
+                
+				$('#tags_del_trunk option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name+ data.water_text);
                 $('#tags_del_trunk option[value=' + $('#id_edit_trunk').val() + ']').attr('data-is-water',data.is_water);
-
+				
                 $('.trunk-select-on-form option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name);
 
 
@@ -229,19 +227,17 @@ while ((is.length > 0)) {
             $('#tags_del_trunk').trigger("chosen:updated");
             $('#id_edit_trunk').trigger("chosen:updated");//select edit
         });
-
-
-
-
-
-                /* is water edit trunk */
+		
+		
+		
+		 /* is water edit trunk */
         $('body').on('change', '#id_edit_trunk', function (e) {
                 var is_water = $('option:selected', this).attr('data-is-water');
 
                 if (parseInt(is_water) === 1)
-                $('#is_water_edit').prop('checked', true);
+					$('#is_water_edit').prop('checked', true);
                 else
-                $('#is_water_edit').prop('checked', false);
+					$('#is_water_edit').prop('checked', false);
         });
 
 

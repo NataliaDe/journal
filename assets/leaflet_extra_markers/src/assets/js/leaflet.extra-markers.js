@@ -18,7 +18,6 @@ ExtraMarkers.Icon = L.ExtraMarkers.Icon = L.Icon.extend({
         svgOpacity: 1,
         iconColor: "#fff",
         number: "",
-        number_cars: "",
         svg: false
     },
     initialize: function(options) {
@@ -43,19 +42,13 @@ ExtraMarkers.Icon = L.ExtraMarkers.Icon = L.Icon.extend({
         return div;
     },
     _createInner: function() {
-        var iconColorStyle = "", iconNumber = "", options = this.options, iconNumberCars = "";
+        var iconColorStyle = "", iconNumber = "", options = this.options;
         if (options.iconColor) {
             iconColorStyle = "style='color: " + options.iconColor + "' ";
         }
-        if (options.number) {console.log('aa');
+        if (options.number) {
             iconNumber = "number='" + options.number + "' ";
         }
-
-        if (options.number_cars) {console.log('jj');
-            iconNumberCars = "number='" + options.number_cars + "' ";
-        }
-
-
         if (options.svg) {
             var svg = '<svg xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 69.529271 95.44922" style="fill:' + options.markerColor + ";stroke:" + options.svgBorderColor + ";fill-opacity:" + options.svgOpacity + ';" height="100%" width="100%" version="1.1" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"><g transform="translate(-139.52 -173.21)"><path d="m174.28 173.21c-19.199 0.00035-34.764 15.355-34.764 34.297 0.007 6.7035 1.5591 12.813 5.7461 18.854l0.0234 0.0371 28.979 42.262 28.754-42.107c3.1982-5.8558 5.9163-11.544 6.0275-19.045-0.0001-18.942-15.565-34.298-34.766-34.297z"/></g></svg>';
             if (options.shape === "square") {
@@ -69,7 +62,7 @@ ExtraMarkers.Icon = L.ExtraMarkers.Icon = L.Icon.extend({
             }
             return svg + "<i " + iconNumber + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + options.icon + "'></i>";
         }
-        return "<i " + iconNumber + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + options.icon + "'></i><i " + iconNumberCars + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + options.icon + "'></i>";
+        return "<i " + iconNumber + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + options.icon + "'></i>";
     },
     _setIconStyles: function(img, name) {
         var options = this.options, size = L.point(options[name === "shadow" ? "shadowSize" : "iconSize"]), anchor, leafletName;

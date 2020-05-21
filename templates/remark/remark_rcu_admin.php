@@ -72,7 +72,8 @@ include 'search_form.php';
         <td><?= $value['id'] ?></td>
         <td><?= $value['description'] ?></td>
         <td><?= $value['date_insert'] ?>
-
+		
+		
                             <br><br>
                 <?php
                 if (isset($value['file_basename']) && !empty($value['file_basename'])) {
@@ -86,7 +87,7 @@ include 'search_form.php';
 
                 ?>
           <a href="<?= $baseUrl ?>/remark/edit_form/<?= $value['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa fa-pencil" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать прикрепленный файл"></i></button></a>
-        </td>
+		</td>
         <td><?= $value['author'] ?></td>
         <td><?= $value['contact'] ?></td>
         <td><?= $value['note'] ?></td>

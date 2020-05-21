@@ -1,14 +1,15 @@
 <!-- <div class="container">-->
 
-<form   enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/0">
+<form enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/0">
 
     <h3 class="form-signin-heading" id="signin-heading">Новое замечание</h3>
     <div class="form-group">
         <label>Описание</label>
         <textarea class="form-control" cols="143" rows="10" name="description" required=""></textarea>
     </div>
-
-    <?php
+	
+	
+	<?php
 if((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))){
   $author=  $_SESSION['locorg_name'].', '.$_SESSION['user_name'];
 }
@@ -84,7 +85,7 @@ else{
             </select>
     </div>
 
-          <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
+	         <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
     <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
 

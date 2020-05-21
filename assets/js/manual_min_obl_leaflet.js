@@ -53,6 +53,7 @@ var baseMaps = {
 
 
 
+
 var states = [{
     "type": "Feature",
     "properties": {"party": "Republican"},
@@ -371,10 +372,6 @@ L.geoJSON(states, {
         }
     }
 }).addTo(map);
-
-
-
-
 
 
 

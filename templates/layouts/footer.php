@@ -47,14 +47,10 @@
 
 
 <!-- select2 jquery js - поиск в выпад списке -->
-<script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="<?= $baseUrl ?>/assets/js/select2/select2.min.js" type="text/javascript" charset="utf-8"></script> 
 
 <!--dataTables-->
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.dataTables.js"></script>
-<!--<script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.10.18/fh-3.1.4/datatables.min.js"></script>-->
-<!--<script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" src="https://cdn.datatables.net/fixedheader/3.1.5/js/dataTables.fixedHeader.min.js"></script>-->
-
 
 <!--маска ввода-->
 <script type="text/javascript" src="<?= $baseUrl ?>/assets/js/jquery.maskedinput.min.js"></script>
@@ -62,29 +58,20 @@
 <!--chained plugin-->
 <script type="text/javascript"  src="<?= $baseUrl ?>/assets/js/jquery.chained.min.js"></script>
 
+
+
 <script src="<?= $baseUrl ?>/assets/ckeditor/ckeditor.js"></script>
-
-
-
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js?<?php echo time();?>"></script>
 
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js?<?php echo time();?>"></script>
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js?<?php echo time();?>"></script>
 
 
 <!-- Chosen jquery js -->
 <script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.jquery.js" type="text/javascript"></script>
 <script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/prism.js" type="text/javascript" charset="utf-8"></script>
-<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script>
-
-
-<script src="<?= $baseUrl ?>/assets/bootstrap_tour/bootstrap-tooltip.js"></script>
-<script src="<?= $baseUrl ?>/assets/bootstrap_tour/bootstrap-popover.js"></script>
-
-
-
-
+<script src="<?= $baseUrl ?>/assets/chosen_v1.8.2/docsupport/init.js" type="text/javascript" charset="utf-8"></script> 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_report.js?<?php echo time();?>"></script>
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/switch_mode.js"></script>
@@ -93,10 +80,7 @@
 	CKEDITOR.replace('myeditor1');
         CKEDITOR.replace('myeditor2');
         CKEDITOR.replace('myeditor3');
-
-
 </script>
-
 
 <!--preloader-->
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/preloader/preloader.js"></script>

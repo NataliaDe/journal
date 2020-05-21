@@ -72,7 +72,7 @@ include 'form.php';
 
 
                 <tr>
-                    <td>1.1</td>
+                    <td>1.1.</td>
                     <td>на объектах, сооружениях и транспорте в городах и сельской местности <b>(сумма строк 1.1.1.-1.1.3),</b> из них:</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «Пожар», вид работ «на объектах», вид работ «на сооружениях», вид работ «на транспорте» в городах и сельской местности">
@@ -86,7 +86,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.1.1</td>
+                    <td>1.1.1.</td>
                     <td>в городах областного подчинения (г. Минске)</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «Пожар» в городах областного подчинения (г. Минске)">
@@ -100,7 +100,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.1.2</td>
+                    <td>1.1.2.</td>
                     <td>в городах районного подчинения (поселки городского типа) </td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «Пожар» в городах районного подчинения (поселки городского типа)">
@@ -114,7 +114,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.1.3</td>
+                    <td>1.1.3.</td>
                     <td>в сельских населенных пунктах (агрогородках, поселках, деревнях и т.д.)</td>
                     <td>
                          <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «Пожар». Разность: 1.1-1.1.1-1.1.2 ">
@@ -129,7 +129,7 @@ include 'form.php';
                 </tr>
 
                 <tr>
-                    <td>1.2</td>
+                    <td>1.2.</td>
                     <td>в лесах</td>
                     <td>
                          <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», вид работ «лес»">
@@ -143,7 +143,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.3</td>
+                    <td>1.3.</td>
                     <td>на торфяниках</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», вид работ «торф»">
@@ -157,7 +157,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.4</td>
+                    <td>1.4.</td>
                     <td>горение сухой растительности, кустарника и т.п.</td>
                     <td>
                          <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», вид работ «трава», вид работ «кустарник»">
@@ -171,7 +171,7 @@ include 'form.php';
 
                 </tr>
                 <tr>
-                    <td>1.5</td>
+                    <td>1.5.</td>
                     <td>загорание мусора, пищи и т.п. </td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «Другие загорания»">
@@ -230,7 +230,6 @@ include 'form.php';
                         </span>
                         </td>
                 </tr>
-
 
 
                 <tr>
@@ -314,8 +313,6 @@ include 'form.php';
                     <td>один водяной ствол</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Кол-во пожаров, где использовался один водяной ствол">
-
-
                         <?=
                         ((isset($number_3['cnt_fire_w_1']) && !empty($number_3['cnt_fire_w_1'])) ? $number_3['cnt_fire_w_1'] : 0) +
                         ((isset($archive_bw['cnt_fire_w_1']) && !empty($archive_bw['cnt_fire_w_1'])) ? $archive_bw['cnt_fire_w_1'] : 0)
@@ -385,7 +382,7 @@ include 'form.php';
                     <td>3.6.</td>
                     <td>один ГПС (СВП)</td>
                     <td>
-                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Кол-во пожаров, где использовался один ГПС (СВП)">
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Кол-во пожаров, где использовался один ствол ГПС-600 или один ствол СВП">
                         <?=
                         ((isset($number_3['cnt_fire_gps_1']) && !empty($number_3['cnt_fire_gps_1'])) ? $number_3['cnt_fire_gps_1'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_1']) && !empty($archive_bw['cnt_fire_gps_1'])) ? $archive_bw['cnt_fire_gps_1'] : 0)
@@ -396,10 +393,10 @@ include 'form.php';
                 </tr>
 
                 <tr>
-                    <td>3.6.1</td>
+                    <td>3.6.1.</td>
                     <td>израсходовано пенообразователя, тонн</td>
                     <td>
-                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался один ГПС (СВП) на пожарах">
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался один ствол ГПС-600 или один ствол СВП на пожарах">
                         <?=
                         ((isset($number_3['cnt_fire_gps_1_po_out']) && !empty($number_3['cnt_fire_gps_1_po_out'])) ? $number_3['cnt_fire_gps_1_po_out'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_1_po_out']) && !empty($archive_bw['cnt_fire_gps_1_po_out'])) ? $archive_bw['cnt_fire_gps_1_po_out'] : 0)
@@ -413,7 +410,7 @@ include 'form.php';
                     <td>3.7.</td>
                     <td>два и более ГПС (СВП)</td>
                     <td>
-                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Кол-во пожаров, где использовалось два и более ГПС (СВП)">
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Кол-во пожаров, где использовалось два и более ГПС-600 или два и более СВП">
                         <?=
                         ((isset($number_3['cnt_fire_gps_2']) && !empty($number_3['cnt_fire_gps_2'])) ? $number_3['cnt_fire_gps_2'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_2']) && !empty($archive_bw['cnt_fire_gps_2'])) ? $archive_bw['cnt_fire_gps_2'] : 0)
@@ -423,10 +420,10 @@ include 'form.php';
                         </td>
                 </tr>
                 <tr>
-                    <td>3.7.1</td>
+                    <td>3.7.1.</td>
                     <td>израсходовано пенообразователя, тонн</td>
                     <td>
-                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался два и более ГПС (СВП) на пожарах">
+                        <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался два и более ГПС-600 или два и более СВП на пожарах">
                         <?=
                         ((isset($number_3['cnt_fire_gps_2_po_out']) && !empty($number_3['cnt_fire_gps_2_po_out'])) ? $number_3['cnt_fire_gps_2_po_out'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_2_po_out']) && !empty($archive_bw['cnt_fire_gps_2_po_out'])) ? $archive_bw['cnt_fire_gps_2_po_out'] : 0)
@@ -463,7 +460,7 @@ include 'form.php';
                 </tr>
 
                 <tr>
-                    <td>3.8.1</td>
+                    <td>3.8.1.</td>
                     <td>израсходовано порошка, тонн</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного порошка на пожарах">

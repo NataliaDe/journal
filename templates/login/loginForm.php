@@ -4,7 +4,7 @@
 
     <h3 class="form-signin-heading" id="signin-heading">Авторизация</h3>
     <div class="form-group">
-        <input type="login" class="form-control" placeholder="Логин"  id="login" name="login" value="<?= $_POST['login']?>" >
+        <input type="login" class="form-control" placeholder="Логин"  id="login" name="login"  >
     </div>
 
     <div class="form-group">

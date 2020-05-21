@@ -71,7 +71,6 @@ var chart = new CanvasJS.Chart("chartContainer", {
 	title:{
 		text: ""
 	},
-
 	legend:{
 		cursor: "pointer",
 		verticalAlign: "center",

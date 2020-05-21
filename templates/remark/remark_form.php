@@ -4,7 +4,7 @@ include 'parts/ghost_msg.php';
 ?>
    <br> <br>
 
-<form  enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/0">
+<form enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/0">
 
     <h3 class="form-signin-heading" id="signin-heading">Новое замечание</h3>
 
@@ -29,7 +29,9 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
     $author = '';
 }
 
+
 ?>
+
     <div class="form-group">
         <label>Автор создания (УМЧС, подразделение)</label>
         <textarea  class="form-control" cols="143" rows="5" name="author" required=""><?=$author?></textarea>
@@ -60,7 +62,6 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
             </select>
     </div>
 
-
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
     <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
@@ -76,7 +77,7 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
          </label>
      </div>
  </div>
-
+	
     <br><br><br>
     <button class="btn btn-lg btn-success btn-block" type="submit">Сохранить замечание</button>
     <br>
@@ -85,3 +86,4 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
 </form>
 
 <!-- </div> /container -->
+

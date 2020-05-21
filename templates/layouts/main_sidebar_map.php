@@ -146,19 +146,6 @@
                         </li>
 
 
-    <?php
-    if (isset($item_active) && $item_active == 'statusrig') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
-                            ?>
-                            <li>
-                                <?php
-                            }
-                            ?>
-                            <a href="<?= $baseUrl ?>/classif/statusrig"><i class="fa fa-chevron-circle-down"></i> Статус выезда</a>
-                        </li>
 
     <?php
     if (isset($item_active) && $item_active == 'workview') {
@@ -259,7 +246,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
-                    <li><a href="<?= $baseUrl ?>/report/rep2" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа</a></li>
+                    <li><a href="<?= $baseUrl ?>/report/rep4" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для уровня УМЧС и РЦУРЧС"></i></a></li>
                     <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма</span></a></li>
                     <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Архив выездов<br>(уровень УМЧС и<br>РЦУРЧС)</span></a></li>

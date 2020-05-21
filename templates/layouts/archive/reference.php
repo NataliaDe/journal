@@ -4,9 +4,9 @@
         <div class="modal-content instruct">
             <div class="modal-header"><button class="close danger" type="button" data-dismiss="modal">×</button>
                 <h4 class="modal-title"><b>Справка</b></h4>
-                Программное средство «Журнал ЦОУ» (Fenix_new)
-                <img src="/str/app/images/qr_rcu.png" width="55" style="float: right;">
-                <br><br>
+                Программное средство «Журнал ЦОУ». Модуль «Архив».
+               
+                <br>
             </div>
             <div class="modal-body">
                  <a href='/journal/templates/layouts/spravka/index.html' target='_blank'><span style='color:red'>Инструкция по использованию</span></a> 
@@ -42,7 +42,7 @@
             <div class="modal-footer">
 
                 <div class="copyright">
-                    <span class='glyphicon glyphicon-copyright-mark'></span> 2018, г.Минск, «Республиканский центр управления и реагирования на чрезвычайные ситуации МЧС Республики Беларусь»
+                    <span class='glyphicon glyphicon-copyright-mark'></span> 2019, г.Минск, «Республиканский центр управления и реагирования на чрезвычайные ситуации МЧС Республики Беларусь»
                 </div>
                 <br>
                 <button class="btn btn-success" type="button" data-dismiss="modal">Закрыть</button></div>

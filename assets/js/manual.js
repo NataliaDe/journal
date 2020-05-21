@@ -282,7 +282,8 @@ $('#destinationForm')
 
             }
         });
-
+        
+        
                 $('#classifTableActionWaybill').DataTable({
             "pageLength": 50,
              "order": [[ 4, "asc" ]],
@@ -310,7 +311,6 @@ $('#destinationForm')
 
             }
         });
-
 
 
 /*  rigTable  */
@@ -359,11 +359,10 @@ $('#destinationForm')
 
 
     } );
-
-
-
-
-/*  rigTable type1  */
+	
+	
+	
+	/*  rigTable type1  */
               var rig_table_vis_type1 =  $('#rigTableType1').DataTable({
             "pageLength": 50,
              "order": [],
@@ -409,24 +408,13 @@ $('#destinationForm')
 
 
     } );
-
-
-
-    /*  rigTable type2  */
+	
+	
+	
+	
+	
+	 /*  rigTable type2  */
               var rig_table_vis_type2 =  $('#rigTableType2').DataTable({
-                   //fixedHeader: true,
-       // fixedHeader: {
-            //header: true,
-          //  footer:true
-            //headerOffset: 15
-                    //$('#fixed').height()
-      //  },
-//           "fixedHeader": {
-//      header: true
-//    },
-      orderCellsTop: true,
-      fixedHeader: true,
-
             "pageLength": 50,
              "order": [],
             language: {
@@ -460,9 +448,6 @@ $('#destinationForm')
 //        ]
         });
 
-          $("tfoot").css("display", "table-header-group");//tfoot of table
-
-
         $('a.toggle-vis-rig-table-type2').on( 'click', function (e) {
         e.preventDefault();
 
@@ -474,10 +459,9 @@ $('#destinationForm')
 
 
     } );
-
-
-
-/*  rigTable type3  */
+	
+	
+	/*  rigTable type3  */
               var rig_table_vis_type3 =  $('#rigTableType3').DataTable({
             "pageLength": 50,
              "order": [],
@@ -524,7 +508,6 @@ $('#destinationForm')
 
 
     } );
-
 
 
 
@@ -583,9 +566,9 @@ $('#destinationForm')
 
             }
         });
-
-
-                $('#logslogin_tbl').DataTable({
+        
+        
+            $('#logslogin_tbl').DataTable({
             "pageLength": 50,
              "order": [[ 0, "desc" ]],
             language: {
@@ -641,10 +624,9 @@ $('#destinationForm')
 
             }
         });
-
-
-
-                $('#remarkTable').DataTable({
+		
+		
+		       $('#remarkTable').DataTable({
             "pageLength": 50,
              "order": [[ 0, "desc" ]],
             language: {
@@ -699,9 +681,9 @@ $('#destinationForm')
 
             }
         });
-
-
-                $('#guide_pasp_tbl').DataTable({
+		
+		
+		$('#guide_pasp_tbl').DataTable({
             "pageLength": 50,
              "order": [[ 1, "asc" ]],
             language: {
@@ -730,9 +712,7 @@ $('#destinationForm')
         });
 
 
-
     });
-
 
 
 })(jQuery);
@@ -740,7 +720,6 @@ $('#destinationForm')
 
 $(document).ready(function () {
     $("tfoot").css("display", "table-header-group");//tfoot of table
-
 
 
     /*---------- таблица с пользователями ------------*/
@@ -836,10 +815,10 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с выездами ------------*/
-
-
-
-     /*---------- rig table type1 ------------*/
+	
+	
+	
+	  /*---------- rig table type1 ------------*/
     $('#rigTableType1 tfoot th').each(function (i) {
         var table = $('#rigTableType1').DataTable();
         if (i !== 1 && i != 7 && i != 13) {
@@ -885,14 +864,15 @@ $(document).ready(function () {
     });
 
     /*---------- END rig table type1 ------------*/
-
-
-      /*---------- rig table type2 ------------*/
+	
+	
+	
+	 /*---------- rig table type2 ------------*/
     $('#rigTableType2 tfoot th').each(function (i) {
         var table = $('#rigTableType2').DataTable();
         if (  i != 17) {
 
-            if (i == 14 ) {
+            if (i == 14) {
                 //выпадающий список
                 var y = 'rigFormType2';
                 var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
@@ -933,10 +913,9 @@ $(document).ready(function () {
     });
 
     /*---------- END rig table type2 ------------*/
-
-
-
-       /*---------- rig table type3 ------------*/
+	
+	
+	   /*---------- rig table type3 ------------*/
     $('#rigTableType3 tfoot th').each(function (i) {
         var table = $('#rigTableType3').DataTable();
         if (i !== 14) {
@@ -982,9 +961,8 @@ $(document).ready(function () {
     });
 
     /*---------- END rig table type3 ------------*/
-
-
-
+	
+	
 
  /*---------- таблица таблица классификаторов ------------*/
     $('#classifTable tfoot th').each(function (i) {
@@ -1012,7 +990,34 @@ $(document).ready(function () {
     /*---------- END таблица классификаторов ------------*/
 
 
+     /*---------- таблица таблица классификатора listmailTable ------------*/
+    $('#listmailTable tfoot th').each(function (i) {
+        var table = $('#listmailTable').DataTable();
+        if (i !== 4 && i != 5) {
 
+                var title = $('#listmailTable tfoot th').eq($(this).index()).text();
+                var x = $('#listmailTable tfoot th').index($(this));
+                var y = 'classifForm';
+                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+
+
+        }
+    });
+    $("#listmailTable tfoot input").on('keyup change', function () {
+        var table = $('#listmailTable').DataTable();
+        table
+                .column($(this).parent().index() + ':visible')
+                .search(this.value)
+                .draw();
+    });
+
+    /*---------- END таблица классификатора listmailTable ------------*/
+    
+    
+    
+    
  /*---------- table classif of action waybill ------------*/
     $('#classifTableActionWaybill tfoot th').each(function (i) {
         var table = $('#classifTableActionWaybill').DataTable();
@@ -1065,33 +1070,6 @@ $(document).ready(function () {
     /*---------- END table classif of action waybill ------------*/
 
 
-
-     /*---------- таблица таблица классификатора listmailTable ------------*/
-    $('#listmailTable tfoot th').each(function (i) {
-        var table = $('#listmailTable').DataTable();
-        if (i !== 4 && i != 5) {
-
-                var title = $('#listmailTable tfoot th').eq($(this).index()).text();
-                var x = $('#listmailTable tfoot th').index($(this));
-                var y = 'classifForm';
-                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-
-
-        }
-    });
-    $("#listmailTable tfoot input").on('keyup change', function () {
-        var table = $('#listmailTable').DataTable();
-        table
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-    });
-
-    /*---------- END таблица классификатора listmailTable ------------*/
-
-
    /*---------- таблица с logs ------------*/
     $('#logsTable tfoot th').each(function (i) {
         var table = $('#logsTable').DataTable();
@@ -1114,8 +1092,10 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с logs------------*/
-
-       /*---------- таблица с logs login ------------*/
+    
+    
+    
+        /*---------- таблица с logs login ------------*/
     $('#logslogin_tbl tfoot th').each(function (i) {
         var table = $('#logslogin_tbl').DataTable();
 
@@ -1161,10 +1141,8 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с logs action ------------*/
-
-
-
-    /* ------------- remark table ---------------*/
+	
+	    /* ------------- remark table ---------------*/
  $('#remarkTable tfoot th').each(function (i) {
         var table = $('#remarkTable').DataTable();
         if (i !== 11 && i != 12) {
@@ -1254,9 +1232,8 @@ $(document).ready(function () {
     });
     /* ------------- end remark table ---------------*/
 
-
-
-    /*---------- guide_pasp_tbl ------------*/
+	
+	    /*---------- guide_pasp_tbl ------------*/
     $('#guide_pasp_tbl tfoot th').each(function (i) {
         var table = $('#guide_pasp_tbl').DataTable();
         if (i !== 4) {
@@ -1320,7 +1297,7 @@ jQuery("#id_pasp"+i).chained("#id_locorg"+i); // зависимость ПАСЧ
 
 
 
-    /*** поле дата/время  разрешено только . и : *****/
+    /**** поле дата/время  разрешено только . и : *****/
 $('.datetime').keypress(function (key) {
     if ((key.charCode < 48 && key.charCode !== 46) || (key.charCode > 57 && key.charCode !== 58))
         return false;
@@ -1655,20 +1632,20 @@ $('select[name='+'"'+j+'"'+']').prop( "disabled", true );
 
   if (typeof (a) === 'undefined') {
             $('select[name='+'"'+j+'"'+']').html('выбор');
-
   }
   else{
 
       var id_pasp =i.options[i.selectedIndex].value;
 
-      if(id_pasp){
+	  
+	 if(id_pasp){
           $('select[name='+'"'+j+'"'+']').html('<option selected value="0"> идет загрузка... </option>');
       }
       else{
           $('select[name='+'"'+j+'"'+']').html('');
       }
-
-
+	  
+	  
     if (id_pasp) {
 
         /*---------  техника данного ПАСЧ --------*/
@@ -1680,17 +1657,16 @@ $('select[name='+'"'+j+'"'+']').prop( "disabled", true );
             success: function (responce) {
 
         /*--------- чтобы обновить технику --------*/
-       //  $('select[name='+'"'+j+'"'+']').select2("destroy");//уничтожаем
-        //   $('select[name='+'"'+j+'"'+']').select2();//создаем заново
-            /*--------- чтобы обновить технику --------*/
-
-
-        $('select[name='+'"'+j+'"'+']').html(responce);
+        // $('select[name='+'"'+j+'"'+']').select2("destroy");//уничтожаем
+         //$('select[name='+'"'+j+'"'+']').select2();//создаем заново
+		 
+		 
+		$('select[name='+'"'+j+'"'+']').html(responce);
         $('select[name='+'"'+j+'"'+']').select2().trigger('change');
         $('select[name='+'"'+j+'"'+']').prop( "disabled", false );
-       // $('select[name='+'"'+j+'"'+']').val(null).trigger('change.select2');
-      // $('select[name='+'"'+j+'"'+']').select2('refresh');
+            /*--------- чтобы обновить технику --------*/
 
+        $('select[name='+'"'+j+'"'+']').html(responce);
            return;
 
             }
@@ -1911,8 +1887,8 @@ function deleteReasonrigUser(j) {
 
       /**** время следования - форма журнала выезда ****/
       for(var i=1;i<30;i++){
-                     // jQuery("#time_follow"+i).mask("99:99:99");
-                      jQuery("#time_follow"+i).mask("99:99");
+                      //jQuery("#time_follow"+i).mask("99:99:99");
+					   jQuery("#time_follow"+i).mask("99:99");
       }
 
 
@@ -1941,7 +1917,6 @@ function setTimeFollow(i){
      /*----- значения полей ------*/
      var time_exit=    $('input[name='+'"'+t_exit+'"'+']').val();
           var time_arrival=    $('input[name='+'"'+t_arr+'"'+']').val();
-
 
 var a=new Date(time_exit);//вр.выезда
 var b=new Date(time_arrival);//вр.приб
@@ -1987,21 +1962,12 @@ else{
 //result
 //var t=h+":"+m+":"+s;//00:00:00 - format
 var t=h+":"+m;//00:00:00 - format
-//alert('kk');
-//alert(time_arrival);
-//if(time_arrival =='')
-//    alert('ll');
-//alert();
 if(time_exit.length == 16 && time_arrival.length == 16){
 
      $('input[name='+'"'+j+'"'+']').val(t);
 }
 
-
-
 }
-
-
 /*--------------- END Высчитать время след = вр.приб-вр.выезда    ------------*/
 
 /*----------------- Пересчет кол-ва выездов, пользователей в левом меню ---------------------*/
@@ -2038,7 +2004,7 @@ function setReturnCar(i, n) {
     var t_arr = 'sily[' + i + '][time_arrival]';
     var t_follow = 'sily[' + i + '][time_follow]';
     var t_end = 'sily[' + i + '][time_end]';
-    //var distance = 'sily[' + i + '][distance]';
+   // var distance = 'sily[' + i + '][distance]';
 
 
     var is_return = $('input[name="' + is_return_name + '"]').prop('checked');
@@ -2138,21 +2104,13 @@ $( window ).load(function() {
   //alert('hello');
   $( "#toggle-vis-rig-table-13" ).trigger( "click" );
   $( "#toggle-vis-rig-table-7" ).trigger( "click" );
-
-  /* rig table type1 */
+  
+    /* rig table type1 */
+	$( "#toggle-vis-rig-table-type1-0" ).trigger( "click" );
   $( "#toggle-vis-rig-table-type1-13" ).trigger( "click" );
-
-    /* rig table type2 */
-    $( "#toggle-vis-rig-table-type1-0" ).trigger( "click" );
-  $( "#toggle-vis-rig-table-type2-16" ).trigger( "click" );
-
-      /* rig table type3 */
-//    $( "#toggle-vis-rig-table-type3-0" ).trigger( "click" );
-//    $( "#toggle-vis-rig-table-type3-13" ).trigger( "click" );
-//    $( "#toggle-vis-rig-table-type3-5" ).trigger( "click" );
-
-
 });
+
+
 
 
 /* delete actionwaybill from bd  */
@@ -2182,11 +2140,9 @@ $(document).on('click', '#btn_del_action', function (e) {
 });
 
 
-
 /*------------------------  archive -------------------------------- */
  $('#getArchiveData').on({
         'click': function (event) {
-
    // alert('123');
 
               // alert('1');
@@ -2196,15 +2152,16 @@ $(document).on('click', '#btn_del_action', function (e) {
    var archive_year=$('select[name="archive_year"]').val();
    var region=$('select[name="id_region"]').val();
    var local=$('input[name="id_local"]').val();
-
+   
    var reasonrig=$('select[name="reasonrig"] option:selected').text();
-
+   
    var max_date=$('select[name="archive_year"]').find(':selected').attr('data-mad');
 
-            if(reasonrig == 'Все')
+               if(reasonrig == 'Все')
             var reasonrig='';
 
-   if(date_start && date_end && archive_year && (date_start !== date_end) && (date_start < max_date) ){
+
+   if(date_start && date_end && archive_year && (date_start !== date_end) && (date_start < max_date)){
 
 
       $('#ajax-content').fadeOut("slow");
@@ -2221,7 +2178,7 @@ $(document).on('click', '#btn_del_action', function (e) {
            archive_year:archive_year,
            region:region,
            local:local,
-           reasonrig: reasonrig
+		   reasonrig: reasonrig
 
         },
 
@@ -2247,10 +2204,10 @@ $('#preload-get-archive-data').css('display','none');
     else if(archive_year == ''){
           toastr.error('Выберите год', 'Ошибка!', {timeOut: 5000});
     }
-        else if(date_start === date_end){
+            else if(date_start === date_end){
           toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 5000});
     }
-            else if(date_start >= max_date){
+                else if(date_start >= max_date){
           toastr.error('В архиве нет данных, начиная с '+max_date, 'Ошибка!', {timeOut: 5000});
     }
    }
@@ -2258,115 +2215,117 @@ $('#preload-get-archive-data').css('display','none');
         }
 
     });
-
-
+    
+    
+    
+    
+    
+    
 /* processing rig tab. change reasonrig */
 $('#rigForm #id_reasonrig').on('change', function (e) {
 
     var reason = $('#rigForm #id_reasonrig').val();
     var object_id = $('#rigForm #object_id').val();
     var coord_lat = $('#rigForm #coord_lat').val();
-    var coord_lon = $('#rigForm #coord_lon').val();
-    var id_officebelong = $('#rigForm [name="id_officebelong"]').val();
+      var coord_lon = $('#rigForm #coord_lon').val();
+	 var id_officebelong = $('#rigForm [name="id_officebelong"]').val();
     var id_firereason = $('#rigForm [name="id_firereason"]').val();
     var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
     var inspector = $('#rigForm [name="inspector"]').val();
-    //alert(id_officebelong);
     //$('#rigForm #object_id').addClass('red-border-input');
-    var coord_lat_length = $('#rigForm #coord_lat').val().length;
-    //alert(coord_lat);
+ var coord_lat_length = $('#rigForm #coord_lat').val().length;
+ //alert(coord_lat);
     if (reason == 34) {
 
         if (object_id == '') {
-            $('#rigForm #object_id').addClass('red-border-input');
+             $('#rigForm #object_id').addClass('red-border-input');
         }
 
         //alert(reason);
-        if (coord_lat == '') {
-            $('#rigForm #coord_lat').addClass('red-border-input');
-        }
+         if (coord_lat == '') {
+             $('#rigForm #coord_lat').addClass('red-border-input');
+         }
 
-        if (coord_lon == '') {
-            $('#rigForm #coord_lon').addClass('red-border-input');
-        }
-
-
-        if (id_officebelong == '0') {
-            $("#office-belong-id .select2-selection").addClass('red-border-input');
-        }
-
-        if (id_firereason == '0') {
-            $("#firereason-id .select2-selection").addClass('red-border-input');
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
-        }
-
-        if (firereason_descr == '') {
-            $('#rigForm [name="firereason_descr"]').addClass('red-border-input');
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
-        }
-
-        if (inspector == '') {
-
-            $('#rigForm [name="inspector"]').addClass('red-border-input');
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
-        }
-
+  if (coord_lon == '') {
+        $('#rigForm #coord_lon').addClass('red-border-input');
     }
-    //other zagor
-    else if (reason == 14 || reason == 69) {
-        if (inspector == '') {
-            $('#rigForm [name="inspector"]').addClass('red-border-input');
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+	
+	
+	      if (id_officebelong == '0') {
+          $( "#office-belong-id .select2-selection" ).addClass('red-border-input');
+    }
 
-        }
+          if (id_firereason == '0') {
+          $( "#firereason-id .select2-selection" ).addClass('red-border-input');
+		  $( '#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    }
 
-//reset
+           if (firereason_descr == '') {
+          $( '#rigForm [name="firereason_descr"]').addClass('red-border-input');
+		  $( '#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    }
+
+               if (inspector == '') {
+          $( '#rigForm [name="inspector"]').addClass('red-border-input');
+		  $( '#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    }
+	
+	
+    }
+
+
+	    //other zagor
+    else if(reason == 14 || reason == 69) {
+               if (inspector == '') {
+          $( '#rigForm [name="inspector"]').addClass('red-border-input');
+		   $( '#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    }
+	
+	//reset
         $('#rigForm #object_id').removeClass('red-border-input');
         $('#rigForm #coord_lat').removeClass('red-border-input');
         $('#rigForm #coord_lon').removeClass('red-border-input');
-        $("#office-belong-id .select2-selection").removeClass('red-border-input');
-        $("#firereason-id .select2-selection").removeClass('red-border-input');
-        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
-
-
+        $( "#office-belong-id .select2-selection" ).removeClass('red-border-input');
+        $( "#firereason-id .select2-selection" ).removeClass('red-border-input');
+        $( '#rigForm [name="firereason_descr"]').removeClass('red-border-input');
     }
 
     // molnia
-    else if (reason == 74) {
+        else if(reason == 74) {
         if (object_id == '') {
-            $('#rigForm #object_id').addClass('red-border-input');
+             $('#rigForm #object_id').addClass('red-border-input');
         }
 
-        if (id_officebelong == '0') {
-            $("#office-belong-id .select2-selection").addClass('red-border-input');
-        }
-
-
-        $('#rigForm #coord_lat').removeClass('red-border-input');
+      if (id_officebelong == '0') {
+          $( "#office-belong-id .select2-selection" ).addClass('red-border-input');
+    }
+	
+	    $('#rigForm #coord_lat').removeClass('red-border-input');
         $('#rigForm #coord_lon').removeClass('red-border-input');
-        $("#firereason-id .select2-selection").removeClass('red-border-input');
-        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
-        $('#rigForm [name="inspector"]').removeClass('red-border-input');
+        $( "#firereason-id .select2-selection" ).removeClass('red-border-input');
+        $( '#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+        $( '#rigForm [name="inspector"]').removeClass('red-border-input');
+		
+		$( '#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
 
-        $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+    }
 
-
-    } else {
+	else {
         $('#rigForm #object_id').removeClass('red-border-input');
         $('#rigForm #coord_lat').removeClass('red-border-input');
         $('#rigForm #coord_lon').removeClass('red-border-input');
-        $("#office-belong-id .select2-selection").removeClass('red-border-input');
-        $("#firereason-id .select2-selection").removeClass('red-border-input');
-        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
-        $('#rigForm [name="inspector"]').removeClass('red-border-input');
-
-        $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+		        $( "#office-belong-id .select2-selection" ).removeClass('red-border-input');
+        $( "#firereason-id .select2-selection" ).removeClass('red-border-input');
+        $( '#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+         $( '#rigForm [name="inspector"]').removeClass('red-border-input');
+		 
+		 $( '#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
         //alert('jkl');
     }
-
-
-/* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
-    if(reason == 18 || reason == 47 || reason == 75 ){
+	
+	
+	/* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
+    if(reason == 18 || reason == 47 || reason == 75){
 
         $('#rigForm #div_podr_zanytia').show();
         $("#zanyatia-id .select2-selection").addClass('blue-border-input');
@@ -2374,9 +2333,10 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
     else{
          $('#rigForm #div_podr_zanytia').hide();
     }
-
+	
 
 });
+
 
 
 /* change work view */
@@ -2387,7 +2347,7 @@ $('#rigForm #id_workview').on('change', function (e) {
 
 
 
-    /* fio head check:  18 - zanytia + proverka boegotovnosty*/
+    /* fio head check */
     if(reason == 18 && work_view == 254){
 
         $('#rigForm #div_fio_head_check').show();
@@ -2399,8 +2359,6 @@ $('#rigForm #id_workview').on('change', function (e) {
     }
 
 });
-
-
 
 
 $('#rigForm #object_id').on('keyup', function (e) {
@@ -2574,6 +2532,7 @@ $('#rigForm [name="inspector"]').on('keyup', function (e) {
 });
 
 
+
 $('#rigForm [name="id_work_view"]').on('change', function (e) {
 
 var reason = $('#rigForm #id_reasonrig').val();
@@ -2600,6 +2559,7 @@ var reason = $('#rigForm #id_reasonrig').val();
 });
 
 /* END processing rig tab. change reasonrig */
+
 
 
 /* form export to csv */
@@ -2631,9 +2591,9 @@ $('form#exporttoCsvRep1').submit(function(e){
             }
 
          });
-
-
-
+		 
+		 
+		 
          /* form search rig in archive */
 $('form#searchArchiveForm').submit(function(e){
 
@@ -2665,6 +2625,7 @@ else if(id_rig == '')
 });
 
 
+
     $('#id_local_archive_1').keydown(function(event){
           //alert('ff');
         if(event.keyCode == 13) {
@@ -2672,14 +2633,14 @@ else if(id_rig == '')
           return false;
       }
    });
-
-
+   
+   
+   
 
 $('#rigForm select[name="podr_zanytia"]').on('change', function (e) {
 
 
     var podr_zanytia = $('#rigForm select[name="podr_zanytia"]').val();
-    var podr_zanytia_text = $('#rigForm select[name="podr_zanytia"] option:selected').text();
 //alert(podr_zanytia);
 
 if(podr_zanytia !== ''){
@@ -2739,10 +2700,6 @@ if(podr_zanytia !== ''){
                 $('#rigForm input[name="housing"]').val(data.housing);
 
 
-                /* set coords to map */
-                setCoordToMap(data.latitude, data.longitude, podr_zanytia_text);
-
-
             });
 
             $(document).ready(function () {
@@ -2768,18 +2725,9 @@ else{
 
 
 
-//                function update() {
-//                    $.get('{{ base_url("student/profile") }}', $("#courses-filter").serialize(), function (res) {
-//                        $("#ajax-process-study").html('');
-//                        $("#ajax-process-study").html(JSON.parse(res)['innerHtml']);
-//
-//                        $("#ajax-how-go").html('');
-//                        $("#ajax-how-go").html(JSON.parse(res)['innerHtml2']);
-//
-//                         $("#ajax-intensivnost-study").html('');
-//                        $("#ajax-intensivnost-study").html(JSON.parse(res)['innerHtml3']);
-//                    })
-//                }
+
+
+
 
 
 /*  SD */
@@ -2813,8 +2761,9 @@ $('body').on('change', '#userForm #id_user_sd', function (e) {
 });
 
 
-
 jQuery("#id_local_bokk").chained("#id_region_bokk");
+
+
 
 
 function changeModeRep1(el) {
@@ -2859,6 +2808,3 @@ function changeNeighborRep1(el) {
 
     }
 }
-
-
-

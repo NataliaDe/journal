@@ -3,13 +3,12 @@
 include 'parts/ghost_msg.php';
 ?>
    <br> <br>
-<form   enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/<?= $id_remark ?>">
+<form  enctype="multipart/form-data" class="form-signin" style="max-width: 70%" role="form"  method="POST" action="<?= $baseUrl ?>/remark/remark_save/<?= $id_remark ?>">
 
     <h3 class="form-signin-heading" id="signin-heading">Новое замечание</h3>
 
     <?php
     foreach ($remark as $value) {
-        echo $value['file_name'];
         ?>
     <div class="form-group">
         <label>Описание</label>
@@ -52,8 +51,8 @@ include 'parts/ghost_msg.php';
     <?php
     }
 
-
-    if(isset($value['file_basename']) && !empty($value['file_basename'])){
+	
+	    if(isset($value['file_basename']) && !empty($value['file_basename'])){
             $path1=$baseUrl.'/'.$value['file_name'];
         ?>
     Вы загрузили файл:<a href='<?= $path1 ?>'><b> <?= $value['file_basename'] ?></b></a>.<br><br>
@@ -64,6 +63,7 @@ include 'parts/ghost_msg.php';
     ?>
 
 
+	
 
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
     <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
@@ -92,6 +92,7 @@ include 'parts/ghost_msg.php';
          </label>
      </div>
  </div>
+
 
     <br><br><br>
     <button class="btn btn-lg btn-success btn-block" type="submit">Сохранить замечание</button>

@@ -11,7 +11,7 @@
 ?>
 <form  role="form" id="resultsBattleFormPart_3" method="POST" action="<?= $baseUrl ?>/results_battle_part_3/<?= $id_rig ?>" >
 
-    <a href="#" class="validate_href" data-form="resultsBattleFormPart_3" data-toggle="modal"  data-target="#validate_modal"></a>
+<a href="#" class="validate_href" data-form="resultsBattleFormPart_3" data-toggle="modal"  data-target="#validate_modal"></a>
 
     <input type="hidden" class="form-control"  name="id_part_3" value="<?= (isset($id_part_3) && !empty($id_part_3)) ? $id_part_3 : 0 ?>" >
 
@@ -126,16 +126,8 @@
                 <input type="text" class="form-control int-cnt" placeholder="0" name="s_chi_kon" value="<?= (isset($part_3['s_chi_kon'])) ? $part_3['s_chi_kon'] : 0 ?>" >
             </div>
         </div>
-
-
-
-    </div>
-
-
-
-    <div class="row">
-
-        <div class="col-lg-3">
+		
+		        <div class="col-lg-3">
             <div class="form-group">
                 <label for="s_people_cons">Спасено людей при других обстоятельствах</label>
                 <input type="text" class="form-control int-cnt" placeholder="0" name="s_people_cons" value="<?= (isset($part_3['s_people_cons'])) ? $part_3['s_people_cons'] : 0 ?>" >
@@ -149,10 +141,13 @@
             </div>
         </div>
 
+
+
     </div>
 
 
-    <br>
+
+
     <p class="line"><span>На проведение демеркуризационных работ</span></p>
 
     <div class="row">
@@ -173,11 +168,9 @@
 
     </div>
 
-    <br>
+
 
     <p class="line"><span>На проведение работ по уничтожению гнезд жалоносных насекомых</span></p>
-
-    <br>
 
 
 
@@ -222,7 +215,7 @@
         <div class="col-lg-2 form-group check-result-battle-part-3">
 
             <div class="checkbox checkbox-danger check-result-battle-part-3">
-                <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free_school" value="1" id="defaultCheckPart3_7" <?= ((isset($part_3['ins_kill_free_school'])) && $part_3['ins_kill_free_school'] == 1) ? 'checked' : '' ?>>
+               <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 80) ? 'required' : '' ?>" type="checkbox" name="ins_kill_free_school" value="1" id="defaultCheckPart3_7" <?= ((isset($part_3['ins_kill_free_school'])) && $part_3['ins_kill_free_school'] == 1) ? 'checked' : '' ?>>
                 <label for="defaultCheckPart3_7" class="<?=(isset($current_reason_rig) && $current_reason_rig == 80 && ((!isset($part_3['ins_kill_free_school']) || $part_3['ins_kill_free_school'] == 0)) ) ? 'label-fire':'' ?>">
                     школах и внешкольных учебных заведениях и т.д (класс Ф 4.1 ТКП 45-2.02-315-2018)
                 </label>
@@ -292,7 +285,7 @@
 
             <div class="checkbox checkbox-success check-result-battle-part-3">
                 <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="hero_in" value="1" id="defaultCheckPart3_8" <?= ((isset($part_3['hero_in'])) && $part_3['hero_in'] == 1) ? 'checked' : '' ?>>
-                <label for="defaultCheckPart3_8" class="<?=(isset($current_reason_rig) && $current_reason_rig == 34 && ((!isset($part_3['hero_in']) || $part_3['hero_in'] == 0) )  ) ? 'label-fire':'' ?>">
+                <label for="defaultCheckPart3_8" class="<?=(isset($current_reason_rig) && $current_reason_rig == 34 && ((!isset($part_3['hero_in']) || $part_3['hero_in'] == 0))  ) ? 'label-fire':'' ?>">
                     в районе выезда подразделения
                 </label>
             </div>

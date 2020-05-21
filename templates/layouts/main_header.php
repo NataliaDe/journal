@@ -1,8 +1,7 @@
 <header class="main-header">
     <!-- Logo -->
 
-
-    <?php
+       <?php
     if (isset($_SESSION['id_level']) && $_SESSION['id_level'] == 1 && isset($id_page) && $id_page != 0) {
         $path = $baseUrl . '/rig/table/for_rcu/' . $id_page . '/0';
     } else {
@@ -24,9 +23,7 @@
         }
 
         ?>
-
-
-
+   
         <img src="<?= $baseUrl ?>/assets/images/logo.png" width="50" height="50" style="float: left;">
         <!-- mini logo for sidebar mini 50x50 pixels -->
 <!--          <span class="logo-mini">Журнал</span>-->
@@ -51,15 +48,13 @@
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
+			
+			
 
 
 
-
-
-<!--                <li class="dropdown tasks-menu">
-                    <a href="<?= $baseUrl ?>/remark"  class="item-menu"><span>Книга замечаний</span></a>
-                </li>-->
-
+		
+			
 <?php
 /* br mode  */
 if(isset($settings_user_br_table) && !empty($settings_user_br_table)){
@@ -91,17 +86,29 @@ else{
 
 ?>
 
+		
+<?php
+               // if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
+
+                    ?>
+
+                   <li>
+ <a href="http://172.26.200.15/peopleSearch" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Поиск людей" target='_blank'>
+
+                                <img src="<?= $baseUrl ?>/assets/images/search_people/Sharepoint.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                            </a>
+                    </li>
 
 
-<!--                <li>
-                    <a href="<?= $baseUrl ?>/maps" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Карта" >
-                        <img src="<?= $baseUrl ?>/assets/images/leaflet/blue_globe.png" width="50" height="50" style="padding-bottom: 5px;">
+                    <?php
+               // }
 
-                    </a>
-                </li>-->
+                ?>
 
 
-                <?php
+			
+<?php
                 if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
 
                     ?>
@@ -132,11 +139,9 @@ else{
                 }
 
                 ?>
-
-
-
-                <li>
-                    <a href="<?= $baseUrl ?>/remark" class="logo">
+			
+			                <li>
+                    <a href="<?= $baseUrl ?>/remark" class="logo" style="background-color: #3c8dbc;">
                         <img src="<?= $baseUrl ?>/assets/images/feedback.png" width="50" height="50" >
 
                     </a>
@@ -172,7 +177,7 @@ else{
                     <!-- User Account: style can be found in dropdown.less -->
                     <li class="dropdown user user-menu">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <i class="fa fa-user"></i>
+<i class="fa fa-user"></i>
                             <span class="hidden-xs"><?= $_SESSION['user_name'] ?></span>
                         </a>
                         <ul class="dropdown-menu">

@@ -2,14 +2,14 @@
 <!--<div class="box-body">-->
 <?php
 //echo $_SERVER['REQUEST_URI'];
-
 ?>
 <br>
 <center><b>Форма для журнала регистрации поступающих сообщений в ЦОУ Г(Р)ОЧС (ПСЧ)</b></center>
 
-<br>
-<form  role="form" class="form-inline" name="rep1Form" id="rep1Form" method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
+<br><br>
+    <form  role="form" class="form-inline" name="rep1Form" id="rep1Form" method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
 
+	
     <div class="row" style="padding-left: 20px">
         <div class="form-group " style="    border: solid 1px #f39c12;
              padding-top: 10px;
@@ -39,101 +39,89 @@
 
         <br><br><br>
     </div>
+	
+	
+	 <div class="row" style="padding-left: 20px">
+                <div class="form-group">
+                    <label for="date_start" >с</label>
+                    <div class="input-group date" id="date_start">
+                        <?php
+                              if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
+                                  ?>
+                        <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
+
+                        <?php
+                              }
+                              else{
+                                  ?>
+                            <input type="text" class="form-control datetime"  name="date_start" />
+                        <?php
+                              }
+                        ?>
+
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
 
 
-    <div class="row" style="padding-left: 20px">
+                <div class="form-group">
+                    <label for="date_end">&nbsp;по</label>
+                    <div class="input-group date" id="date_end">
+                            <?php
+                              if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {
+                                  ?>
+                        <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
 
-        <div class="form-group">
-            <label for="date_start" >с</label>
-            <div class="input-group date" id="date_start">
-                <?php
-                if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
+                        <?php
+                              }
+                              else{
+                                  ?>
+                       <input type="text" class="form-control datetime"  name="date_end" />
+                        <?php
+                              }
+                        ?>
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
-
-                    <?php
-                } else {
-
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_start" />
-                    <?php
-                }
-
-                ?>
-
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
-
-
-        <div class="form-group">
-            <label for="date_end">&nbsp;по</label>
-            <div class="input-group date" id="date_end">
-                <?php
-                if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
-
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
-
-                    <?php
-                } else {
-
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_end" />
-                    <?php
-                }
-
-                ?>
-
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
 
 
         <div class="form-group">
+                    <label for="id_region">Область</label>
+                    <select class="form-control" name="id_region" id="id_region"  >
+   <?php
+   if($_SESSION['id_level'] == 1){
+       ?>
+<!--                        <option value="">все</option>              -->
+                        <?php
+   }
+                        foreach ($region as $re) {
+                            if ( $re['id'] == $_SESSION['id_region'] && $_SESSION['id_level'] != 1) {
+                                printf("<p><option value='%s' selected ><label>%s</label></option></p>", $re['id'], $re['name']);
+                            } elseif($_SESSION['id_level']==1) {
+                                printf("<p><option value='%s' ><label>%s</label></option></p>", $re['id'], $re['name']);
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
 
-            <label for="id_region">Область</label>
-            <select class="form-control" name="id_region" id="id_region"  >
-                <?php
-                if ($_SESSION['id_level'] == 1) {
+                <div class="form-group">
+                    <label for="id_local">Район</label>
+                    <select class="form-control" name="id_local" id="auto_local"  >
+                        <option value="">Все</option>
+                        <?php
 
-                    ?>
-                    <!--                        <option value="">все</option>              -->
-                    <?php
-                }
-                foreach ($region as $re) {
-                    if ($re['id'] == $_SESSION['id_region'] && $_SESSION['id_level'] != 1) {
-                        printf("<p><option value='%s' selected ><label>%s</label></option></p>", $re['id'], $re['name']);
-                    } elseif ($_SESSION['id_level'] == 1) {
-                        printf("<p><option value='%s' ><label>%s</label></option></p>", $re['id'], $re['name']);
-                    }
-                }
-
-                ?>
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="id_local">Район</label>
-            <select class="form-control" name="id_local" id="auto_local"  >
-                <option value="">Все</option>
-                <?php
-                foreach ($local as $row) {
-                    if ($row['id'] == $_SESSION['id_local'] && $_SESSION['id_level'] != 1) {
-                        printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'], $row['id_region'], $row['name']);
-                    } else {
-                        printf("<p><option value='%s'   class='%s' ><label>%s</label></option></p>", $row['id'], $row['id_region'], $row['name']);
-                    }
-                }
-
-                ?>
-            </select>
-        </div>
-
-
-
-
+                        foreach ($local as $row) {
+                            if ( $row['id'] == $_SESSION['id_local']  && $_SESSION['id_level'] != 1) {
+                                printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
+                            } else {
+                                printf("<p><option value='%s'   class='%s' ><label>%s</label></option></p>", $row['id'],$row['id_region'], $row['name']);
+                            }
+                        }
+                        ?>
+                    </select>
+                </div>
 
 
 
@@ -153,47 +141,46 @@
         </div>
 
         <div class="form-group">
-            <button class="btn bg-purple" type="submit"  id="btn_rep1" >Сформировать</button>
+            <button class="btn bg-purple" type="submit"   >Сформировать</button>
         </div>
-    </div>
+</div>
 
 
+        <br> <br>
+        <div class="row">
 
-    <br> <br>
-    <div class="row">
+            <div class="form-group" id="div_is_pasp" style="display: none">
+                <div class="checkbox checkbox-danger">
+                    <?php
+                    if (!isset($_POST['is_pasp']) || $_POST['is_pasp'] == 0) {
 
-        <div class="form-group" id="div_is_pasp" style="display: none">
-            <div class="checkbox checkbox-danger">
-                <?php
-                if (!isset($_POST['is_pasp']) || $_POST['is_pasp'] == 0) {
+                        ?>
+                        <input id="checkbox3" type="checkbox" name="is_pasp" value="1"  >
+                        <?php
+                    } else {
+
+                        ?>
+                        <input id="checkbox3" type="checkbox" name="is_pasp" value="1"  checked="" >
+                        <?php
+                    }
 
                     ?>
-                    <input id="checkbox3" type="checkbox" name="is_pasp" value="1"  >
-                    <?php
-                } else {
-
-                    ?>
-                    <input id="checkbox3" type="checkbox" name="is_pasp" value="1"  checked="" >
-                    <?php
-                }
-
-                ?>
-                <label for="checkbox3">
-                    по привлечению техники из выбранных подразделений
-                </label>
+                    <label for="checkbox3">
+                        из указанных подразделений
+                    </label>
+                </div>
             </div>
+            <div class="form-group" id="div_id_pasp" style="display: none">
+                <select class="chosen-select-deselect form-control" name="id_pasp[]" id="id_pasp"  multiple tabindex="4" data-placeholder="Подразделение" >
+
+
+                </select>
+            </div>
+
         </div>
-        <div class="form-group" id="div_id_pasp" style="display: none">
-            <select class="chosen-select-deselect form-control" name="id_pasp[]" id="id_pasp"  multiple tabindex="4" data-placeholder="Подразделение" >
 
-
-            </select>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="form-group" data-toggle="tooltip" data-placement="right" id="lable-for-neighbor"
+ <div class="row">
+<div class="form-group" data-toggle="tooltip" data-placement="right" id="lable-for-neighbor"
              title="Будут отображены все выезды в указанную область и(или) район.">
             <div class="checkbox checkbox-success">
                 <?php
@@ -221,33 +208,15 @@
         </div>
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
-        <!--
-                <div class="form-group" id="block-neighbor-descr">
-        <?php
-        //if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
 
-        ?>
-                        Будут отображены все выезды в указанную область и(или) район.
-        <?php
-        //} else {
-
-        ?>
-                        Будут отображены выезды в указанную область и(или) район, которые создал указанный область и(или) район.
-        <?php
-        //}
-
-        ?>
-
-
-                </div>-->
-    </div>
+</div>
 
 
 
 
 
 
-</form>
+    </form>
 <br><br>
 
 <i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
@@ -255,12 +224,12 @@
 <br>
 <i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
     рекомендуем строить отчет за период не больше 1 недели в связи с большим объемом данных.</span>
-
-
-
-
+	
+	
+	
+	
 <br>
 <?php
-include dirname(dirname(__FILE__)) . '/bokk/form.php';
+include dirname(dirname(__FILE__)).'/bokk/form.php';
 
 ?>

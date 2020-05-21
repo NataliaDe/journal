@@ -1,9 +1,9 @@
 <br>
 <style>
-    .li-tabs{
-        border: 1px solid #bcc4c7;
-        border-radius: 4px 4px 0 0;
-    }
+.li-tabs{
+	border: 1px solid #bcc4c7;
+	border-radius: 4px 4px 0 0;
+}
 
     .fire{
         border: 2px solid red;
@@ -15,17 +15,16 @@
     }
 
 </style>
-<?php
-if (isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')) {
-    include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
-}
-
-
-include dirname(dirname(__FILE__)) . '/rig/title_block.php';
-
-?>
+ <?php
+    if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
+           include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
+    }
+	
+	
+	    include dirname(dirname(__FILE__)) . '/rig/title_block.php';
+    ?>
 <div class="box-body">
-
+    
 
 
     <ul class="nav nav-tabs">
@@ -46,7 +45,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
             <a  href="#1" data-toggle="tab">Результаты боевой работы</a>
         </li>
 
-        <?php
+                <?php
         if ($active_tab == 2) {
 
             ?>
@@ -98,20 +97,20 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
             }
 
             ?>
-            <a  href="#4" data-toggle="tab">Раздел 3. Общие сведения</a>
+            <a  href="#4" data-toggle="tab">Раздел 3-4. Общие сведения и другие выезды</a>
         </li>
 
     </ul>
-    <!--------------------------------------------------- содержимое вкладок------------------------------------------>
-    <div class="tab-content ">
-        <br>
+        <!--------------------------------------------------- содержимое вкладок------------------------------------------>
+        <div class="tab-content ">
+            <br>
 
-        <div class="tab-pane <?= ($active_tab == 1) ? 'active' : '' ?>" id="1">
+             <div class="tab-pane <?= ($active_tab == 1) ? 'active': ''?>" id="1">
 
-            <form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?= $id_rig ?>" >
-
-                <a href="#" class="validate_href" data-form="resultsBattleForm" data-toggle="modal"  data-target="#validate_modal"></a>
-
+			<form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?=$id_rig ?>" >
+			
+			<a href="#" class="validate_href" data-form="resultsBattleForm" data-toggle="modal"  data-target="#validate_modal"></a>
+			
                 <div class="row">
 
 
@@ -128,7 +127,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                     -->
 
 
-                    <input type="hidden" class="form-control"  name="id_battle" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0 ?>" >
+                    <input type="hidden" class="form-control"  name="id_battle" value="<?= (isset($id_battle) && !empty($id_battle)) ? $id_battle : 0  ?>" >
 
                     <div class="col-lg-1">
                         <div class="form-group">
@@ -136,8 +135,8 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['dead_man']) || $battle['dead_man'] == 0) ) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="dead_man" value="<?= (isset($battle['dead_man'])) ? $battle['dead_man'] : 0 ?>" >
                         </div>
                     </div>
-
-                    <div class="col-lg-1">
+					
+				     <div class="col-lg-1">
                         <div class="form-group">
                             <label for="dead_child">в т.ч. детей</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['dead_child']) || $battle['dead_child'] == 0) ) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="dead_child" value="<?= (isset($battle['dead_child'])) ? $battle['dead_child'] : 0 ?>" >
@@ -150,39 +149,39 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_man']) || $battle['save_man'] == 0) ) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_man" value="<?= (isset($battle['save_man'])) ? $battle['save_man'] : 0 ?>" >
                         </div>
                     </div>
-
-
-                    <div class="col-lg-1">
+					
+					
+					 <div class="col-lg-1">
                         <div class="form-group">
                             <label for="save_child">в т.ч. детей</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_child']) || $battle['save_child'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_child" value="<?= (isset($battle['save_child'])) ? $battle['save_child'] : 0 ?>" >
                         </div>
                     </div>
-
-                    <div class="col-lg-2">
+					
+					<div class="col-lg-2">
                         <div class="form-group">
                             <label for="save_mchs">в т.ч. подразделениями МЧС</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_mchs']) || $battle['save_mchs'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_mchs" value="<?= (isset($battle['save_mchs'])) ? $battle['save_mchs'] : 0 ?>" >
                         </div>
                     </div>
-
-
-                    <div class="col-lg-2"></div>
-
-
+					
+					
+					<div class="col-lg-2"></div>
+					
+					
                     <div class="col-lg-2">
                         <div class="box-body">
                             <button type="submit" class="btn-save-rig">  <div class="i2Style">Сохранить данные</div></button>
                         </div>    </div>
 
-
+    
 
                 </div>
-
-
-                <div class="row">
-
-                    <div class="col-lg-1">
+				
+				
+				 <div class="row">
+				 
+				  <div class="col-lg-1">
                         <div class="form-group">
                             <label for="inj_man_l">Травмировано</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['inj_man']) || $battle['inj_man'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="inj_man" value="<?= (isset($battle['inj_man'])) ? $battle['inj_man'] : 0 ?>" >
@@ -195,11 +194,11 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['ev_man']) || $battle['ev_man'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="ev_man" value="<?= (isset($battle['ev_man'])) ? $battle['ev_man'] : 0 ?>" >
                         </div>
                     </div>
-
-                    <div class="col-lg-1">
+					
+					<div class="col-lg-1">
                         <div class="form-group">
                             <label for="ev_child">в т.ч. детей</label>
-                            <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['ev_child']) || $battle['ev_child'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="ev_child" value="<?= (isset($battle['ev_child'])) ? $battle['ev_child'] : 0 ?>" >
+                           <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['ev_child']) || $battle['ev_child'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="ev_child" value="<?= (isset($battle['ev_child'])) ? $battle['ev_child'] : 0 ?>" >
                         </div>
                     </div>
 
@@ -210,8 +209,8 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                         </div>
                     </div>
 
-
-                </div>
+				 
+				  </div>
 
 
                 <p class="line"><span>Строения</span></p>
@@ -287,9 +286,9 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_an']) || $battle['save_an'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_an" value="<?= (isset($battle['save_an'])) ? $battle['save_an'] : 0 ?>" >
                         </div>
                     </div>
-
-
-
+					
+					
+					
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="save_an_mchs">в т.ч. подразделениями МЧС</label>
@@ -346,11 +345,11 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
 
 
                 </div>
-
-
-
-
-                <p class="line"><span>Ущерб (прямые потери) и материальные ценности</span></p>
+				
+				
+				
+				
+				              <p class="line"><span>Ущерб (прямые потери) и материальные ценности</span></p>
 <!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
 
                 <div class="row">
@@ -373,15 +372,15 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                 </div>
 
 
-            </form>
-        </div>
+    </form>
+</div>
 
 
 
 
 
         <!--  -------------------------          PART 2 --------------------------------->
-        <div class="tab-pane <?= ($active_tab == 2) ? 'active' : '' ?>" id="2">
+        <div class="tab-pane <?= ($active_tab == 2) ? 'active': ''?>" id="2">
 
             <?php
             include dirname(__FILE__) . '/part_1/part_1.php';
@@ -389,7 +388,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
             ?>
         </div>
 
-        <!--------------------------------        END PART 1 ----------------------------------------->
+<!--------------------------------        END PART 1 ----------------------------------------->
 
 
 
@@ -434,6 +433,8 @@ include 'modals/validate_modal.php';
 <script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script src="<?= $baseUrl ?>/assets/toastr/js/toastr.min.js"></script>
 <script>
+
+
 
 
 
@@ -491,9 +492,10 @@ include 'modals/validate_modal.php';
             }
         });
     });
-
-
-
+	
+	
+	
+	
 
     $(document).ready(function () {
         $('body').on('change', '#resultsBattleFormPart_1 input[name="one_gdzs"]', function (e) {
@@ -526,14 +528,16 @@ include 'modals/validate_modal.php';
         });
     });
 
-
-    if (<?= $is_success ?> === 1)
-        toastr.success('Информация сохранена.', 'Успех!', {progressBar: true, timeOut: 5000});
-
-
-
-
-    $('form#resultsBattleForm').on('submit', function (e) {
+ if(<?= $is_success ?> === 1)
+        toastr.success('Информация текущей вкладки сохранена.', 'Успех!', {progressBar:     true,timeOut: 5000});
+	
+	
+	
+	
+	
+	
+	
+	$('form#resultsBattleForm').on('submit', function (e) {
         e.preventDefault();
         var form = $('form#resultsBattleForm');
         var name_form = 'resultsBattleForm';

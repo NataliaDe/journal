@@ -8,31 +8,29 @@
         <?php
         //автоматическое обновление страницы general
         if (isset($delay)) {
-
             ?>
             <meta http-equiv="Refresh" content="<?= $delay ?>" />
             <?php
         }
-
         ?>
 
         <link rel="icon" href="<?= $baseUrl ?>/favicon.ico" type="image/x-icon" />
         <link rel="shortcut icon" href="<?= $baseUrl ?>/favicon.ico" type="image/x-icon" />
 
-
+        
 
         <title>
-            <?php
-            if (isset($title) && !empty($title)) {
-                $name_title = $title;
-            } else {
-                $name_title = ' Журнал ЦОУ';
-            }
-            echo $name_title;
-
-            ?>
-
-        </title>
+                    <?php
+  if(isset($title) && !empty($title))  {
+      $name_title=$title;
+  }   
+  else{
+      $name_title=' Журнал ЦОУ';
+  }
+  echo $name_title;
+?>
+            
+           </title>
 
 
         <!-- Bootstrap 3.3.5 -->
@@ -44,7 +42,7 @@
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/bootstrapValidator/css/bootstrapValidator.min.css">
 
 
-        <!--datepicker -->
+         <!--datepicker -->
         <link href="<?= $baseUrl ?>/assets/css/datepicker/bootstrap-datetimepicker.min.css" rel="stylesheet">
 
         <!--        adminLTE-->
@@ -73,19 +71,20 @@
 
         <!-- Chosen CSS -->
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/chosen_v1.8.2/chosen.css">
-
+        
         <!-- select2 css - поиск в выпад списке -->
-        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2_1.css">
-
+                <link rel="stylesheet" href="<?= $baseUrl ?>/assets/js/select2/select2_1.css">
+                
+                
 
         <!-- manual -->
-        <link href="<?= $baseUrl ?>/assets/css/manual.css" rel="stylesheet">
+        <link href="<?= $baseUrl ?>/assets/css/manual.css?<?php echo time();?>" rel="stylesheet">
         <link href="<?= $baseUrl ?>/assets/css/signin.css" rel="stylesheet">
 
 
         <!-- DataTable CSS -->
         <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/css/jquery.dataTables.css">
-        <!--<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.10.18/fh-3.1.4/datatables.min.css"/>-->
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
@@ -93,25 +92,20 @@
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
         <![endif]-->
 
+		<link href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" rel="stylesheet"/>
+		  <link rel="stylesheet" href="<?= $baseUrl ?>/assets/css/switch.css">
 
-        <link href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" rel="stylesheet"/>
-        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/css/switch.css">
-
-
-        <link rel="stylesheet" href="<?= $baseUrl ?>/assets/preloader/preloader.css">
-
+		  <link rel="stylesheet" href="<?= $baseUrl ?>/assets/preloader/preloader.css">
     </head>
-    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
-
-
-
-        <?php
+<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+    
+	
+	<?php
         include dirname(__FILE__) . '/preloader.php';
 
         ?>
-
-
-        <!--    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">-->
+    
+<!--    <body class="hold-transition skin-blue sidebar-mini sidebar-collapse">-->
 
 
 

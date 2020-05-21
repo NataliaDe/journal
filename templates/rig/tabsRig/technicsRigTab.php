@@ -1,5 +1,4 @@
 <p class="line"><span>Привлекаемые силы и средства МЧС</span></p>
-
 <div class="row">
 <div class="col-lg-2">
 
@@ -25,6 +24,7 @@
      </div>
 
 <br>
+
 <?php
 //$k = 3; //начало
 //$j = 2; //блок техники состоит из  3 единиц, шаг
@@ -34,7 +34,6 @@ $j = 3; //блок техники состоит из  3 единиц, шаг
 $k1 = 3; //начало-для техники из др ведомств
 ?>
 <!--По умолчанию выводить 3 единицы техники     -->
-<div id="div-sily-mchs" >
 <?php
 /* ------------------------ редактируемые СиС МЧС --------------------------- */
 //print_r($silymchs);
@@ -60,7 +59,7 @@ if (isset($silymchs) && !empty($silymchs)) {
             <div class="col-lg-2 ">
                 <div class="form-group ">
                     <label for="id_region">Область</label>
-                    <select class="form-control sily_select" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');" >
+                    <select class="form-control sily_select" name="silymchs[<?= $i ?>][id_region]" id="id_region<?= $i ?>" onchange="javascript:clearPasp('silymchs[<?= $i ?>][id_teh][]');"  >
 
                         <option value="">Выбрать</option>
                         <?php
@@ -389,15 +388,13 @@ for ($i = $k; $i <= ($k + $j); $i++) {
 ?>
 
 </div>
-</div>
 <br><br>
 <span class="glyphicon glyphicon-download-alt" style="color: red;" ></span>&nbsp;&nbsp;
 Техника берется из <a  href="/str " target="_blank" aria-hidden="true" data-toggle="tooltip" data-placement="left" title="Перейти" style="text-transform: uppercase" >
-    <span style="color:red;">строевой записки</span></a>, <b>(К) </b>- техника, заступившая из другого подразделения; <b>&#155; </b>- техника на выезде; <b>(Р) </b>- техника в ремонте;
-<!--    <b>(ТО) </b>- техника на ТО;-->
+    <span style="color:red;">строевой записки</span></a>, <b>(К) </b>- техника, заступившая из другого подразделения; <b>&#155; </b>- техника на выезде; <b>(Р) </b>- техника в ремонте; 
+	<!--<b>(ТО) </b>- техника на ТО;-->
     <b>(Бр) </b>- техника в боевом расчете; <b>(Рез) </b>- техника в резерве.
-<br>
-<b>*</b>Технику, находящуюся на ТО, можно использовать для высылки.
+
 <br><br><br>
 <!------------------------------------------------Привлекаемые силы и средства других ведомств----------------------------------------------------------->
 <p class="line"><span>Привлекаемые силы и средства других ведомств</span></p>
@@ -421,7 +418,7 @@ if (isset($innerservice)) {
         <?php
         if (isset($value['time_msg']) && $value['time_msg'] != '0000-00-00 00:00:00') {
             ?>
-                        <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_msg]" value="<?= date('Y-m-d H:i', strtotime($value['time_msg']))?>" />
+                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_msg]" value="<?= date('Y-m-d H:i', strtotime($value['time_msg'])) ?>" />
             <?php
         } else {
             ?>
@@ -441,7 +438,7 @@ if (isset($innerservice)) {
         <?php
         if (isset($value['time_arrival']) && $value['time_arrival'] != '0000-00-00 00:00:00') {
             ?>
-                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_arrival]" value="<?=  date('Y-m-d H:i', strtotime($value['time_arrival'])) ?>" />
+                            <input type="text" class="form-control datetime"  name="service[<?= $i ?>][time_arrival]" value="<?=  date('Y-m-d H:i', strtotime($value['time_arrival']))  ?>" />
             <?php
         } else {
             ?>

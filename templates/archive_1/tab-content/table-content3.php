@@ -108,7 +108,7 @@ $t_arrival=$each_time[2];
 ?>
     <tr  style='background-color:rgb(<?=$_SESSION['colors'][$row['id_rig']]?>); '>
                     <td><?= $i ?></td>
-                    <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"><?= $row['id_rig'] ?></a></b></td>
+                    <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id_rig'] ?></a></b></td>
                     <td><?= date('d.m.Y', strtotime($row['date_msg'])) ?></td>
                     <td><?= date('H:i', strtotime($row['time_msg'])) ?></td>
                     <td><?= $row['local_name'] ?></td>
@@ -117,6 +117,7 @@ $t_arrival=$each_time[2];
                     <td><?= ($t_msg == '0000-00-00 00:00:00' || empty($t_msg) || $t_msg=='-') ? '' : date('d.m.Y H:i', strtotime($t_msg)) ?></td>
                     <td><?= ($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit=='-') ? '' : date('d.m.Y H:i', strtotime($t_exit)) ?></td>
                     <td><?= ($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ?></td>
+
 
                 </tr>
             <?php
@@ -133,14 +134,16 @@ $t_arrival=$each_time[2];
 <a href="<?=$link_excel?>" id="link_to_excel"><button class="submit" type="submit" >Экспорт в Excel</button></a>
 <input type="hidden" value="<?= $link_excel_hidden ?>" id="prev_link_to_excel">
 
+
+
         <script>
 
             (function ($, undefined) {
     $(function () {
 
                 $('#archiveTable3').DataTable({
-         //   "pageLength": 50,
-          "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
+        //    "pageLength": 50,
+         "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
              "order": [[ 0, "asc" ]],
             language: {
                 "processing": "Подождите...",
@@ -184,7 +187,7 @@ $t_arrival=$each_time[2];
             if (i == 11 || i==15 ) {
                 //выпадающий список
                 var y = 'rigForm';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"  onChange="changeLinkExcel();"><option value=""></option></select>')
+                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '" onChange="changeLinkExcel();"><option value=""></option></select>')
                         .appendTo($(this).empty())
                         .on('change', function () {
 
@@ -207,7 +210,7 @@ $t_arrival=$each_time[2];
                 var x = $('#archiveTable3 tfoot th').index($(this));
                 var y = 'archiveTable3';
                 //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск" onkeyup="keyupField();"   />');
+                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск" onkeyup="keyupField();"  />');
                 // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
             }
 
@@ -222,9 +225,9 @@ $t_arrival=$each_time[2];
     });
 
           });
-
-
-
+          
+          
+          
 function changeLinkExcel(){
 
         var id_rig=$('#inptarchiveTable31').val();

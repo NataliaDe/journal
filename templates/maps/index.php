@@ -40,13 +40,14 @@
 
             ?>
 
- <i style="color:#fb4343;" class="fa fa-bell"  data-toggle="tooltip" data-placement="right"
+			
+			 <i style="color:#fb4343;" class="fa fa-bell"  data-toggle="tooltip" data-placement="right"
 
     title="<?= implode(', ', $reasons_names) ?>
     ">
 
  </i>
-
+			
         </p></b></center>
 
 
@@ -65,4 +66,3 @@
 <script>
 
 </script>
-

@@ -19,6 +19,8 @@
 </style>
 
 <?php
+//print_r($rig);
+//echo $_SESSION['id_user'];
 if (isset($rig) && !empty($rig)) {
 
     $time_msg = date('Y-m-d H:i', strtotime($rig['time_msg']));
@@ -26,8 +28,8 @@ if (isset($rig) && !empty($rig)) {
     $id_reasonrig = $rig['id_reasonrig'];
     $id_street = $rig['id_street'];
     $home_number = $rig['home_number'];
-    $housing = $rig['housing']; //корпус, кв, подъезд
-    //  $apartment = $rig['apartment'];
+    $housing = $rig['housing'];//корпус, кв, подъезд
+  //  $apartment = $rig['apartment'];
     $is_opposite = $rig['is_opposite'];
     $id_locality = $rig['id_locality'];
     $id_region = $rig['id_region'];
@@ -47,19 +49,19 @@ if (isset($rig) && !empty($rig)) {
     $id_statusrig = $rig['id_statusrig'];
     $is_opg = $rig['is_opg'];
     $opg_text = $rig['opg_text'];
-    $id_user = $rig['id_user'];
-
-    $podr_zanytia = $rig['podr_zanytia'];
-
-    $fio_head_check = $rig['fio_head_check'];
+    $id_user=$rig['id_user'];
+	
+	$podr_zanytia = $rig['podr_zanytia'];
+	
+	$fio_head_check=$rig['fio_head_check'];
 
     /* ------- выбор вида нас.п. -------- */
-    if (isset($locality) && !empty($locality)) {
-        foreach ($locality as $l) {
-            if ($id_locality == $l['id'])
-                $id_locality_vid = $l['id_vid'];
-        }
+	if(isset($locality) && !empty($locality)){
+		    foreach ($locality as $l) {
+        if ($id_locality == $l['id'])
+            $id_locality_vid = $l['id_vid'];
     }
+	}
 
 
     if (isset($id_locality_vid) && !empty($id_locality_vid)) {
@@ -72,9 +74,7 @@ if (isset($rig) && !empty($rig)) {
     else {
         $vid_of_locality = '';
     }
-
-    $addr_for_map = (isset($bread_crumb_addr) && !empty($bread_crumb_addr)) ? array_pop($bread_crumb_addr) : '';
-    echo $addr_for_map;
+	$addr_for_map = (isset($bread_crumb_addr) && !empty($bread_crumb_addr)) ? array_pop($bread_crumb_addr) : '';
 
     /* ------- END выбор вида нас.п. -------- */
 } else {
@@ -104,11 +104,11 @@ if (isset($rig) && !empty($rig)) {
     $id_statusrig = 0;
     $is_opg = 0;
     $opg_text = NULL;
-    $id_user = $_SESSION['id_user'];
-
-    $podr_zanytia = 0;
-    $fio_head_check = '';
-
+    $id_user=$_SESSION['id_user'];
+	
+	$podr_zanytia=0;
+	
+	$fio_head_check='';
 
 
     /* ------- выбор вида нас.п. -------- */
@@ -131,25 +131,25 @@ if (isset($rig) && !empty($rig)) {
         $vid_of_locality = '';
     }
 
+	 
     /* ------- END выбор вида нас.п. -------- */
 }
 
 if (isset($people) && !empty($people)) {
     $phone = $people['phone'];
     $fio = $people['fio'];
-    // $floor_all = $people['floor_all'];
-    $floor = $people['floor']; //этажность/этаж
+   // $floor_all = $people['floor_all'];
+    $floor = $people['floor'];//этажность/этаж
     $address = $people['address'];
     $position = $people['position'];
 } else {
     $phone = '';
     $fio = '';
-    // $floor_all = '';
-    $floor = ''; //этажность/этаж
+   // $floor_all = '';
+    $floor = '';//этажность/этаж
     $address = '';
     $position = '';
 }
-
 ?>
 
 <div class="row">
@@ -161,17 +161,14 @@ if (isset($people) && !empty($people)) {
             <div class="input-group date" id="time_msg">
                 <?php
                 if (isset($time_msg) && $time_msg != '0000-00-00 00:00:00' && $time_msg != NULL) {
-
                     ?>
                     <input type="text" class="form-control datetime"  name="time_msg" value="<?= $time_msg ?>" />
                     <?php
                 } else {
-
                     ?>
                     <input type="text" class="form-control datetime"  name="time_msg" />
                     <?php
                 }
-
                 ?>
 
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
@@ -195,29 +192,12 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-    <div class="col-lg-1">
-        <?php
-        include dirname(__FILE__) . '/buttonSaveRig.php';
+    <div class="col-lg-2">
+                <?php
+            include dirname(__FILE__) . '/buttonSaveRig.php';
 
-        ?>
+            ?>
     </div>
-
-    <!--    <div class="col-lg-2">
-    <?php
-    //if ($id_user == $_SESSION['id_user'] || ($_SESSION['id_level'] == 1 && $_SESSION['can_edit'] == 1 && $_SESSION['is_admin'] == 1)) {
-
-    ?>
-
-
-
-    <?php
-//        } else {
-//
-//          include dirname(__FILE__) . '/infoMsg.php';
-//        }
-
-    ?>
-        </div>-->
 
 
 
@@ -244,17 +224,16 @@ if (isset($people) && !empty($people)) {
         <div class="form-group" id="reason-rig-id">
             <label for="id_reasonrig">Причина вызова</label>
             <select class="js-example-basic-single form-control" name="id_reasonrig" id="id_reasonrig" >
-                <option value="">Выбрать</option>
-                <?php
-                foreach ($reasonrig as $row) {
-                    if ($id_reasonrig == $row['id'] && $id_reasonrig != 0) {
-                        printf("<p><option value='%s'selected ><label>%s</label></option></p>", $row['id'], $row['name']);
-                    } elseif ($row['is_delete'] != 1 && $row['id'] != 0) {//удаленные записи не отображать
-                        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
-                    }
-                }
-
-                ?>
+<option value="">Выбрать</option>
+<?php
+foreach ($reasonrig as $row) {
+    if ($id_reasonrig == $row['id'] && $id_reasonrig != 0) {
+        printf("<p><option value='%s'selected ><label>%s</label></option></p>", $row['id'], $row['name']);
+    } elseif ($row['is_delete'] != 1 && $row['id'] != 0) {//удаленные записи не отображать
+        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+    }
+}
+?>
             </select>
         </div>
     </div>
@@ -265,65 +244,64 @@ if (isset($people) && !empty($people)) {
             <label for="id_work_view">Вид работ</label>
             <select class="js-example-basic-single form-control" name="id_work_view"  id="id_workview" >
                 <option value="">Выбрать</option>
-                <?php
-                foreach ($workview as $row) {
-                    if ($id_workview == $row['id'] && $id_workview != 0) {
-                        printf("<p><option value='%s' selected class='%s' ><label>%s</label></option></p>", $row['id'], $row['id_reasonrig'], $row['name']);
-                    } elseif ($row['is_delete'] != 1 && $row['id'] != 0) {
-                        printf("<p><option value='%s' class='%s' ><label>%s</label></option></p>", $row['id'], $row['id_reasonrig'], $row['name']);
-                    }
-                }
-
-                ?>
+<?php
+foreach ($workview as $row) {
+    if ($id_workview == $row['id'] && $id_workview  != 0) {
+        printf("<p><option value='%s' selected class='%s' ><label>%s</label></option></p>", $row['id'], $row['id_reasonrig'], $row['name']);
+    } elseif($row['is_delete'] != 1 && $row['id'] != 0) {
+        printf("<p><option value='%s' class='%s' ><label>%s</label></option></p>", $row['id'],  $row['id_reasonrig'], $row['name']);
+    }
+}
+?>
             </select>
         </div>
     </div>
 
-    <?php
-    /* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
+	    <?php
+		/* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
     if (isset($podr) && !empty($podr)) {
 
         ?>
-        <div class="col-lg-2" id="div_podr_zanytia" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && ($id_reasonrig == 18 || $id_reasonrig == 47 || $id_reasonrig == 75) ) ? 'block' : 'none' ?> ">
-            <div class="form-group" id="zanyatia-id">
-                <label for="podr_zanytia">Выбор подразделения</label>
-                <select class="js-example-basic-single form-control" name="podr_zanytia"  style=" border: solid 2px #e61010 !important;" >
-                    <option value="">Выбрать</option>
-                    <?php
-                    foreach ($podr as $row) {
-
-
-
-                        if (isset($podr_zanytia) && $podr_zanytia == $row['id_pasp'])
-                            printf("<p><option value='%s' selected ><label>%s</label></option></p>", $row['id_pasp'], $row['pasp_name']);
-                        else
-                            printf("<p><option value='%s'  ><label>%s</label></option></p>", $row['id_pasp'], $row['pasp_name']);
-                    }
-
-                    ?>
-                </select>
-            </div>
+	<div class="col-lg-2" id="div_podr_zanytia" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && ($id_reasonrig == 18 || $id_reasonrig == 47 || $id_reasonrig == 75) ) ? 'block' : 'none'  ?> ">
+        <div class="form-group" id="zanyatia-id">
+            <label for="podr_zanytia">Выбор подразделения</label>
+            <select class="js-example-basic-single form-control" name="podr_zanytia" style=" border: solid 2px #e61010 !important;" >
+                <option value="">Выбрать</option>
+<?php
+foreach ($podr as $row) {
+    if(isset($podr_zanytia) && $podr_zanytia == $row['id_pasp'])
+        printf("<p><option value='%s' selected ><label>%s</label></option></p>", $row['id_pasp'],  $row['pasp_name']);
+        else
+   printf("<p><option value='%s'  ><label>%s</label></option></p>", $row['id_pasp'],  $row['pasp_name']);
+}
+?>
+            </select>
         </div>
+    </div>
         <?php
     }
 
     ?>
-
-
-    <div class="col-lg-2" id="div_fio_head_check" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && $id_reasonrig == 18 && $id_workview != 0 && $id_workview == 254) ? 'block' : 'none' ?> ">
-        <div class="form-group" id="fio-head-check-id">
-            <label for="fio_head_check">Ф.И.О. руководителя проверки</label>
+	
+	
+	
+	        <div class="col-lg-2" id="div_fio_head_check" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && $id_reasonrig == 18 && $id_workview  != 0 && $id_workview  == 254) ? 'block' : 'none' ?> ">
+            <div class="form-group" id="fio-head-check-id">
+                <label for="fio_head_check">Ф.И.О. руководителя проверки</label>
             <input type="text" class="form-control"  placeholder="Ф.И.О." name="fio_head_check" value="<?= $fio_head_check ?>" >
+            </div>
         </div>
-    </div>
-
 
 </div>
 
 <p class="line"><span>Адрес</span></p>
 
 
-
+<?php
+//print_r($locality);
+//  echo $_SESSION['id_local'] ;
+//echo $_SESSION['auto_local'] ;
+?>
 <div class="row" id="div-address">
 
     <div class="col-lg-2">
@@ -352,7 +330,6 @@ if (isset($people) && !empty($people)) {
                         }
                     }
                 }
-
                 ?>
             </select>
         </div>
@@ -363,9 +340,10 @@ if (isset($people) && !empty($people)) {
         <div class="form-group" name="local">
             <label for="id_local">Район/Город</label>
             <select class="js-example-basic-single form-control" name="id_local" id="id_local" data-placeholder="Выбрать"    onchange="javascript:changeLocal();"  >
-                <option selected value="">Все</option>
+             <option selected value="">Все</option>
                 <!--              список формируется ajax функция-->
                 <?php
+
                 if ($id != 0) {//редактирование - заполнить район по умолчанию
                     foreach ($local as $loc) {
                         if ($id_local == $loc['id']) {
@@ -385,13 +363,12 @@ if (isset($people) && !empty($people)) {
                             printf("<p><option value='%s' ><label>%s</label></option></p>", $loc['id'], $loc['name']);
                     }
                 }
-
                 ?>
             </select>
 
         </div>
     </div>
-    <?php ?>
+                <?php ?>
     <div class="col-lg-2">
         <div class="form-group">
             <label for="id_selsovet">Сельский совет</label>
@@ -402,11 +379,12 @@ if (isset($people) && !empty($people)) {
                 if ($id != 0) {//редактирование - заполнить  по умолчанию
                     if (isset($selsovet) && !empty($selsovet)) {
                         foreach ($selsovet as $row) {
-                            if ($id_selsovet == $row['id']) {
-                                printf("<p><option selected value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
-                            } else {
-                                printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
-                            }
+                                if ($id_selsovet == $row['id']) {
+                                    printf("<p><option selected value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+                                } else {
+                                    printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+                                }
+
                         }
                     }
                 } else {// при добавлении нового выезда - заполнить  по умолчанию из сессии
@@ -417,46 +395,46 @@ if (isset($people) && !empty($people)) {
                         }
                     }
                 }
-
                 ?>
                 <!--            список формируется ajax функция-->
             </select>
         </div>
     </div>
-
-    <div class="col-lg-3">
+	
+	
+	    <div class="col-lg-3">
         <div class="form-group">
             <label for="id_locality">Населенный пункт</label>
             <select class="js-example-basic-single form-control" name="id_locality" id="id_locality"  data-placeholder="Выбрать"  onchange="javascript:changeLocality();"  >
 
                 <!--            список формируется ajax функция-->
-                <?php
-                if ($id != 0) {//редактирование - заполнить  по умолчанию
-                    echo '   <option selected value="">Все</option>';
-                    if (isset($locality) && !empty($locality)) {
-                        foreach ($locality as $row) {
-                            if ($id_locality == $row['id']) {
-                                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
-                            } else {
-                                printf("<option data-toggle='tooltip' data-placement='left'  title='%s'  value='%s' ><label>%s</label></option>", $row['local_name'], $row['id'], $row['name']);
-                            }
-                        }
-                    }
-                } else {//новый выезд
-                    echo '   <option selected value="">Все</option>';
-                    if (isset($locality) && !empty($locality)) {
+<?php
 
-                        foreach ($locality as $row) {
-                            if (isset($auto_local_city)) {//город
-                                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
-                            } else {
-                                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
-                            }
-                        }
-                    }
-                }
+if ($id != 0) {//редактирование - заполнить  по умолчанию
+    echo '   <option selected value="">Все</option>';
+    if (isset($locality) && !empty($locality)) {
+        foreach ($locality as $row) {
+            if ($id_locality == $row['id']) {
+                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
+            } else {
+                printf("<option data-toggle='tooltip' data-placement='left'  title='%s'  value='%s' ><label>%s</label></option>", $row['local_name'], $row['id'], $row['name']);
+            }
+        }
+    }
+} else {//новый выезд
+     echo '   <option selected value="">Все</option>';
+    if (isset($locality) && !empty($locality)) {
 
-                ?>
+        foreach ($locality as $row) {
+            if (isset($auto_local_city)) {//город
+                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
+            } else {
+                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
+            }
+        }
+    }
+}
+?>
             </select>
         </div>
     </div>
@@ -466,35 +444,33 @@ if (isset($people) && !empty($people)) {
 
 
 <div class="row">
-    <?php
+<?php
 // echo $id_street;
-
-    ?>
+?>
     <div class="col-lg-3" id="div-street">
         <div class="form-group">
             <label for="id_street">Улица</label>
             <select class="js-example-basic-single form-control" id="id_street" name="id_street" data-placeholder="Выбрать" >
                 <option value="">Все</option>
-                <?php
-                if ($id != 0) {//редактирование - заполнить  по умолчанию
-                    if (isset($street) && !empty($street)) {
-                        foreach ($street as $row) {
-                            if ($id_street == $row['id']) {
-                                printf("<p><option selected value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
-                            } else {
-                                printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
-                            }
-                        }
-                    }
-                } else {
-                    if (isset($street) && !empty($street)) {
-                        foreach ($street as $row) {
-                            printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
-                        }
-                    }
-                }
-
-                ?>
+<?php
+if ($id != 0) {//редактирование - заполнить  по умолчанию
+    if (isset($street) && !empty($street)) {
+        foreach ($street as $row) {
+            if ($id_street == $row['id']) {
+                printf("<p><option selected value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
+            } else {
+                printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
+            }
+        }
+    }
+} else {
+    if (isset($street) && !empty($street)) {
+        foreach ($street as $row) {
+            printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id'], $row['name'], $row['vid_name']);
+        }
+    }
+}
+?>
                 <!--            список формируется ajax функция-->
             </select>
         </div>
@@ -507,39 +483,39 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-    <div class="col-lg-2">
+        <div class="col-lg-2">
         <div class="form-group">
             <label for="housing">Корпус, кв., подъезд</label>
             <input type="text" class="form-control" placeholder="Корпус, кв., подъезд" name="housing" value="<?= $housing ?>" >
         </div>
     </div>
 
-    <!--    <div class="col-lg-1">
-            <div class="form-group">
-                <label for="housing">Корпус</label>
-                <input type="text" class="form-control" placeholder="Корпус" name="housing" value="< $housing ?>" >
-            </div>
-        </div>-->
+<!--    <div class="col-lg-1">
+        <div class="form-group">
+            <label for="housing">Корпус</label>
+            <input type="text" class="form-control" placeholder="Корпус" name="housing" value="< $housing ?>" >
+        </div>
+    </div>-->
 
-    <!--        <div class="col-lg-1">
-            <div class="form-group">
-                <label for="floor_all">Этажность</label>
-                <input type="text" class="form-control" placeholder="Этажность" name="floor_all" value="< $floor_all ?>" >
-            </div>
-        </div>-->
+<!--        <div class="col-lg-1">
+        <div class="form-group">
+            <label for="floor_all">Этажность</label>
+            <input type="text" class="form-control" placeholder="Этажность" name="floor_all" value="< $floor_all ?>" >
+        </div>
+    </div>-->
 
-    <!--    <div class="col-lg-1">
-            <div class="form-group">
-                <label for="apartment">Квартира</label>
-                <input type="text" class="form-control" placeholder="Квартира" name="apartment" value="< $apartment ?>" >
-            </div>
-        </div>-->
-    <!--    <div class="col-lg-1">
-            <div class="form-group">
-                <label for="floor">Этаж</label>
-                <input type="text" class="form-control" placeholder="Этаж" name="floor" value="< $floor ?>" >
-            </div>
-        </div>-->
+<!--    <div class="col-lg-1">
+        <div class="form-group">
+            <label for="apartment">Квартира</label>
+            <input type="text" class="form-control" placeholder="Квартира" name="apartment" value="< $apartment ?>" >
+        </div>
+    </div>-->
+<!--    <div class="col-lg-1">
+        <div class="form-group">
+            <label for="floor">Этаж</label>
+            <input type="text" class="form-control" placeholder="Этаж" name="floor" value="< $floor ?>" >
+        </div>
+    </div>-->
 
     <div class="col-lg-1">
         <div class="form-group">
@@ -548,24 +524,21 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-    <!--    <div class="col-lg-1"></div>-->
+<!--    <div class="col-lg-1"></div>-->
 
     <div class="col-lg-2">
         <div class="form-group">
             <div class="checkbox checkbox-success">
-                <?php
-                if ($is_opposite == 1) {
-
-                    ?>
+<?php
+if ($is_opposite == 1) {
+    ?>
                     <input id="checkbox1" type="checkbox" name="is_opposite" value="1" checked="">
-                    <?php
-                } else {
-
-                    ?>
+    <?php
+} else {
+    ?>
                     <input id="checkbox1" type="checkbox" name="is_opposite" value="1">
                     <?php
                 }
-
                 ?>
 
                 <label for="checkbox1">
@@ -576,13 +549,6 @@ if (isset($people) && !empty($people)) {
     </div>
 
 </div>
-<?php
-//print_r($locality);
-//  echo $_SESSION['id_local'] ;
-//echo $_SESSION['auto_local'] ;
-
-?>
-
 
 
 <div class="row">
@@ -612,7 +578,7 @@ if (isset($people) && !empty($people)) {
         </div>
     </div>
 
-
+	
     <?php
     if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord']['name_sign'] == 'yes') {
 
@@ -651,7 +617,6 @@ if (isset($people) && !empty($people)) {
 
     ?>
 
-
 </div>
 
 
@@ -669,7 +634,6 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
 }
 
 ?>
-
 
 <div class="row">
     <div class="col-lg-5">
@@ -691,16 +655,15 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
             <label for="id_officebelong">Ведомственная прин.</label>
             <select class="js-example-basic-single form-control" name="id_officebelong"  >
                 <option value="">Выбрать</option>
-                <?php
-                foreach ($officebelong as $row) {
-                    if ($id_officebelong == $row['id']) {
-                        printf("<p><option value='%s' selected ><label>%s</label></option></p>", $row['id'], $row['name']);
-                    } elseif ($row['is_delete'] != 1) {
-                        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
-                    }
-                }
-
-                ?>
+<?php
+foreach ($officebelong as $row) {
+    if ($id_officebelong == $row['id']) {
+        printf("<p><option value='%s' selected ><label>%s</label></option></p>", $row['id'], $row['name']);
+    } elseif ($row['is_delete'] != 1) {
+        printf("<p><option value='%s' ><label>%s</label></option></p>", $row['id'], $row['name']);
+    }
+}
+?>
             </select>
         </div>
     </div>
@@ -720,6 +683,7 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
 
 
 </div>
+
 
 <?php
 if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord']['name_sign'] == 'yes') {
@@ -1292,7 +1256,7 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
 
 
     <?php
-    if (isset($rig) && !empty($rig) && isset($longitude) && !empty($longitude) && isset($latitude) && !empty($latitude)) {
+    if (isset($rig) && !empty($rig) && isset($longitude) && !empty($longitude) && isset($latitude) && !empty($latitude) && isset($addr_for_map) && !empty($addr_for_map)) {
 
         ?>
                     setCoordToMap(<?= $latitude ?>, <?= $longitude ?>, '<?= $addr_for_map ?>', 1);
