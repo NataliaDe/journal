@@ -4,13 +4,12 @@
 //echo $_SERVER['REQUEST_URI'];
 
 ?>
+<br>
+<center><b>Сведения о чрезвычайных ситуациях (в том числе пожарах), и их последствиях и боевой работе органов и подразделений по чрезвычайным ситуациям</b></center>
 <a href="<?= $baseUrl ?>/report/rep2" target="_blank" style="float: right; color: #b80509; border: 1px solid #b80509;" data-toggle="tooltip" data-placement="top" title="Перейти">
       <img src="<?= $baseUrl ?>/assets/images/3.png" style="width: 40px">
       &nbsp;Краткий отчет по боевой работе&nbsp;
   </a>
-<br>
-<center><b>Сведения о чрезвычайных ситуациях (в том числе пожарах), и их последствиях и боевой работе органов и подразделений по чрезвычайным ситуациям</b></center>
-
 <br><br>
 
 <form  role="form" class="form-inline" name="rep1Form"  method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
@@ -23,11 +22,10 @@
             foreach (ARCHIVE_YEAR_LIST as $y) {
                 if (isset($filter['year']) && !empty($filter['year']) && $filter['year'] == $y) {
                     printf("<p><option value='%s' selected ><label>%s</label></option></p>", $y, $y);
-                }
-                elseif(!isset($filter['year']) && $y== date('Y') ) {
+                } elseif(!isset($filter['year']) && $y== date('Y') ) {
                     printf("<p><option value='%s' selected><label>%s</label></option></p>", $y, $y);
                 }
-                else {
+				else {
                     printf("<p><option value='%s' ><label>%s</label></option></p>", $y, $y);
                 }
             }
@@ -69,7 +67,7 @@
             foreach ($local as $row) {
                 if (isset($filter['id_local']) && !empty($filter['id_local']) && $filter['id_local'] == $row['id']) {
                     printf("<p><option value='%s' class='%s'  selected ><label>%s</label></option></p>", $row['id'], $row['id_region'], $row['name']);
-                }
+                } 
                 else {
                     printf("<p><option value='%s'   class='%s' ><label>%s</label></option></p>", $row['id'], $row['id_region'], $row['name']);
                 }
@@ -148,8 +146,6 @@
     <br> <br>
 
 </form>
-
-
 <br>
 
 <!--<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -

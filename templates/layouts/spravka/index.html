@@ -1,74 +1,2192 @@
 <!DOCTYPE html>
-<html >
-<head>
-  <meta charset="UTF-8">
-  <title>РП Журнал ЦОУ</title>
-  
-  
-  
-      <link rel="stylesheet" href="css/style.css">
+<html lang="en">
 
-  
+<head>
+    <meta charset="UTF-8">
+    <title>Руководство | ПС "Журнал ЦОУ"</title>
+    <meta name="description" content="Руководство по использованию">
+    <meta name="author" content="REMRC">
+    <meta name="copyright" content="REMRC">
+    <link rel="shortcut icon" type="image/png" href="img/favicon.ico">
+	<link href="font-awesome-4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/tree-viewer.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-  <h1>Руководство пользователя программного средства "Журнал ЦОУ"</h1>
-<div class="accordion">
-  <ul>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Вход в программу</h2>
-          <p>Данные для входа можно получить в РЦУРЧС (тел. 209-27-51)</p>
-        </a>
-      </div>
-    </li>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Создание выезда</h2>
-          <p>Выезд можно создать по кнопке или из левого меню</p>
-        </a>
-      </div>
-    </li>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Базовые вкладки</h2>
-          <p>Заполняем информацию на 3 базовых вкладках и сохраняем выезд в любой момент</p>
-        </a>
-      </div>
-    </li>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Дополнительная информация</h2>
-          <p>Заполняем информацию на вспомогательных вкладках</p>
-        </a>
-      </div>
-    </li>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Редактирование выезда</h2>
-          <p>Для редактирования информации по выезду или удаления используйте кнопки</p>
-        </a>
-      </div>
-    </li>
-    <li>
-      <div>
-        <a href="#">
-          <h2>Классификаторы</h2>
-          <p>На уровне района можно вести классификатор для информирования должностных лиц</p>
-        </a>
-      </div>
-    </li>
-  </ul>
-</div>
-<p class="about">
-  By <a href="http://erc.mchs.gov.by/">РЦУРЧС</a>
-</p>
+
+    <div class="wrapper">
+        <div class="left-side">
+            <div class="logo">
+                <img src="img/logo.png" alt="" width="120" height="120" />
+            </div>
+            <div class="left-content">
+                <ul role="tablist">
+                    <li role="presentation" class="active"><a href="#one" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-home"></i></span>О руководстве</a></li>
+                    <li role="presentation"><a href="#two" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-folder"></i></span>Базовые классификаторы</a></li>
+                    <li role="presentation"><a href="#three" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-sitemap"></i></span>Модуль "Боевая работа"</a></li>
+                    <li role="presentation"><a href="#six" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-print"></i></span>Отчеты</a></li>
+                    <li role="presentation"><a href="#source" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-check-square-o"></i></span>Регистрация выездов</a></li>
+                    <li role="presentation"><a href="#support" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-support"></i></span>Общие рекомендации</a></li>
+					<li role="presentation"><a href="#other" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-wrench"></i></span>Настройки</a></li>
+					<li role="presentation"><a href="#archive" aria-controls="home" role="tab" data-toggle="tab"><span><i class="fa fa-truck"></i></span>Архив выездов</a></li>
+                </ul>
+            </div>
+            <div class="copyright">
+                <p>Минск, РЦУРЧС &#169; 2020 </p>
+            </div>
+        </div>
+        <div class="right-side">
+            <div class="right-content">
+                <div id="one" class="content active fade in">
+                    <h1><span>Программное средство "Журнал ЦОУ"</span> - руководство пользователя</h1>
+                    <div class="content-welcome">
+                        <p>
+                            
+                        </p>
+                    </div>
+                    <div class="created">
+                        <p>
+                            Создано: 20/03/2020
+                            <br> Последнее обновление: <b>14/05/2020</b>
+                            <br> Подразделение: ОВПО РЦУРЧС
+							<br> Телефон: 8-017-209-27-51
+                            
+                            
+                            <br>
+                            <br> Данное руководство создано для облегчения работы с программным средством "Журнал ЦОУ". Если у Вас возникли вопросы или предложения, пожалуйста, используйте следующую <a href="http://172.26.200.14/journal/remark">форму</a> для связи с нами.
+							
+							
+							<br>
+							<img src="img/01_schema.png" alt="Схема интеграции" style="display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;">
+                        </p>
+                    </div>
+                </div>
+                <div id="two" class="content fade">
+                    <h1>Базовые классификаторы</h1>
+                    <p>
+                        В программном средстве "Журнал ЦОУ" используются следующие классификаторы  (дерево всех позиций расположено ниже):
+                        <br> 1. Причина выезда и виды работ.
+                        <br> 2. Причина пожара.
+						<br> 3. Службы.
+						<br> 4. Ведомственная принадлежность.
+						<br> 5. Список лиц (для модуля "Информирование").
+						<br> 6. Список ПАСП.
+						<br>
+                        <br> Классификаторы 1-4 администрируются на уровне ОВПО РЦУРЧС.
+                        <br> Классификаторы 5-6 могут заполняться на уровне Г(Р)ОЧС.
+                        
+                    </p>
+                    <pre>
+								<div class="tree-viewer-pd" id="jstree1">
+                                    <ul>
+										
+                                        <li> <!-- class="jstree-open" -->1. Причины и виды выездов
+                                            <ul>
+                                                <!-- <li>01 дежурство
+                                                    <ul>
+														<li>первая 
+															<ul>
+																<li data-jstree='"type":"css"}'>animation-custom.css</li>
+															</ul>
+														</li>
+														<li>bootstrap-select
+															<ul>
+																<li data-jstree='"type":"css"}'>bootstrap-select.css</li>
+															</ul>
+														</li>
+														<li>c3
+															<ul>
+																<li data-jstree='"type":"css"}'>c3.min.css</li>
+															</ul>
+														</li>
+														<li>chosen
+															<ul>
+																<li data-jstree='"type":"css"}'>chosen.css</li>
+															</ul>
+														</li>
+														<li>code-editor
+															<ul>
+																<li data-jstree='"type":"css"}'>ambiance.css</li>
+																<li data-jstree='"type":"css"}'>codemirror.css</li>
+															</ul>
+														</li>
+														<li>color-picker
+															<ul>
+																<li data-jstree='"type":"css"}'>farbtastic.css</li>
+															</ul>
+														</li>
+														<li>cropper
+															<ul>
+																<li data-jstree='"type":"css"}'>cropper.min.css</li>
+															</ul>
+														</li>
+														<li>datapicker
+															<ul>
+																<li data-jstree='"type":"css"}'>datepicker3.css</li>
+															</ul>
+														</li>
+														<li>dialog
+															<ul>
+																<li data-jstree='"type":"css"}'>dialog.css</li>
+																<li data-jstree='"type":"css"}'>sweetalert2.min.css</li>
+															</ul>
+														</li>
+														<li>dropzone
+															<ul>
+																<li data-jstree='"type":"css"}'>dropzone.css</li>
+															</ul>
+														</li>
+														<li>jvectormap
+															<ul>
+																<li data-jstree='"type":"css"}'>jquery-jvectormap-2.0.3.css</li>
+															</ul>
+														</li>
+														<li>meanmenu
+															<ul>
+																<li data-jstree='"type":"css"}'>meanmenu.min.css</li>
+															</ul>
+														</li>
+														<li>metisMenu
+															<ul>
+																<li data-jstree='"type":"css"}'>metisMenu.min.css</li>
+																<li data-jstree='"type":"css"}'>metisMenu-vertical.css</li>
+															</ul>
+														</li>
+														<li>notification
+															<ul>
+																<li data-jstree='"type":"css"}'>notification.css</li>
+															</ul>
+														</li>
+														<li>scrollbar
+															<ul>
+																<li data-jstree='"type":"css"}'>jquery.mCustomScrollbar.min.css</li>
+															</ul>
+														</li>
+														<li>summernote
+															<ul>
+																<li data-jstree='"type":"css"}'>summernote.css</li>
+															</ul>
+														</li>
+														<li>wave
+															<ul>
+																<li data-jstree='"type":"css"}'>button.css</li>
+																<li data-jstree='"type":"css"}'>waves.min.css</li>
+															</ul>
+														</li>
+                                                        <li data-jstree='"type":"css"}'>animate.css</li>
+                                                        <li data-jstree='"type":"css"}'>bootstrap.min.css</li>
+                                                        <li data-jstree='"type":"css"}'>font-awesome.min.css</li>
+                                                        <li data-jstree='"type":"css"}'>jquery.dataTables.min.css</li>
+                                                        <li data-jstree='"type":"css"}'>main.css</li>
+                                                        <li data-jstree='"type":"css"}'>normalize.css</li>
+                                                        <li data-jstree='"type":"css"}'>notika-custom-icon.css</li>
+                                                        <li data-jstree='"type":"css"}'>owl.carousel.css</li>
+                                                        <li data-jstree='"type":"css"}'>owl.theme.css</li>
+                                                        <li data-jstree='"type":"css"}'>owl.transitions.css</li>
+                                                        <li data-jstree='"type":"css"}'>responsive.css</li>
+                                                        <li data-jstree='"type":"css"}'>themesaller-forms.css</li>
+                                                    </ul>
+                                                </li> -->
+												<li>01 выезд в соседний гарнизон
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>возврат в пути, работы не проводились</li>
+                                                        <li data-jstree='"type":"css"}'>ликвидация ЧС</li>
+                                                        <li data-jstree='"type":"css"}'>оказание помощи населению</li>
+                                                        <li data-jstree='"type":"css"}'>оказание помощи организации</li>
+                                                        <li data-jstree='"type":"css"}'>проведение АСР</li>
+                                                        <li data-jstree='"type":"css"}'>служебный</li>
+                                                        <li data-jstree='"type":"css"}'>сработка молнии</li>
+                                                        <li data-jstree='"type":"css"}'>тушение других загораний</li>
+														<li data-jstree='"type":"css"}'>тушение пожара в соседнем гарнизоне</li>
+                                                    </ul>
+                                                </li>
+													<li>02 дежурство
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>дежурство на мероприятии</li>
+                                                        <li data-jstree='"type":"css"}'>дежурство на объекте</li>
+                                                        <li data-jstree='"type":"css"}'>дежурство по обеспечению ПБ</li>
+                                                        <li data-jstree='"type":"css"}'>дежурство при обнаружении подозрительного взрывоопасного предмета</li>
+                                                        <li data-jstree='"type":"css"}'>дозор</li>
+                                                        <li data-jstree='"type":"css"}'>мониторинг тепловых аномалий</li>
+                                                    </ul>
+                                                </li>
+												</li>
+													<li>03 демеркуризация
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>замеры ПДК</li>
+                                                        <li data-jstree='"type":"css"}'>обезвреживание отходов</li>
+                                                        <li data-jstree='"type":"css"}'>сбор ртути</li>
+                                                        <li data-jstree='"type":"css"}'>удаление ртути</li>
+                                                        <li data-jstree='"type":"css"}'>дозор</li>
+                                                        <li data-jstree='"type":"css"}'>мониторинг тепловых аномалий</li>
+                                                    </ul>
+													</li>
+													<li>04 другие загорания
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>вспышка без последующего горения</li>
+                                                        <li data-jstree='"type":"css"}'>горение стерни</li>
+                                                        <li data-jstree='"type":"css"}'>горение ТБО</li>
+                                                        <!-- <li data-jstree='"type":"css"}'>другое</li> -->
+                                                        <li data-jstree='"type":"css"}'>загорание ТС в движении</li>
+                                                        <li data-jstree='"type":"css"}'>контролируемое горение (костер, мангал, порубочные остатки)</li>
+														<li data-jstree='"type":"css"}'>короткое замыкание электропроводки</li>
+														<li data-jstree='"type":"css"}'>мусор</li>
+														<li data-jstree='"type":"css"}'>мусор контролируемое сжигание</li>
+														<li data-jstree='"type":"css"}'>пища на газ. плите</li>
+														<li data-jstree='"type":"css"}'>пища на эл. плите</li>
+														<li data-jstree='"type":"css"}'>самосожжение</li>
+                                                    </ul>
+													</li>
+													
+													<li>05 занятия
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>другие занятия</li>
+                                                        <li data-jstree='"type":"css"}'>занятия ГСВ</li>
+                                                        <li data-jstree='"type":"css"}'>занятия на водах</li>
+                                                        <li data-jstree='"type":"css"}'>занятия ПАСП</li>
+                                                        <li data-jstree='"type":"css"}'>занятия со специализированными службами</li>
+                                                        <li data-jstree='"type":"css"}'>занятия ФП</li>
+														<li data-jstree='"type":"css"}'>ОППП (занятия ГДЗС)</li>
+														<li data-jstree='"type":"css"}'>отработка вводной</li>
+														<li data-jstree='"type":"css"}'>отработка ОП и ОК</li>
+														<li data-jstree='"type":"css"}'>проверка боеготовности</li>
+														<li data-jstree='"type":"css"}'>ТДК (занятия ГДЗС)</li>
+														<li data-jstree='"type":"css"}'>ТСЗ</li>
+														<li data-jstree='"type":"css"}'>ТСП</li>
+														<li data-jstree='"type":"css"}'>ТСУ</li>
+														<li data-jstree='"type":"css"}'>участие в соревнованиях</li>
+                                                    </ul>
+													</li>
+													
+													<li>06 заправка
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>заправка АСВ</li>
+                                                        <li data-jstree='"type":"css"}'>заправка водой</li>
+                                                        <li data-jstree='"type":"css"}'>заправка воздухом</li>
+                                                        <li data-jstree='"type":"css"}'>заправка ГСМ</li>
+                                                        <li data-jstree='"type":"css"}'>заправка огнетушащим порошком</li>
+                                                        <li data-jstree='"type":"css"}'>заправка пенообразователем</li>
+														
+                                                    </ul>
+													</li>
+													
+													<li>07 контроль сварочных и огневых работ
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>контроль налива</li>
+                                                        <li data-jstree='"type":"css"}'>контроль огневых работ</li>
+                                                        <li data-jstree='"type":"css"}'>контроль сварочных работ</li>
+                                                        
+													</ul>
+													</li>
+													
+													<li>08 ложный
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>ложный выезд</li>
+                                                        
+                                                        
+													</ul>
+													</li>
+													
+													<li>09 ЧС
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>авария</li>
+                                                        <li data-jstree='"type":"css"}'>деблокировка погибшего</li>
+														<li data-jstree='"type":"css"}'>деблокировка пострадавшего</li>
+														<li data-jstree='"type":"css"}'>другие ЧС техногенного характера</li>
+														<li data-jstree='"type":"css"}'>другое</li>
+														<li data-jstree='"type":"css"}'>ДТП</li>
+														<li data-jstree='"type":"css"}'>ликвидация последствий паводка</li>
+														<li data-jstree='"type":"css"}'>ликвидация последствий розлива (выброса) СДЯВ</li>
+														<li data-jstree='"type":"css"}'>ликвидация последствий розлива нефтепродуктов</li>
+														<li data-jstree='"type":"css"}'>на системах жизнеобеспечения</li>
+														<li data-jstree='"type":"css"}'>природного характера</li>
+														<li data-jstree='"type":"css"}'>техногенного характера</li>
+                                                        
+													</ul>
+													</li>
+													
+													<li>10 передислокация
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>передислокация в пределах гарнизона</li>
+                                                        <li data-jstree='"type":"css"}'>передислокация за пределы гарнизона</li>
+														<li data-jstree='"type":"css"}'>передислокация на службы взаимодействия</li>
+													                                                        
+													</ul>
+													</li>
+													
+													<li>11 платные услуги
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>буксировка</li>
+                                                        <li data-jstree='"type":"css"}'>другие платные услуги</li>
+														<li data-jstree='"type":"css"}'>извлечение животных из вентиляционных шахт</li>
+														<li data-jstree='"type":"css"}'>извлечение транспортных средств</li>
+														<li data-jstree='"type":"css"}'>испытание ограждений, оборудования</li>
+														<li data-jstree='"type":"css"}'>испытания пожарных гидрантов</li>
+														<li data-jstree='"type":"css"}'>обеспечение пожарной безопасности</li>
+														<li data-jstree='"type":"css"}'>обустройство территории</li>
+														<li data-jstree='"type":"css"}'>охрана комбайнов</li>
+														<li data-jstree='"type":"css"}'>платная помощь населению</li>
+														<li data-jstree='"type":"css"}'>платная помощь организациям</li>
+														<li data-jstree='"type":"css"}'>погрузочно-разгрузочные работы</li>
+														<li data-jstree='"type":"css"}'>помывка зданий, сооружений и дорожного покрытия</li>
+														<li data-jstree='"type":"css"}'>проведение наружных высотных работ на зданиях, сооружениях</li>
+														<li data-jstree='"type":"css"}'>ликвидация гнезд жалоносных насекомых</li>
+														<li data-jstree='"type":"css"}'>проведение подводно-технических водолазных работ</li>
+														<li data-jstree='"type":"css"}'>проверка ППВ</li>
+														<li data-jstree='"type":"css"}'>промывка канализаций</li>
+														<li data-jstree='"type":"css"}'>разборка зданий и сооружений</li>
+														<li data-jstree='"type":"css"}'>сопровождение и мойка сельскохозяйственной техники</li>
+										                              
+													</ul>
+													</li>
+													
+													<li>12 пожар
+                                                    <ul>
+                                                        <!-- <li data-jstree='"type":"css"}'>в жилом секторе</li> -->
+                                                        <li data-jstree='"type":"css"}'>на объекте</li>
+														<li data-jstree='"type":"css"}'>на сооружении</li>
+														<li data-jstree='"type":"css"}'>на транспорте</li>
+														<!-- <li data-jstree='"type":"css"}'>пожар памятников архитектуры (церкви, музеи и т.д.)</li> -->
+														<!-- <li data-jstree='"type":"css"}'>тушение пожара</li> -->
+				                
+													</ul>
+													</li>
+													
+													<li>13 молния
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>сработка молнии</li>
+                                                        				                
+													</ul>
+													</li>
+													
+													<li>14 хоз. работы
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>хозяйственные работы</li>
+                                                        
+				                
+													</ul>
+													</li>
+													
+													<li>15 другие сигнализации
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>ПДЗ</li>
+                                                        <li data-jstree='"type":"css"}'>сработка сигнализации</li>
+														
+				                
+													</ul>
+													</li>
+													
+													<li>16 испытания ПТВ
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>испытания оборудования</li>
+                                                        <li data-jstree='"type":"css"}'>испытания рукавов</li>
+														
+				                
+													</ul>
+													</li>
+													
+													<li>17 помощь организациям
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>буксировка авто</li>
+                                                        <li data-jstree='"type":"css"}'>взаимодействие с другими организациями</li>
+														<li data-jstree='"type":"css"}'>деблокировка погибшего</li>
+														<li data-jstree='"type":"css"}'>деблокировка пострадавшего</li>
+														<li data-jstree='"type":"css"}'>другое</li>
+														<li data-jstree='"type":"css"}'>замеры ПДК</li>
+														<li data-jstree='"type":"css"}'>извлечение предмета</li>
+														<li data-jstree='"type":"css"}'>извлечение человека</li>
+														<li data-jstree='"type":"css"}'>освобождение зажатых частей тела (снятие колец и предметов)</li>
+														<li data-jstree='"type":"css"}'>откачка воды</li>
+														<li data-jstree='"type":"css"}'>открывание дверей</li>
+														<li data-jstree='"type":"css"}'>перенос человека</li>
+														<li data-jstree='"type":"css"}'>помощь 102 (МВД)</li>
+														<li data-jstree='"type":"css"}'>помощь 102,103</li>
+														<li data-jstree='"type":"css"}'>помощь 103</li>
+														<li data-jstree='"type":"css"}'>помощь 104</li>
+														<li data-jstree='"type":"css"}'>помощь ГАИ</li>
+														<li data-jstree='"type":"css"}'>помощь горгаз</li>
+														<li data-jstree='"type":"css"}'>помощь ЖКХ</li>
+														<li data-jstree='"type":"css"}'>проведение акции</li>
+														<li data-jstree='"type":"css"}'>проведение высотных работ</li>
+														<li data-jstree='"type":"css"}'>ликвидация гнезд жалоносных насекомых</li>
+														<li data-jstree='"type":"css"}'>проверка ППВ</li>
+														<li data-jstree='"type":"css"}'>охрана комбайнов</li>
+														<li data-jstree='"type":"css"}'>работы на акватории</li>
+														<li data-jstree='"type":"css"}'>распиловка аварийных деревьев</li>
+														<li data-jstree='"type":"css"}'>следственный
+														эксперимент</li>
+														<li data-jstree='"type":"css"}'>снос (поднятие), транспортировка людей</li>
+														<li data-jstree='"type":"css"}'>шоринг</li>
+				                
+													</ul>
+													</li>
+													
+													<li>18 помощь населению
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>анализ газовоздушной среды</li>
+                                                        <li data-jstree='"type":"css"}'>буксировка транспорта</li>
+														<li data-jstree='"type":"css"}'>деблокировка погибшего</li>
+														<li data-jstree='"type":"css"}'>деблокировка пострадавшего</li>
+														<li data-jstree='"type":"css"}'>другое</li>
+														<li data-jstree='"type":"css"}'>замеры ПДК</li>
+														<li data-jstree='"type":"css"}'>извлечение животного</li>
+														<li data-jstree='"type":"css"}'>извлечение предмета</li>
+														<li data-jstree='"type":"css"}'>извлечение человека</li>
+														<li data-jstree='"type":"css"}'>не оказывалась</li>
+														<li data-jstree='"type":"css"}'>освобождение зажатых частей тела (снятие колец и предметов)</li>
+														<li data-jstree='"type":"css"}'>откачка воды</li>
+														<li data-jstree='"type":"css"}'>открывание дверей</li>
+														<li data-jstree='"type":"css"}'>отлов пресмыкающихся</li>
+														<li data-jstree='"type":"css"}'>перенос человека</li>
+														<li data-jstree='"type":"css"}'>подача электроэнергии</li>
+														<li data-jstree='"type":"css"}'>ликвидация гнезд жалоносных насекомых</li>
+														<li data-jstree='"type":"css"}'>охрана комбайнов</li>
+														<li data-jstree='"type":"css"}'>подвоз воды</li>
+														<li data-jstree='"type":"css"}'>проверка ППВ</li>
+														<li data-jstree='"type":"css"}'>поиск потерявшегося</li>
+														<li data-jstree='"type":"css"}'>работы по предотвращению суицида</li>
+														<li data-jstree='"type":"css"}'>работы по шорингу</li>
+														<li data-jstree='"type":"css"}'>разборка завалов, уборка аварийных деревьев</li>
+														<li data-jstree='"type":"css"}'>спуск с высоты</li>
+																		                
+													</ul>
+													</li>
+													
+													<li>19 ремонт, ТО
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>ремонт</li>
+                                                        <li data-jstree='"type":"css"}'>техосмотр</li>
+														<li data-jstree='"type":"css"}'>ТО</li>
+														<li data-jstree='"type":"css"}'>ТО-1</li>
+														<li data-jstree='"type":"css"}'>ТО-2</li>
+				                
+													</ul>
+													</li>
+													
+													<li>20 служебный
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>буксировка транспорта на ремонт, ТО</li>
+                                                        <li data-jstree='"type":"css"}'>доставка оборудования</li>
+														<li data-jstree='"type":"css"}'>подписание документов</li>
+														<li data-jstree='"type":"css"}'>получение оборудования</li>
+														<li data-jstree='"type":"css"}'>получение путевых листов</li>
+														<li data-jstree='"type":"css"}'>помощь сотруднику</li>
+														<li data-jstree='"type":"css"}'>проверка больных на дому</li>
+														<li data-jstree='"type":"css"}'>проверка подразделений</li>
+														<li data-jstree='"type":"css"}'>проверка ПФС</li>
+														<li data-jstree='"type":"css"}'>работа на фасаде</li>
+														<li data-jstree='"type":"css"}'>смена л/с</li>
+														<li data-jstree='"type":"css"}'>списание техники</li>
+				                
+													</ul>
+													</li>
+													
+													<li>21 ЕДДС
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>другое</li>
+                                                        <li data-jstree='"type":"css"}'>переадресация в 102</li>
+														<li data-jstree='"type":"css"}'>переадресация в 103</li>
+														<li data-jstree='"type":"css"}'>переадресация в 104</li>
+														<li data-jstree='"type":"css"}'>переадресация в ЖКХ</li>
+														<li data-jstree='"type":"css"}'>переадресация в РЭС</li>
+																		                
+													</ul>
+													</li>
+													
+													<li>22 ЛТТ
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>кустарник</li>
+                                                        <li data-jstree='"type":"css"}'>лес</li>
+														<li data-jstree='"type":"css"}'>торф</li>
+														<li data-jstree='"type":"css"}'>трава</li>
+													                
+													</ul>
+													</li>
+													
+													<li>23 ликвидация гнезд жалоносных насекомых
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>дезинсекция</li>
+                                                        <li data-jstree='"type":"css"}'>ликвидация</li>
+														<li data-jstree='"type":"css"}'>на платной основе</li>
+														<li data-jstree='"type":"css"}'>помощь населению</li>
+														<li data-jstree='"type":"css"}'>помощь организациям</li>
+													                
+													</ul>
+													</li>
+													
+													<li>24 уборочная кампания
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>для других целей</li>
+                                                        <li data-jstree='"type":"css"}'>на безвозмездной основе</li>
+														<li data-jstree='"type":"css"}'>на платной основе</li>
+														<li data-jstree='"type":"css"}'>охрана комбайнов на безвозмездной основе</li>
+														<li data-jstree='"type":"css"}'>охрана комбайнов на платной основе</li>
+														<li data-jstree='"type":"css"}'>перевозка зерна на безвозмездной основе</li>
+														<li data-jstree='"type":"css"}'>перевозка зерна на платной основе</li>
+														<li data-jstree='"type":"css"}'>ремонтные работы на безвозмездной основе</li>
+														<li data-jstree='"type":"css"}'>ремонтные работы на платной основе</li>
+														<li data-jstree='"type":"css"}'>сопровождение комбайнов на безвозмездной основе</li>
+														<li data-jstree='"type":"css"}'>сопровождение комбайнов на платной основе</li>
+													                
+													</ul>
+													</li>
+													
+													<li>25 проверка ППВ
+                                                    <ul>
+                                                        <li data-jstree='"type":"css"}'>проверка ППВ</li>
+                                                        
+													                
+													</ul>
+													</li>
+													
+												<!-- <li>fonts
+                                                    <ul>
+                                                        <li data-jstree='"type":"otf"}'>FontAwesome.otf</li>
+                                                        <li data-jstree='"type":"ttf"}'>fontawesome-webfont.ttf</li>
+                                                        <li data-jstree='"type":"woff"}'>fontawesome-webfont.woff</li>
+                                                        <li data-jstree='"type":"woff"}'>glyphicons-halflings-regular.woff</li>
+                                                        <li data-jstree='"type":"eot"}'>notika-icon.eot</li>
+                                                        <li data-jstree='"type":"svg"}'>notika-icon.svg</li>
+                                                        <li data-jstree='"type":"ttf"}'>notika-icon.ttf</li>
+                                                        <li data-jstree='"type":"woff"}'>notika-icon.woff</li>
+                                                    </ul>
+                                                </li> -->
+												<!-- <li class="jstree-open">img
+                                                    <ul>
+                                                        <li>blog
+															<ul>
+																<li data-jstree='"type":"png"}'>1.jpg</li>
+															</ul>
+														</li>
+                                                        <li>country
+															<ul>
+																<li data-jstree='"type":"png"}'>1.png</li>
+																<li data-jstree='"type":"png"}'>2.png</li>
+																<li data-jstree='"type":"png"}'>3.png</li>
+															</ul>
+														</li>
+                                                        <li>cropper
+															<ul>
+																<li data-jstree='"type":"jpg"}'>1.jpg</li>
+															</ul>
+														</li>
+                                                        <li>dialog
+															<ul>
+																<li data-jstree='"type":"png"}'>like.png</li>
+															</ul>
+														</li>
+                                                        <li>logo
+															<ul>
+																<li data-jstree='"type":"png"}'>logo.png</li>
+																<li data-jstree='"type":"png"}'>favicon.png</li>
+															</ul>
+														</li>
+                                                        <li>post
+															<ul>
+																<li data-jstree='"type":"jpg"}'>1.jpg</li>
+																<li data-jstree='"type":"jpg"}'>2.jpg</li>
+																<li data-jstree='"type":"jpg"}'>3.jpg</li>
+															</ul>
+														</li>
+                                                        <li>search-engines
+															<ul>
+																<li data-jstree='"type":"png"}'>baidu.png</li>
+																<li data-jstree='"type":"png"}'>bing.png</li>
+																<li data-jstree='"type":"png"}'>duckduckgo.png</li>
+																<li data-jstree='"type":"png"}'>google.png</li>
+																<li data-jstree='"type":"png"}'>yahoo.png</li>
+																<li data-jstree='"type":"png"}'>yandex.png</li>
+															</ul>
+														</li>
+                                                        <li>widgets
+															<ul>
+																<li data-jstree='"type":"png"}'>2.png</li>
+																<li data-jstree='"type":"png"}'>4.png</li>
+																<li data-jstree='"type":"png"}'>6.png</li>
+															</ul>
+														</li>
+                                                        <li data-jstree='"type":"png"}'>chosen-sprite.png</li>
+                                                        <li data-jstree='"type":"ico"}'>favicon.ico</li>
+                                                        <li class="text-navy" data-jstree='"type":"img"}'>green1.png</li>
+                                                    </ul>
+                                                </li> -->
+                                            <!--     <li class="jstree-open">js
+                                                    <ul>
+														<li>animation
+															<ul>
+																<li data-jstree='"type":"js"}'>animation-active.js</li>
+															</ul>
+														</li>
+														<li>bootstrap-select
+															<ul>
+																<li data-jstree='"type":"js"}'>bootstrap-select.js</li>
+															</ul>
+														</li>
+														<li>charts
+															<ul>
+																<li data-jstree='"type":"js"}'>area-chart.js</li>
+																<li data-jstree='"type":"js"}'>bar-chart.js</li>
+																<li data-jstree='"type":"js"}'>Chart.js</li>
+																<li data-jstree='"type":"js"}'>line-chart.js</li>
+															</ul>
+														</li>
+														<li>chat
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.chat.js</li>
+															</ul>
+														</li>
+														<li>chosen
+															<ul>
+																<li data-jstree='"type":"js"}'>chosen.jquery.js</li>
+															</ul>
+														</li>
+														<li>code-editor
+															<ul>
+																<li data-jstree='"type":"js"}'>code-editor.js</li>
+																<li data-jstree='"type":"js"}'>code-editor-active.js</li>
+																<li data-jstree='"type":"js"}'>codemirror.js</li>
+															</ul>
+														</li>
+														<li>color-picker
+															<ul>
+																<li data-jstree='"type":"js"}'>color-picker.js</li>
+																<li data-jstree='"type":"js"}'>farbtastic.min.js</li>
+															</ul>
+														</li>
+														<li>counterup
+															<ul>
+																<li data-jstree='"type":"js"}'>counterup-active.js</li>
+																<li data-jstree='"type":"js"}'>jquery.counterup.min.js</li>
+																<li data-jstree='"type":"js"}'>waypoints.min.js</li>
+															</ul>
+														</li>
+														<li>data-map
+															<ul>
+																<li data-jstree='"type":"js"}'>bootstrap3-typeahead.min.js</li>
+																<li data-jstree='"type":"js"}'>d3.min.js</li>
+																<li data-jstree='"type":"js"}'>datamaps.all.min.js</li>
+																<li data-jstree='"type":"js"}'>data-maps-active.js</li>
+																<li data-jstree='"type":"js"}'>topojson.js</li>
+															</ul>
+														</li>
+														<li>cropper
+															<ul>
+																<li data-jstree='"type":"js"}'>cropper.min.js</li>
+																<li data-jstree='"type":"js"}'>cropper-actice.js</li>
+															</ul>
+														</li>
+														<li>data-map
+															<ul>
+																<li data-jstree='"type":"js"}'>d3.min.js</li>
+																<li data-jstree='"type":"js"}'>datamaps.all.min.js</li>
+																<li data-jstree='"type":"js"}'>data-maps-active.js</li>
+																<li data-jstree='"type":"js"}'>topojson.js</li>
+															</ul>
+														</li>
+														<li>datapicker
+															<ul>
+																<li data-jstree='"type":"js"}'>bootstrap-datepicker.js</li>
+																<li data-jstree='"type":"js"}'>datepicker-active.js</li>
+															</ul>
+														</li>
+														<li>data-table
+															<ul>
+																<li data-jstree='"type":"js"}'>data-table-act.js</li>
+																<li data-jstree='"type":"js"}'>jquery.dataTables.min.js</li>
+															</ul>
+														</li>
+														<li>dialog
+															<ul>
+																<li data-jstree='"type":"js"}'>dialog-active.js</li>
+																<li data-jstree='"type":"js"}'>sweetalert2.min.js</li>
+															</ul>
+														</li>
+														<li>dropzone
+															<ul>
+																<li data-jstree='"type":"js"}'>dropzone.js</li>
+															</ul>
+														</li>
+														<li>easytopie
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.easypiechart.min.js</li>
+																<li data-jstree='"type":"js"}'>salvattore.min.js</li>
+															</ul>
+														</li>
+														<li>flot
+															<ul>
+																<li data-jstree='"type":"js"}'>analtic-flot-active.js</li>
+																<li data-jstree='"type":"js"}'>chart-tooltips.js</li>
+																<li data-jstree='"type":"js"}'>curvedLines.js</li>
+																<li data-jstree='"type":"js"}'>flot-active.js</li>
+																<li data-jstree='"type":"js"}'>flot-widget-anatic-active.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.orderBars.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.pie.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.resize.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.time.js</li>
+																<li data-jstree='"type":"js"}'>jquery.flot.tooltip.min.js</li>
+															</ul>
+														</li>
+														<li>google.maps
+															<ul>
+																<li data-jstree='"type":"js"}'>google.maps2-active.js</li>
+																<li data-jstree='"type":"js"}'>google.maps-active.js</li>
+															</ul>
+														</li>
+														<li>icheck
+															<ul>
+																<li data-jstree='"type":"js"}'>icheck.min.js</li>
+																<li data-jstree='"type":"js"}'>icheck-active.js</li>
+															</ul>
+														</li>
+														<li>jvectormap
+															<ul>
+																<li data-jstree='"type":"js"}'>jvectormap-active.js</li>
+																<li data-jstree='"type":"js"}'>jquery-jvectormap-world-mill-en.js</li>
+																<li data-jstree='"type":"js"}'>jquery-jvectormap-2.0.2.min.js</li>
+															</ul>
+														</li>
+														<li>knob
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.appear.js</li>
+																<li data-jstree='"type":"js"}'>jquery.knob.js</li>
+																<li data-jstree='"type":"js"}'>knob-active.js</li>
+															</ul>
+														</li>
+														<li>login
+															<ul>
+																<li data-jstree='"type":"js"}'>login-action.js</li>
+															</ul>
+														</li>
+														<li>meanmenu
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.meanmenu.js</li>
+															</ul>
+														</li>
+														<li>metisMenu
+															<ul>
+																<li data-jstree='"type":"js"}'>metisMenu.min.js</li>
+																<li data-jstree='"type":"js"}'>metisMenu-active.js</li>
+															</ul>
+														</li>
+														<li>notification
+															<ul>
+																<li data-jstree='"type":"js"}'>bootstrap-growl.min.js</li>
+																<li data-jstree='"type":"js"}'>notification-active.js</li>
+															</ul>
+														</li>
+														<li>rangle-slider
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery-ui-1.10.4.custom.min.js</li>
+																<li data-jstree='"type":"js"}'>jquery-ui-touch-punch.min.js</li>
+																<li data-jstree='"type":"js"}'>rangle-active.js</li>
+															</ul>
+														</li>
+														<li>scrollbar
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.mCustomScrollbar.concat.min.js</li>
+															</ul>
+														</li>
+														<li>sparkline
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.sparkline.min.js</li>
+																<li data-jstree='"type":"js"}'>sparkline-active.js</li>
+															</ul>
+														</li>
+														<li>summernote
+															<ul>
+																<li data-jstree='"type":"js"}'>summernote.min.js</li>
+																<li data-jstree='"type":"js"}'>summernote-active.js</li>
+																<li data-jstree='"type":"js"}'>summernote-updated.min.js</li>
+															</ul>
+														</li>
+														<li>todo
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.todo.js</li>
+															</ul>
+														</li>
+														<li>vendor
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery-1.12.4.min.js</li>
+																<li data-jstree='"type":"js"}'>modernizr-2.8.3.min.js</li>
+															</ul>
+														</li>
+														<li>wave
+															<ul>
+																<li data-jstree='"type":"js"}'>wave-active.js</li>
+																<li data-jstree='"type":"js"}'>waves.min.js</li>
+															</ul>
+														</li>
+														<li>wizard
+															<ul>
+																<li data-jstree='"type":"js"}'>jquery.bootstrap.wizard.min.js</li>
+																<li data-jstree='"type":"js"}'>wizard-active.js</li>
+															</ul>
+														</li>
+                                                        <li data-jstree='"type":"js"}'>bootstrap.min.js</li>
+                                                        <li data-jstree='"type":"js"}'>jasny-bootstrap.min.js</li>
+                                                        <li data-jstree='"type":"js"}'>jquery.scrollUp.min.js</li>
+                                                        <li data-jstree='"type":"js"}'>jquery-price-slider.js</li>
+                                                        <li data-jstree='"type":"js"}'>main.js</li>
+                                                        <li class="text-navy" data-jstree='"type":"js"}'>owl.carousel.min.js</li>
+                                                        <li class="text-navy" data-jstree='"type":"js"}'>plugins.js</li>
+                                                        <li class="text-navy" data-jstree='"type":"js"}'>wow.min.js</li>
+                                                    </ul>
+                                                </li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> index.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> index-2.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> index-3.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> index-4.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> 404.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> accordion.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> alert.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> analytics.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> animations.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> area-charts.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> bar-charts.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> buttons.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> code-editor.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> color.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> compose-email.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> contact.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> data-map.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> data-table.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> dialog.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> dropdown.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> flot-charts.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> form-components.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> form-elements.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> form-examples.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> image-cropper.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> inbox.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> invoice.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> line-charts.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> login-register.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> modals.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> normal-table.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> notification.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> popovers.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> tabs.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> tooltips.html</li> -->
+                                                <!-- <li data-jstree='"type":"html"}'> typography.html</li> -->
+                                            </ul>
+		<li>2. Причины пожара
+			<ul>
+			<li data-jstree='"type":"css"}'>поджог</li>
+			<li data-jstree='"type":"css"}'>нарушение технологического регламента (процесса)</li>
+			<li data-jstree='"type":"css"}'>взрыв</li>
+			<li data-jstree='"type":"css"}'>нарушение ПТ при проведении огневых работ</li>
+			<li data-jstree='"type":"css"}'>механическое разрушение узлов и деталей и т.д.</li>
+			<li data-jstree='"type":"css"}'>нарушение правил хранения, использования, изготовления и транспортировки веществ и материалов</li>
+			<li data-jstree='"type":"css"}'>нарушение правил эксплуатации газовых устройств и агрегатов</li>
+			<li data-jstree='"type":"css"}'>нарушение правил монтажа и устройства электросетей и электрооборудования</li>
+			<li data-jstree='"type":"css"}'>конструктивный недостаток электрооборудования</li>
+			<li data-jstree='"type":"css"}'>нарушение правил устройства и монтажа печей, теплогенерирующих агрегатов и устройств</li>
+			<li data-jstree='"type":"css"}'>нарушение правил эксплуатации печей, теплогенерирующих агрегатов и устройств</li>
+			<li data-jstree='"type":"css"}'>конструктивный недостаток теплогенерирующих агрегатов и устройств</li>
+			<li data-jstree='"type":"css"}'>конструктивный недостаток изделия, устройства</li>
+			<li data-jstree='"type":"css"}'>неосторожное обращение с огнем</li>
+			<li data-jstree='"type":"css"}'>шалость детей с огнем</li>
+			<li data-jstree='"type":"css"}'>проявление сил природы</li>
+			<li data-jstree='"type":"css"}'>прочие причины</li>
+			<li data-jstree='"type":"css"}'>неустановленные причины</li>
+			<li data-jstree='"type":"css"}'>столкновение автомобилей (авария на транспорте)</li>
+			<li data-jstree='"type":"css"}'>нарушение правил эксплуатации электросетей и электрооборудования</li>
+			<li data-jstree='"type":"css"}'>неосторожное обращение с огнем при выжигании сухой растительности, травы на корню</li>
+			<li data-jstree='"type":"css"}'>нарушение правил эксплуатации пиротехнического изделия</li>
+			<li data-jstree='"type":"css"}'>конструктивный недостаток пиротехнического изделия</li>
+			
+			</ul>
+		
+		
+		</li>
+											
+		<li>3. Службы
+						<ul>
+							<li data-jstree='"type":"css"}'>Белорусское общество Красного Креста</li>
+							<li data-jstree='"type":"css"}'>Скорая медицинская помощь</li>
+							<li data-jstree='"type":"css"}'>РОВД</li>
+							<li data-jstree='"type":"css"}'>КГБ</li>
+							<li data-jstree='"type":"css"}'>МВД</li>
+							<li data-jstree='"type":"css"}'>Мингаз</li>
+							<li data-jstree='"type":"css"}'>ЖКХ</li>
+							<li data-jstree='"type":"css"}'>РЭС</li>
+							<li data-jstree='"type":"css"}'>ОСВОД</li>
+							<li data-jstree='"type":"css"}'>водоканал</li>
+							<li data-jstree='"type":"css"}'>Аварийная электросети</li>
+							<li data-jstree='"type":"css"}'>Другие</li>
+							<li data-jstree='"type":"css"}'>ГИМС</li>
+							<li data-jstree='"type":"css"}'>ГАИ</li>
+						</ul>
+		
+		
+		</li>
+		
+		<li>4. Ведомственная принадлежность
+						<ul>
+							<li data-jstree='"type":"css"}'>Государственный</li>
+							<li data-jstree='"type":"css"}'>Другое</li>
+							<li data-jstree='"type":"css"}'>ЖЭУ</li>
+							<li data-jstree='"type":"css"}'>Смешанный</li>
+							<li data-jstree='"type":"css"}'>Частный</li>
+							
+						</ul>
+		
+		
+		</li>
+		
+		<li>5. Список лиц
+						<ul>
+							<li data-jstree='"type":"css"}'>начальник РОСН полковник Иванов И.И. (пример)</li>
+							<li data-jstree='"type":"css"}'>заместитель начальника РОСН подполковник Сидоров С.С. (пример)</li>
+							<li data-jstree='"type":"css"}'>заместитель начальника РОСН капитан Бескоровайный Н.С. (пример)</li>
+							
+							
+						</ul>
+		
+		
+		</li>
+		
+		<li>6. Список ПАСП
+						<ul>
+							<li data-jstree='"type":"css"}'>ПАСЧ №11, г. Минск, ул. Светлая 1 (пример) </li>
+							<li data-jstree='"type":"css"}'>ПАСЧ №21, г. Минск, ул. Светлая 2 (пример)</li>
+							<li data-jstree='"type":"css"}'>ПАСЧ №31, г. Минск, ул. Светлая 3 (пример)</li>
+							
+							
+						</ul>
+		
+		
+		</li>
+											
+                                        </li>
+                                    </ul>
+                                </div>
+</pre>
+
+
+
+                </div>
+                <div id="three" class="content fade">
+
+                    <h1> Модуль "Боевая работа" </h1>
+                    <div>Для автоматизированной подготовки отчета "Сведения о чрезвычайных ситуациях (в том числе пожарах), и их последствиях и боевой работе органов и подразделений по чрезвычайным ситуациям" в программном средстве "Журнал ЦОУ" помимо основных учетных полей реализованы 4 (четыре) формы</div>
+					<br>
+					<div>
+					<img src="img/bw_00e.png" alt="Боевая работа (ссылка)" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+					
+					
+					<pre>
+				Форма № 1 (базовые параметры)
+</pre>
+					
+					<div>
+					<img src="img/bw_01.png" alt="Боевая работа (база)" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+					
+                    <pre>
+				Форма № 2 (Раздел 1. Боевая работа по ликвидации пожаров)
+</pre>
+
+<div>
+<img src="img/bw_02.png" alt="Боевая работа (раздел 1)" style="display: block;
+margin-left: auto;
+border: 2px solid #32CD32;
+margin-right: auto;
+width: 50%;">
+  </div>
+  <br>
+  Если выбрана позиция <b>"Ликвидация до прибытия"</b> (модуль "Временные характеристики")
+<div>
+<img src="img/bw_02_01.png" alt="Боевая работа (раздел 1)" style="display: block;
+margin-left: auto;
+border: 2px solid #B22222;
+margin-right: auto;
+width: 75%;">
+  </div>
+  
+  то позиции <b>"населением, работающим до прибытия подразделений МЧС"</b> и <b>"без установки пожарных аварийно-спасательных автомобилей на водоисточник"</b> выбирается автоматически
+<div>
+<img src="img/bw_02_02.png" alt="Боевая работа (раздел 1)" style="display: block;
+margin-left: auto;
+border: 2px solid #B22222;
+margin-right: auto;
+width: 75%;">
+  </div>
   
   
+  <pre>
+				Форма № 3 (Раздел 2. Боевая работа по ликвидации ЧС)
+</pre>
+
+<div>
+					<img src="img/bw_03.png" alt="Боевая работа (раздел 2)" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+                    <pre>
+				Форма № 4 (Раздел 3. Общие сведения)
+</pre>
+
+<div>
+					<img src="img/bw_04.png" alt="Боевая работа (раздел 3)" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+
+
+                </div>
+                
+                <div id="six" class="content fade">
+				
+				<div class="plugins-area">
+					<h1>Отчет "Боевая работа"</h1>
+					<div class="static-table-list">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>#</th>
+									<th>Наименование показателя</th>
+									<th>Описание</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr><td colspan="3" align=center><b>Раздел 1. Боевая работа по ликвидации пожаров</b></td></tr>
+								<tr>
+									<td>1.</td>
+									<td>Всего ликвидировано пожаров ПАСП МЧС, в том числе не подлежащих учету (сумма строк 1.1.-1.5.)</td>
+									<td>сумма позиций 1.1.-1.5.</td>
+								</tr>
+								
+								<tr>
+									<td>1.1.</td>
+									<td>на объектах, сооружениях и транспорте в городах и сельской местности (сумма строк 1.1.1.-1.1.3), из них:</td>
+									<td>все выезды с причиной выезда "Пожар" и выбранными видами работ "на объектах", "на сооружениях", "на транспорте"</td>
+								</tr>
+								<tr>
+									<td>1.1.1.</td>
+									<td>в городах областного подчинения (г. Минске)</td>
+									<td>все выезды из пункта 1.1, у которых указаны в позиции "Населенный пункт" города областного подчинения или г.Минск</td>
+								</tr>
+								<tr>
+									<td>1.1.2.</td>
+									<td>в городах районного подчинения (поселки городского типа)</td>
+									<td>все выезды из пункта 1.1, у которых указаны в позиции "Населенный пункт" города районного подчинения и поселки городского типа</td>
+								</tr>
+								<tr>
+									<td>1.1.3.</td>
+									<td>в сельских населенных пунктах (агрогородках, поселках, деревнях и т.д.)</td>
+									<td>разница между 1.1. - 1.1.1. - 1.1.2.</td>
+								</tr>
+								<tr>
+									<td>1.2.</td>
+									<td>в лесах</td>
+									<td>все выезды с причиной "ЛТТ" и видом работ "лес"</td>
+								</tr>
+								<tr>
+									<td>1.3.</td>
+									<td>на торфяниках</td>
+									<td>все выезды с причиной "ЛТТ" и видом работ "торф"</td>
+								</tr>
+								<tr>
+									<td>1.4.</td>
+									<td>горение сухой растительности, кустарника и т.п.</td>
+									<td>все выезды с причиной "ЛТТ" и видами работ "трава/кустарник"</td>
+								</tr>
+								<tr>
+									<td>1.5.</td>
+									<td>загорание мусора, пищи и т.п.</td>
+									<td>все выезды с причиной "Другие загорания"</td>
+								</tr>
+								<tr>
+									<td>2.</td>
+									<td>Пожары ликвидированы (по пожарам на объектах, сооружениях и транспорте в городах и сельской местности)</td>
+									<td>сумма уникальных выездов по позициям 2.1.+2.2.+2.3.+2.4.+2.5.+2.6.+2.7. (так как у одного и того же выезда на пожар может быть выбрано несколько позиций одновременно)</td>
+								</tr>
+								<tr>
+									<td>2.1.</td>
+									<td>населением, работающими до прибытия подразделений МЧС</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.2.</td>
+									<td>ведомственными и добровольными пожарными формированиями до прибытия подразделений МЧС (в том числе с использованием пожарной техники)</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.3.</td>
+									<td>силами одного отделения</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.4.</td>
+									<td>силами одной смены</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.5.</td>
+									<td>с привлечением дополнительных сил МЧС</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.6.</td>
+									<td>без установки пожарных аварийно-спасательных автомобилей на водоисточник (водоем, ПГ и т.п.)</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>2.7.</td>
+									<td>с установкой пожарных аварийно-спасательных автомобилей на водоисточник (водоем, ПГ и т.п.)</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								
+								
+								<tr>
+									<td>3.</td>
+									<td>При тушении использовались:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>3.1.</td>
+									<td>один водяной ствол</td>
+									<td>количество выездов на пожар, где применялись стволы</td>
+								</tr>
+								<tr>
+									<td>3.2.</td>
+									<td>два водяных ствола</td>
+									<td>количество выездов на пожар, где применялись стволы</td>
+								</tr>
+								<tr>
+									<td>3.3.</td>
+									<td>три - четыре водяных ствола</td>
+									<td>количество выездов на пожар, где применялись стволы</td>
+								</tr>
+								<tr>
+									<td>3.4.</td>
+									<td>пять и более водяных стволов</td>
+									<td>количество выездов на пожар, где применялись стволы</td>
+								</tr>
+								<tr>
+									<td>3.5.</td>
+									<td>стволы высокого давления</td>
+									<td>количество выездов на пожар, где применялись стволы</td>
+								</tr>
+								<tr>
+									<td>3.6.</td>
+									<td>один ГПС (СВП)</td>
+									<td>количество выездов на пожар, где применялись стволы ГПС-600 или СВП</td>
+								</tr>
+								<tr>
+									<td>3.6.1.</td>
+									<td>израсходовано пенообразователя, тонн</td>
+									<td>сумма тонн израсходованного пенообразователя, где использовался один ствол ГПС-600 или СВП (причина выезда "12 пожар")</td>
+								</tr>
+								<tr>
+									<td>3.7.</td>
+									<td>два и более ГПС (СВП)</td>
+									<td>количество выездов на пожар, где применялись стволы ГПС-600 или СВП</td>
+								</tr>
+								<tr>
+									<td>3.7.1.</td>
+									<td>израсходовано пенообразователя, тонн</td>
+									<td>сумма тонн израсходованного пенообразователя, где использовались два и более стволов ГПС-600 или СВП (причина выезда "12 пожар")</td>
+								</tr>
+								<tr>
+									<td>3.8.</td>
+									<td>переносные порошковые огнетушители</td>
+									<td>количество выездов на пожар, где использовались переносные порошковые огнетушители (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.8.1.</td>
+									<td>израсходовано порошка, тонн</td>
+									<td>сумма тонн израсходованного порошка (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.9.</td>
+									<td>аварийно-спасательный и механизированный инструмент (сумма строк 3.9.1.-3.9.3), из них:</td>
+									<td>сумма строк 3.9.1.-3.9.3.</td>
+								</tr>
+								<tr>
+									<td>3.9.1.</td>
+									<td>механизированный (бензоинструмент, электроинструмент и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.9.2.</td>
+									<td>пневматический аварийно-спасательный инструмент (домкраты, пневмоподушки и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.9.3.</td>
+									<td>гидравлический аварийно-спасательный инструмент (ножницы, кусачки, разжим и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.10.</td>
+									<td>автомобили быстрого реагирования</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.11.</td>
+									<td>пожарные автоцистерны</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.12.</td>
+									<td>автолестницы и коленчатые подъемники</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.13.</td>
+									<td>автомобили дымоудаления</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.14.</td>
+									<td>пожарные насосные станции</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								
+								<tr>
+									<td>3.15.</td>
+									<td>рукавные автомобили</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.16.</td>
+									<td>автомобили связи и освещения</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.17.</td>
+									<td>автомобили ГДЗС</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.18.</td>
+									<td>автомобили пенного тушения</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.19.</td>
+									<td>автомобили порошкового, комбинированного тушения</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.20.</td>
+									<td>автомобили газоводяного тушения</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.21.</td>
+									<td>штабные автомобили</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.22.</td>
+									<td>воздухозаправщики (воздухохранилища)</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.23.</td>
+									<td>аварийно-спасательные автомобили</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.24.</td>
+									<td>автомобиль медицинской службы</td>
+									<td>количество таких единиц техники на пожаре</td>
+								</tr>
+								<tr>
+									<td>3.25.</td>
+									<td>авиационная техника</td>
+									<td>количество привлеченной авиационной техники на пожаре (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.26.</td>
+									<td>другая техника МЧС</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								
+								<tr>
+									<td>3.27.</td>
+									<td>одно звено ГДЗС</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								<tr>
+									<td>3.28.</td>
+									<td>два и более звеньев ГДЗС</td>
+									<td>количество выездов на пожар, где установлен данный чек-бокс</td>
+								</tr>
+								
+								<tr>
+									<td>4.</td>
+									<td>Результаты боевой работы на пожарах:</td>
+									<td></td>
+								</tr>
+								
+								<tr>
+									<td>4.1.</td>
+									<td>спасено людей:</td>
+									<td>сумма спасенных людей на пожарах (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.1.1.</td>
+									<td>в том числе с применением дополнительных масок</td>
+									<td>количество спасенных людей на пожарах с применением масок (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.1.2.</td>
+									<td>в том числе детей</td>
+									<td>сумма спасенных детей на пожарах (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.2.</td>
+									<td>эвакуировано людей:</td>
+									<td>сумма эвакуированных людей на пожарах (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.2.1.</td>
+									<td>в том числе детей</td>
+									<td>сумма эвакуированных детей на пожарах (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.3.</td>
+									<td>спасено голов скота</td>
+									<td>сумма спасенных голов скота на пожарах (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.4.</td>
+									<td>предотвращено уничтожение кормов и технических культур (тонн)</td>
+									<td>сумма спасенных тонн кормов (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.5.</td>
+									<td>предотвращено уничтожение огнем строений</td>
+									<td>сумма спасенных строений (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>4.6.</td>
+									<td>предотвращено уничтожение огнем единиц техники</td>
+									<td>сумма спасенных единиц техники (форма 2 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td colspan="3" align=center><b>Раздел II. Боевая работа по ликвидации чрезвычайных ситуациях и последствий от них</b></td></tr>
+								</tr>
+								<tr>
+									<td>1.</td>
+									<td>Количество выездов ПАСП МЧС на ликвидацию чрезвычайных ситуаций и последствий от них (сумма строк 1.1 - 1.2):</td>
+									<td>сумма позиций 1.1.-1.2.</td>
+								</tr>
+								<tr>
+									<td>1.1.</td>
+									<td>количество выездов ПАСП МЧС на ликвидацию ЧС техногенного характера и последствий от них (без учета пожаров)</td>
+									<td>количество выездов с причиной "ЧС" и видами работ "техногенного характера/на системах обеспечения/другие ЧС техногенного характера"</td>
+								</tr>
+								<tr>
+									<td>1.2.</td>
+									<td>количество выездов ПАСП МЧС на ликвидацию ЧС природного характера и последствий от них (без учета пожаров в природных экосистемах)</td>
+									<td>количество выездов с причиной "ЧС" и видом работ "природного характера"</td>
+								</tr>
+								
+								<tr>
+									<td>2.</td>
+									<td>Результаты боевой работы на ЧС:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>2.1.</td>
+									<td>спасено людей:</td>
+									<td>сумма спасенных людей на ЧС (форма 1 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.1.1.</td>
+									<td>в том числе детей</td>
+									<td>сумма спасенных детей на ЧС (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>2.2.</td>
+									<td>эвакуировано людей:</td>
+									<td>сумма эвакуированных людей на ЧС (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>2.2.1.</td>
+									<td>в том числе детей</td>
+									<td>сумма эвакуированных детей на ЧС (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>2.3.</td>
+									<td>спасено голов скота</td>
+									<td>сумма спасенных голов скота на ЧС (форма 1 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>2.4.</td>
+									<td>предотвращено уничтожение строений</td>
+									<td>сумма спасенных строений на ЧС (форма 3 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>2.5.</td>
+									<td>предотвращено уничтожение единиц техники</td>
+									<td>сумма спасенных единиц техники на ЧС (форма 3 по боевой работе)</td>
+								</tr>
+								
+								
+								<tr>
+									<td>3.</td>
+									<td>При ликвидации использовались:</td>
+									<td></td>
+								</tr>
+								
+								<tr>
+									<td>3.1.</td>
+									<td>Автомобили основного назначения, в том числе:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>3.1.1.</td>
+									<td>автомобили быстрого реагирования</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.1.2.</td>
+									<td>пожарные автоцистерны</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								
+								
+								<tr>
+									<td>3.2.</td>
+									<td>Автомобили специального назначения, в том числе:</td>
+									<td></td>
+								</tr>
+								<tr>
+									<td>3.2.1.</td>
+									<td>аварийно-спасательные автомобили</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.2.2.</td>
+									<td>автомобили службы химической и радиационной защиты (прицепы)</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.2.3.</td>
+									<td>автомобиль службы водолазно-спасательных работ (прицепы)</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								
+								<tr>
+									<td>3.2.4.</td>
+									<td>автомобиль медицинской службы</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.2.5.</td>
+									<td>автомобили связи и освещения</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.2.6.</td>
+									<td>автолестницы и коленчатые подъемники</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.2.7.</td>
+									<td>штабные автомобили</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								
+								<tr>
+									<td>3.3.</td>
+									<td>Автомобили инженерного назначения, в том числе:</td>
+									<td></td>
+								</tr>
+								
+								
+								<tr>
+									<td>3.3.1.</td>
+									<td>автомобильные краны</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.3.2.</td>
+									<td>передвижные электростанции (электрогенераторы)</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.4.</td>
+									<td>Вспомогательные автомобили МЧС (топливозаправщики, МТО АТ, медпомощь и др.)</td>
+									<td>количество таких единиц техники на ЧС</td>
+								</tr>
+								<tr>
+									<td>3.5.</td>
+									<td>авиационная техника</td>
+									<td>количество привлеченной авиационной техники на ЧС (форма 3 по боевой работе)</td>
+								</tr>
+																
+								<tr>
+									<td>3.6.</td>
+									<td>аварийно-спасательный и механизированный инструмент, из них:</td>
+									<td>сумма строк 3.6.1.-3.6.3.</td>
+								</tr>
+								<tr>
+									<td>3.6.1.</td>
+									<td>механизированный (бензоинструмент, электроинструмент и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 3 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.6.2.</td>
+									<td>пневматический аварийно-спасательный инструмент (домкраты, пневмоподушки и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 3 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>3.6.3.</td>
+									<td>гидравлический аварийно-спасательный инструмент (ножницы, кусачки, разжим и т.п.)</td>
+									<td>количество использованного инструмента на пожаре (форма 3 по боевой работе)</td>
+								</tr>
+								
+								
+								<tr>
+									<td colspan="3" align=center><b>Раздел III. Другие выезды</b></td></tr>
+								
+								
+								<tr>
+									<td>1.</td>
+									<td>Другие выезды (сумма строк 1.1. - 1.9.)</td>
+									<td>сумма строк 1.1.-1.9.</td>
+								</tr>
+								<tr>
+									<td>1.1.</td>
+									<td>на сработку сигнализации</td>
+									<td>причина выезда "Другие сигнализации" + причина выезда "Молния"</td>
+								</tr>
+								<tr>
+									<td>1.1.1.</td>
+									<td>из них на сработку СПИоЧС "Молния"</td>
+									<td>причина выезда "Молния"</td>
+								</tr>
+								<tr>
+									<td>1.2.</td>
+									<td>ложные</td>
+									<td>причина выезда "Ложный"</td>
+								</tr>
+								<tr>
+									<td>1.3.</td>
+									<td>помощь населению, организациям</td>
+									<td>причина выезда "Помощь населению" + причина выезда "Помощь организациям"</td>
+								</tr>
+								
+								
+								<tr>
+									<td>1.4.</td>
+									<td>на проведение демеркуризационных работ/на розлив ртути (ртутьсодержащих отходов)</td>
+									<td>причина выезда "Демеркуризация"</td>
+								</tr>
+								<tr>
+									<td>1.4.1.</td>
+									<td>собрано ртути, кг</td>
+									<td>количество ртути в килограммах (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.4.2.</td>
+									<td>собрано ртутьсодержащих отходов, кг</td>
+									<td>количество ртутьсодержащих отходов в килограммах (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.5.</td>
+									<td>на проведение работ при ликвидации последствий ДТП</td>
+									<td>количество выездов, где есть пострадавшие при ДТП (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.5.1.</td>
+									<td>спасено людей</td>
+									<td>спасено людей при ДТП (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.5.2.</td>
+									<td>в том числе детей</td>
+									<td>спасено детей при ДТП (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.5.3.</td>
+									<td>деблокировано погибших</td>
+									<td>деблокировано погибших (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.6.</td>
+									<td>на проведение работ на акваториях водоемов</td>
+									<td>количество выездов, где есть пострадавшие на водоемах (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.6.1.</td>
+									<td>спасено людей</td>
+									<td>спасено людей на водоемах (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.6.2.</td>
+									<td>в том числе детей</td>
+									<td>спасено детей на водоемах (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.6.3.</td>
+									<td>деблокировано погибших</td>
+									<td>извлечено погибших на водоемах (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>1.7.</td>
+									<td>на проведение работ по уничтожению гнезд жалоносных насекомых</td>
+									<td>количество выездов (!!! без анализа причины выезда "23 ликвидация гнезд жалоносных насекомых" !!!) из пунктов 1.7.1+1.7.2.</td>
+								</tr>
+								
+								<tr>
+									<td>1.7.1.</td>
+									<td>на безвозмездной основе в:</td>
+									<td>количество уникальных выездов, где выбрано на безвозмездной основе (1.7.1.) и при этом выбран хотя бы один из пунктов 1.7.1.1., 1.7.1.2., 1.7.1.3. (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>1.7.1.1.</td>
+									<td>случаях наличия прямой угрозы жизни и здоровью людей</td>
+									<td>количество выездов с выбранным чек-боксом и выбранным пунктом 1.7.1. (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.7.1.2.</td>
+									<td>дошкольных учреждениях, домах престарелых и инвалидов, больницах, спальных корпусах школ-интернатов и детских учреждений (класс Ф 1.1. согласно ТКП 45-2.02-315-2018)</td>
+									<td>количество выездов с выбранным чек-боксом и выбранным пунктом 1.7.1. (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.7.1.3.</td>
+									<td>школах и внешкольных учебных заведениях, средних специальных учебных заведениях, профессионально-технических училищах (класс Ф 4.1. согласно ТКП 45-2.02-315-2018)</td>
+									<td>количество выездов с выбранным чек-боксом и выбранным пунктом 1.7.1. (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.7.2.</td>
+									<td>на платной основе:</td>
+									<td>количество уникальных выездов, где выбрано на платной основе (1.7.2.) и при этом выбран хотя бы один из пунктов 1.7.2.1., 1.7.2.2. (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.7.2.1.</td>
+									<td>объекты находящиеся в личной собственности граждан</td>
+									<td>количество выездов с выбранным чек-боксом и выбранным пунктом 1.7.2. (форма 4 по боевой работе)</td>
+								</tr>
+								<tr>
+									<td>1.7.2.2.</td>
+									<td>организации по ранее заключенным договорам</td>
+									<td>количество выездов с выбранным чек-боксом и выбранным пунктом 1.7.2. (форма 4 по боевой работе)</td>
+								</tr>
+								<!-- чекпоинт 16-03-2020-->
+								<tr>
+									<td>1.8.</td>
+									<td>на ликвидацию последствий паводка (без учета ЧС природного характера)</td>
+									<td>причина выезда "ЧС" вид работ "ликвидация последствий паводка"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.</td>
+									<td>на прочие:</td>
+									<td>причины выезда "контроль сварочных и огневых работ", "дежурство", "хоз.работы", "заправка" (виды работ: заправка АСВ, заправка ГСМ), "передислокация", "ремонт, ТО (виды работ: ТО-1, ТО-2)", "выезд в сосдений гарнизон", "испытания ПТВ", "платные услуги", "уборочная кампания"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.1.</td>
+									<td>контроль за проведением огневых работ, дозоры</td>
+									<td>причина выезда "Контроль за проведением огневых и сварочных работ"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.2.</td>
+									<td>дежурство по обеспечению пожарной безопасности и взаимодействие с другими службами</td>
+									<td>причина выезда "дежурство"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.3.</td>
+									<td>хозяйственные работы</td>
+									<td>причина выезда "хозяйственные работы"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.4.</td>
+									<td>заправка ГСМ, АСВ</td>
+									<td>причина выезда "заправка" виды работ "ГСМ/АСВ"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.5.</td>
+									<td>передислокация</td>
+									<td>причина выезда "передислокация"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.6.</td>
+									<td>ТО-1, ТО-2, ремонт</td>
+									<td>причина выезда "ремонт" виды работ "ремонт/ТО-1/ТО-2"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.7.</td>
+									<td>выезд в соседний гарнизон для ликвидации ЧС</td>
+									<td>причина выезда "выезд в соседний гарнизон"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.8.</td>
+									<td>испытание ПТВ</td>
+									<td>причина выезда "испытания ПТВ"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.9.</td>
+									<td>платные услуги</td>
+									<td>причина выезда "платные услуги"</td>
+								</tr>
+								
+								<tr>
+									<td>1.9.10.</td>
+									<td>другие</td>
+									<td>причина выезда "уборочная кампания"</td>
+								</tr>
+								
+								<tr>
+									<td>2.</td>
+									<td>Спасено людей в иных случаях:</td>
+									<td>сумма позиций 2.1.1.+2.2.1+2.3.1.</td>
+								</tr>
+								
+								<tr>
+									<td>2.1.</td>
+									<td>обвал грунта</td>
+									<td>количество выездов где заполнены позиции по обвалу (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.1.1</td>
+									<td>спасено людей</td>
+									<td>количество спасенных людей при обвале грунта (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.1.2</td>
+									<td>в том числе детей</td>
+									<td>количество спасенных детей при обвале грунта (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.2.</td>
+									<td>обрушение строительных конструкций</td>
+									<td>количество выездов где заполнены позиции по обрушениям конструкций (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.2.1.</td>
+									<td>спасено людей</td>
+									<td>количество спасенных людей при обрушении конструкций (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.2.2.</td>
+									<td>в том числе детей</td>
+									<td>количество спасенных детей при обрушении конструкций (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.3.</td>
+									<td>других обстоятельствах</td>
+									<td>количество выездов с другими обстоятельствами (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.3.1.</td>
+									<td>спасено людей</td>
+									<td>количество спасенных людей при других обстоятельствах (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td>2.3.2.</td>
+									<td>в том числе детей</td>
+									<td>количество спасенных детей при других обстоятельствах (форма 4 по боевой работе)</td>
+								</tr>
+								
+								<tr>
+									<td colspan="3" align=center><b>Раздел IV. Общие сведения</b></td></tr>
+								
+								<tr>
+									<td>1.</td>
+									<td>Общее количество выездов</td>
+									<td>сумма позиций 1 из всех разделов данного отчета</td>
+								</tr>
+								
+								<tr>
+									<td>2.</td>
+									<td>Спасено людей</td>
+									<td>сумма всех спасенных людей из всех разделов</td>
+								</tr>
+								
+								<tr>
+									<td>2.1.</td>
+									<td>в том числе детей</td>
+									<td>сумма всех спасенных детей из всех разделов</td>
+								</tr>
+								
+								<tr>
+									<td>3.</td>
+									<td>Проведено тактико-специальных учений (занятий)</td>
+									<td>сумма позиций 3.1.+3.2.+3.3.</td>
+								</tr>
+								
+								<tr>
+									<td>3.1.</td>
+									<td>проведено ТСУ</td>
+									<td>причина выезда "Занятия" вид работ "ТСУ"</td>
+								</tr>
+								
+								<tr>
+									<td>3.2.</td>
+									<td>проведено ТСЗ</td>
+									<td>причина выезда "Занятия" вид работ "ТСЗ"</td>
+								</tr>
+								
+								<tr>
+									<td>3.2.1.</td>
+									<td>в том числе в ночное время</td>
+									<td>причина выезда "Занятия" вид работ "ТСЗ", время поступления сообщения с 22-00 до 06-00</td>
+								</tr>
+								
+								<tr>
+									<td>3.3.</td>
+									<td>занятия по ПАСП, отработка нормативов по пожарной аварийно-спасательной подготовке</td>
+									<td>причина выезда "Занятия" вид работ "занятия ПАСП"</td>
+								</tr>
+								
+								<tr>
+									<td>4.</td>
+									<td>Случаи героизма, проявленные л/с при ликвидации ЧС</td>
+									<td>сумма уникальных выездов позиций, указанных ниже</td>
+								</tr>
+								
+								<tr>
+									<td>4.1.</td>
+									<td>в районе выезда подразделения</td>
+									<td>количество выездов с выбранным чек-боксом (форма 4 по боевой работе) </td>
+								</tr>
+								
+								<tr>
+									<td>4.2.</td>
+									<td>вне района выезда подразделения</td>
+									<td>количество выездов с выбранным чек-боксом (форма 4 по боевой работе)</td>
+								</tr>
+								
+								
+								
+								
+								
+								
+							</tbody>
+						</table>
+					</div>
+				</div>
+                    
+                    
+                    <h1>Отчет "Журнал"</h1>
+					<h3>Краткое описание</h3>
+						<p>Данный отчет позволяет отобразить выезды за выбранную территориальную единицу и указанный период времени по установленной форме.</p>
+			
+						<img src="img/o_2.png" alt="Боевая работа (раздел 3)" style="display: block;
+					
+							margin-left: auto;
+							border: 2px solid #32CD32;
+							margin-right: auto;
+							width: 75%;">
+					<br>
+						<img src="img/o_3.png" alt="Боевая работа (раздел 3)" style="display: block;
+					
+							margin-left: auto;
+							border: 2px solid #32CD32;
+							margin-right: auto;
+							width: 50%;">
+			<br>
+	                
+						<p>В мае 2020 реализована возможность построения данного отчета как по месту выезда, так и по технике указанного подразделения</p>
+			
+						<img src="img/switcher.png" alt="Переключатель" style="display: block;
+					
+							margin-left: auto;
+							border: 2px solid #32CD32;
+							margin-right: auto;
+							width: 25%;">
+
+	
+			<br>
+
+
+
+					<h1>Отчет "Суточная сводка"</h1>
+					<h3>Краткое описание</h3>
+					<p>Данный отчет позволяет получить сведения по выездам за текущие сутки по выбранной УМЧС форме.</p>
+			
+						<img src="img/o_4.png" alt="Боевая работа (раздел 3)" style="display: block;
+							margin-left: auto;
+							border: 2px solid #32CD32;
+							margin-right: auto;
+							width: 75%;">
+						<br>
+					<pre>
+						<xmp>
+	<!-- примечание -->
+		Расшифровка позиций по данному отчету в этом руководстве будет реализована по заявительному принципу по телефону (017) 209-27-51.
+						</xmp>
+					</pre>
+			
+              
+                    
+                    
+                </div>
+                
+                
+                <div id="source" class="content fade">
+                    <h1> Регистрация выездов </h1>
+                    
+                    <h3>Причина выезда</h3>
+
+					
+					
+                    <ul>
+                        <li><a href="blocks/all/01.html">01 выезд в соседний гарнизон</a></li>
+						<li><a href="blocks/all/02.html">02 дежурство</a></li>
+						<li><a href="blocks/all/03.html">03 демеркуризация</a></li>
+						<li><a href="blocks/all/04.html">04 другие загорания</a></li>
+						<li><a href="blocks/all/05.html">05 занятия</a></li>
+						<li><a href="blocks/all/06.html">06 заправка</a></li>
+						<li><a href="blocks/all/07.html">07 контроль сварочных и огневых работ</a></li>
+						<li><a href="blocks/all/08.html">08 ложный</a></li>
+						<li><a href="blocks/all/09.html">09 ЧС</a></li>
+						<li><a href="blocks/all/10.html">10 передислокация</a></li>
+						<li><a href="blocks/all/11.html">11 платные услуги</a></li>
+						<li><a href="blocks/all/12.html">12 пожар <b style="color:red;">[NEW]</b></a></li>
+						<li><a href="blocks/all/13.html">13 молния</a></li>
+						<li><a href="blocks/all/14.html">14 хозяйственные работы</a></li>
+						<li><a href="blocks/all/15.html">15 другие сигнализации</a></li>
+						<li><a href="blocks/all/16.html">16 испытания ПТВ</a></li>
+						<li><a href="blocks/all/17.html">17 помощь организациям</a></li>
+						<li><a href="blocks/all/18.html">18 помощь населению</a></li>
+						<li><a href="blocks/all/19.html">19 ремонт, ТО</a></li>
+						<li><a href="blocks/all/20.html">20 служебный</a></li>
+						<li><a href="blocks/all/21.html">21 ЕДДС</a></li>
+						<li><a href="blocks/all/22.html">22 ЛТТ</a></li>
+						<li><a href="blocks/all/23.html">23 ликвидация гнезд</a></li>
+						<li><a href="blocks/all/24.html">24 уборочная кампания</a></li>
+						<li><a href="blocks/all/25.html">25 проверка ППВ <b style="color:red;">[NEW]</b></a></li>
+						
+						
+                    </ul>
+					
+					 
+                    
+					<br>
+					
+                    <h5>Благодарность за участие в подготовке данного раздела</h5>
+                    <ul>
+                        <li><a href="http://192.168.101.106
+"><b>Гродненское областное УМЧС</b></a></li>
+						
+                    </ul>
+                 
+                </div>
+                <div id="support" class="content fade">
+                    <h1> Общие рекомендации</h1>
+                    	 <h3>В данном разделе приведены общие рекомендации выявленные в процессе работы</h3>
+                    <ul>
+                        <li><a href="blocks/copy.html">Копирование выезда</a> <b style="color:red;"> [NEW]</b> </li>
+						<li><a href="blocks/time_grodno.html">Временные характеристики (вкладка)</a> <b style="color:red;"> [NEW]</b> </li>
+						<li><a href="blocks/zayav_grodno.html">Данные о заявителе</a> <b style="color:red;"> [NEW]</b></li>
+						<li><a href="blocks/br_gomel.html">Заполнение сведений по боевой работе</a> <b style="color:pink;"> [NEW]</b> </li>
+						<li><a href="blocks/neighbour.html">Соседние гарнизоны</a></li>
+						<li><a href="blocks/short_page.html">Краткий вид главной таблицы (выборочные причины)</a></li>
+						<li><a href="blocks/together_work.html">Совместная работа с выездами</a></li>
+						<li><a href="blocks/pasp.html">Справочник ПАСП</a></li>
+						<li><a href="blocks/faces.html">Список лиц</a></li>
+                        
+                    </ul>
+                </div>
+				
+				<div id="other" class="content fade">
+				
+				                    <h1> Настройки </h1>
+                    <div>Для отображения главной таблицы выездов в разных форматах реализована следующая настройка</div>
+					<br>
+					<div>
+					<img src="img/set_01.png" alt="Настройка выездов" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 75%;">
+  </div>
+					
+					
+					<pre>
+				Вид таблицы (стандартная)
+</pre>
+					
+					<div>
+					<img src="img/set_011.png" alt="Таблица" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+					
+                    <pre>
+				Вид таблицы №1
+</pre>
+
+<div>
+<img src="img/set_02.png" alt="Таблица" style="display: block;
+margin-left: auto;
+border: 2px solid #32CD32;
+margin-right: auto;
+width: 50%;">
+  </div>
+  
+  <pre>
+				Вид таблицы №2
+</pre>
+
+<div>
+					<img src="img/set_03.png" alt="Таблица" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+                    <pre>
+				Вид таблицы №3
+</pre>
+
+<div>
+					<img src="img/set_04.png" alt="Таблица" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+  <br>
+  <br>
+  
+      <pre>
+				Вид таблицы №4
+</pre>
+
+<div>
+					<img src="img/set_05.png" alt="Таблица" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  </div>
+
+  <br>
+  <br>
+  
+				
+                    <h1> Цвет причины выезда </h1>
+                    <p>В программном средстве реализован механизм разукрашивания различных причин выезда разными цветами</p>
+					
+					<img src="img/color_01.png" alt="Цвет" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 75%;">
+  
+  <br>
+  
+  <h1> Фильтрация причин выезда</h1>
+                    <p>В программном средстве реализован механизм отображения в главной таблице выездов только определенных причин выезда</p>
+					
+					<img src="img/filter2.png" alt="Цвет" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  
+  <br>
+  
+  <img src="img/filter1.png" alt="Цвет" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 50%;">
+  
+                    
+                </div>
+				
+				<div id="archive" class="content fade">
+                    <h1> Архив выездов </h1>
+                    <p>Для ускорения работы с программным средством реализован модуль "Архив выездов" для хранения устаревших выездов в отдельной базе данных. <br>Информация в этой базе данных предназначена только для просмотра и экспорта в Excel.<br> Перенос выездов в архив происходит ежемесячно (в течение 1-2 недели каждого месяца).</p>
+					
+					<img src="img/arc_01.png" alt="Архив" style="display: block;
+					
+  margin-left: auto;
+  border: 2px solid #32CD32;
+  margin-right: auto;
+  width: 75%;">
+                    
+                </div>
+				
+                <!-- <div id="nine" class="content fade"> -->
+                    <!-- <h1> Sliders Structure </h1> -->
+                    <!-- <div>The base structure was organized by row, col-** class </div> -->
+                    <!-- <pre> -->
+    <!-- <xmp> -->
+    <!-- code will be here -->
+    <!-- </xmp> -->
+<!-- </pre> -->
+                    <!-- code pre tag end -->
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.1.0.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+	<script src="js/jstree.min.js"></script>
+    <script src="js/jstree.active.js"></script>
+    <script src="js/main.js"></script>
 </body>
+
 </html>

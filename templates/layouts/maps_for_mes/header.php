@@ -55,7 +55,7 @@
 
 
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/leaflet/leaflet.css" />
-        <link href="<?= $baseUrl ?>/assets/maps_for_mes/manual_leaflet.css" rel="stylesheet">
+        <link href="<?= $baseUrl ?>/assets/maps_for_mes/manual_leaflet.css?<?php echo time();?>" rel="stylesheet">
 
 
 

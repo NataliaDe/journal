@@ -57,7 +57,7 @@
         <th>Ликвидация</th>
         <th>Ликвидация до прибытия</th>
         <th>Время окончания работ</th>
-        <th>Возвращение</th>
+        <th>Возвра-<br>щение</th>
         <th>Расстояние до места ЧС, км</th>
         <th>Возврат техники</th>
 	</tr>
@@ -127,9 +127,9 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
 
 
 ?>
-                <tr  style='background-color:rgb(<?= $_SESSION['colors'][$row['id_rig']] ?>); '>
+    <tr  style='background-color:rgb(<?=$_SESSION['colors'][$row['id_rig']]?>); '>
                     <td><?= $i ?></td>
-                    <td><b><a href="<?= $baseUrl ?>/card_rig/<?= $table_name_year ?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"><?= $row['id_rig'] ?></a></b></td>
+                    <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id_rig'] ?></a></b></td>
                     <td><?= date('d.m.Y', strtotime($row['date_msg'])) ?></td>
                     <td><?= date('H:i', strtotime($row['time_msg'])) ?></td>
                     <td><?= $row['local_name'] ?></td>
@@ -139,7 +139,7 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
                     <td><?= ($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ?></td>
                     <td><?= ($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
                     <td><?= ($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv'])) ?></td>
-                    <td><?= ($row['is_likv_before_arrival'] == 0) ? 'нет' : 'да' ?></td>
+                    <td><?= ($row['is_likv_before_arrival'] == 0)?'нет':'да'  ?></td>
                     <td><?= ($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end=='-' ) ? '' : date('d.m.Y H:i', strtotime($t_end)) ?></td>
                     <td><?= ($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return=='-') ? '' : date('d.m.Y H:i', strtotime($t_return)) ?></td>
                     <td><?= $t_distance ?></td>
@@ -226,8 +226,8 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
     $(function () {
 
                 $('#archiveTable2').DataTable({
-            "pageLength": 50,
-             "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
+           // "pageLength": 50,
+            "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
              "order": [[ 0, "asc" ]],
             language: {
                 "processing": "Подождите...",
@@ -294,7 +294,7 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
                 var x = $('#archiveTable2 tfoot th').index($(this));
                 var y = 'archiveTable2';
                 //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск" onkeyup="keyupField();"  />');
+                $(this).html('<input type="text" class="noprint inpt-archive-show" id="inpt' + y + x + '" placeholder="Поиск" onkeyup="keyupField();"   />');
                 // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
             }
 
@@ -309,9 +309,8 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
     });
 
           });
-
-
-
+          
+          
 function changeLinkExcel(){
 
         var id_rig=$('#inptarchiveTable21').val();

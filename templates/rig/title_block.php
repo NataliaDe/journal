@@ -16,18 +16,15 @@ if (isset($id_rig) && !empty($id_rig) && isset($settings_user['vid_rig_table']) 
             <a href="<?= $baseUrl ?>/rig/new/<?= $id_rig ?>/30" >Дополнительно</a>
         </li>
 
-
-        <?php
+		 <?php
         if (isset($current_reason_rig) && in_array($current_reason_rig, $reasonrig_with_informing)) {
         ?>
         <li class="<?=($title_block == 'info') ? 'active':''?>">
             <a href="<?= $baseUrl ?>/rig/<?= $id_rig ?>/info"  aria-hidden='true' data-toggle="tooltip" data-placement="bottom" title="Информирование">
                 <i class="fa fa-lg fa-info-circle" ></i>
             </a>
-
-
         </li>
-        <?php
+		        <?php
         }
         ?>
 

@@ -1,17 +1,17 @@
-<br><br>
-<?php
-foreach ($action as $value) {
+ <br><br>
+  <?php
+     foreach ($action as $value) {
 
-    $reason = $value['reason_id'];
-      $id_work = $value['id_work_view'];
-}
+         $reason=$value['reason_id'];
+         $id_work = $value['id_work_view'];
 
-?>
+     }
+         ?>
 
 
-<form     method="POST" action="<?= $baseUrl ?>/classif/actionwaybill/edit/ord/<?= $action_id ?>/<?= $id_work ?>">
+ <form     method="POST" action="<?= $baseUrl ?>/classif/actionwaybill/edit/ord/<?= $action_id?>/<?= $id_work ?>">
 
-    <div class="row">
+     <div class="row">
       <div class="col-lg-2">
     <div class="form-group" >
         <label for="exampleInputEmail1">Причина вызова</label>
@@ -53,69 +53,69 @@ foreach ($action as $value) {
     </div>
     </div>
 
-    <?php
-    $j = 0;
-    foreach ($action as $value) {
-        $i = $value['id'];
-        $j++;
-
-        ?>
-        <br>
-        <p class="line"><span>Мера <?= $j ?></span></p>
-
-        <div class="row">
-            <div class="col-lg-6" >
-                <div class="form-group">
-                    <!--             <label for="exampleInputPassword1">Мера < $i ?></label>-->
-                    <!--             <textarea id="myeditor<?= $i ?>" name="myeditor[< $i ?>]"  ></textarea>-->
-    <?= $value['description'] ?>
-                </div>
-            </div>
-
-            <div class="col-lg-2">
-                <div class="checkbox checkbox-success">
-
-                    <input id="checkbox<?= $i ?>" type="checkbox" name="is_off[<?= $i ?>]" value="1" checked="">
-                    <label for="checkbox<?= $i ?>">
-                        Включать в путевку
-                    </label>
-                </div>
-            </div>
-
-            <div class="col-lg-2">
-                <div class="form-group">
-                    <label >
-                        Порядок следования в путевке
-                    </label>
-                    <select class="js-example-basic-single form-control " name="ord[<?= $i ?>]" >
-
-                        <?php
-                        $cnt = count($action);
-                        for ($k = 1; $k <= $cnt; $k++) {
-                            if ($value['ord'] == $k)
-                                printf("<p><option value='%s' selected ><label>%s</label></option></p>", $k, $k);
-                            else
-                                printf("<p><option value='%s' ><label>%s</label></option></p>", $k, $k);
-                        }
-
-                        ?>
-
-                    </select>
-
-                </div>
-            </div>
-
-        </div>
-        <br>
-        <?php
-    }
+     <?php
+     $j=0;
+     foreach ($action as $value) {
+$i=$value['id'];
+$j++;
 
     ?>
+     <br>
+        <p class="line"><span>Мера <?= $j ?></span></p>
+
+     <div class="row">
+         <div class="col-lg-6" >
+     <div class="form-group">
+<!--             <label for="exampleInputPassword1">Мера < $i ?></label>-->
+<!--             <textarea id="myeditor<?= $i ?>" name="myeditor[< $i ?>]"  ></textarea>-->
+<?= $value['description'] ?>
+         </div>
+         </div>
+
+          <div class="col-lg-2">
+         <div class="checkbox checkbox-success">
+
+             <input id="checkbox<?= $i ?>" type="checkbox" name="is_off[<?= $i ?>]" value="1" checked="">
+             <label for="checkbox<?= $i ?>">
+                 Включать в путевку
+             </label>
+         </div>
+          </div>
+
+             <div class="col-lg-2">
+                 <div class="form-group">
+                     <label >
+                         Порядок следования в путевке
+                     </label>
+                     <select class="js-example-basic-single form-control " name="ord[<?= $i ?>]" >
+
+                         <?php
+                         $cnt= count($action);
+                         for ($k = 1; $k <= $cnt; $k++) {
+                             if ($value['ord'] == $k)
+                                 printf("<p><option value='%s' selected ><label>%s</label></option></p>", $k, $k);
+                             else
+                                 printf("<p><option value='%s' ><label>%s</label></option></p>", $k, $k);
+                         }
+
+                         ?>
+
+                     </select>
+
+                 </div>
+             </div>
+
+</div>
+  <br>
+     <?php
+     }
+     ?>
 
 
-    <button type="submit" class="btn btn-success">Сохранить</button>
+  <button type="submit" class="btn btn-success">Сохранить</button>
 
 </form>
+
 <br>
 <a href="<?= $baseUrl ?>/classif/actionwaybill" ><button type="button" class="btn btn-warning">Отмена</button></a>
 

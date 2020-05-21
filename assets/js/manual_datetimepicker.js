@@ -23,7 +23,7 @@ $(function () {
         format: 'YYYY-MM-DD HH:mm:ss'
                 // autoclose: true
     });
-
+    
       /*------  дата и время локализации < дата и время ликвидации ------*/
     $('#time_loc').on("dp.change", function (e) {
         $('#time_likv').data("DateTimePicker").setMinDate(e.date);
@@ -33,9 +33,9 @@ $(function () {
         $('#time_loc').data("DateTimePicker").setMaxDate(e.date);
     });
     /* ------- END дата и время локализации < дата и время ликвидации -------*/
-
-
-
+    
+    
+    
        /* дата без времени*/
     $('#date_start').datetimepicker({
         language: 'ru',
@@ -51,7 +51,7 @@ $(function () {
         pickTime: false
                 // autoclose: true
     });
-
+    
           /*------  начальная дата < конечная дата ------*/
     $('#date_start').on("dp.change", function (e) {
         $('#date_end').data("DateTimePicker").setMinDate(e.date);
@@ -61,40 +61,6 @@ $(function () {
         $('#date_start').data("DateTimePicker").setMaxDate(e.date);
     });
     /* ------- END начальная дата < конечная дата -------*/
-
-
-
-
-
-    /* report 4 */
-    $('#date_start_rep4').datetimepicker({
-        language: 'ru',
-        format: 'DD.MM',
-        //changeYear: false,
-        pickTime: false
-                // autoclose: true
-    });
-
-    $('#date_end_rep4').datetimepicker({
-        language: 'ru',
-        format: 'DD.MM',
-        //changeYear: false,
-        pickTime: false
-                // autoclose: true
-    });
-
-    $('#date_start_rep4').on("dp.change", function (e) {
-        $('#date_end_rep4').data("DateTimePicker").setMinDate(e.date);
-    });
-
-    $('#date_end_rep4').on("dp.change", function (e) {
-        $('#date_start_rep4').data("DateTimePicker").setMaxDate(e.date);
-    });
-
-
-    /* END report 4 */
-
-
 
 });
 
@@ -135,8 +101,8 @@ function getTimeArrivalMchs(j, i) {
         'minDate': new Date(time_exit), //дата прибытия д б > дата выезда
         format: 'YYYY-MM-DD HH:mm'
     });
-
-
+    
+   
 
 }
 /*----------------- КОНЕЦ  время прибытия - форма журнал выезда - для машин МЧС --------------------*/

@@ -90,9 +90,10 @@
             width: 98%;
         }
         /*---------- END таблица с выездами ------------*/
-
-
-        /* rig table type 1 */
+		
+		
+		
+		/* rig table type 1 */
         #inptrigFormType11, #inptrigFormType12{
             width: 78px;
         }
@@ -133,8 +134,10 @@
         #selrigFormType112{
             width: 100px;
         }
-
-
+		
+		
+		
+		
 /* rig table type 3 */
         #inptrigFormType31, #inptrigFormType32{
             width: 78px;
@@ -189,22 +192,22 @@
         #selrigFormType311{
             width: 80px;
         }
-
-
+		
+		
         #rigTableType1_wrapper{
             width: 98%;
         }
-
-        #rigTableType3_wrapper{
+		
+		
+		#rigTableType3_wrapper{
             width: 93%;
         }
-        /* rig table type 3 */
 
-
-
-
-
-        /* rig table type 2 */
+        /* rig table type1 */
+		
+		
+		
+		  /* rig table type 2 */
         #inptrigFormType21, #inptrigFormType22{
             width: 78px;
         }
@@ -257,6 +260,7 @@
         }
 
         /* rig table type2 */
+		
 
 
                 /*---------- таблица с классификаторами ------------*/
@@ -555,9 +559,9 @@ top:2px;
         #remarkTableRcu_wrapper,#remarkTable_wrapper{
             width: 92%;
         }
-
-
-
+		
+		
+		
         #guide_pasp_tbl_wrapper{
             width: 75%;
             margin-left: 100px;
@@ -567,14 +571,17 @@ top:2px;
         .blue-border-input{
             border: solid 2px blue !important;
         }
-/*        #zanyatia-id .select2-selection{
+
+		        .blue-border-input{
             border: solid 2px blue !important;
-        }*/
-
-
-
-
-
+        }
+		
+		
+		
+		
+		
+		
+		
 /* typing indicator */
 
   .typing-indicator {
@@ -656,7 +663,8 @@ background-color: black;
 /* END typing indicator */
 
 
-@media (max-width: 1300px) {
+
+@media (max-width: 1000px) {
     #title_for_ivanov{
        display: none !important;
     }
@@ -664,9 +672,6 @@ background-color: black;
 
 
 }
-
-
-
 
 
 @media (max-width: 991px){}
@@ -687,4 +692,3 @@ background-color: black;
         cursor: default;
         opacity: 0.5;
     }
-

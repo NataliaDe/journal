@@ -11,9 +11,7 @@
     if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
            include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
     }
-
-
-include dirname(dirname(__FILE__)) . '/rig/title_block.php';
+    include dirname(dirname(__FILE__)) . '/rig/title_block.php';
     ?>
 <div class="box-body">
     <form  role="form" id="trunkForm" method="POST" action="<?= $baseUrl ?>/trunk/<?= $id_rig ?>" >
@@ -145,7 +143,7 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                         <div class="col-lg-2">
 
                                            <div class=" times">
-                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
+                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" > 
                                             </div>
 
 <!--                                            <div class="form-group">
@@ -351,10 +349,8 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                     <div class="form-group">
                         <h4>Добавить новый тип</h4>
                         <input type="text" class="form-control" placeholder="Введите наименование типа" required="" id='tag_name' >
-
-                    </div>
-
-
+						
+						
                     <div class="form-group">
                         <div class="checkbox checkbox-success">
                             <input id="is_water" type="checkbox" name="is_water" value="1" >
@@ -363,12 +359,12 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                             </label>
                         </div>
                     </div>
-
-
+						
                         <br>
                         <div class="btn-modal">
                             <button type="button" class="btn btn-bd-primary"  onclick="AddTag();return false;">Добавить</button>
                         </div>
+                    </div>
 
 
                     <br>
@@ -381,19 +377,19 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                 <option value=''  ></option>
                                 <?php
                                 foreach ($trunk_for_del as $tr) {
-                                    ?>
+?>
 <option data-is-water="<?=$tr['is_water']?>" value='<?=$tr['id']?>'  ><?=$tr['name']?></option>
 <?php
 
-                                        //printf("<p><option value='%s' ><label>%s %s</label></option></p>", $tr['id'], $tr['name'],(($tr['is_water'] == 1) ? ' (водяной)':''));
+                                        //printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
 
                                 }
 
                                 ?>
                             </select>
                         </div>
-
-                        <div class="form-group">
+						
+						<div class="form-group">
                             <div class="checkbox checkbox-success">
                                 <input id="is_water_edit" type="checkbox" name="is_water_edit" value="1" >
                                 <label for="is_water_edit">
@@ -401,15 +397,10 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                 </label>
                             </div>
                         </div>
-
-
+						
                         <br>
                          <input type="text" class="form-control" placeholder="Введите новое наименование" required="" id='edit_tag_name' >
                          <br>
-
-
-
-
                         <div class="btn-modal">
                              <button type="button" class="btn btn-bd-primary"  onclick="editTag();return false;">Сохранить изменения</button>
                         </div>
@@ -419,21 +410,24 @@ include dirname(dirname(__FILE__)) . '/rig/title_block.php';
                                         <div class="form-group">
                         <h4>Выберите тип для удаления</h4>
                         <div class="tags-select">
-                            <select class="chzn-select-trunk" data-placeholder="Выберите из списка" id='tags_del_trunk' style="width:50%">
+                            <select class="chzn-select" data-placeholder="Выберите из списка" id='tags_del_trunk' style="width:50%">
                                 <option value=''  ></option>
                                 <?php
                                 foreach ($trunk_for_del as $tr) {
-?>
-           <option data-is-water="<?=$tr['is_water']?>" value='<?=$tr['id']?>'  ><?=$tr['name'].(($tr['is_water'] == 1) ? ' (водяной)':'')?></option>
-                                <?php
 
-                                       // printf("<p><option value='%s' ><label>%s %s</label></option></p>", $tr['id'], $tr['name'],(($tr['is_water'] == 1) ? ' (водяной)':''));
+?>
+ <option data-is-water="<?=$tr['is_water']?>" value='<?=$tr['id']?>'  ><?=$tr['name'].(($tr['is_water'] == 1) ? ' (водяной)':'')?></option>
+<?php
+                                      //  printf("<p><option value='%s' ><label>%s</label></option></p>", $tr['id'], $tr['name']);
 
                                 }
 
                                 ?>
                             </select>
                         </div>
+						
+						
+						
                         <br>
                         <div class="btn-modal">
                             <button type="button" class="btn btn-bd-primary" id='del_tag_btn'>Удалить</button>

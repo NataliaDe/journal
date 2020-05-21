@@ -3,10 +3,11 @@
 <?php
 //echo $_SERVER['REQUEST_URI'];
 
-if ($_SESSION['id_level'] == 1) {
-    $path = $baseUrl . '/rig/table/for_rcu/' . $id_page;
-} else {
-    $path = $baseUrl . '/rig/table';
+if($_SESSION['id_level']==1){
+     $path=$baseUrl .'/rig/table/for_rcu/'.$id_page ;
+}
+else{
+   $path=$baseUrl .'/rig/table' ;
 }
 
 
@@ -26,72 +27,65 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
         $fields_filter[] = $row['name_sign'];
     }
 }
-
 ?>
-
-
-
 <br>
-<form  role="form" class="form-inline" id="filterRigForm" method="POST" action=" <?= $path ?> ">
+    <form  role="form" class="form-inline" id="filterRigForm" method="POST" action=" <?= $path ?> ">
 
-    <div class="row">
-        <div class="form-group">
-            <label for="date_start" >с</label>
-            <div class="input-group date" id="date_start">
-                <?php
-                if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
+                <div class="form-group">
+                    <label for="date_start" >с</label>
+                    <div class="input-group date" id="date_start">
+                        <?php
+                              if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
+                                  ?>
+                        <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
+                        <?php
+                              } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
 
-                    <?php
-                } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
+                            ?>
+                            <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_SESSION['remember_filter_date_start'] ?>"/>
+                            <?php
+                        }
+                              else{
+                                  ?>
+                            <input type="text" class="form-control datetime"  name="date_start" value="<?= $default_start_date ?>" />
+                        <?php
+                              }
+                        ?>
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_SESSION['remember_filter_date_start'] ?>"/>
-                    <?php
-                } else {
-
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_start" value="<?= $default_start_date ?>" />
-                    <?php
-                }
-
-                ?>
-
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
 
 
-        <div class="form-group">
-            <label for="date_end">&nbsp;по</label>
-            <div class="input-group date" id="date_end">
-                <?php
-                if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
+                <div class="form-group">
+                    <label for="date_end">&nbsp;по</label>
+                    <div class="input-group date" id="date_end">
+                            <?php
+                        if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
+                            ?>
+                            <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
 
-                    <?php
-                } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
+                            <?php
+                        } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_SESSION['remember_filter_date_end'] ?>"/>
-                    <?php
-                } else {
+                            ?>
+                            <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_SESSION['remember_filter_date_end'] ?>"/>
+                            <?php
+                        } else {
 
-                    ?>
-                    <input type="text" class="form-control datetime"  name="date_end" value="<?= $default_end_date ?>" />
-                    <?php
-                }
+                            ?>
+                            <input type="text" class="form-control datetime"  name="date_end" value="<?= $default_end_date ?>" />
+                            <?php
+                        }
 
-                ?>
+                        ?>
 
-                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
-            </div>
-        </div>
-
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                    </div>
+                </div>
+            
         <div class="form-group">
             <div class="checkbox checkbox-success">
 
@@ -102,35 +96,31 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
             </div>
         </div>
 
-        <div class="form-group">
-            <button class="btn bg-purple" type="submit" data-toggle="tooltip" data-placement="top" title="С 06:00 до 06:00"  >Фильтр</button>
-        </div>
-        <div class="form-group">
+                <div class="form-group">
+                    <button class="btn bg-purple" type="submit" data-toggle="tooltip" data-placement="top" title="С 06:00 до 06:00"  >Фильтр</button>
+                </div>
+           <div class="form-group">
 
-            <?php
-            if ($_SESSION['id_level'] == 1) {//rcu
+               <?php
+               if ($_SESSION['id_level'] == 1) {//rcu
+                   ?>
 
-                ?>
+               <a href="<?= $path ?>/0/1"> <button class="btn bg-yellow-active" type="button" >Сбросить</button></a>
+               <?php
+               }
+               else{
+                   ?>
+               <a href="<?= $path ?>/1"> <button class="btn bg-yellow-active" type="button" >Сбросить</button></a>
+               <?php
+               }
+               ?>
 
-                <a href="<?= $path ?>/0/1"> <button class="btn bg-yellow-active" type="button" >Сбросить</button></a>
-                <?php
-            } else {
+                </div>
 
-                ?>
-                <a href="<?= $path ?>/1"> <button class="btn bg-yellow-active" type="button" >Сбросить</button></a>
-                <?php
-            }
-
-            ?>
-
-        </div>
-
-    </div>
-
-    <div id="filter-block" class="row <?= (!in_array('reasonrig', $fields_filter)) ? 'hide' : '' ?>
+<div id="filter-block" class="row <?= (!in_array('reasonrig', $fields_filter)) ? 'hide' : '' ?>
     <?= (isset($settings_user_br_table) && !empty($settings_user_br_table) && isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1) ? 'not-available' : '' ?>"
 
-         style="padding-left: 15px; padding-top: 15px">
+         style="padding-left: 27px; padding-top: 15px">
              <?php
              if (isset($settings_user_br_table) && !empty($settings_user_br_table) && isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1) {
                  if (isset($_POST['reasonrig']) && !empty($_POST['reasonrig'])) {
@@ -168,7 +158,9 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
 
 
 
-</form>
+    </form>
+
+
 
 <?php
 if ($_SESSION['id_level'] != 1) {
@@ -183,9 +175,10 @@ if ($_SESSION['id_level'] != 1) {
 
 <style>
     .div-not-available-select .chosen-container-multi{
-        width: 561px !important;
+        width: 563px !important;
     }
 </style>
+
 
 
 

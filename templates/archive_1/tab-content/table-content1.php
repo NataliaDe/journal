@@ -71,7 +71,7 @@
         ?>
     <tr  style='background-color:rgb(<?=$_SESSION['colors'][$row['id_rig']]?>); '>
   <td><?= $i?></td>
-  <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id_rig'] ?></a></b></td>
+    <td><b><a href="<?= $baseUrl ?>/card_rig/<?=$table_name_year?>/<?= $row['id_rig'] ?>" style="color:black" target="_blank" data-toggle="tooltip" data-placement="top" title="Просмотреть карточку вызова"> <?= $row['id_rig'] ?></a></b></td>
   <td><?= date('d.m.Y', strtotime($row['date_msg'])) ?></td>
   <td><?= date('H:i', strtotime($row['time_msg'])) ?></td>
     <td><?= $row['local_name'] ?></td>
@@ -80,7 +80,7 @@
 	<td><?= $row['view_work'] ?></td>
 	<td><?= $row['inf_detail'] ?></td>
 	<td><?= $row['people'] ?></td>
-        <td><?= ($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
+    <td><?= ($row['time_loc']=='0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
 	<td><?= ($row['time_likv']=='0000-00-00 00:00:00' || empty($row['time_likv']) ||$row['time_likv']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv'])) ?></td>
     </tr>
     <?php
@@ -129,15 +129,15 @@
 <a href="<?=$link_excel?>" id="link_to_excel"><button class="submit" type="submit" >Экспорт в Excel</button></a>
 <input type="hidden" value="<?= $link_excel_hidden ?>" id="prev_link_to_excel">
 
+
         <script>
 
             (function ($, undefined) {
     $(function () {
 
                 $('#archiveTable1').DataTable({
-           // "pageLength": 50,
-            "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
-
+          //  "pageLength": 50,
+           "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
              "order": [[ 0, "asc" ]],
             language: {
                 "processing": "Подождите...",
@@ -219,9 +219,8 @@
     });
 
           });
-
-
-
+          
+          
 function changeLinkExcel(){
 
         var id_rig=$('#inptarchiveTable11').val();
@@ -298,5 +297,4 @@ $('#link_to_excel').attr("href",new_link_to_excel);
 changeLinkExcel();
   }
     }
-
         </script>

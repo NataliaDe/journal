@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `ss.regions`
+ * Object model mapping for relational table `ss.regions` 
  */
 
 namespace App\MODELS;
@@ -46,15 +46,15 @@ class Model_People {
         else
             return FALSE;
     }
-
-
+    
+        
     public function selectAllByIdRig($id_rig) {
       $this->setIdRig($id_rig);
         return R::findOne('people', 'id_rig = ? ', [$this->id_rig]);
     }
-
+    
         public function selectAllInIdRig($id_rig) {
-        // в формате mas[id_rig]=>array()
+        // в формате mas[id_rig]=>array() 
         $str_id_rig = implode(',', $id_rig);
         $result = R::getAll('SELECT * FROM people WHERE id_rig IN (  ' . $str_id_rig . ')');
         foreach ($result as $row) {
@@ -62,16 +62,16 @@ class Model_People {
         }
         return $new_result;
     }
-
-
-
-        public function copy_people($array)
+	
+	
+	        public function copy_people($array)
     {
 
         $people = R::dispense('people');
         $people->import($array);
         R::store($people);
     }
+
 }
 
 ?>

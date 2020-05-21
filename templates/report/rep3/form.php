@@ -4,7 +4,6 @@
 //echo $_SERVER['REQUEST_URI'];
 
 ?>
-
 <br>
 <center><b>СУТОЧНАЯ СВОДКА о выезде пожарных аварийно-спасательных подразделений МЧС Республики Беларусь</b></center>
 
@@ -19,12 +18,10 @@
             foreach (ARCHIVE_YEAR_LIST as $y) {
                 if (isset($filter['year']) && !empty($filter['year']) && $filter['year'] == $y) {
                     printf("<p><option value='%s' selected ><label>%s</label></option></p>", $y, $y);
+                } elseif(!isset($filter['year']) && $y== date('Y') ) {
+                    printf("<p><option value='%s' selected><label>%s</label></option></p>", $y, $y);
                 }
-                elseif(!isset($filter['year']) && $y== date('Y') ) {
-                     printf("<p><option value='%s' selected ><label>%s</label></option></p>", $y, $y);
-
-                }
-                else {
+				else {
                     printf("<p><option value='%s' ><label>%s</label></option></p>", $y, $y);
                 }
             }
@@ -95,12 +92,10 @@ printf("<p><option value='%s' selected ><label>%s</label></option></p>", $re['id
     <br> <br>
 
 </form>
+
+
+<!-- <i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
+Данные в столбце &laquo;С начала года&raquo; формируются автоматически, начиная с 1 октября 2019 года.-->
+<!-- Для единовременного ввода данных за 2019 год с января по сентябрь 2019 года - обращаться в ОВПО РЦУРЧС.-->
 <br>
 
-<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i> -
-Данные в столбце &laquo;С начала года&raquo; формируются автоматически, начиная с 1 октября 2019 года.
-Для единовременного ввода данных за 2019 год с января по сентябрь  2019 года - обращаться в ОВПО РЦУРЧС.
-<br>
-<a href="<?= $baseUrl ?>/results_battle_for_archive_2019/0">ссылка для единовременного ввода данных за 2019 год с января по сентябрь 2019 года</a>
-<!--<i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
-    ...</span>-->

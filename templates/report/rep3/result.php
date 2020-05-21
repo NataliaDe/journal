@@ -90,7 +90,7 @@ include 'form.php';
                     <tr>
                         <td>1.1.1</td>
                         <td>в том числе в жилом секторе:</td>
-                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «пожар» вид работ «на объекте» ">
+                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «пожар» вид работ «на объекте ">
                                 <?= $daily_rigs_hs['rig_live_sector'] ?>
                             </span>
                         </td>
@@ -141,7 +141,7 @@ include 'form.php';
                     <tr>
                         <td>2</td>
                         <td>природного характера:</td>
-                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», причина выезда «ЧС»+ вид работ «природного характера» ">
+                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», причина выезда «ЧС»+ вид работ «природного характера»">
                                 <?= $daily_rigs_hs['rig_nature_ltt'] ?>
                             </span>
                         </td>

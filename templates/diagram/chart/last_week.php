@@ -13,8 +13,8 @@
 .wideBox {
   clear: both;
   text-align: center;
-  margin-bottom: 50px;
-  padding: 10px;
+  margin-bottom: 10px;
+  padding: 0px 10px 10px 10px;
   background: #ebedf2;
   border: 1px solid #333;
   line-height: 80%;
@@ -38,8 +38,8 @@
 }
 
 #chartData {
-  width: 200px;
-  margin: 0 40px 0 0;
+  width: 274px;
+  margin: 0 0px 0 0;
   float: right;
   border-collapse: collapse;
   box-shadow: 0 0 1em rgba(0, 0, 0, 0.5);
@@ -85,15 +85,15 @@ $( pieChart );
 function pieChart() {
 
   // Config settings
-  var chartSizePercent = 55;                        // The chart radius relative to the canvas width/height (in percent)
+  var chartSizePercent = 50;                        // The chart radius relative to the canvas width/height (in percent)
   var sliceBorderWidth = 1;                         // Width (in pixels) of the border around each slice
   var sliceBorderStyle = "#fff";                    // Colour of the border around each slice
   var sliceGradientColour = "#ddd";                 // Colour to use for one end of the chart gradient
-  var maxPullOutDistance = 25;                      // How far, in pixels, to pull slices out when clicked
+  var maxPullOutDistance = 15;                      // How far, in pixels, to pull slices out when clicked
   var pullOutFrameStep = 4;                         // How many pixels to move a slice with each animation frame
   var pullOutFrameInterval = 40;                    // How long (in ms) between each animation frame
-  var pullOutLabelPadding = 105;                     // Padding between pulled-out slice and its label
-  var pullOutLabelFont = "bold 16px 'Trebuchet MS', Verdana, sans-serif";  // Pull-out slice label font
+  var pullOutLabelPadding = 130;                     // Padding between pulled-out slice and its label
+  var pullOutLabelFont = "bold 14px 'Trebuchet MS', Verdana, sans-serif";  // Pull-out slice label font
   var pullOutValueFont = "bold 12px 'Trebuchet MS', Verdana, sans-serif";  // Pull-out slice value font
   var pullOutValuePrefix = "";                     // Pull-out slice value prefix
   var pullOutShadowColour = "rgba( 0, 0, 0, .5 )";  // Colour to use for the pull-out slice shadow
@@ -459,16 +459,16 @@ $arr_color=array('#0DA068','#194E9C','#ED9C13','#ED5713','#057249',
 //    '#a001a3','#017ac6','#0154c6','#a2005f','#f46161');
 ?>
 
-<div id="container" style="width:55%">
+<div id="container" style="width:75%">
     <br><br>
   <div class="wideBox">
 <!--    <h2>Тестовая версия диаграммы</h2>-->
 <h3>Топ 10 причин выездов</h3>
     <p>Распределение выездов за текущую неделю в разрезе причин по Республике Беларусь</p>
-     <p>с <?= $monday ?> по <?= $monday_next ?></p>
+         <p>с <?= $monday ?> по <?= $monday_next ?></p>
   </div>
 
-  <canvas id="chart" width="750" height="500"></canvas>
+  <canvas id="chart" width="940" height="660"></canvas>
 
   <table id="chartData">
 

@@ -19,7 +19,7 @@
 
     <div class="col-lg-5"></div>
 
-    <div class="col-lg-2">
+	    <div class="col-lg-2">
 <?php
  include dirname(__FILE__) . '/buttonSaveRig.php';
 ?>

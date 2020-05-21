@@ -26,7 +26,7 @@ if(isset($msg) && !empty($msg)){
         <b><span style="color:red; font-size: 16px">  Не забудьте сделать backup БД !!!</span></b><br><br><br>
          <b><span style="color:green; font-size: 14px">1. Сохранять данные за 1 месяц !!! Например, за сентябрь: с 2018-09-01 по 2018-10-01 (берутся выезды с 06 утра до 06 утра) </span></b><br><br>
           <b><span style="color:green; font-size: 14px">2. Удалить за выбранный диапазон дат информацию из БД (выполнить .sql файл) </span></b><br><br>
-           <b><span style="color:green; font-size: 14px">3. Сбросить auto_increment (Надо обнулять все данные в таблице!) </span></b><br><br><br>
+           <b><span style="color:green; font-size: 14px">3. Сбросить auto_increment </span></b><br><br><br>
        <div class="form-group">
                     <label for="date_start" >с</label>
                     <div class="input-group date" id="date_start">
@@ -34,7 +34,7 @@ if(isset($msg) && !empty($msg)){
                               if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="date_start"  value="<?= $_POST['date_start'] ?>"/>
-
+                        
                         <?php
                               }
                               else{
@@ -43,7 +43,7 @@ if(isset($msg) && !empty($msg)){
                         <?php
                               }
                         ?>
-
+                    
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
@@ -56,7 +56,7 @@ if(isset($msg) && !empty($msg)){
                               if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] !=NULL) {
                                   ?>
                         <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
-
+                        
                         <?php
                               }
                               else{
@@ -65,14 +65,14 @@ if(isset($msg) && !empty($msg)){
                         <?php
                               }
                         ?>
-
+                      
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
 
 
                 <div class="form-group">
-                    <button class="btn bg-purple" type="submit"   >Сохранить в архив БД</button>
+                    <button class="btn bg-purple" type="submit"   >Сохранить в json-формат</button>
                 </div>
     </form>
 <br><br><br>

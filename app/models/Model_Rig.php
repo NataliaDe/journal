@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `ss.regions`
+ * Object model mapping for relational table `ss.regions` 
  */
 
 namespace App\MODELS;
@@ -27,7 +27,7 @@ class Model_Rig {
         $x = $_POST;
         $y = array();
         $error=array();
-
+        
                             /*             * * проверка на вшивость Время сообщения  ** */
             if (isset($x['time_msg']) && !empty($x['time_msg'])) {
                 if ($this->isDateTimeValid($x['time_msg'], "Y-m-d H:i")) {
@@ -66,11 +66,12 @@ class Model_Rig {
           $y['is_opg'] = (isset($x['is_opg']) && !empty($x['is_opg'])) ? intval($x['is_opg']) : 0;
           $y['opg_text'] = (isset($y['is_opg']) && $y['is_opg'] == 1 ) ? $x['opg_text'] : NULL;//если не отмечен чекбокс-не записываем в БД описание
 
-          if(isset($y['id_reasonrig']) && ($y['id_reasonrig'] == 18 || $y['id_reasonrig'] == 47 || $y['id_reasonrig'] == 75)) {// zanyatia, hoz work, ptv
+		  
+		            if(isset($y['id_reasonrig']) && ($y['id_reasonrig'] == 18 || $y['id_reasonrig'] == 47 || $y['id_reasonrig'] == 75)) {// zanyatia, hoz work, ptv
               $y['podr_zanytia'] = (isset($x['podr_zanytia']) && !empty($x['podr_zanytia'])) ? $x['podr_zanytia'] : 0;
           }
-
-          $y['fio_head_check'] = (isset($x['fio_head_check']) && !empty($x['fio_head_check'])) ? trim($x['fio_head_check']) : '';
+		  
+		     $y['fio_head_check'] = (isset($x['fio_head_check']) && !empty($x['fio_head_check'])) ? trim($x['fio_head_check']) : '';
 
 
         return $y;
@@ -86,13 +87,13 @@ class Model_Rig {
         if ($this->id == 0) {//insert
             $array['id_locorg'] = $_SESSION['id_locorg'];
             $array['date_insert'] = $this->setDateInsert();
-             $array['id_user']=$_SESSION['id_user'];
+			$array['id_user']=$_SESSION['id_user'];
         }
-	elseif(isset($array['id_user'])){
+		   elseif(isset($array['id_user'])){
             unset( $array['id_user']);
         }
         $array['last_update'] = $this->setLastUpdate();
-
+        
         $rig->import($array);
 
         $new_id = R::store($rig);
@@ -125,7 +126,7 @@ class Model_Rig {
         $x = $_POST;
         $y = array();
         $error=array();
-
+        
         if (isset($x['is_close']) && $x['is_close'] == 1) {//стоит отметка не учитывать даты
             $y['time_loc'] = '0000-00-00 00:00:00';
             $y['time_likv'] = '0000-00-00 00:00:00';
@@ -164,7 +165,7 @@ class Model_Rig {
                 $y['time_loc'] = NULL;
             }
             /*             * * END проверка на вшивость Время локализации  ** */
-
+            
                                 /*             * * проверка на вшивость Время ликвид  ** */
             if (isset($x['time_likv']) && !empty($x['time_likv'])) {
                 if ($this->isDateTimeValid($x['time_likv'], "Y-m-d H:i:s")) {
@@ -178,8 +179,8 @@ class Model_Rig {
                  $y['is_close_by_time_likv'] = 0;//выезд не закрыт
             }
             /*             * * END проверка на вшивость Время ликвид  ** */
-
-
+        
+        
         //время ликв д б больше вр лакализации
         if( isset($y['time_loc']) && $y['time_loc']!= NULL && isset($y['time_likv']) && $y['time_likv'] != NULL && $y['time_loc'] >$y['time_likv'] ){
              $error['time_loc_likv'] = ' Время ликвидации не может превышать время локализации ';
@@ -190,8 +191,8 @@ class Model_Rig {
          $y['error'] = $error;
         return $y;
     }
-
-
+    
+    
     //проверка на формат дата-время
     public function isDateTimeValid($field,$format) {
                 $t_exit = \DateTime::createFromFormat($format, $field);
@@ -199,9 +200,9 @@ class Model_Rig {
                     return true;
                 else
                     return false;
-
+         
     }
-
+    
 //save время лок, ликв
     public function saveTimeCharacter($array, $id) {
          unset($array['error']);//очистить элемент с ошибками
@@ -211,7 +212,7 @@ class Model_Rig {
         $rig->import($array);
         R::store($rig);
     }
-
+    
 
 
 }

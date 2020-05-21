@@ -98,8 +98,6 @@ $res_battle=array();
         if(!empty($row['results_battle']))
          $res_battle= explode('#', $row['results_battle']);
 
-
-
         if(isset($res_battle) && !empty($res_battle) && count($res_battle) > 1 &&  max($res_battle) > 0){
              $i++;
             ?>

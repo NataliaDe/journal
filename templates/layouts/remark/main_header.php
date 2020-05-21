@@ -6,7 +6,7 @@
         <!-- mini logo for sidebar mini 50x50 pixels -->
 <!--          <span class="logo-mini">Журнал</span>-->
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>Книга </b>замечаний обратная связь</span>
+        <span class="logo-lg"><b>Книга </b>замечаний</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
 
@@ -20,19 +20,18 @@
 
 
         <a href="#" class="logo" style="width: 365px; background-color: #a94442" id="title_for_ivanov" >
-            <span class="logo-lg" style="display: block "><b>Книга </b>замечаний <span style="font-size: 16px">(обратная связь)</span></span>
+        <span class="logo-lg" style="display: block "><b>Книга </b>замечаний <span style="font-size: 16px">(обратная связь)</span></span>
     </a>
 
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
-<!--                <li class="dropdown tasks-menu">
+              <!--  <li class="dropdown tasks-menu">
                     <a href="<?= $baseUrl ?>/remark"  class="item-menu"><span   >Книга замечаний</span></a>
                 </li>-->
-
-
-                <li>
+				
+				                <li>
                     <a href="<?= $baseUrl ?>/remark" class="logo" style="background-color: #a94442;">
                         <img src="<?= $baseUrl ?>/assets/images/feedback.png" width="50" height="50" >
 

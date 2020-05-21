@@ -10,8 +10,7 @@
 ?>
 <form  role="form" id="resultsBattleFormPart_1" method="POST" action="<?= $baseUrl ?>/results_battle_part_1/<?= $id_rig ?>" >
 
-    <a href="#" class="validate_href" data-form="resultsBattleFormPart_1" data-toggle="modal"  data-target="#validate_modal"></a>
-
+<a href="#" class="validate_href" data-form="resultsBattleFormPart_1" data-toggle="modal"  data-target="#validate_modal"></a>
 
      <input type="hidden" class="form-control"  name="id_part_1" value="<?= (isset($id_part_1) && !empty($id_part_1)) ? $id_part_1 : 0 ?>" >
             <label >
@@ -49,7 +48,7 @@
 
                 <div class="col-lg-12 form-group check-result-battle-part-1">
                     <div class="checkbox checkbox-danger check-result-battle-part-1">
-                    <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="no_water" value="1" id="defaultCheck6" <?= ((isset($part_1['no_water'])) && $part_1['no_water'] == 1) ? 'checked': ''?>>
+                   <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="no_water" value="1" id="defaultCheck6" <?= ((isset($part_1['no_water'])) && $part_1['no_water'] == 1) ? 'checked': ''?>>
                     <label class="form-check-label <?=(isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($part_1['no_water']) || $part_1['no_water'] == 0)  ) ? 'label-fire':'' ?>" for="defaultCheck6">
                         без установки пожарных аварийно-спасательных автомобилей на водоисточник (водоем, ПГ и т.п.)
                     </label>
@@ -88,7 +87,7 @@
 
                 <div class="col-lg-3 form-group check-result-battle-part-1">
                     <div class="checkbox checkbox-danger check-result-battle-part-1">
-                    <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="dop_mes" value="1" id="defaultCheck5" <?= ((isset($part_1['dop_mes'])) && $part_1['dop_mes'] == 1) ? 'checked': ''?>>
+                   <input class="form-check-input <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" type="checkbox" name="dop_mes" value="1" id="defaultCheck5" <?= ((isset($part_1['dop_mes'])) && $part_1['dop_mes'] == 1) ? 'checked': ''?>>
                     <label class="form-check-label <?=(isset($current_reason_rig) && $current_reason_rig == 34 && ((!isset($part_1['alone_otd']) || $part_1['alone_otd'] == 0) && (!isset($part_1['alone_shift']) || $part_1['alone_shift'] == 0) && (!isset($part_1['dop_mes']) || $part_1['dop_mes'] == 0)) ) ? 'label-fire':'' ?>" for="defaultCheck5">
                         с привлечением дополнительных сил МЧС
                     </label>

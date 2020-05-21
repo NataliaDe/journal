@@ -76,10 +76,6 @@
 
 
 
-
-
-
-
     <div class="form-group">
         <label for="reasonrig">Причина вызова</label>
         <select class=" chosen-select-deselect-single form-control" data-placeholder="Не выбрана" multiple="" name="reasonrig[]"   >

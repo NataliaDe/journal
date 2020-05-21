@@ -58,8 +58,8 @@
 
 			<td class="td_13"><p class="block_3">г.Минск</p></td>
 		</tr>
-		<tr class="calibre2">
-			<td class="td_7"><p class="block_2">327016</p></td>
+		<tr class="calibre2" style="background-color:#d9edf7 ">
+			<td class="td_7" ><p class="block_2">327016</p></td>
 			<td class="td_8"><p class="block_2">2020-01-01</p></td>
 			<td class="td_9"><p class="block_2">00:52:00</p></td>
 			<td class="td_10"><p class="block_3">Горит грузовой автомобиль в гараже</p></td>
@@ -67,6 +67,7 @@
 			<td class="td_11"><p class="block_3">г. Рогачёв, Улица Генерала Петровского, дом 26</p></td>
 
 			<td class="td_13"><p class="block_3">Гомельская</p></td>
+			<td class="td_13"><p class="block_3">По запросу перенесен в архив 2020 года</p></td>
 		</tr>
 		<tr class="calibre2">
                     <td class="td_7"><p class="block_2" style="color:red; font-weight: 600;"><a name="327107" style="color:red;">327107</a></p></td>
@@ -416,21 +417,28 @@
 	<p class="block_"></p>
 	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 2.  При необходимости
             учета их в боевой работе за <span class="text_">2020</span> год обращайтесь в ОВПО для переноса конкретных выездов
-            в архивную базу данных за <span class="text_1">2020 год </span>(укажите конкретные <b lang="en" class="calibre3">ID</b>).
-            Другие выезды с другими причинами выезда за этот период (кроме пожара, ЧС, другие загорания) могут быть рассмотрены в индивудуальном порядке.</p>
-	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>  3.  При этом будет автоматически пересчитана статистика за <b class="calibre3">2020 год</b> по боевой работе.</p>
-	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 4.  Также обращаем внимание,
-            что в некоторых УМЧС выезды, которые случились в ночь с 31 на 01 (например, выезды в Гродненском ОУМЧС с ID: <span style="color:red; font-weight: 600;"><a href="#327107" style="color:red;">327107</a>, <a href="#327103" style="color:red;">327103</a></span>), были самостоятельно продублированы позже
-            в оперативной базе данных текущего года.</p>
+            в архивную базу данных за <span class="text_1"><u>2020 год</u> </span>(укажите конкретные <b lang="en" class="calibre3">ID</b>).
+            Другие выезды с другими причинами выезда за этот период (кроме пожара, ЧС, другие загорания) могут быть рассмотрены в индивудуальном порядке.<br>
+			При этом будет автоматически пересчитана статистика за <b class="calibre3">2020 год</b> по боевой работе.</p>
+			
+			
+
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 3.  Также обращаем внимание,
+            что в некоторых УМЧС выезды, которые случились в ночь с 31 на 01 (например, выезды в Гродненском ОУМЧС с ID: <span style="color:red; font-weight: 600;"><a href="#327107" style="color:red;">327107</a>, <a href="#327103" style="color:red;">327103</a></span> - указаны в таблице выше), были самостоятельно продублированы позже
+            в оперативной базе данных текущего года.<br>
+		
+			
+			</p>
 
 
 
 
 
-	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 5.  В 2021 году выезды с 01.01.2021 00:00 и далее будут рассматриваться и использоваться статистикой как выезды 2021 года по предложениям УМЧС (до этого выезды с 31 по 01 относились к прошлому году).</p>
+	<p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i>
+	4.  В 2021 году выезды с 01.01.2021 00:00 и далее будут рассматриваться и использоваться статистикой как выезды 2021 года по предложениям УМЧС (до этого выезды с 01.01.2020 00:00 до 01.01.2020 06:00 относились к 2019 году).</p>
 
 
-        <p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 6.
+        <p class="block_"><i class="fa fa-exclamation-circle" aria-hidden="true" style="color:red"></i> 5.
             В связи с разночтениями учета данных по выездам и начала заполнения сведений с октября 2019 года отчет по боевой работе за 2019 год может выдавать некорректные данные.</p>
 
                     </strong>

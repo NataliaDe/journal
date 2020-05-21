@@ -44,7 +44,7 @@
 
         <a onclick="window.close()" style="color: black">  <button type="button" style="position: absolute; margin-left: 50px; margin-top: 25px;"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;назад</button></a>
         <?php
-
+                
         } else {
 
             ?>
@@ -67,19 +67,19 @@
             </div>
             <!-- /.container-fluid -->
 
-            <div class="row">
+			
+			            <div class="row">
                 <div class="col-lg-8">
-
-                    <div class="panel panel-default">
+			 <div class="panel panel-default">
                         <div class="panel-heading">
                             Описание выезда
                         </div>
                         <div class="panel-body">
                             <p>Дата и время сообщения: <?= date('d.m.Y', strtotime($result['date_msg'])) ?> <?= date('H:i', strtotime($result['time_msg'])) ?></p>
-                            <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_loc'])) : '-' ?></p>
-                            <p>Дата и время ликвидации: <?= (!empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i', strtotime($result['time_likv'])) : '-' ?> </p>
+                            <p>Дата и время локализации: <?= (!empty($result['time_loc']) && $result['time_loc'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_loc'])) : '-' ?></p>
+                            <p>Дата и время ликвидации: <?= ( !empty($result['time_likv']) && $result['time_likv'] != '0000-00-00 00:00:00') ? date('d.m.Y H:i:s', strtotime($result['time_likv'])) : '-' ?> </p>
 
-                            <br>
+							<br>
                             <h4>Адрес выезда</h4>
                             <address>
 <!--                                <strong>г. Пинск</strong>-->
@@ -103,45 +103,47 @@
 
 
                                 </strong>
-                                <br><?= (!empty($result['inf_region'])) ? implode(', ', $result['inf_region']) : '' ?>
-                                <br> Объект: <?= (!empty($result['object'])) ? $result['object'] : '-' ?> <?= (!empty($result['office_name'])) ? (' (' . $result['office_name'] . ')') : '' ?>.
+                                <br><?= (!empty($result['inf_region'])) ? implode(', ', $result['inf_region']) : ''?>
+                                <br> Объект: <?= (!empty($result['object'])) ? $result['object'] : '-' ?> <?= (!empty($result['office_name'])) ? (' ('.$result['office_name'].')') : '' ?>.
                                 <br> Координаты: <?= (!empty($result['coord'])) ? $result['coord'] : '-' ?>&nbsp;
 
                                 <?php
                                 if (!empty($result['coord_link'])) {
 
                                     $a = implode(', ', $result['coord_link']);
-                                    echo '(' . $a . ')';
+                                                                    echo '('.$a.')';
                                 }
+
+
 
                                 ?>
 
 
 
-                                <!--                                                                Координаты: 54.343444, 27.343444 (ссылка по возможности)-->
+<!--                                                                Координаты: 54.343444, 27.343444 (ссылка по возможности)-->
 
                             </address>
 
-                            <address>
-<?= (!empty($result['people'])) ? ('Данные заявителя: ' . $result['people']) : '' ?>
-                                <br>
-                                <!--                                Телефон: 209-27-51-->
-                                <br>
-                                <strong><?= (!empty($result['reasonrig_name'])) ? ('Причина выезда: ' . $result['reasonrig_name']) : '' ?><?= (!empty($result['view_work'])) ? (' (' . $result['view_work'] . ')') : '' ?> </strong>
-                                <br>
-                                <strong> <?= (!empty($result['firereason_name'])) ? ('Причина пожара: ' . $result['firereason_name']) : '' ?> </strong>
-                                <br>
-<?= (!empty($result['inspector'])) ? ('Инспектор: ' . $result['inspector']) : '' ?>
+							<address>
+                                 <?= (!empty($result['people'])) ? ('Данные заявителя: '.$result['people']) : '' ?>
+								<br>
+<!--                                Телефон: 209-27-51-->
+								<br>
+                                                                <strong><?= (!empty($result['reasonrig_name'])) ? ('Причина выезда: '.$result['reasonrig_name']) : '' ?><?= (!empty($result['view_work'])) ? (' ('.$result['view_work'].')') : '' ?> </strong>
+								<br>
+								<strong> <?= (!empty($result['firereason_name'])) ? ('Причина пожара: '.$result['firereason_name']) : '' ?> </strong>
+								<br>
+								 <?= (!empty($result['inspector'])) ? ('Инспектор: '.$result['inspector']) : '' ?>
 
                             </address>
                         </div>
                         <!-- /.panel-body -->
                     </div>
-
-                </div>
-
-
-                <div class="col-lg-4">
+					
+					</div>
+					
+					
+					<div class="col-lg-4">
 
 <?php
 if (!empty($result['coord'])) {
@@ -149,7 +151,7 @@ if (!empty($result['coord'])) {
 
     ?>
 
-
+                      
 <!-- apikey is NESSESARY-->
 <script src="http://api-maps.yandex.ru/2.1-dev/?apikey=f009fa81-ba29-4ad9-bdbd-4deb99c8b2b6&lang=ru-RU&load=package.full" type="text/javascript"></script>
 
@@ -163,18 +165,16 @@ function init() {
                         myMap = new ymaps.Map('YMapsIDgeopoint', {
                         center: [<?=$result['coord']?>],
                         zoom: 17
-                        //controls: ['zoomControl', 'searchControl', 'typeSelector', 'geolocationControl']
-
+                      //  controls: ['zoomControl', 'searchControl', 'typeSelector', 'geolocationControl']
                         });
-
-                           myMap.controls.remove('geolocationControl');
+						
+						
+						    myMap.controls.remove('geolocationControl');
                             myMap.controls.remove('searchControl');
-                             myMap.controls.remove('trafficControl');
-                             myMap.controls.remove('typeSelector');
-                              myMap.controls.remove('fullscreenControl');
-                                myMap.controls.remove('rulerControl');
-                          //  myMap.controls.remove('routeButtonControl');
-
+                            myMap.controls.remove('trafficControl');
+                            myMap.controls.remove('typeSelector');
+                            myMap.controls.remove('fullscreenControl');
+                            myMap.controls.remove('rulerControl');
 
                             // Создаем геообъект с типом геометрии "Точка".
                                 myGeoObject = new ymaps.GeoObject({
@@ -288,7 +288,7 @@ var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
             }
 
     }
-</script>
+                        </script>
                         <div id="YMapsIDgeopoint" style="width:500px; height:420px;"></div>
     <?php
 }
@@ -297,8 +297,7 @@ var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
                 </div>
             </div>
 
-
-      <div class="row">
+			 <div class="row">
                 <div class="col-lg-4">
                     <div class="well">
                         <h4>Содержание поступившей информации</h4>
@@ -497,11 +496,17 @@ var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
             <?php
               }
             ?>
+			
+			
+			
 
         <!-- /#page-wrapper -->
-
-
+		
+		
+		
+		
 <?php
+
 if(isset($results_battle) && !empty($results_battle) && (isset(array_count_values($results_battle)[0]) && array_count_values($results_battle)[0]<count($results_battle))){
     ?>
 <div class="panel panel-default">
@@ -551,7 +556,6 @@ if(isset($results_battle) && !empty($results_battle) && (isset(array_count_value
         <?php
 }
 ?>
-
 
 
         <?php
@@ -627,8 +631,6 @@ if(isset($trunk) && !empty($trunk)){
         <?php
 }
 ?>
-
-
 
 
 

@@ -4,11 +4,11 @@
     if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
            include dirname(dirname(__FILE__)) . '/tabsRig/info_msg_now_update.php';
     }
-
-
-$id_rig=$id;
+	
+	$id_rig=$id;
 include dirname(dirname(__FILE__)) . '/title_block.php';
     ?>
+
 <?php
 
 //print_r($time_character);
@@ -28,7 +28,7 @@ else{
 
 ?>
 <!-- КОНЕЦ выгрузка данных в переменные-->
-
+<br>
 <div class="box-body">
 
     <form  role="form" id="characterForm" method="POST" action="<?= $baseUrl ?>/rig/<?= $id ?>/character">
@@ -84,20 +84,15 @@ else{
 
             <div class="col-lg-2">
                    <br>
-
                 <div class="form-group">
                     <div class="checkbox checkbox-success">
                       <?php
-
-                      if(isset($id_reasonrig) && ($id_reasonrig == 34 || $id_reasonrig == 14)){// pogar, drugie zag
+					                        if(isset($id_reasonrig) && ($id_reasonrig == 34 || $id_reasonrig == 14)){// pogar, drugie zag
                                                            ?>
                         <input id="checkbox0" type="checkbox" name="is_close" value="1" disabled="" >
-
                             <?php
                       }
                       else{
-
-
                               if (isset($is_close) && $is_close == 1 ) {
                                   ?>
                             <input id="checkbox0" type="checkbox" name="is_close" value="1" checked="" >
@@ -107,22 +102,19 @@ else{
                             <input id="checkbox0" type="checkbox" name="is_close" value="1" >
                             <?php
                         }
-                        }
+					  }
                         ?>
                         <label for="checkbox0">
                             Не учитывать даты
                         </label>
-                            <?php
+						                            <?php
                               if(isset($id_reasonrig) && ($id_reasonrig == 34 || $id_reasonrig == 14)){// pogar, drugie zag
                                  ?>
                             <i class="fa fa-exclamation-circle" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Для указанной причины вызова данная функция не доступна!"></i>
                             <?php
                               }
                             ?>
-
                     </div>
-
-
                 </div>
             </div>
 
