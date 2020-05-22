@@ -25,7 +25,7 @@
         </form>
         <!-- /.search form -->
         <!-- sidebar menu: : style can be found in sidebar.less -->
-        <ul class="sidebar-menu">
+        <ul class="sidebar-menu" id="header-list">
             <li class="header">Главное меню</li>
 
             <li>
@@ -56,27 +56,59 @@
 
             <?php
             if (isset($_SESSION['id_organ']) && $_SESSION['id_organ'] == RCU && $_SESSION['is_admin'] == 1) {//RCU
+
                 ?>
                 <li>
                     <a href="<?= $baseUrl ?>/user" target="_blank">
                         <i class="fa fa-users"></i><span>Пользователи</span> <small class="label pull-right bg-red" ></small>
                     </a>
                 </li>
+
+                <li>
+                    <a href="<?= $baseUrl ?>/notifications" target="_blank">
+                        <i class="fa fa-bell-o"></i>
+
+                        <?php if (isset($_SESSION['cnt_unseen_notifications']) && $_SESSION['cnt_unseen_notifications'] > 0) {
+
+                            ?>
+                            <small class="label pull-right bg-red number_notif" id="number_notif"  style="display: block !important;right: 22px;top: 10px; border-radius: 50px 50px 50px 50px;" ><?= $_SESSION['cnt_unseen_notifications'] ?></small>
+                            <?php
+                        }
+
+                        ?>
+
+
+                        <span>Уведомления
+                            <?php if (isset($_SESSION['cnt_unseen_notifications']) && $_SESSION['cnt_unseen_notifications'] > 0) {
+
+                                ?>
+                                <small class="label pull-right bg-red number_notif" style="display: block !important;right: 22px;top: 10px; border-radius: 50px 50px 50px 50px;" ><?= $_SESSION['cnt_unseen_notifications'] ?></small>
+                                <?php
+                            }
+
+                            ?>
+                        </span>
+                    </a>
+                </li>
                 <?php
             }
+
             ?>
 
             <?php
             if (isset($classif_active) && !empty($classif_active)) {
                 $item_active = $classif_active;
+
                 ?>
                 <li class="treeview active">
                     <?php
                 } else {
+
                     ?>
                 <li class="treeview">
                     <?php
                 }
+
                 ?>
 
                 <a href="#">
@@ -88,125 +120,145 @@
                     <?php
                     if (isset($_SESSION['id_organ']) && $_SESSION['id_organ'] == RCU && $_SESSION['is_admin'] == 1) {//RCU
                         if (isset($item_active) && $item_active == 'reasonrig') {
+
                             ?>
                             <li class="active">
-                            <?php
-                        } else {
-                            ?>
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/reasonrig"><i class="fa fa-chevron-circle-down"></i> Причина вызова</a>
                         </li>
 
-    <?php
-    if (isset($item_active) && $item_active == 'firereason') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
+                        <?php
+                        if (isset($item_active) && $item_active == 'firereason') {
+
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/firereason"><i class="fa fa-chevron-circle-down"></i> Причина пожара</a>
                         </li>
 
-    <?php
-    if (isset($item_active) && $item_active == 'service') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
+                        <?php
+                        if (isset($item_active) && $item_active == 'service') {
+
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/service"><i class="fa fa-chevron-circle-down"></i> Службы</a>
                         </li>
 
 
-    <?php
-    if (isset($item_active) && $item_active == 'officebelong') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
+                        <?php
+                        if (isset($item_active) && $item_active == 'officebelong') {
+
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/officebelong"><i class="fa fa-chevron-circle-down"></i> Ведомство</a>
                         </li>
 
 
 
-    <?php
-    if (isset($item_active) && $item_active == 'workview') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
+                        <?php
+                        if (isset($item_active) && $item_active == 'workview') {
+
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/workview"><i class="fa fa-chevron-circle-down"></i> Вид работ</a>
                         </li>
-                            <?php
+                        <?php
+                        if (isset($item_active) && $item_active == 'listmail') {
 
-
-                                if (isset($item_active) && $item_active == 'listmail') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/listmail"><i class="fa fa-chevron-circle-down"></i> Список email</a>
                         </li>
                         <?php
-						
-						                                           
-    if (isset($item_active) && $item_active == 'actionwaybill') {
-        ?>
-                            <li class="active">
-                            <?php
-                        } else {
+                        if (isset($item_active) && $item_active == 'actionwaybill') {
+
                             ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
                             <li>
                                 <?php
                             }
+
                             ?>
                             <a href="<?= $baseUrl ?>/classif/actionwaybill"><i class="fa fa-chevron-circle-down"></i>Меры без.(путевка)</a>
                         </li>
-<?php
-                        }
-
-
-                        if (isset($item_active) && $item_active == 'destination') {
-                            ?>
-                        <li class="active">
                         <?php
-                    } else {
+                    }
+
+
+                    if (isset($item_active) && $item_active == 'destination') {
+
                         ?>
+                        <li class="active">
+                            <?php
+                        } else {
+
+                            ?>
                         <li>
                             <?php
                         }
+
                         ?>
                         <a href="<?= $baseUrl ?>/classif/destination"><i class="fa fa-chevron-circle-down"></i> Список лиц</a>
                     </li>
-                    
-                    
-					                    <?php
+
+
+                    <?php
                     if (isset($item_active) && $item_active == 'guide_pasp') {
 
                         ?>
@@ -242,86 +294,89 @@
                 </a>
                 <ul class="treeview-menu" >
                     <li><a href="<?= $baseUrl ?>/report/rep1" target="_blank"><i class="fa fa-chevron-circle-down"></i> Журнал</a></li>
-					<li><a href="<?= $baseUrl ?>/report/rep3" target="_blank"><i class="fa fa-chevron-circle-down"></i> Суточная сводка <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для УМЧС"></i></a></li>
-					 <li><a href="<?= $baseUrl ?>/report/rep4" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для уровня УМЧС и РЦУРЧС"></i></a></li>
-                   <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма<span></a></li>
-                   <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма<span></a></li>
-				   <li><a href="<?= $baseUrl ?>/table_close_rigs" target="_blank"><i class="fa fa-chevron-circle-down"></i> Выезды за сутки</a></li>
-                   <li><a href="<?= $baseUrl ?>/diagram_results_battle" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Диаграммы (спасение)<span></a></li>
-                    <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span >Архив выездов <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для уровня УМЧС и РЦУРЧС"></i><span></a></li>
-					
-                </ul>
-            </li>
+                    <li><a href="<?= $baseUrl ?>/report/rep3" target="_blank"><i class="fa fa-chevron-circle-down"></i> Суточная сводка <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для УМЧС"></i></a></li>
+                    <li><a href="<?= $baseUrl ?>/report/rep4" target="_blank"><i class="fa fa-chevron-circle-down"></i> Боевая работа <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для уровня УМЧС и РЦУРЧС"></i></a></li>
+                    <li><a href="<?= $baseUrl ?>/diagram/diag1"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Столбчатая диаграмма<span></a></li>
+                                    <li><a href="<?= $baseUrl ?>/chart/last_week" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Круговая диаграмма<span></a></li>
+                                                    <li><a href="<?= $baseUrl ?>/table_close_rigs" target="_blank"><i class="fa fa-chevron-circle-down"></i> Выезды за сутки</a></li>
+                                                    <li><a href="<?= $baseUrl ?>/diagram_results_battle" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span style="font-size: 12px">Диаграммы (спасение)<span></a></li>
+                                                                    <li><a href="<?= $baseUrl ?>/archive_1" target="_blank"><i class="fa fa-chevron-circle-down"></i> <span >Архив выездов <i class="fa fa-exclamation-circle" aria-hidden="true" style="color:#b8c7ce;" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="для уровня УМЧС и РЦУРЧС"></i><span></a></li>
+
+                                                                                    </ul>
+                                                                                    </li>
 
 
-<?php
-if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == 2) {
-    ?>
-              <!--  <li>
-                    <a href="<?= $baseUrl ?>/logs" target="_blank">
-                        <i class="fa fa-book" aria-hidden="true"></i>
-                        <span>Логи</span>
+                                                                                    <?php
+                                                                                    if (isset($_SESSION['id_user']) && $_SESSION['id_user'] == 2) {
 
-                    </a>
-                </li>-->
-                
-                
-                <li class="treeview">
-        <a href="#">
-            <i class="fa fa-book" aria-hidden="true"></i>
-            <span>Логи</span>
-            <i class="fa fa-angle-left pull-right"></i>
-        </a>
-        <ul class="treeview-menu">
-            <li><a href="<?= $baseUrl ?>/logs" target="_blank"><i class="fa fa-chevron-circle-down"></i> json</a></li>
-            <li><a href="<?= $baseUrl ?>/logs/login" target="_blank"><i class="fa fa-chevron-circle-down"></i>Авторизация</a></li>
-            <li><a href="<?= $baseUrl ?>/logs/actions" target="_blank"><i class="fa fa-chevron-circle-down"></i>Действия</a></li>
-    <!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
-        </ul>
-    </li>
+                                                                                        ?>
+                                                                                        <!--  <li>
+                                                                                              <a href="<?= $baseUrl ?>/logs" target="_blank">
+                                                                                                  <i class="fa fa-book" aria-hidden="true"></i>
+                                                                                                  <span>Логи</span>
 
-                   <li>
-                    <a href="<?= $baseUrl ?>/save_to_json" target="_blank">
-                        <i class="fa fa-reply-all" aria-hidden="true"></i>
-                        <span>Сохранить в json</span>
-
-                    </a>
-                </li>
-				
-				                <li>
-                    <a href="<?= $baseUrl ?>/export/csv/rep1" target="_blank" class="<?= (isset($export_csv_rep1)) ? 'active-sidebar' : ''  ?>">
-                            <i class="fa fa-map-marker"></i><span>Экспорт в csv</span> <small class="label pull-right bg-red" ></small>
-                        </a>
-                    </li>
-    <?php
-}
-
-if (isset($_SESSION['id_user'])) {
-   // if (!($_SESSION['id_level'] == 1 && $_SESSION['is_admin'] == 1)) {//кроме РЦУ админ
-        ?>
+                                                                                              </a>
+                                                                                          </li>-->
 
 
+                                                                                        <li class="treeview">
+                                                                                            <a href="#">
+                                                                                                <i class="fa fa-book" aria-hidden="true"></i>
+                                                                                                <span>Логи</span>
+                                                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                                                            </a>
+                                                                                            <ul class="treeview-menu">
+                                                                                                <li><a href="<?= $baseUrl ?>/logs" target="_blank"><i class="fa fa-chevron-circle-down"></i> json</a></li>
+                                                                                                <li><a href="<?= $baseUrl ?>/logs/login" target="_blank"><i class="fa fa-chevron-circle-down"></i>Авторизация</a></li>
+                                                                                                <li><a href="<?= $baseUrl ?>/logs/actions" target="_blank"><i class="fa fa-chevron-circle-down"></i>Действия</a></li>
+                                                                                        <!--                    <li><a href=""><i class="fa fa-chevron-circle-down"></i> Отчет4</a></li>-->
+                                                                                            </ul>
+                                                                                        </li>
 
-                    <li class="treeview">
-                        <a href="#">
-                            <i class="fa fa-cog" aria-hidden="true"></i>
-                            <span>Настройки</span>
+                                                                                        <li>
+                                                                                            <a href="<?= $baseUrl ?>/save_to_json" target="_blank">
+                                                                                                <i class="fa fa-reply-all" aria-hidden="true"></i>
+                                                                                                <span>Сохранить в json</span>
 
-                            <i class="fa fa-angle-left pull-right"></i>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li><a href="<?= $baseUrl ?>/settings/reason_rig_color" target="_blank"><i class="fa fa-chevron-circle-down"></i>Причина вызова</a></li>
-						    <li><a href="<?= $baseUrl ?>/settings/index" ><i class="fa fa-chevron-circle-down"></i>Другие</a></li>
-                        </ul>
-                    </li>
+                                                                                            </a>
+                                                                                        </li>
+
+                                                                                        <li>
+                                                                                            <a href="<?= $baseUrl ?>/export/csv/rep1" target="_blank" class="<?= (isset($export_csv_rep1)) ? 'active-sidebar' : '' ?>">
+                                                                                                <i class="fa fa-map-marker"></i><span>Экспорт в csv</span> <small class="label pull-right bg-red" ></small>
+                                                                                            </a>
+                                                                                        </li>
+                                                                                        <?php
+                                                                                    }
+
+                                                                                    if (isset($_SESSION['id_user'])) {
+                                                                                        // if (!($_SESSION['id_level'] == 1 && $_SESSION['is_admin'] == 1)) {//кроме РЦУ админ
+
+                                                                                        ?>
 
 
-        <?php
-    //}
-}
-?>
 
-        </ul>
-    </section>
-    <!-- /.sidebar -->
-</aside>
+                                                                                        <li class="treeview">
+                                                                                            <a href="#">
+                                                                                                <i class="fa fa-cog" aria-hidden="true"></i>
+                                                                                                <span>Настройки</span>
+
+                                                                                                <i class="fa fa-angle-left pull-right"></i>
+                                                                                            </a>
+                                                                                            <ul class="treeview-menu">
+                                                                                                <li><a href="<?= $baseUrl ?>/settings/reason_rig_color" target="_blank"><i class="fa fa-chevron-circle-down"></i>Причина вызова</a></li>
+                                                                                                <li><a href="<?= $baseUrl ?>/settings/index" ><i class="fa fa-chevron-circle-down"></i>Другие</a></li>
+                                                                                            </ul>
+                                                                                        </li>
+
+
+                                                                                        <?php
+                                                                                        //}
+                                                                                    }
+
+                                                                                    ?>
+
+                                                                                    </ul>
+                                                                                    </section>
+                                                                                    <!-- /.sidebar -->
+                                                                                    </aside>

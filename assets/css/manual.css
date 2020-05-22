@@ -90,9 +90,9 @@
             width: 98%;
         }
         /*---------- END таблица с выездами ------------*/
-		
-		
-		
+
+
+
 		/* rig table type 1 */
         #inptrigFormType11, #inptrigFormType12{
             width: 78px;
@@ -134,10 +134,10 @@
         #selrigFormType112{
             width: 100px;
         }
-		
-		
-		
-		
+
+
+
+
 /* rig table type 3 */
         #inptrigFormType31, #inptrigFormType32{
             width: 78px;
@@ -192,21 +192,21 @@
         #selrigFormType311{
             width: 80px;
         }
-		
-		
+
+
         #rigTableType1_wrapper{
             width: 98%;
         }
-		
-		
+
+
 		#rigTableType3_wrapper{
             width: 93%;
         }
 
         /* rig table type1 */
-		
-		
-		
+
+
+
 		  /* rig table type 2 */
         #inptrigFormType21, #inptrigFormType22{
             width: 78px;
@@ -260,7 +260,7 @@
         }
 
         /* rig table type2 */
-		
+
 
 
                 /*---------- таблица с классификаторами ------------*/
@@ -559,9 +559,9 @@ top:2px;
         #remarkTableRcu_wrapper,#remarkTable_wrapper{
             width: 92%;
         }
-		
-		
-		
+
+
+
         #guide_pasp_tbl_wrapper{
             width: 75%;
             margin-left: 100px;
@@ -575,13 +575,13 @@ top:2px;
 		        .blue-border-input{
             border: solid 2px blue !important;
         }
-		
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
+
 /* typing indicator */
 
   .typing-indicator {
@@ -692,3 +692,62 @@ background-color: black;
         cursor: default;
         opacity: 0.5;
     }
+
+
+    /*--------------- notifications ---------------- */
+    .notifications-page .notif-block {
+    text-align: left;
+    line-height: 1.4;
+}
+
+.notifications-page .notif-block {
+    background: #d8e0ea;
+    border-radius: 5px;
+    display: block;
+    width: 100%;
+    min-height: 112px;
+    height: auto;
+    border: 1px solid #dfe4ec;
+    color: #3e4858;
+    text-decoration: none;
+    padding: 20px;
+    margin-bottom: 15px;
+    position: relative;
+    box-shadow: 0px 0px 12px 0px rgba(170, 184, 206, 0.2);
+}
+
+.notif-block .date-notif {
+    margin-bottom: 13px;
+    color: #808ea3;
+}
+
+
+.notifications-page .notif-block.new-notif {
+    border-left: 5px solid;
+    border-left-color: #3c8dbc;
+    padding-left: 15px;
+    cursor: pointer !important;
+}
+
+
+#read_all_notify_button {
+    background-image: url(../images/check2.svg);
+    border: 1px solid #4f5866 !important;
+}
+
+
+#read_all_notify_button {
+    height: 45px;
+    padding: 5px;
+    padding-left: 44px;
+    background-repeat: no-repeat;
+    width: 140px;
+    display: inline-block;
+    font-size: 13px;
+    line-height: inherit;
+    background-position-x: 12px;
+    background-position-y: center;
+    background-size: 23px;
+}
+
+/*--------------- END notifications ---------------- */

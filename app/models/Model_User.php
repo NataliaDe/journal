@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `user` 
+ * Object model mapping for relational table `user`
  */
 
 namespace App\MODELS;
@@ -91,17 +91,28 @@ class Model_User {
         else
             return FALSE;
     }
-    
+
     public function deleteUserById($id) {
         $this->setId($id);
         $user = R::load('user', $this->id);
         $ok=R::trash($user);
-        
+
         if (empty($ok)) {
             return TRUE;
         } else {
             return FALSE;
         }
+    }
+
+
+    public function getCntUnseenNotif($id_user)
+    {
+        return R::getCell('select count(id) from notifications where id_user = ? and is_see = ?',array($id_user,0));
+    }
+
+        public function getAllNotif($id_user)
+    {
+        return R::getAll('select * from notifications where id_user = ? order by date_action desc',array($id_user));
     }
 
 }
