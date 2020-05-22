@@ -27,12 +27,14 @@
             В данной вкладке находится общая информация по выездам.
         </p>
 
-        <center>
-        <div id="preload-table-content1" style="display:none;">
-            <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
-Идет загрузка данных...
 
-        </div>
+
+        <center>
+            <div id="preload-table-content1" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+
+            </div>
         </center>
         <div id="table-content1">
 
@@ -49,14 +51,14 @@
         <p>
             В данной вкладке находится общая информация по выезжавшей технике.
             <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
- <span style="color: red; font-size: 13px">  После применения в таблице фильтра по технике (и информации связанной с ней, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
+            <span style="color: red; font-size: 13px">  После применения в таблице фильтра по технике (и информации связанной с ней, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
         <center>
-        <div id="preload-table-content2" style="display:none;">
-   <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
-Идет загрузка данных...
-        </div>
+            <div id="preload-table-content2" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+            </div>
         </center>
 
         <div id="table-content2">
@@ -72,15 +74,15 @@
     <section id="content3" class="sec">
         <p>
             В данной вкладке находится общая информация по информированию должностных лиц.
-              <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
- <span style="color: red; font-size: 13px">  После применения в таблице фильтра по адресату (и информации связанной с ним, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
+            <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+            <span style="color: red; font-size: 13px">  После применения в таблице фильтра по адресату (и информации связанной с ним, например, время выезда) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
-                <center>
-        <div id="preload-table-content3" style="display:none;">
-   <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
-Идет загрузка данных...
-        </div>
+        <center>
+            <div id="preload-table-content3" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+            </div>
         </center>
 
         <div id="table-content3">
@@ -97,16 +99,16 @@
     <section id="content4" class="sec">
         <p>
             В данной вкладке находится общая информация по привлечению сил других ведомств.
-             <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
- <span style="color: red; font-size: 13px">  После применения в таблице фильтра по службе (и информации связанной с ней, например, время прибытия) при экспорте в Excel данный фильтр не учитывается.</b></span>
+            <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
+            <span style="color: red; font-size: 13px">  После применения в таблице фильтра по службе (и информации связанной с ней, например, время прибытия) при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
 
-                <center>
-        <div id="preload-table-content4" style="display:none;">
-   <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
-Идет загрузка данных...
-        </div>
+        <center>
+            <div id="preload-table-content4" style="display:none;">
+                <i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i><br><br>
+                Идет загрузка данных...
+            </div>
         </center>
 
         <div id="table-content4">
@@ -124,7 +126,7 @@
         <p>
             В данной вкладке находится информация по боевой работе.
             <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
- <span style="color: red; font-size: 13px">  После применения в таблице фильтра по количеству спасенных, эвакуированных и т.д. при экспорте в Excel данный фильтр не учитывается.</b></span>
+            <span style="color: red; font-size: 13px">  После применения в таблице фильтра по количеству спасенных, эвакуированных и т.д. при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
         <center>
@@ -150,7 +152,7 @@
         <p>
             В данной вкладке находится информация по стволам.
             <span class="glyphicon glyphicon-hand-up" style="color: red; font-size: 13px" ></span>
- <span style="color: red; font-size: 13px">  После применения в таблице фильтра по стволам при экспорте в Excel данный фильтр не учитывается.</b></span>
+            <span style="color: red; font-size: 13px">  После применения в таблице фильтра по стволам при экспорте в Excel данный фильтр не учитывается.</b></span>
         </p>
 
         <center>
@@ -172,6 +174,13 @@
 
 </main>
 
+<?php
+include 'modals/modal_is_exclude_statistics.php';
+
+?>
+
+<link rel="stylesheet" href="<?= $baseUrl ?>/assets/css/radiobuttons.css">
+
 <script>
 
     function refreshTable(content) {
@@ -184,14 +193,14 @@
         var region = $('select[name="id_region"]').val();
         var local = $('input[name="id_local"]').val();
 
-        var reasonrig=$('select[name="reasonrig"] option:selected').text();
-        if(reasonrig == 'Все')
-            var reasonrig='';
-       // alert(reasonrig);
+        var reasonrig = $('select[name="reasonrig"] option:selected').text();
+        if (reasonrig == 'Все')
+            var reasonrig = '';
+        // alert(reasonrig);
 
         if (date_start && date_end) {
-             $('#' + content).fadeOut("slow");
-            $('#preload-'+content).css('display','block');
+            $('#' + content).fadeOut("slow");
+            $('#preload-' + content).css('display', 'block');
 
 
             //  alert('123');
@@ -210,17 +219,20 @@
                 },
 
                 success: function (response) {
- $('#preload-'+content).css('display','none');
-                   // $('#' + content).fadeOut("slow", function () {
-                        //  $('h1.m-n > *:not(:first)').remove();
-                        $('#' + content).html(response);
-                        $('#' + content).fadeIn("slow");
-                      //  console.log("it Work");
-                   // });
+                    $('#preload-' + content).css('display', 'none');
+                    // $('#' + content).fadeOut("slow", function () {
+                    //  $('h1.m-n > *:not(:first)').remove();
+                    $('#' + content).html(response);
+                    $('#' + content).fadeIn("slow");
+                    //  console.log("it Work");
+                    // });
 
                 }
             });
         }
     }
+
+
+
 
 </script>

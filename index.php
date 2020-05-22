@@ -86,6 +86,7 @@ use App\MODELS\Model_Listmailview;//список email
 use App\MODELS\Model_Actionwaybill;//meri dly putevki
 use App\MODELS\Model_Loglogin;
 use App\MODELS\Model_Logs;
+use App\MODELS\Model_Helpers;
 
 
 //архив
@@ -221,7 +222,7 @@ function is_permis() {
             }
 
     }
-    
+
             elseif (strpos($app->request->getResourceUri(), 'archive_1')) {
 
             /* only rcu or umchs */
@@ -417,6 +418,31 @@ function order_rigs($a, $b)
     return strcmp($b["full_time_msg"], $a["full_time_msg"]);
 }
 
+
+function get_notifications($id_user)
+{
+    $user_m = new Model_User();
+    $notif = $user_m->selectNotifications($id_user);
+
+    if (isset($notif) && !empty($notif)) {
+
+    }
+}
+
+function set_notifications($id_user)
+{
+    $user_m = new Model_User();
+    $notif = $user_m->getCntUnseenNotif($id_user);
+
+    if (isset($notif) && !empty($notif) && isset($_SESSION['id_user'])) {
+        $_SESSION['cnt_unseen_notifications']=$notif;
+    }
+    elseif(isset($_SESSION['cnt_unseen_notifications'])){
+        unset($_SESSION['cnt_unseen_notifications']);
+    }
+}
+
+
 /* -------------------------- END ФУНКЦИИ ------------------------- */
 
 
@@ -507,18 +533,20 @@ $app->group('/login', function () use ($app,$log) {
                 $array = array('time' => date("Y-m-d H:i:s"), 'ip-address' => $_SERVER['REMOTE_ADDR'], 'login' => $login, 'password' => $password, 'user_name' => $_SESSION['user_name']);
                 $log_array = json_encode($array, JSON_UNESCAPED_UNICODE);
                 $log->info('Сессия -  :: Вход пользователя с - id = ' . $_SESSION['id_user'] . ' данные - : ' . $log_array); //запись в logs
-                
-                
-                
+
+
+
                 /* save log to bd */
                 $arr = array('user_id' => $_SESSION['id_user'], 'user_name' => $_SESSION['user_name'], 'region_name' => $_SESSION['region_name'], 'locorg_name' => $_SESSION['locorg_name']);
                 $loglogin = new Model_Loglogin();
                 $loglogin->save($arr,1);
 
-				
+                set_notifications($_SESSION['id_user']);
+
+
                  if(isset($_SESSION['id_ghost']))
                     unset($_SESSION['id_ghost']);
-				
+
                 $app->redirect(BASE_URL . '/rig');
             } else {
                 $app->redirect(BASE_URL . '/login');
@@ -535,13 +563,13 @@ $app->get('/logout', function () use ($app, $log) {
      $array = array('time' => date("Y-m-d H:i:s"), 'ip-address' => $_SERVER['REMOTE_ADDR'], 'login' => $_SESSION['login'], 'password' => $_SESSION['password'], 'user_name' => $_SESSION['user_name']);
     $log_array = json_encode($array, JSON_UNESCAPED_UNICODE);
     $log->info('Сессия -  :: Выход пользователя с - id = ' . $_SESSION['id_user'] .' выполнил '.$_SESSION['user_name'].' данные - : ' . $log_array); //запись в logs
-    
-    
+
+
                     /* save log to bd */
                 $arr = array('user_id' => $_SESSION['id_user'], 'user_name' => $_SESSION['user_name'], 'region_name' => $_SESSION['region_name'], 'locorg_name' => $_SESSION['locorg_name']);
                 $loglogin = new Model_Loglogin();
                 $loglogin->save($arr,0);
-    
+
     //
     // if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
     //session_start();
@@ -606,7 +634,7 @@ $app->group('/user', 'is_login', 'is_permis', function () use ($app, $log) {
         $data['local'] = $local->selectAll(); //районы
         $locality = new Model_Locality();
         $data['locality'] = $locality->selectAll(); //нас.пункты
-		
+
 		$data['ranks']=R::getAll('select * from rank');
 
         /*         * *** КОНЕЦ Классификаторы **** */
@@ -632,7 +660,7 @@ $app->group('/user', 'is_login', 'is_permis', function () use ($app, $log) {
             $data['users_sd'] = R::getAll('select * from speciald.permissions as u where u.is_delete = ? and u.is_guest = ?'
                     . ' AND u.id_user NOT IN (SELECT id_user_sd from journal.user WHERE id_user_sd is NOT NULL)', array(0, 0));
         }
-		
+
         $data['bread_crumb'] = $bread_crumb;
         $app->render('layouts/header.php',$data);
         $data['path_to_view'] = 'user/userForm.php';
@@ -671,8 +699,8 @@ $app->group('/user', 'is_login', 'is_permis', function () use ($app, $log) {
         $array['auto_ate'] = $auto_ate;
         $array['auto_local'] = $auto_local;
         $array['auto_locality'] = $auto_locality;
-		
-		
+
+
 		        /* for special d */
 				        $id_user_sd = $app->request()->post('id_user_sd');
         if (isset($id_user_sd) && !empty($id_user_sd)) {//connect with user SD
@@ -690,7 +718,7 @@ $app->group('/user', 'is_login', 'is_permis', function () use ($app, $log) {
 			$array['creator_name_for_speciald'] = $creator_name_for_speciald;
 		}
         /* END for special d */
-		
+
 
         /* ++  КОНЕЦ обработка POST-данных ++ */
 
@@ -768,7 +796,7 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
     // form rig - add, edit
     $app->get('/new(/:id(/:active_tab))', function ($id = 0, $active_tab = 1) use ($app) {
 
-	
+
 	        $data['settings_user'] = getSettingsUser();
         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             if (in_array($active_tab, array(10, 20, 30))) {
@@ -782,7 +810,7 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
 
 
         $cp=array(8,9,12);
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /*         * *** Классификаторы **** */
@@ -833,7 +861,7 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app,$log) {
                 $rig_m = new Model_Rig();
                 $rig = $rig_m->selectAllById($id);
 				$data['is_sily_mchs']=$rig['is_sily_mchs'];
-				
+
             if ($active_tab != 2) {
                 // инф по вызову
                 $rig_m = new Model_Rig();
@@ -882,7 +910,7 @@ elseif ($rig['id_region'] != 0) {
             //инф по СиС др ведомств
             $innerservice = new Model_Innerservice();
             $data['innerservice'] = $innerservice->selectAllByIdRig($id);
-			
+
 			 /* is updeting now ?  */
             $is_update_now=is_update_rig_now($rig,$id);
           //  echo $is_update_now;exit();
@@ -936,7 +964,7 @@ elseif ($rig['id_region'] != 0) {
         }
 
 
-		
+
 		       if ($active_tab != 2) {
                                 /* guide pasp  */
             if ($_SESSION['id_level'] == 1 && $_SESSION['id_organ'] == 5) {//rcu
@@ -945,11 +973,11 @@ elseif ($rig['id_region'] != 0) {
 
             } elseif ($_SESSION['id_level'] == 3 && !in_array($_SESSION['id_organ'], $cp)) {//rochs
                 //$data['podr'] = R::getAll('select g.*,r.id_loc_org,  r.locorg_name, r.pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp where r.id_loc_org = ? ', array($_SESSION['id_locorg']));
-				
+
 				$data['podr'] = R::getAll('select g.*, r.id_loc_org, r.locorg_name, (CASE WHEN ( r.of_gohs is not null and r.name_paso_object is not null ) THEN CONCAT(r.pasp_name," ",r.locorg_name, " (",r.name_paso_object,")")
 when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
  WHEN (r.of_gohs IS  NULL AND r.`id_organ`=6)  THEN CONCAT(r.locorg_name) ELSE r.pasp_name END) AS `pasp_name`, r.of_gohs from guidepasp as g left join pasp as r on r.id=g.id_pasp where (r.id_loc_org = ? or r.of_gohs = ?) or (r.id_region = ? AND r.id_organ = ?) ', array($_SESSION['id_locorg'], $_SESSION['id_locorg'],$_SESSION['id_region'],PASO));
- 
+
             } elseif ($_SESSION['id_level'] == 3 && in_array($_SESSION['id_organ'], $cp)) {//rosn pinsk
 
             $data['podr'] = R::getAll('select g.*,r.id_loc_org,  r.locorg_name, r.pasp_name  from guidepasp as g left join pasp as r on r.id=g.id_pasp  where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
@@ -969,8 +997,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             }
 
         }
-		
-		
+
+
                 if ($id == 0) {
             $bread_crumb = array('Создать выезд');
             $data['title'] = 'Новый выезд';
@@ -990,7 +1018,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 foreach ($inf_rig as $value) {
                     $date_rig=$value['date_msg'].' '.$value['time_msg'];
                     $adr_rig=(empty($value['address'])) ? $value['additional_field_address']: $value['address'];
-					
+
 					$data['id_user']=$value['id_user'];
                 }
                 $bread_crumb[]=$date_rig;
@@ -1000,8 +1028,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         }
 
          /*--------- добавить инф о редактируемом вызове ------------*/
-		 
-		 
+
+
 		$paso_object=R::getAll('select * from paso_object');
         if(!empty($paso_object)){
             foreach ($paso_object as $row) {
@@ -1026,9 +1054,9 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 		$data['title_block']='info';
 
         $data['id_rig'] = $id;
-		
+
 		$data['settings_user'] = getSettingsUser();
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
 
@@ -1042,14 +1070,14 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 foreach ($inf_rig as $value) {
                     $date_rig=$value['date_msg'].' '.$value['time_msg'];
                     $adr_rig=(empty($value['address'])) ? $value['additional_field_address']: $value['address'];
-					
+
 					$data['id_user']=$value['id_user'];
 					$data['current_reason_rig']=$value['id_reasonrig'];
                 }
                 $bread_crumb[]=$date_rig;
                 $bread_crumb[]=$adr_rig;
             }
-			
+
 			/* is updeting now ?  */
             $rig_m = new Model_Rig();
             $rig = $rig_m->selectAllById($id);
@@ -1060,7 +1088,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 $data['is_update_now'] = $is_update_now;
             }
             /* is updeting now ?  */
-			
+
 			            //is infroming
                 $data['is_informing']=$rig->is_informing;
 
@@ -1093,16 +1121,16 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         /*         * ********* Обработка POST-данных************* */
         $informing_m = new Model_Informing();
-		
+
 		$data['settings_user'] = getSettingsUser();
-		
-		
+
+
 		   /* did informing get involved or not */
         $is_informing = $app->request()->post('is_informing');
         if (isset($is_informing) && !empty($is_informing) && $is_informing == 1) {//no
             $is_informing = 1;
         } else {//involved
-            $is_informing = 0;            
+            $is_informing = 0;
         }
 $post_info = $informing_m->getPOSTData();
         //update rig
@@ -1112,8 +1140,8 @@ $post_info = $informing_m->getPOSTData();
             R::store($rig);
         }
 
-		
-		
+
+
         $post_info = $informing_m->getPOSTData();
 
 //        print_r($post_info);
@@ -1136,16 +1164,16 @@ $post_info = $informing_m->getPOSTData();
         if ($id != 0) {//edit
             unset_update_rig_now($id);
         }
-		
+
 				$log_post_info=json_encode($post_info,JSON_UNESCAPED_UNICODE);
  $log->info('Сессия -  :: Сохранение ИНФОРМИРОВАНИЕ - id_rig = ' . $id.' данные - : '.$log_post_info); //запись в logs
- 
+
                               /* save log to bd */
         $action = 'редактирование информирования по выезду';
         $arr = array('s_user_id' => $_SESSION['id_user'], 's_user_name' => $_SESSION['user_name'], 's_region_name' => $_SESSION['region_name'], 's_locorg_name' => $_SESSION['locorg_name'], 'id_rig' => $id, 'action' => $action);
         $logg = new Model_Logs();
         $logg->save($arr);
- 
+
                 if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $app->redirect(BASE_URL . '/rig/' . $id.'/info');
         } else {
@@ -1161,11 +1189,11 @@ $post_info = $informing_m->getPOSTData();
 
         $data['title']='Временные характеристики выезда';
 		$data['title_block']='time';
-		
+
         $data['id'] = $id;
-		
+
 		$data['settings_user'] = getSettingsUser();
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
 
@@ -1186,7 +1214,7 @@ $post_info = $informing_m->getPOSTData();
                 $bread_crumb[]=$date_rig;
                 $bread_crumb[]=$adr_rig;
             }
-			
+
 			/* is updeting now ?  */
             $rig_m = new Model_Rig();
             $rig = $rig_m->selectAllById($id);
@@ -1254,9 +1282,9 @@ $post_info = $informing_m->getPOSTData();
 
         /* ------------------------------- Сохранить ------------------------------------ */
         $time_character_m->saveTimeCharacter($post_character, $id); //временные хар-ки по выезду
-		
-		
-		
+
+
+
 		        /* if likv before arrival - set results_battle_part_1 : people_help = 1 */
         if (isset($post_character['is_likv_before_arrival']) && $post_character['is_likv_before_arrival'] == 1) {
             $save_data['people_help'] = 1;
@@ -1276,33 +1304,33 @@ $post_info = $informing_m->getPOSTData();
         $save_data['last_update'] = date("Y-m-d H:i:s");
         $battle->import($save_data);
         R::store($battle);
-		
-		
-		
+
+
+
          if(!empty($post_jrig)){
               $jrig_m->save($post_jrig); //журнал вызова
          }
 
-		 
-		 
+
+
         /* is updeting now ?  */
         if ($id != 0) {//edit
             unset_update_rig_now($id);
         }
-		 
+
         /* ---------------------------- КОНЕЦ Сохранить---------------------------- */
 		$log_post_character=json_encode($post_character,JSON_UNESCAPED_UNICODE);
 		$log_post_jrig=json_encode($post_jrig,JSON_UNESCAPED_UNICODE);
  $log->info('Сессия -  :: Сохранение ВРЕМЕННЫЕ ХАР-КИ ПО ВЫЕЗДУ - id_rig = ' . $id.' данные - : '.$log_post_character); //запись в logs
   $log->info('Сессия -  :: Сохранение ЖУРНАЛ ПО ВЫЕЗДУ - id_rig = ' . $id.' данные - : '.$log_post_jrig); //запись в logs
-  
-  
+
+
                               /* save log to bd */
         $action = 'редактирование временных характеристик по выезду, журнала выезда';
         $arr = array('s_user_id' => $_SESSION['id_user'], 's_user_name' => $_SESSION['user_name'], 's_region_name' => $_SESSION['region_name'], 's_locorg_name' => $_SESSION['locorg_name'], 'id_rig' => $id, 'action' => $action);
         $logg = new Model_Logs();
         $logg->save($arr);
-  
+
                         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $app->redirect(BASE_URL . '/rig/' . $id . '/character');
         } else {
@@ -1311,7 +1339,7 @@ $post_info = $informing_m->getPOSTData();
     });
 
 
-	
+
 	    // question with delete rig
     $app->get('/delete/:id', function ($id) use ($app) {
         $bread_crumb = array('Выезд', 'Удалить');
@@ -1344,35 +1372,37 @@ $post_info = $informing_m->getPOSTData();
         $app->render('layouts/footer.php');
     });
 
-	
-	
-	
+
+
+
      //rigtable for rcu
      $app->get('/table/for_rcu/:id(/:id_rig)(/:is_reset_filter)', function ($id,$id_rig=0, $is_reset_filter=0) use ($app) {
-		 
+
 		 $filter=[];
 		 $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
-		 
+
 		         /* MODELS */
         $sily_m = new Model_Jrig();
         $rig_m = new Model_Rigtable();
         $inner_m = new Model_Innerservice();
         $informing_m = new Model_Informing();
 		$sily_mchs_m = new Model_Silymchs();
-		 
+
 		 if($is_reset_filter == 1){
             rememberFilterDate($filter);
         }
         $bread_crumb = array('Все выезды');
 
         $data['id_page']=$id;//номер вклдаки
-		
+
 		$data['settings_user'] = getSettingsUser();
 		$data['settings_user_br_table'] = getSettingsUserMode();
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
-		
-		
+
+
+set_notifications($_SESSION['id_user']);
+
 		         /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
         if (!empty($is_show_link_sd)) {
@@ -1391,21 +1421,21 @@ $post_info = $informing_m->getPOSTData();
         if ($id_rig != 0) {
             $rig = search_rig_by_id($rig_m, $id_rig);
             $data['rig'] = $rig;
-			
+
 			$data['search_rig_by_id']=1;
         }
         /* -------------- END Поиск вызова по введенному id ---------------- */
         elseif ($id_rig == 0) {//обычная таблица
 
             /* -------- таблица выездов в зависимости от авт пользователя -------- */
-			
+
 			if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
                 $rig_m->setDateStart($_SESSION['remember_filter_date_start']);
             }
             if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
                 $rig_m->setDateEnd($_SESSION['remember_filter_date_end']);
             }
-			
+
             if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {//mode
                 $filter['reasonrig'] = $data['settings_user_br_table'];
             } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_reasonrig']) && !empty($_SESSION['remember_filter_reasonrig'])) {
@@ -1417,7 +1447,7 @@ $post_info = $informing_m->getPOSTData();
             } else {//выезды за РОСН, УГЗ, АВиацию
                 $data['rig'] = $rig_m->selectAllByIdOrgan($id, 0,$filter); //за весь орган
             }
-			
+
 			            if (!empty($data['rig']))
                 usort($data['rig'], "order_rigs");
 
@@ -1434,20 +1464,20 @@ $post_info = $informing_m->getPOSTData();
         $data['reasonrig_color']=$reasonrig_color;
            /*-------- END цвет статусов выездов ----------*/
 
-		   
-		   
-		   
+
+
+
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
 		$id_rig_with_informing = array();//rigs with informing
-		
+
         foreach ($data['rig'] as $value) {//id of rigs
-		
+
 		    if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
                 $id_rig_with_informing[] = $value['id'];// rigs with informing
             }
-			
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
 				$id_rig_informing[] = $value['id'];
@@ -1457,14 +1487,14 @@ $post_info = $informing_m->getPOSTData();
                 $id_rig_sis_mes[] = $value['id'];
             }
         }
-		
+
 		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
             $sily_mchs = $sily_m->selectAllInIdRig($id_rig_arr);        // in format mas[id_rig]=>array()
             $data['sily_mchs'] = $sily_mchs;
         }
-		
 
-        
+
+
         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $rig_cars = [];
             $rig_innerservice = [];
@@ -1510,8 +1540,8 @@ $post_info = $informing_m->getPOSTData();
         }
 			 elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2 or tupe 3
 
-			 
-			 
+
+
 			  /* --- for table type 2 ---- */
 		$res=getSilyForType2($sily_mchs);
         $data['teh_mark'] = $res['teh_mark'];
@@ -1522,13 +1552,13 @@ $post_info = $informing_m->getPOSTData();
         $data['return_time'] = $res['return_time'];
         $data['distance'] = $res['distance'] ;
 		 /* --- END for table type 2 ---- */
-			 
+
 			 }
-			 
-			 
+
+
 			 if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
-			 
-			
+
+
             /* fill or no icons */
             $informing_empty=array();
             if (!empty($id_rig_with_informing)) {
@@ -1538,14 +1568,14 @@ $post_info = $informing_m->getPOSTData();
             $data['result_icons'] =  array_merge($result_icons_empty,$informing_empty);
             /* END fill or no icons */
 
-			
+
 			if (!empty($id_rig_with_informing)) {
                 $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
             }
-			
+
             if (!empty($id_rig_arr)) {
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
@@ -1555,9 +1585,9 @@ $post_info = $informing_m->getPOSTData();
 
             $data['rig'] = getResultsBattle($data['rig']); //results battle
             $data['trunk_by_rig'] = getTrunkByRigs($id_rig_arr);
-			
+
 			 }
-			 
+
 			                  // empty fields
         if (!empty($data['rig']))
             $data['rig'] = getEmptyFields($data['rig']);
@@ -1576,10 +1606,10 @@ $post_info = $informing_m->getPOSTData();
 
         }
          /* is updeting now ?  */
-		
-		
-	
-		
+
+
+
+
         $data['bread_crumb'] = $bread_crumb;
         $app->render('layouts/header.php');
         $data['active_tab'] = $id; //активная вклдака - id области
@@ -1591,25 +1621,25 @@ $post_info = $informing_m->getPOSTData();
 
          // table for rcu - filter on dates
      $app->post('/table/for_rcu/:id(/:id_rig)', function ($id,$id_rig=0) use ($app) {
-		 
+
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
 
 
         $data['id_page']=$id;//number of tabs
-						
+
 		$data['settings_user'] = getSettingsUser();
 		$data['settings_user_br_table'] = getSettingsUserMode();
-						 
-						 
+
+
 		$rig_m = new Model_Rigtable();
         $sily_m = new Model_Jrig();
         $inner_m = new Model_Innerservice();
         $informing_m = new Model_Informing();
         $sily_mchs_m = new Model_Silymchs();
-						 
+
 		$data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
           /* ++++++ proccessing of POST-data ++++++++ */
@@ -1626,8 +1656,8 @@ $post_info = $informing_m->getPOSTData();
             show_error($error,NULL,$post_date,'/rig/rigTable/form_search.php');//view dates for repeat choose
             exit();
         }
-		
-		
+
+
         $filter = $post_date;
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1) {
             if (isset($filter['reasonrig'])) {
@@ -1636,8 +1666,8 @@ $post_info = $informing_m->getPOSTData();
         }
         rememberFilterDate($filter);
         /* -------- END validate is success ------- */
-		
-		
+
+set_notifications($_SESSION['id_user']);
 		        /* ---- SD ---- */
         $is_show_link_sd=get_users_connect_sd($_SESSION['id_user']);
         if(!empty($is_show_link_sd)){
@@ -1666,7 +1696,7 @@ $post_info = $informing_m->getPOSTData();
 
         $cp = array(8, 9, 12); //rosn, ugz,avia tabs
 
-		
+
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {//mode
             $filter['reasonrig'] = $data['settings_user_br_table'];
         }
@@ -1677,7 +1707,7 @@ $post_info = $informing_m->getPOSTData();
         else{//rosn, ugz,avia rigs
              $data['rig'] = $rig_m->selectAllByIdOrgan($id, 0, $filter); //for all organ
         }
-		
+
 		        if (!empty($data['rig']))
             usort($data['rig'], "order_rigs");
         /*----- END rigtable according to session user --------- */
@@ -1691,13 +1721,13 @@ $post_info = $informing_m->getPOSTData();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
 		$id_rig_with_informing = array();//rigs with informing
-		
+
         foreach ($data['rig'] as $value) {//id of rigs
-		
+
 		    if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
                 $id_rig_with_informing[] = $value['id'];// rigs with informing
             }
-		
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
 				$id_rig_informing[] = $value['id'];
@@ -1714,9 +1744,9 @@ $post_info = $informing_m->getPOSTData();
         }
 
         /* ------- END select information on SiS MHS-------- */
-		
-		
-		
+
+
+
 
         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $rig_cars = [];
@@ -1762,9 +1792,9 @@ $post_info = $informing_m->getPOSTData();
             $data['rig_informing'] = $rig_informing;
 
         }
-		
-		
-		
+
+
+
 		  elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2
 
 			/* --- for table type 2 ---- */
@@ -1781,7 +1811,7 @@ $post_info = $informing_m->getPOSTData();
             /* --- END for table type 2 ---- */
 
 		  }
-		  
+
 
 		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
@@ -1794,7 +1824,7 @@ $post_info = $informing_m->getPOSTData();
             $result_icons_empty=empty_icons($id_rig_arr);
             $data['result_icons'] =  array_merge($result_icons_empty,$informing_empty);
             /* END fill or no icons */
-			
+
 			if (!empty($id_rig_with_informing)) {
 
                 $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
@@ -1815,7 +1845,7 @@ $post_info = $informing_m->getPOSTData();
         }
 
 
-     
+
                  // empty fields
         if (!empty($data['rig']))
             $data['rig'] = getEmptyFields($data['rig']);
@@ -1834,11 +1864,11 @@ $post_info = $informing_m->getPOSTData();
 
         }
          /* is updeting now ?  */
-		 
 
 
-		
-		
+
+
+
         $app->render('layouts/header.php');
         $data['active_tab'] = $id; // active tab - id of region
         $data['path_to_view'] = 'rig/rigTable.php';
@@ -1849,21 +1879,22 @@ $post_info = $informing_m->getPOSTData();
 
     //rigtable
     $app->get('(/:id_rig)(/:is_reset_filter)', function ($id_rig = 0, $is_reset_filter=0) use ($app) {
-		
+
 		$filter = [];
-		
+
 		if($is_reset_filter == 1){
             rememberFilterDate($filter);
         }
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
-		
+
 		$data['settings_user'] = getSettingsUser();
 		 $data['settings_user_br_table'] = getSettingsUserMode();
 		$data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
-		 
+
 		 $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
-		 
+
+                 set_notifications($_SESSION['id_user']);
 		         /* ---- SD ---- */
         $is_show_link_sd=get_users_connect_sd($_SESSION['id_user']);
         if(!empty($is_show_link_sd)){
@@ -1891,7 +1922,7 @@ $post_info = $informing_m->getPOSTData();
                 $organ = $r['id_organ_user']; //кто создал
             }
             $data['rig'] = $rig;
-			
+
 			 $data['search_rig_by_id']=1;
         }
         /* -------------- END Поиск вызова по введенному id ---------------- */
@@ -1914,22 +1945,22 @@ $post_info = $informing_m->getPOSTData();
         } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_reasonrig']) && !empty($_SESSION['remember_filter_reasonrig'])) {
             $filter['reasonrig'] = $_SESSION['remember_filter_reasonrig'];
         }
-		
+
         if ($_SESSION['id_level'] == 3) {
 
             if ($id_rig == 0) {
-				
+
 				if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
                    $rig_m->setDateStart($_SESSION['remember_filter_date_start']);
                 }
                 if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
                    $rig_m->setDateEnd($_SESSION['remember_filter_date_end']);
                 }
-				
+
                 //выезды за ГРОЧС
                // $data['rig'] = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0); //за ГРОЧС
 			$rig = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0, $filter); //за ГРОЧС
-			
+
 if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
             $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
             $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
@@ -1942,7 +1973,7 @@ else{
         } elseif ($_SESSION['id_level'] == 2) {
 
             if ($id_rig == 0) {
-				
+
 				if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
                    $rig_m->setDateStart($_SESSION['remember_filter_date_start']);
                 }
@@ -1955,7 +1986,7 @@ else{
                 } else {// UMCHS
                    // $data['rig'] = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0); //выезды за всю область(не включая ЦП), не удаленные записи
 				    $rig = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0, $filter); //выезды за всю область(не включая ЦП), не удаленные записи
-					
+
 					if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
                     $rig_neighbor_id = $rig_m->selectIdRigByIdRegion(0, $_SESSION['id_region'], $filter); //за ГРОЧС
                     $rig_neighbor = $rig_m->selectAllByIdRegionNeighbor($rig_neighbor_id, $filter);
@@ -1989,7 +2020,7 @@ else{
                 }
             }
         }
-		
+
 		        if (!empty($data['rig']))
             usort($data['rig'], "order_rigs");
 
@@ -2004,13 +2035,13 @@ else{
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
 		$id_rig_with_informing = array(); //rigs with informing
-		
+
         foreach ($data['rig'] as $value) {//id of rigs
-		
+
 		    if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
                 $id_rig_with_informing[] = $value['id']; // rigs with informing
             }
-		
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
 				$id_rig_informing[] = $value['id'];
@@ -2020,19 +2051,19 @@ else{
                 $id_rig_sis_mes[] = $value['id'];
             }
         }
-		
+
 		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
             $sily_mchs = $sily_m->selectAllInIdRig($id_rig_arr);        // in format mas[id_rig]=>array()
             $data['sily_mchs'] = $sily_mchs;
         }
 
         /* ------- END select information on SiS MHS-------- */
-		
 
-		
-		
-		
-		
+
+
+
+
+
         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $rig_cars = [];
             $rig_innerservice = [];
@@ -2076,15 +2107,15 @@ else{
             $data['rig_innerservice'] = $rig_innerservice;
             $data['rig_informing'] = $rig_informing;
         }
-		
-		
-		
-		
-		 elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2
-       
-	   
 
-			
+
+
+
+		 elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2
+
+
+
+
 	   /* --- for table type 2 ---- */
 	   		$res=getSilyForType2($sily_mchs);
         $data['teh_mark'] = $res['teh_mark'];
@@ -2095,7 +2126,7 @@ else{
         $data['return_time'] = $res['return_time'];
         $data['distance'] = $res['distance'] ;
 		 /* --- END for table type 2 ---- */
-	   
+
 		 }
 		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
@@ -2108,14 +2139,14 @@ else{
             $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
-			
+
 			if (!empty($id_rig_with_informing)) {
                 $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
                 }
             }
-			
+
             if (!empty($id_rig_arr)) {
                 $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
                 foreach ($ids_rig_not_full_sily as $value) {
@@ -2134,7 +2165,7 @@ else{
             $data['rig'] = getEmptyFields($data['rig']);
 
 
-		
+
 		 /* is updeting now ?  */
         foreach ($data['rig'] as $k => $r) {
             $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
@@ -2146,8 +2177,8 @@ else{
             //  exit();
         }
         /* is updeting now ?  */
-		
-	
+
+
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
         $app->render('layouts/div_wrapper.php', $data);
@@ -2159,19 +2190,19 @@ else{
     $app->post('/table', function ($is_remember_filter=0) use ($app) {
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
-		
+
 		$data['settings_user'] = getSettingsUser();
 	    $data['settings_user_br_table'] = getSettingsUserMode();
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
-		
-		
+
+
         $rig_m = new Model_Rigtable();
         $sily_m = new Model_Jrig();
         $inner_m = new Model_Innerservice();
         $informing_m = new Model_Informing();
         $sily_mchs_m = new Model_Silymchs();
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
         /* ++++++ обработка POST-данных ++++++++ */
@@ -2192,7 +2223,7 @@ else{
             show_error($error,NULL,$post_date,'/rig/rigTable/form_search.php');//отобразить даты для повторного выбора
             exit();
         }
-		
+
 		        $filter = $post_date;
         if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1) {
             if (isset($filter['reasonrig'])) {
@@ -2201,8 +2232,9 @@ else{
         }
         rememberFilterDate($filter);
         /* -------- КОНЕЦ Прошла ли валидация ------- */
-		
-		
+
+        set_notifications($_SESSION['id_user']);
+
 		        /* ---- SD ---- */
         $is_show_link_sd=get_users_connect_sd($_SESSION['id_user']);
         if(!empty($is_show_link_sd)){
@@ -2214,19 +2246,19 @@ else{
 
          /* ---- END SD ---- */
 
-		
+
         /* -------- таблица выездов в зависимости от авт пользователя -------- */
 
-		
+
 		        if (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {//mode
             $filter['reasonrig'] = $data['settings_user_br_table'];
         }
-		
+
         if ($_SESSION['id_level'] == 3) {
                 //выезды за ГРОЧС
                 // $data['rig'] = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0); //за ГРОЧС
 			$rig = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0, $filter); //за ГРОЧС
-			
+
 			if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
             $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
             $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
@@ -2242,7 +2274,7 @@ else{
             } else {// UMCHS
                 //$data['rig'] = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0); //rigs on region without CP, deleted rigs
 				$rig = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0, $filter); //rigs on region without CP, deleted rigs
-				
+
 				if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
                 $rig_neighbor_id = $rig_m->selectIdRigByIdRegion(0, $_SESSION['id_region'], $filter); //за ГРОЧС
                 $rig_neighbor = $rig_m->selectAllByIdRegionNeighbor($rig_neighbor_id, $filter);
@@ -2258,7 +2290,7 @@ else{
               //for_rcu
         }
 
-		
+
         if (!empty($data['rig']))
             usort($data['rig'], "order_rigs");
         /* ----- КОНЕЦ таблица выездов в зависимости от авт пользователя --------- */
@@ -2274,21 +2306,21 @@ else{
         }
         $data['reasonrig_color']=$reasonrig_color;
            /*-------- END цвет статусов выездов ----------*/
-		   
-		   
-		   
+
+
+
 		           /* ------- select information on SiS MHS -------- */
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
 		$id_rig_with_informing = array();//rigs with informing
-		
+
         foreach ($data['rig'] as $value) {//id of rigs
-		
+
             if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
                 $id_rig_with_informing[] = $value['id'];// rigs with informing
             }
-		
+
             if ($value['id'] != null){
                 $id_rig_arr[] = $value['id'];
 			    $id_rig_informing[] = $value['id'];
@@ -2304,10 +2336,10 @@ else{
         }
 
         /* ------- END select information on SiS MHS-------- */
-		   
-		   
-		   
-		   
+
+
+
+
 
         if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
             $rig_cars = [];
@@ -2352,9 +2384,9 @@ else{
             $data['rig_innerservice'] = $rig_innerservice;
             $data['rig_informing'] = $rig_informing;
 
-        }		
+        }
 		 elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2
-        
+
 		/* --- for table type 2 ---- */
 				$res=getSilyForType2($sily_mchs);
         $data['teh_mark'] = $res['teh_mark'];
@@ -2365,10 +2397,10 @@ else{
         $data['return_time'] = $res['return_time'];
         $data['distance'] = $res['distance'] ;
 		 /* --- END for table type 2 ---- */
-		
+
 		 }
-		 
-		 
+
+
        if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
             /* fill or no icons */
@@ -2403,7 +2435,7 @@ else{
          // empty fields
         if (!empty($data['rig']))
             $data['rig'] = getEmptyFields($data['rig']);
-		
+
 		  /* is updeting now ?  */
         foreach ($data['rig'] as $k=>$r) {
             $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
@@ -2417,8 +2449,8 @@ else{
 
         }
          /* is updeting now ?  */
-		 
-		
+
+
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
         $app->render('layouts/div_wrapper.php', $data);
@@ -2434,14 +2466,14 @@ else{
         $rig->deleteRigById($id); // update is_delete=1
 
         $log->info('Сессия -  :: УДАЛЕНИЕ ВЫЕЗДА - id_rig = ' . $id.' выполнил '.$_SESSION['user_name']); //запись в logs
-        
+
                 /* save log to bd */
         $action = 'удаление выезда';
 
         $arr = array('s_user_id' => $_SESSION['id_user'], 's_user_name' => $_SESSION['user_name'], 's_region_name' => $_SESSION['region_name'], 's_locorg_name' => $_SESSION['locorg_name'], 'id_rig' => $id, 'action' => $action);
         $logg = new Model_Logs();
         $logg->save($arr);
-        
+
         $app->redirect(BASE_URL . '/rig');
     });
 
@@ -2457,9 +2489,9 @@ else{
         $service = new Model_Innerservice();
         $post_service = $service->getPOSTData(); //данные по привлекаемым службам
         $silymchs = new Model_Silymchs();
-        
+
 		$data['settings_user'] = getSettingsUser();
-		
+
 		/* did sily mchs get involved or not */
         $is_sily_mchs = $app->request()->post('is_sily_mchs');
         if (isset($is_sily_mchs) && !empty($is_sily_mchs) && $is_sily_mchs == 1) {//no
@@ -2471,10 +2503,10 @@ else{
             $post_silymchs = $silymchs->getPOSTData(); //данные по силам МЧС
         }
         $post_rig['is_sily_mchs'] = $is_sily_mchs;
-		
+
 		$post_rig['is_copy']=0;
 
-		
+
         //print_r($post_silymchs);
         //exit();
         /* -------- КОНЕЦ обработка POST-данных ---------- */
@@ -2484,8 +2516,8 @@ else{
         if ($id != 0) {//edit
             unset_update_rig_now($id);
         }
-		
-		
+
+
         /* ---------- сохранить вызов ----------- */
 
         if ($active_tab != 2) {
@@ -2530,8 +2562,8 @@ else{
 
             $log->info('Сессия -  :: Сохранение ВЫЕЗДА - id_rig = ' . $id . ' выполнил ' . $_SESSION['user_name'] . ' данные - : ' . $log_post_rig); //запись в logs
             $log->info('Сессия -  :: Сохранение ИНФ ПО ЗАЯВИТЕЛЮ - id_rig = ' . $id . ' выполнил ' . $_SESSION['user_name'] . ' данные - : ' . $log_post_people); //запись в logs
-            
-            
+
+
 
                             /* save log to bd */
             if ($id == 0) {//new
@@ -2545,7 +2577,7 @@ else{
             $logg = new Model_Logs();
             $logg->save($arr);
 
-			
+
 			            if (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type4') {//type4
 
                 $app->redirect(BASE_URL . '/rig/new/'.$new_id);
@@ -2563,7 +2595,7 @@ else{
                 $app->redirect(BASE_URL . '/rig');
             }
 		}
-			
+
         } else {
             $bread_crumb = array('Выезды', 'Сохранить выезд');
             $data['bread_crumb'] = $bread_crumb;
@@ -2599,7 +2631,7 @@ function rememberFilterDate($filter)
                 unset($_SESSION['remember_filter_date_start']);
                 unset($_SESSION['remember_filter_date_end']);
             }
-			
+
 			if (isset($filter['remember_filter_reasonrig']) && !empty($filter['remember_filter_reasonrig'])) {
                 unset($_SESSION['remember_filter_reasonrig']);
             }
@@ -2846,8 +2878,8 @@ $app->group('/classif', 'is_login', 'is_permis', function () use ($app, $log) {
     })->conditions(array('bean' => '[a-z]{5,}'));
 
 
-    
-    
+
+
        //actionwaybill classif - form add
     $app->get('/actionwaybill/addForm', function () use ($app, $log) {
 
@@ -3089,7 +3121,7 @@ $data['action_id']=$id_reasonrig;
 
         $app->redirect(BASE_URL . '/classif/actionwaybill');
 
-    });  
+    });
 });
 
 
@@ -3240,9 +3272,9 @@ $app->group('/settings', 'is_login',  function () use ($app, $log) {
 
         $bread_crumb = array('Настройки', 'Настройки пользователя');
         $data['bread_crumb'] = $bread_crumb;
-		
 
-		
+
+
           $reasonrig = new Model_Reasonrig();
           $data['reasonrig'] = $reasonrig->selectAll(1);
 
@@ -3292,15 +3324,15 @@ $app->group('/settings', 'is_login',  function () use ($app, $log) {
         $types=$_POST['type'];
 		$id_reasonrig_for_br_table=(isset($_POST['id_reasonrig_for_br_table']) && !empty($_POST['id_reasonrig_for_br_table'])) ? $_POST['id_reasonrig_for_br_table'] : array();
 		$fields_filter=(isset($_POST['fields_filter']) && !empty($_POST['fields_filter'])) ? $_POST['fields_filter'] : array();
-		
+
          R::exec('DELETE FROM settings_user  WHERE id_user = ?', array($_SESSION['id_user']));
 
          foreach ($types as $value) {
 
              R::exec('INSERT INTO settings_user(id_user, id_settings_type) values(?,?) ', array($_SESSION['id_user'],$value));
          }
-		 
-		 
+
+
 		          /* fields filter */
         if (isset($fields_filter) && !empty($fields_filter)) {
             foreach ($fields_filter as $value) {
@@ -3311,9 +3343,9 @@ $app->group('/settings', 'is_login',  function () use ($app, $log) {
              if(isset($_SESSION['remember_filter_reasonrig']))
             unset($_SESSION['remember_filter_reasonrig']);
         }
-		 
-		 
-		 
+
+
+
          /* reason for br table */
 
         R::exec('DELETE FROM settings_user_br_table  WHERE id_user = ?', array($_SESSION['id_user']));
@@ -3333,7 +3365,7 @@ $app->group('/settings', 'is_login',  function () use ($app, $log) {
 
 
     });
-	
+
 });
 
 
@@ -3381,8 +3413,8 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         } else {
             $local_name = 'все';
         }
-		
-		
+
+
         if (isset($_POST['reasonrig']) && !empty($_POST['reasonrig'])) {
             $reasonrig_n = $_POST['reasonrig'];
         }
@@ -3400,8 +3432,8 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         else{
             $reasonrig_name='все';
         }
-		
-		
+
+
 		if (isset($_POST['id_pasp']) && !empty($_POST['id_pasp']) && isset($_POST['is_pasp']) && $_POST['is_pasp'] ==1 ) {
             $id_pasp = $_POST['id_pasp'];
             $pasp_name=R::getAll('select pasp_name from pasp where pasp_id IN('. implode(',', $id_pasp).')');
@@ -3490,7 +3522,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 		//print_r($result);
 		//exit();
 
-		
+
 		if (isset($id_pasp) && !empty($id_pasp)  && isset($_POST['is_pasp']) && $_POST['is_pasp'] ==1) {
             //print_r($id_pasp);exit();
             $arr_exclude = array();
@@ -3526,8 +3558,8 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
                 }
             }
         }
-		
-		
+
+
         /* ---------------------------------------------------- ЭКСПОРТ в EXCEL ------------------------------------------------------------------------------ */
      $objPHPExcel = new PHPExcel();
                     $objReader = PHPExcel_IOFactory::createReader("Excel2007");
@@ -3622,29 +3654,29 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 			}
             //$tel= ($people[$row['id']]['phone'] == NULL || empty($people[$row['id']]['phone']) ) ? '': ('тел. '.$people[$row['id']]['phone']);
 			$tel=$tt;
-			
+
 			if(isset($row['id']) && isset($people[$row['id']]['fio'])){
 				$people_fio=$people[$row['id']]['fio'];
 			}
 			else{
 				$people_fio='';
 			}
-			
+
 			if(isset($row['id']) && isset($people[$row['id']]['address'])){
 				$people_address=$people[$row['id']]['address'];
 			}
 			else{
 				$people_address='';
 			}
-			
+
 			if(isset($row['id']) && isset($people[$row['id']]['position'])){
 				$people_position=$people[$row['id']]['position'];
 			}
 			else{
 				$people_position='';
 			}
-			
-			
+
+
           //$sheet->setCellValue('D' . $r, $people[$row['id']]['fio'].chr(10).$tel.chr(10).$people[$row['id']]['address'].chr(10).$people[$row['id']]['position']);
 
 		  $sheet->setCellValue('D' . $r, $people_fio.chr(10).$tel.chr(10).$people_address.chr(10).$people_position);
@@ -3814,7 +3846,7 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
         $data['region'] = $region->selectAll(); //области
         $local = new Model_Local();
         $data['local'] = $local->selectAll(); //районы
-		
+
 		$data['reasonrig']=R::getAll('select * from reasonrig where is_delete = ?',array(0));
 
         /*         * *** КОНЕЦ Классификаторы **** */
@@ -3825,8 +3857,8 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
         $app->render('layouts/footer.php');
     });
 
-	
-	
+
+
     /* ----- results battle report ------ */
     //form
     $app->get('/rep2(:is_error)', function ($is_error = 0) use ($app) {
@@ -3948,10 +3980,10 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
     });
-	
-	
-	
-	
+
+
+
+
 	    /*  daily report */
 
     //form
@@ -4380,7 +4412,7 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
             }
 			$data['archive_2019'] = $archive_2019;
         }
-        
+
 
 
 
@@ -4801,11 +4833,11 @@ $sheet->getStyleByColumnAndRow(0, 8, 16, $r-1)->applyFromArray($styleArray);
             $app->render('layouts/footer.php');
         }
     });
-	
-	
-	
-	
-	
+
+
+
+
+
 	        /*  big report for NII */
 
     //form
@@ -6091,10 +6123,10 @@ $data['caption'] = $caption;
             $app->render('layouts/footer.php');
         }
     });
-	
-	
-	
-	
+
+
+
+
     /* bokk */
     $app->post('/bokk', function () use ($app, $log) {
 
@@ -6221,9 +6253,9 @@ $data['caption'] = $caption;
         }
 		if(!empty($result))
         usort($result, "cmp");
-	
-	
-	
+
+
+
         if (empty($result)) {//нет вызовов
             // $app->redirect(BASE_URL . '/error');
             $arr[] = 'Нет данных для отображения!';
@@ -6291,9 +6323,9 @@ $data['caption'] = $caption;
         $objWriter->save('php://output');
         /* ---------------------------------------------------- END ЭКСПОРТ в EXCEL ------------------------------------------------------------------------------ */
     });
-	
-	
-	
+
+
+
 	});
 
 /* ------------------------- END report ------------------------------- */
@@ -6568,7 +6600,7 @@ $app->post('/select', function () use ($app) {
                     }
                 }
             } */
-			
+
 			if (!empty($list_teh)) {
                 foreach ($list_teh as $row) {
                     if (!empty($on_rig) && in_array($row['id_teh'], $on_rig)) {
@@ -6666,8 +6698,8 @@ $app->post('/select', function () use ($app) {
                 }
             }
             break;
-			
-			
+
+
 			  /* select lang, lat for reason rig = zanyatia */
         case "showAddrPasp":
 
@@ -6761,8 +6793,8 @@ $app->post('/select', function () use ($app) {
                 ]);
             }
             break;
-			
-			
+
+
 			/* ----------------- pasp by local ------------------ */
         case "showPaspByLocalForRep1":
         //$id_region = $app->request()->post('id_region');
@@ -6773,8 +6805,8 @@ $app->post('/select', function () use ($app) {
             $sql = $sql . ' p.id_local = '.$id_local;
         }
         $podr = R::getAll($sql);
-		
-		
+
+
 		        if (empty($podr)) {
                 $id_local_new = R::getCell('select id_local_ss from journal.locals_accordance where id_local_journal = ?', array($id_local));
                 if (!empty($id_local_new)) {
@@ -6798,8 +6830,8 @@ $app->post('/select', function () use ($app) {
 
 
             break;
-			
-			
+
+
     }
 });
 /* ------------- КОНЕЦ Формирование классификаторов административно-терр деления --------------- */
@@ -6959,8 +6991,8 @@ $app->group('/waybill', 'is_login', 'is_permis', function () use ($app) {
     } */
 
 
-    
-    
+
+
         function getData($id_rig) {
 
         //данные по выезду
@@ -7000,7 +7032,7 @@ $app->group('/waybill', 'is_login', 'is_permis', function () use ($app) {
 
 
         $purpose = $row['inf_detail']; //цель выезда
-        
+
         $reasonrig_name=$row['reasonrig_name'];
         $view_work=$row['view_work'];
         $reasonrig_id=$row['id_reasonrig'];
@@ -7089,8 +7121,8 @@ $app->group('/waybill', 'is_login', 'is_permis', function () use ($app) {
         'work_view'=>$view_work,'work_id'=>$work_id,'reasonrig_id'=>$reasonrig_id);
     return $array;
     }
-    
-    
+
+
           /* mail - форма рассылки
            * ok=0 default
            * ok=1 success send
@@ -7720,8 +7752,8 @@ $dompdf->stream($filename);
 /* ------------------------- Logs ------------------------------- */
 
 $app->group('/logs', 'is_login', 'is_permis', function () use ($app) {
-    
-    
+
+
 
     /* login */
     $app->get('/login', function () use ($app) {
@@ -7795,7 +7827,7 @@ $app->group('/logs', 'is_login', 'is_permis', function () use ($app) {
         $app->render('layouts/div_wrapper.php', $data);
         $app->render('layouts/footer.php');
     });
-    
+
     /* json */
 
     $app->get('/', function () use ($app) {
@@ -8306,7 +8338,7 @@ $app->group('/archive_1','is_login','is_permis', function () use ($app) {
        // $data['archive_year'] = $archive_year_m->selectAll();
         //$data['archive_year'] = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
         //$archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
-		
+
 		$archive_year=ARCHIVE_YEAR;
 
         foreach ($archive_year as $value) {
@@ -8315,7 +8347,7 @@ $app->group('/archive_1','is_login','is_permis', function () use ($app) {
         }
         $data['archive_year'] = $archive_year_1;
 
-		
+
 		$data['reasonrig']=R::getAll('select * from reasonrig where is_delete = ?',array(0));
         /*         * *** КОНЕЦ Классификаторы **** */
 
@@ -8468,7 +8500,7 @@ switch ($region_id) {
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
              //$param[] = $local;
         }
-		
+
 		        if(isset($reasonrig) && !empty($reasonrig)){
               $sql=$sql.' AND reasonrig_name = "'.$reasonrig.'"';
              //$param[] = $local;
@@ -8587,7 +8619,7 @@ $data['table_name_year']=$table_name_year;
          else{
             $local_for_export='no';
         }
-		
+
 		         if(isset($reasonrig) && !empty($reasonrig)){
               $sql=$sql.' AND reasonrig_name = "'.$reasonrig.'"';
              //$param[] = $local;
@@ -8601,7 +8633,7 @@ $data['table_name_year']=$table_name_year;
 
 if($id_tab=='table-content1'){//rig
 
-    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail,  people,time_loc, time_likv '.$sql;
+    $sql='SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail,  people,time_loc, time_likv,is_statistics '.$sql;
 
 }
 elseif($id_tab=='table-content2'){//technic mchs
@@ -8670,9 +8702,9 @@ elseif($id_tab=='table-content6'){
 
     });
 
-    
-    
-    
+
+
+
        $app->get('/exportExcelTab1/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/:reason/:work_view/:detail/:people/:time_loc/:time_likv',
            function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr,$reason,$work_view,$detail,$people,$time_loc,$time_likv) use ($app) {
 
@@ -9308,7 +9340,7 @@ elseif($id_tab=='table-content4'){//innerservice
     });
 
 
-    
+
       /* informing info */
        $app->get('/exportExcelTab3/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
 
@@ -9347,7 +9379,7 @@ $local=$loc;
               $sql=$sql.' AND ( local_name like "'.$local.'" OR local_name like "'.$local.'%" ) ';
              //$param[] = $local;
         }
-		
+
 		        if( $reasonrig_form != 'no'){
 
               $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
@@ -9608,7 +9640,7 @@ elseif($id_tab=='table-content4'){//innerservice
     });
 
 
-    
+
   /* innerservice info */
        $app->get('/exportExcelTab4/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
 
@@ -9648,7 +9680,7 @@ $local=$loc;
              //$param[] = $local;
         }
 
-		
+
 		        if( $reasonrig_form != 'no'){
 
               $sql=$sql.' AND reasonrig_name =  "'.$reasonrig_form.'"';
@@ -9908,7 +9940,7 @@ elseif($id_tab=='table-content4'){//innerservice
         $objWriter->save('php://output');
     });
 
-	
+
 	      /* results battle */
        $app->get('/exportExcelTab5/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab,$table,$date_from,$date_to,$reg,$loc,$reasonrig_form,$id_rig,$date_msg,$time_msg,$local_1,$addr) use ($app) {
 
@@ -10267,8 +10299,8 @@ $result=R::getAll($sql, $param);
 
 
 
-	
-	
+
+
 	    /* search by id rig */
 
     $app->get('/search_form', function () use ($app) {
@@ -10356,11 +10388,98 @@ $result=R::getAll($sql, $param);
     });
 
     /* END search by id rig */
-    
-   });
 
 
- $app->get('/no_permission', function () use ($app) {
+    $app->post('/exclude_statistics', function () use ($app) {
+
+        /* post data */
+        $ids_delete = $app->request()->post('ids_delete');
+        $ids = $app->request()->post('ids');
+        $tbl = $app->request()->post('tbl_name');
+
+        $cnt = 0; //cnt rigs with changes
+
+        $helpers = new Model_Helpers();
+
+
+
+        if (!empty($ids)) {
+            $arr_ids = explode(',', $ids);
+            foreach ($arr_ids as $element) {
+                if (!empty($element) && $element != null) {
+                    $new_array_ids[] = $element;
+                }
+            }
+
+            if (!empty($new_array_ids)) {
+
+                $res = R::getAll('select is_statistics from jarchive.' . $tbl . ' WHERE id_rig IN(' . implode(',', $new_array_ids) . ')');
+
+                if (!empty($res)) {
+                    foreach ($res as $row) {
+                        if ($row['is_statistics'] != 1) {
+                            $cnt++;
+                        }
+                    }
+                }
+
+                R::exec('UPDATE jarchive.' . $tbl . ' SET is_statistics = ? WHERE id_rig IN(' . implode(',', $new_array_ids) . ')', array(1));
+            }
+            //print_r($new_array_ids);
+        }
+        if (!empty($ids_delete)) {
+            $arr_ids_delete = explode(',', $ids_delete);
+            foreach ($arr_ids_delete as $element) {
+                if (!empty($element) && $element != null) {
+                    $new_array_ids_delete[] = $element;
+                }
+            }
+            if (!empty($new_array_ids_delete)) {
+
+                $res = R::getAll('select is_statistics from jarchive.' . $tbl . ' WHERE id_rig IN(' . implode(',', $new_array_ids_delete) . ')');
+                if (!empty($res)) {
+                    foreach ($res as $row) {
+                        if ($row['is_statistics'] != 0) {
+                            $cnt++;
+                        }
+                    }
+                }
+
+                R::exec('UPDATE jarchive.' . $tbl . ' SET is_statistics = ? WHERE id_rig IN(' . implode(',', $new_array_ids_delete) . ')', array(0));
+            }
+        }
+
+        if ($cnt > 0) {
+
+            $users_notif = R::getAll('select id from user where id_level = ? and can_edit = ? and is_admin = ?', array(1, 1, 1));
+
+
+            if (!empty($users_notif)) {
+
+                foreach ($users_notif as $value) {
+
+                    $name = 'Внес пользователь: ' . $_SESSION['user_name'] . (($_SESSION['locorg_name'] != $_SESSION['user_name']) ? (', ' . $_SESSION['locorg_name']) : '') .
+                        (($_SESSION['region_name'] != $_SESSION['user_name']) ? (', ' . (($_SESSION['id_region'] == 3) ? $_SESSION['region_name'] : ( $_SESSION['region_name'] . ' обл.'))) : '');
+
+                    $notif['msg_show'] = 'Изменения в архиве: вкл./искл. выезда из статистики (затронуто <b>' . $cnt .' '.$helpers->declination_word_by_number($cnt,array('выезд', 'выезда','выездов')). '</b>). ' . $name;
+                    $notif['id_user'] = $value['id'];
+                    $notif['is_see'] = 0;
+                    $notif['date_action'] = $notif['date_insert'] = date('Y-m-d H:i:s');
+
+
+                    if (!empty($notif)) {
+                        $n = R::dispense('notifications');
+                        $n->import($notif);
+                        R::store($n);
+                    }
+                }
+            }
+        }
+    });
+});
+
+
+$app->get('/no_permission', function () use ($app) {
 
         $bread_crumb = array('Архив', 'Параметры');
         $data['bread_crumb'] = $bread_crumb;
@@ -10699,8 +10818,8 @@ $app->group('/export/csv', 'is_login', function () use ($app, $log) {
             $post_date['id_reasonrig'] = $post_id_reasonrig;*/
 		$post_id_reasonrig=array(14,18,33,34,38,41,70,73,74,76,78);
 		$post_date['id_reasonrig'] = $post_id_reasonrig;
-		
-		
+
+
 		        /* vid for reasonrig */
 				$reasonrig_vid = R::getAll('select * from reasonrig where id IN ('. implode(',', $post_id_reasonrig).')');
 
@@ -10722,13 +10841,13 @@ $app->group('/export/csv', 'is_login', function () use ($app, $log) {
        // print_r($rigs);
        //exit();
 
-     
+
         if(!empty($rigs)){
              /* export to csv */
         $inf = array();
         foreach ($rigs as $row) {
 			 $reasonrig_name=trim(stristr($row['reasonrig_name'], ' '));
-           
+
 		     $detail_1= trim(str_replace(array("\r\n", "\r", "\n"), '',  strip_tags($row['inf_detail_1'])));
              $detail=substr ($detail_1, 0, strrpos($detail_1, '.')).'.';//cut before last .
 
@@ -11122,7 +11241,7 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
         $data['bread_crumb'] = $bread_crumb;
 
 
-		
+
 		  $is_file=$app->request()->post('is_file');
          $is_file = (isset($is_file)) ? $is_file : 0;
          //echo $is_file;exit();
@@ -11281,9 +11400,9 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
             exit();
         }
 
-		
-		
-		
+
+
+
         $array['description'] = $app->request()->post('description');
         $array['type_user'] = $app->request()->post('type_user');
         $array['contact'] = $app->request()->post('contact');
@@ -11348,9 +11467,9 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
 
         /* edit */
         if($input['action'] == 'edit'){
-			
-			
-			        
+
+
+
         $array['description'] = $input['description'];
         $array['type_user'] = $input['type_user'];
         $array['contact'] = $input['contact'];
@@ -11370,7 +11489,7 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
             $array['id_ghost'] = $_SESSION['id_ghost'];
         }
 
-			
+
         if ($id != 0) {
             if (isset($_SESSION['id_user'])) {
                 if (isset($_SESSION['id_level']) && $_SESSION['id_level'] == 1 && $_SESSION['is_admin'] == 1) {//admin rcu
@@ -11818,7 +11937,7 @@ function getCardByIdRig($table_name_year,$id_rig){
                 }
             }
              $data['informing'] = $informing;
-			 
+
 		 /* results_battle */
         $results_battle = array();
         $i = 0;
@@ -11838,10 +11957,10 @@ function getCardByIdRig($table_name_year,$id_rig){
             }
         }
         $data['results_battle'] = $results_battle;
-		
-		
-		
-		
+
+
+
+
         /* trunk */
             $arr_trunk = explode('~', $value['trunk']);
 
@@ -11886,15 +12005,15 @@ function getCardByIdRig($table_name_year,$id_rig){
                 }
             }
               $data['trunk'] = $trunk;
-		
-		
+
+
         }
 
-		
-		
-		
-		
-		
+
+
+
+
+
        // print_r($silymchs);exit();
 
 
@@ -12007,7 +12126,7 @@ function getCardByIdRigFromJournal($id_rig){
 
 
          $r['people']=(empty($arr_people) ) ? '' : implode(', ', $arr_people);
-		
+
 
             /* sily mchs */
             $is_likv_before=($value['is_likv_before_arrival'] == 0)?'нет':'да' ;
@@ -12113,15 +12232,15 @@ function getCardByIdRigFromJournal($id_rig){
                 }
             }
              $data['informing'] = $informing;
-			 
-			 
+
+
 			  /* result battle */
              $result_battle=R::getRow('select dead_man,dead_child, save_man, inj_man, ev_man,save_an,save_plan, save_build, save_teh from results_battle where id_rig = ?',array($id_rig));
              $data['results_battle']=$result_battle;
-			 
-			 
-			 
-			 
+
+
+
+
                /* trunk */
         $arr_trunk = R::getAll('SELECT j.`mark`,j.`numbsign`,j.`locorg_name`,j.`pasp_name`, t.`time_pod`, tl.`name` AS trunk_name ,
                 t.`cnt`,t.`water`
@@ -12155,13 +12274,13 @@ LEFT JOIN trunklist AS tl ON tl.`id`=t.`id_trunk_list` WHERE j.`id_rig` =  ?', a
             }
         }
         $data['trunk'] = $trunk;
-			 
+
         }
 
        // print_r($silymchs);exit();
-	   
-	   
-	   
+
+
+
 
 
         $data['result'] = $r;
@@ -12179,13 +12298,13 @@ $app->group('/results_battle', function () use ($app,$log) {
         $bread_crumb = array('Результаты боевой работы');
         $data['title'] = 'Результаты боевой работы';
 		$data['title_block']='rb';
-		
+
 		$data['settings_user'] = getSettingsUser();
-		
+
 		$data['active_tab']=$active_tab;
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
-		
+
 		         /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id_rig); // дата, время, адрес объекта для редактируемого вызова по id
@@ -12203,8 +12322,8 @@ $app->group('/results_battle', function () use ($app,$log) {
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
             }
-			
-			
+
+
 			  /* is updeting now ?  */
              if (isset($is_success) && $is_success == 0) {
                 $rig_m = new Model_Rig();
@@ -12233,9 +12352,9 @@ $app->group('/results_battle', function () use ($app,$log) {
             $data['id_battle'] = 0;
 
         $data['battle'] = $battle;
-		
-		
-		
+
+
+
 		 /* select battle for rig from bd PART 1 */
         $part_1 = R::getRow('select * from rb_chapter_1 WHERE id_rig = ? ', array($id_rig));
 
@@ -12288,13 +12407,13 @@ $app->group('/results_battle', function () use ($app,$log) {
         $save_data=array();
         $save_data['dead_man'] = (empty($app->request()->post('dead_man'))) ? 0 : intval($app->request()->post('dead_man'));
 		$save_data['dead_child'] = (empty($app->request()->post('dead_child'))) ? 0 : intval($app->request()->post('dead_child'));
-		
+
         $save_data['save_man'] = (empty($app->request()->post('save_man'))) ? 0 : intval($app->request()->post('save_man'));
 		$save_data['save_child'] = (empty($app->request()->post('save_child'))) ? 0 : intval($app->request()->post('save_child'));
         $save_data['save_mchs'] = (empty($app->request()->post('save_mchs'))) ? 0 : intval($app->request()->post('save_mchs'));
-		
+
         $save_data['inj_man'] = (empty($app->request()->post('inj_man'))) ? 0 : intval($app->request()->post('inj_man'));
-		
+
         $save_data['ev_man'] = (empty($app->request()->post('ev_man'))) ? 0 : intval($app->request()->post('ev_man'));
 		$save_data['ev_child'] = (empty($app->request()->post('ev_child'))) ? 0 : intval($app->request()->post('ev_child'));
         $save_data['ev_mchs'] = (empty($app->request()->post('ev_mchs'))) ? 0 : intval($app->request()->post('ev_mchs'));
@@ -12310,13 +12429,13 @@ $app->group('/results_battle', function () use ($app,$log) {
         $save_data['save_an'] = (empty($app->request()->post('save_an'))) ? 0 : intval($app->request()->post('save_an'));
         $save_data['dam_an'] = (empty($app->request()->post('dam_an'))) ? 0 : intval($app->request()->post('dam_an'));
         $save_data['des_an'] = (empty($app->request()->post('des_an'))) ? 0 : intval($app->request()->post('des_an'));
-		
+
 		$save_data['save_an_mchs'] = (empty($app->request()->post('save_an_mchs'))) ? 0 : intval($app->request()->post('save_an_mchs'));
 
         $save_data['save_plan'] = (empty($app->request()->post('save_plan'))) ? 0 : $app->request()->post('save_plan');
         $save_data['dam_plan'] = (empty($app->request()->post('dam_plan'))) ? 0 : $app->request()->post('dam_plan');
         $save_data['des_plan'] = (empty($app->request()->post('des_plan'))) ? 0 : $app->request()->post('des_plan');
-		
+
 		$save_data['dam_money'] = (empty($app->request()->post('dam_money'))) ? 0 : $app->request()->post('dam_money');
         $save_data['save_wealth'] = (empty($app->request()->post('save_wealth'))) ? 0 : $app->request()->post('save_wealth');
 
@@ -12338,7 +12457,7 @@ $app->group('/results_battle', function () use ($app,$log) {
         $battle->import($save_data);
 
         R::store($battle);
-		
+
 		 /* is updeting now ?  */
         if ($id_rig != 0) {//edit
             unset_update_rig_now($id_rig);
@@ -12793,7 +12912,7 @@ $app->group('/trunk', 'is_login',function () use ($app,$log) {
             $id = R::store($trunk);
 
 			$trunk_new = R::load('trunklist', $id);
-			
+
             echo json_encode([
                 //'id' => $id,
                 'message'  => 'Редактирование выполнено успешно',
@@ -12828,11 +12947,11 @@ $app->group('/trunk', 'is_login',function () use ($app,$log) {
 
         $bread_crumb = array('Подача стволов');
 		$data['title_block']='trunks';
-		
+
 		$data['settings_user'] = getSettingsUser();
-		
+
 		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
-		
+
 		         /* --------- добавить инф о редактируемом вызове ------------ */
         $rig_table_m = new Model_Rigtable();
         $inf_rig = $rig_table_m->selectByIdRig($id_rig); // дата, время, адрес объекта для редактируемого вызова по id
@@ -12850,11 +12969,11 @@ $app->group('/trunk', 'is_login',function () use ($app,$log) {
                 $bread_crumb[] = $date_rig;
                 $bread_crumb[] = $adr_rig;
             }
-			
+
 			    $rig_m = new Model_Rig();
                 $rig = $rig_m->selectAllById($id_rig);
                 $data['rig_time']=$rig;
-				
+
 			 /* is updeting now ?  */
              if (isset($is_success) && $is_success == 0) {
                 $rig_m = new Model_Rig();
@@ -12870,7 +12989,7 @@ $app->group('/trunk', 'is_login',function () use ($app,$log) {
         }
         /* --------- добавить инф о редактируемом вызове ------------ */
 
-		
+
         $data['title'] = 'Подача стволов';
 
         $data['id_rig']=$id_rig;
@@ -12984,7 +13103,7 @@ $app->group('/trunk', 'is_login',function () use ($app,$log) {
         }
         $rig->import($save_data);
         R::store($rig);
-		
+
 		 /* is updeting now ?  */
         if ($id_rig != 0) {//edit
             unset_update_rig_now($id_rig);
@@ -13424,11 +13543,11 @@ $app->post('/change_mode', function () use ($app) {
 
     if($is_change == 1){
         $_SESSION['br_table_mode']=1;
-		
+
 		if (isset($_SESSION['remember_filter_reasonrig']) && !empty($_SESSION['remember_filter_reasonrig'])) {
             unset($_SESSION['remember_filter_reasonrig']);
         }
-    
+
     }
     else{
         if(isset($_SESSION['br_table_mode']))
@@ -13470,7 +13589,7 @@ $app->group('/maps', function () use ($app) {
          * 79 - fire in eco system */
 
         $reasons=array(14,34,38,76,79);
-		
+
 		        $reason_rig = R::getAll('select name from reasonrig where id IN(' . implode(',', $reasons) . ')');
         $reasons_names = array();
         foreach ($reason_rig as $value) {
@@ -13754,12 +13873,12 @@ $app->group('/maps_for_mes', function () use ($app) {
         $filter['id_vid_car'] = $app->request()->post('id_vid_car'); // spec, osn,...
 
 
-		
+
         $is_show_name_pasp=$app->request()->post('show_number_pasp');
         if(isset($is_show_name_pasp) && !empty($is_show_name_pasp) && $is_show_name_pasp == 1){
             $filter['show_number_pasp'] =1;
         }
-		
+
         $res1 = getDataFilter($filter);
 
 
@@ -13943,7 +14062,7 @@ $app->group('/maps_for_mes', function () use ($app) {
         $sql = 'select distinct(p.tid), p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record,p.orgid, p.name_teh,p.divizid,p.divizion_num,p.extra_pasp_num,p.extra_pasp_name_or_number from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
             . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
 		}
-		
+
         if (isset($filter['id_region']) && !empty($filter['id_region'])) {
             $sql_reg = '';
             $sql_rosn = '';
@@ -14077,7 +14196,7 @@ $app->group('/maps_for_mes', function () use ($app) {
                 }
 
         $podr = R::getAll($sql);
-		
+
 		$locorg_coords = $ob = R::getAll('select * from ss.coord_locorg where  latitude is not null and longitude is not null and id_pasp <> 0');
         $ids_pasp_otdel = array();
 
@@ -14113,7 +14232,7 @@ $app->group('/maps_for_mes', function () use ($app) {
                     }
                     $value['mark'] = $str_mark;
                     $value['cnt_cars'] = $cnt_cars;
-					
+
 					if (isset($list_cars_by_record[$value['id_record']]) && !empty($list_cars_by_record[$value['id_record']])) {
                         $all_mark_str = '';
                         foreach ($list_cars_by_record[$value['id_record']] as $all_mark) {
@@ -14122,8 +14241,8 @@ $app->group('/maps_for_mes', function () use ($app) {
                         if ($all_mark_str != '')
                             $value['all_mark'] = $all_mark_str;
                     }
-					
-					
+
+
                     $podr_with_all_car[] = $value;
                 }
             }
@@ -14132,7 +14251,7 @@ $app->group('/maps_for_mes', function () use ($app) {
 			$k=0;
 
             foreach ($podr_with_all_car as $value) {
-				
+
 				$k++;
                 $res = array();
 
@@ -15129,7 +15248,54 @@ $app->group('/copy_rig', 'is_login', 'is_permis', function () use ($app, $log) {
 
 
 
+    /*-------------------- notifications --------------------*/
+    $app->get('/notifications', function () use ($app) {
 
+    $data['title'] = 'Уведомления';
+
+    $bread_crumb = array('Уведомления', 'Все');
+    $data['bread_crumb'] = $bread_crumb;
+
+    $user_m = new Model_User();
+    $data['all_notifications'] = $user_m->getAllNotif($_SESSION['id_user']);
+
+    $data['is_unseen_notif']= array_column($data['all_notifications'], 'is_see');
+
+    $app->render('layouts/header.php', $data);
+    $data['path_to_view'] = 'notifications/list.php';
+    $app->render('layouts/div_wrapper.php', $data);
+    $app->render('layouts/footer.php');
+});
+
+
+$app->post('/readNotify', function () use ($app) {
+       $is_ajax = $app->request->isAjax();
+        if ($is_ajax) {
+        $id = $app->request()->post('id');
+
+       R::exec('UPDATE notifications SET is_see=?, date_read = ? WHERE id = ?', array(1, date('Y-m-d H:i:s'), $id));
+
+
+        set_notifications($_SESSION['id_user']);
+//        $data['unseen_notifications'] = getUnseenNotificationsByUser();
+//        $view = $app->render('notifications/parts/unseen_notifications_for_topmenu.php', $data);
+//        $response = ['success' => TRUE, 'view' => $view];
+        $response = ['success' => TRUE];
+    }
+});
+
+$app->post('/readAllNotify', function () use ($app) {
+        $is_ajax = $app->request->isAjax();
+        if ($is_ajax) {
+            R::exec('UPDATE notifications SET is_see=?, date_read = ? WHERE id_user = ? and is_see = ?', array(1,date('Y-m-d H:i:s'),$_SESSION['id_user'],0));
+
+            set_notifications($_SESSION['id_user']);
+            echo json_encode(array('success' => 'Все уведомление прочитаны'));
+            return true;
+        }
+
+});
+/*-------------------- END notifications --------------------*/
 
 
 
