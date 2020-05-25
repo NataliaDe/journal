@@ -25,7 +25,7 @@ define(UGZ, 9); //id_organ UGZ
 define(AVIA, 12); //id_organ AVIACIA
 
 define(VER, '4.0');
-define(NEWS_DATE, '21.05.2020');
+define(NEWS_DATE, '25.05.2020');
 
 CONST ARCHIVE_YEAR=array(0=>array('table_name'=>'2019a'),1=>array('table_name'=>'2020a'));
 CONST ARCHIVE_YEAR_LIST=array(2019,2020);
