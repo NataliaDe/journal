@@ -45,14 +45,6 @@
 
 </style>
 
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-
-<link href="https://nightly.datatables.net/css/jquery.dataTables.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/js/jquery.dataTables.js"></script>
-<link href="https://nightly.datatables.net/fixedheader/css/fixedHeader.dataTables.css?_=f0de745b101295e88f1504c17177ff49.css" rel="stylesheet" type="text/css" />
-<script src="https://nightly.datatables.net/fixedheader/js/dataTables.fixedHeader.js?_=f0de745b101295e88f1504c17177ff49"></script>
-
-
 <div class="noprint" id="conttabl">
     <b> Выберите столбец, чтобы скрыть/отобразить:  </b>
     <b>
@@ -647,7 +639,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
 
-
+<script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script>
 
     $(document).ready(function () {
