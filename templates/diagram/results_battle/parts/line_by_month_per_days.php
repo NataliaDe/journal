@@ -64,7 +64,7 @@ console.log(cnt_per_day_dead_man);
         //data: [{{ data.procent_process_study|join(',') }}],
         data: [<?= implode(',',$cnt_per_days['save_man']) ?>],
         "fill": false,
-        "borderColor": "rgb(255, 205, 86, 0.7)",
+        "borderColor": "rgb(2, 107, 212, 0.7)",
         "lineTension": 0.1
 
 

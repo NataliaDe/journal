@@ -66,7 +66,7 @@ if (isset($filter['type_save']) && !empty($filter['type_save'])) {
         ?>
             data_chart_per_days.push(<?= $cnt_per_days['save_man_percent'] ?>);
             labels_chart_per_days.push('Спасено всего: ' +<?= array_sum($cnt_per_days['save_man']) ?> );
-            background.push("rgba(255, 205, 86, 0.7)");
+            background.push("rgba(2, 107, 212, 0.7)");
         <?php
     }
     if (in_array(4, $filter['type_save'])) {
@@ -94,7 +94,7 @@ if (isset($filter['type_save']) && !empty($filter['type_save'])) {
 
         ];
 
-        background=["rgba(255, 99, 132, 0.7)", "rgba(255, 159, 64, 0.7)", "rgba(255, 205, 86, 0.7)", "rgba(75, 192, 192, 0.7)"];
+        background=["rgba(255, 99, 132, 0.7)", "rgba(255, 159, 64, 0.7)", "rgba(2, 107, 212, 0.7)", "rgba(75, 192, 192, 0.7)"];
 
 
     <?php

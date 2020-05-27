@@ -41,8 +41,8 @@ $('#loginForm')
                         },
                         stringLength: {
                             min: 3,
-                            max: 7,
-                            message: 'от 3 до 7 символов'
+                            max: 12,
+                            message: 'от 3 до 12 символов'
                         },
                         regexp: {
                             regexp: /^[a-zA-Z0-9]+$/,
@@ -90,8 +90,8 @@ $('#userForm')
                         },
                         stringLength: {
                             min: 3,
-                            max: 7,
-                            message: 'от 3 до 7 символов'
+                            max: 12,
+                            message: 'от 3 до 12 символов'
                         },
                         regexp: {
                             regexp: /^[a-zA-Z0-9_]+$/,

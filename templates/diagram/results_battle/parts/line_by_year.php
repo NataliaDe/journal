@@ -93,7 +93,7 @@
 <?= $cnt_per_month_by_year['save_man'][11] ?>,
 <?= $cnt_per_month_by_year['save_man'][12] ?>],
         "fill": false,
-        "borderColor": "rgb(255, 205, 86, 0.7)",
+        "borderColor": "rgb(2, 107, 212, 0.7)",
         "lineTension": 0.1
 
 
