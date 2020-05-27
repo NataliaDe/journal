@@ -115,6 +115,13 @@ class Model_User {
         return R::getAll('select * from notifications where id_user = ? order by date_action desc',array($id_user));
     }
 
+
+            public function get_rcu_boss()
+    {
+        return R::getCell('select id from user where is_rcu_boss = ? limit ?',array(1,1));
+    }
+
+
 }
 
 ?>

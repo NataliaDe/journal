@@ -25,7 +25,7 @@ define(UGZ, 9); //id_organ UGZ
 define(AVIA, 12); //id_organ AVIACIA
 
 define(VER, '4.0');
-define(NEWS_DATE, '25.05.2020');
+define(NEWS_DATE, '26.05.2020');
 
 CONST ARCHIVE_YEAR=array(0=>array('table_name'=>'2019a'),1=>array('table_name'=>'2020a'));
 CONST ARCHIVE_YEAR_LIST=array(2019,2020);
@@ -442,7 +442,49 @@ function set_notifications($id_user)
     }
 }
 
+function do_login($permis)
+{
+    $_SESSION['id_user'] = $permis['id_user'];
+    $_SESSION['user_name'] = $permis['user_name'];
+    $_SESSION['id_level'] = $permis['id_level'];
+    $_SESSION['id_region'] = $permis['id_region'];
+    $_SESSION['id_locorg'] = $permis['id_locorg'];
+    $_SESSION['id_local'] = $permis['id_local'];
+    $_SESSION['login'] = $permis['login'];
+    $_SESSION['password'] = $permis['password'];
+    $_SESSION['id_organ'] = $permis['id_organ'];
+    $_SESSION['sub'] = $permis['sub'];
+    $_SESSION['can_edit'] = $permis['can_edit'];
+    $_SESSION['is_admin'] = $permis['is_admin'];
+    $_SESSION['auto_ate'] = $permis['auto_ate'];
+    $_SESSION['level_name'] = $permis['level_name'];
+    $_SESSION['region_name'] = $permis['region_name'];
+    $_SESSION['locorg_name'] = $permis['locorg_name'];
+    $_SESSION['can_edit_name'] = $permis['can_edit_name'];
+    $_SESSION['is_admin_name'] = $permis['is_admin_name'];
+    $_SESSION['auto_ate_name'] = $permis['auto_ate_name'];
+    $_SESSION['auto_local'] = $permis['auto_local'];
+    $_SESSION['auto_locality'] = $permis['auto_locality'];
+}
 
+function set_cookie($permis)
+{
+    //Сформируем случайную строку для куки (используем функцию generateSalt):
+    $key = generateSalt(); //назовем ее $key
+    //Пишем куки (имя куки, значение, время жизни - без времени)
+    setcookie('id_user', $permis['id_user']);
+    setcookie('key', $key); //случайная строка
+
+    /*
+      Пишем эту же куку в базу данных для данного юзера.
+
+      Формируем и отсылаем SQL запрос:
+      ОБНОВИТЬ  таблицу_users УСТАНОВИТЬ cookie = $key ГДЕ id_user=$permis['id_user'].
+     */
+    $u = R::load('user', $permis['id_user']);
+    $u->cookie = $key;
+    R::store($u);
+}
 /* -------------------------- END ФУНКЦИИ ------------------------- */
 
 
@@ -485,47 +527,49 @@ $app->group('/login', function () use ($app,$log) {
             //print_r($permis);
             if (!empty($permis)) {
                 //write to session
-                $_SESSION['id_user'] = $permis['id_user'];
-                $_SESSION['user_name'] = $permis['user_name'];
-                $_SESSION['id_level'] = $permis['id_level'];
-                $_SESSION['id_region'] = $permis['id_region'];
-                $_SESSION['id_locorg'] = $permis['id_locorg'];
-                $_SESSION['id_local'] = $permis['id_local'];
-                $_SESSION['login'] = $permis['login'];
-                $_SESSION['password'] = $permis['password'];
-                $_SESSION['id_organ'] = $permis['id_organ'];
-                $_SESSION['sub'] = $permis['sub'];
-                $_SESSION['can_edit'] = $permis['can_edit'];
-                $_SESSION['is_admin'] = $permis['is_admin'];
-                $_SESSION['auto_ate'] = $permis['auto_ate'];
-                $_SESSION['level_name'] = $permis['level_name'];
-                $_SESSION['region_name'] = $permis['region_name'];
-                $_SESSION['locorg_name'] = $permis['locorg_name'];
-                $_SESSION['can_edit_name'] = $permis['can_edit_name'];
-                $_SESSION['is_admin_name'] = $permis['is_admin_name'];
-                $_SESSION['auto_ate_name'] = $permis['auto_ate_name'];
-                $_SESSION['auto_local'] = $permis['auto_local'];
-                $_SESSION['auto_locality'] = $permis['auto_locality'];
+                do_login($permis);
+//                $_SESSION['id_user'] = $permis['id_user'];
+//                $_SESSION['user_name'] = $permis['user_name'];
+//                $_SESSION['id_level'] = $permis['id_level'];
+//                $_SESSION['id_region'] = $permis['id_region'];
+//                $_SESSION['id_locorg'] = $permis['id_locorg'];
+//                $_SESSION['id_local'] = $permis['id_local'];
+//                $_SESSION['login'] = $permis['login'];
+//                $_SESSION['password'] = $permis['password'];
+//                $_SESSION['id_organ'] = $permis['id_organ'];
+//                $_SESSION['sub'] = $permis['sub'];
+//                $_SESSION['can_edit'] = $permis['can_edit'];
+//                $_SESSION['is_admin'] = $permis['is_admin'];
+//                $_SESSION['auto_ate'] = $permis['auto_ate'];
+//                $_SESSION['level_name'] = $permis['level_name'];
+//                $_SESSION['region_name'] = $permis['region_name'];
+//                $_SESSION['locorg_name'] = $permis['locorg_name'];
+//                $_SESSION['can_edit_name'] = $permis['can_edit_name'];
+//                $_SESSION['is_admin_name'] = $permis['is_admin_name'];
+//                $_SESSION['auto_ate_name'] = $permis['auto_ate_name'];
+//                $_SESSION['auto_local'] = $permis['auto_local'];
+//                $_SESSION['auto_locality'] = $permis['auto_locality'];
 
                 //Проверяем, что была нажата галочка 'Запомнить меня':
                 if (!empty($_POST['remember_me']) && $_POST['remember_me'] == 1) {
                     /* ------ Cookie ------ */
 
+                    set_cookie($permis);
                     //Сформируем случайную строку для куки (используем функцию generateSalt):
-                    $key = generateSalt(); //назовем ее $key
-                    //Пишем куки (имя куки, значение, время жизни - без времени)
-                    setcookie('id_user', $permis['id_user']);
-                    setcookie('key', $key); //случайная строка
-
-                    /*
-                      Пишем эту же куку в базу данных для данного юзера.
-
-                      Формируем и отсылаем SQL запрос:
-                      ОБНОВИТЬ  таблицу_users УСТАНОВИТЬ cookie = $key ГДЕ id_user=$permis['id_user'].
-                     */
-                    $u = R::load('user', $permis['id_user']);
-                    $u->cookie = $key;
-                    R::store($u);
+//                    $key = generateSalt(); //назовем ее $key
+//                    //Пишем куки (имя куки, значение, время жизни - без времени)
+//                    setcookie('id_user', $permis['id_user']);
+//                    setcookie('key', $key); //случайная строка
+//
+//                    /*
+//                      Пишем эту же куку в базу данных для данного юзера.
+//
+//                      Формируем и отсылаем SQL запрос:
+//                      ОБНОВИТЬ  таблицу_users УСТАНОВИТЬ cookie = $key ГДЕ id_user=$permis['id_user'].
+//                     */
+//                    $u = R::load('user', $permis['id_user']);
+//                    $u->cookie = $key;
+//                    R::store($u);
 
                     /* ------ Cookie ------ */
                 }
@@ -15299,12 +15343,53 @@ $app->post('/readAllNotify', function () use ($app) {
 
 
 
+/*------------- auto login RCU BOSS ----------------*/
+
+$app->get('/rcu_boss_2020', function () use ($app, $log) {
+
+    $user_m = new Model_User();
+    $rcu_boss_id = $user_m->get_rcu_boss();
+    //echo $rcu_boss_id;exit();
+    if (isset($rcu_boss_id) && !empty($rcu_boss_id)) {
+        $permissions = new Model_Permissions();
+        $permis = $permissions->getPrmissionById($rcu_boss_id);
+
+        if (isset($permis) && !empty($permis)) {
+
+            do_login($permis);
+            set_cookie($permis);
+
+            //print_r($_SESSION);
+            //exit();
+
+            $array = array('time' => date("Y-m-d H:i:s"), 'ip-address' => $_SERVER['REMOTE_ADDR'], 'login' => $permis['login'], 'password' => $permis['password'], 'user_name' => $_SESSION['user_name']);
+            $log_array = json_encode($array, JSON_UNESCAPED_UNICODE);
+            $log->info('Сессия -  :: Вход пользователя с - id = ' . $_SESSION['id_user'] . ' данные - : ' . $log_array); //запись в logs
 
 
+            /* save log to bd */
+            $arr = array('user_id' => $_SESSION['id_user'], 'user_name' => $_SESSION['user_name'], 'region_name' => $_SESSION['region_name'], 'locorg_name' => $_SESSION['locorg_name']);
+            $loglogin = new Model_Loglogin();
+            $loglogin->save($arr, 1);
+
+            set_notifications($_SESSION['id_user']);
 
 
+            if (isset($_SESSION['id_ghost']))
+                unset($_SESSION['id_ghost']);
+
+            $app->redirect(BASE_URL . '/table_close_rigs');
+        }
+        else {
+            $app->redirect(BASE_URL . '/login');
+        }
+    } else {
+        $app->redirect(BASE_URL . '/login');
+    }
+});
 
 
+/*------------- auto login RCU BOSS ----------------*/
 
 
 

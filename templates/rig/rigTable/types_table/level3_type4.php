@@ -241,8 +241,8 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
             <!--                            если адрес пуст-выводим дополнит поле с адресом-->
             <?php
-            if ($row['address'] != NULL) {
-                echo $row['address'] . '<br>' . $row['additional_field_address'];
+            if ($row['address_type_table_4'] != NULL) {
+                echo $row['address_type_table_4'] . '<br>' . $row['additional_field_address'];
             } else {
                 echo $row['additional_field_address'];
             }
