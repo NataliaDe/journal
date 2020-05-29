@@ -50,9 +50,9 @@ if (isset($rig) && !empty($rig)) {
     $is_opg = $rig['is_opg'];
     $opg_text = $rig['opg_text'];
     $id_user=$rig['id_user'];
-	
+
 	$podr_zanytia = $rig['podr_zanytia'];
-	
+
 	$fio_head_check=$rig['fio_head_check'];
 
     /* ------- выбор вида нас.п. -------- */
@@ -105,9 +105,9 @@ if (isset($rig) && !empty($rig)) {
     $is_opg = 0;
     $opg_text = NULL;
     $id_user=$_SESSION['id_user'];
-	
+
 	$podr_zanytia=0;
-	
+
 	$fio_head_check='';
 
 
@@ -131,7 +131,7 @@ if (isset($rig) && !empty($rig)) {
         $vid_of_locality = '';
     }
 
-	 
+
     /* ------- END выбор вида нас.п. -------- */
 }
 
@@ -282,9 +282,9 @@ foreach ($podr as $row) {
     }
 
     ?>
-	
-	
-	
+
+
+
 	        <div class="col-lg-2" id="div_fio_head_check" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && $id_reasonrig == 18 && $id_workview  != 0 && $id_workview  == 254) ? 'block' : 'none' ?> ">
             <div class="form-group" id="fio-head-check-id">
                 <label for="fio_head_check">Ф.И.О. руководителя проверки</label>
@@ -400,8 +400,8 @@ foreach ($podr as $row) {
             </select>
         </div>
     </div>
-	
-	
+
+
 	    <div class="col-lg-3">
         <div class="form-group">
             <label for="id_locality">Населенный пункт</label>
@@ -578,7 +578,7 @@ if ($is_opposite == 1) {
         </div>
     </div>
 
-	
+
     <?php
     if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord']['name_sign'] == 'yes') {
 

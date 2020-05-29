@@ -160,7 +160,8 @@
             $('#archiveTable1').DataTable({
                 //  "pageLength": 50,
                 "lengthMenu": [[-1, 10, 25, 50], ["Все", 10, 25, 50]],
-                "order": [[0, "asc"]],
+//                "order": [[0, "asc"]],
+                "order": [],
                 language: {
                     "processing": "Подождите...",
                     "search": "Поиск:",

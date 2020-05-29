@@ -266,7 +266,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 foreach ($rig_cars[$row['id']] as $val) {
 
                     ?>
-                    <p><?=($val['is_return'] == 1) ? '<del>': ''?><?= $val['mark'] ?><?= ' ' . $val['pasp_name'] ?><?= ' ' . $val['locorg_name'] ?><?=($val['is_return'] == 1) ? '</del>': ''?></p>
+                    <p><?= ($val['is_return'] == 1) ? '<del>' : '' ?><?= $val['mark'] ?><?= ' ' . $val['pasp_name'] ?><?= ' ' . $val['locorg_name'] ?><?= ($val['is_return'] == 1) ? '</del>' : '' ?></p>
                     <?php
                 }
             }
@@ -592,7 +592,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
             if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                 ?>
-                                                                                    <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
+                                                                                                <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
                 <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa <?= ($_SESSION['can_edit'] == 0) ? 'fa-eye' : 'fa-pencil' ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
                 <?php
             } else {
@@ -606,20 +606,28 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 <?php
             }
 
-            ?>
-            <br><br>
-            <a  href="#" class="create-copy-link <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal-create-copy" data-id="<?= $row['id'] ?>" data-url="<?= $baseUrl ?>/copy_rig/<?= $row['id'] ?>"  aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Создать копию выезда" > <button class="btn btn-xs btn-info" type="button"><i class="fa fa-copy" ></i></button></a>
+            if ((isset($settings_user['is_copy_rig']) && $settings_user['is_copy_rig']['name_sign'] == 'yes')) {
 
-                <?php
-                if ($is_show_link_sd == 1) {
-                    ?>
-            <br><br>
-                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
-                        <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
-                    </a>
-                    <?php
-                }
                 ?>
+                <br><br>
+                <a  href="#" class="create-copy-link <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal-create-copy" data-id="<?= $row['id'] ?>" data-url="<?= $baseUrl ?>/copy_rig/<?= $row['id'] ?>"  aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Создать копию выезда" > <button class="btn btn-xs btn-info" type="button"><i class="fa fa-copy" ></i></button></a>
+                <?php
+            }
+
+            ?>
+
+            <?php
+            if ($is_show_link_sd == 1) {
+
+                ?>
+                <br><br>
+                <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
+                    <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
+                </a>
+            <?php
+        }
+
+        ?>
         </td>
 
 
@@ -642,130 +650,130 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 <script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
 <script>
 
-    $(document).ready(function () {
+                        $(document).ready(function () {
 
-        var rig_table_vis_type4 = $('#rigTableType4').DataTable({
-            //fixedHeader: true,
-            // fixedHeader: {
-            //header: true,
-            //  footer:true
-            //headerOffset: 15
-            //$('#fixed').height()
-            //  },
+                            var rig_table_vis_type4 = $('#rigTableType4').DataTable({
+                                //fixedHeader: true,
+                                // fixedHeader: {
+                                //header: true,
+                                //  footer:true
+                                //headerOffset: 15
+                                //$('#fixed').height()
+                                //  },
 //           "fixedHeader": {
 //      header: true
 //    },
-            orderCellsTop: true,
-            fixedHeader: true,
+                                orderCellsTop: true,
+                                fixedHeader: true,
 
-            "pageLength": 50,
-            "order": [],
-            language: {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
+                                "pageLength": 50,
+                                "order": [],
+                                language: {
+                                    "processing": "Подождите...",
+                                    "search": "Поиск:",
+                                    "lengthMenu": "Показать _MENU_ записей",
+                                    "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                                    "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                                    "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                                    "infoPostFix": "",
+                                    "loadingRecords": "Загрузка записей...",
+                                    "zeroRecords": "Записи отсутствуют.",
+                                    "emptyTable": "В таблице отсутствуют данные",
+                                    "paginate": {
+                                        "first": "Первая",
+                                        "previous": "Предыдущая",
+                                        "next": "Следующая",
+                                        "last": "Последняя"
+                                    },
+                                    "aria": {
+                                        "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                                        "sortDescending": ": активировать для сортировки столбца по убыванию"
+                                    }
 
-            }
+                                }
 //                                 "columnDefs": [
 //            {
 //                "targets": [ 13 ],
 //                "visible": false
 //            }
 //        ]
-        });
+                            });
 
-        $("tfoot").css("display", "table-header-group");//tfoot of table
-
-
-        $('a.toggle-vis-rig-table-type4').on('click', function (e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column_type4 = rig_table_vis_type4.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column_type4.visible(!column_type4.visible());
+                            $("tfoot").css("display", "table-header-group");//tfoot of table
 
 
-        });
+                            $('a.toggle-vis-rig-table-type4').on('click', function (e) {
+                                e.preventDefault();
+
+                                // Get the column API object
+                                var column_type4 = rig_table_vis_type4.column($(this).attr('data-column'));
+
+                                // Toggle the visibility
+                                column_type4.visible(!column_type4.visible());
 
 
-        $('#rigTableType4 tfoot th').each(function (i) {
-            var table = $('#rigTableType4').DataTable();
-            if (i != 17) {
+                            });
 
-                if (i == 15  || i == 13 || i == 2) {
-                    //выпадающий список
-                    var y = 'rigFormType4';
-                    var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
-                            .appendTo($(this).empty())
-                            .on('change', function () {
 
-                                var val = $(this).val();
+                            $('#rigTableType4 tfoot th').each(function (i) {
+                                var table = $('#rigTableType4').DataTable();
+                                if (i != 17) {
 
-                                table.column(i) //Only the first column
-                                        .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                    if (i == 15 || i == 13 || i == 2) {
+                                        //выпадающий список
+                                        var y = 'rigFormType4';
+                                        var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                                                .appendTo($(this).empty())
+                                                .on('change', function () {
+
+                                                    var val = $(this).val();
+
+                                                    table.column(i) //Only the first column
+                                                            .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                                            .draw();
+                                                });
+
+                                        var x = $('#rigTableType4 tfoot th').index($(this));
+                                        table.column(i).data().unique().sort().each(function (d, j) {
+                                            select.append('<option value="' + d + '" >' + d + '</option>');
+                                        });
+
+
+                                    } else {
+                                        var title = $('#rigTableType4 tfoot th').eq($(this).index()).text();
+                                        var x = $('#rigTableType4 tfoot th').index($(this));
+                                        var y = 'rigFormType4';
+                                        //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                                        $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                                        // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+                                    }
+
+                                }
+                            });
+                            $("#rigTableType4 tfoot input").on('keyup change', function () {
+                                var table = $('#rigTableType4').DataTable();
+                                table
+                                        .column($(this).parent().index() + ':visible')
+                                        .search(this.value)
                                         .draw();
                             });
 
-                    var x = $('#rigTableType4 tfoot th').index($(this));
-                    table.column(i).data().unique().sort().each(function (d, j) {
-                        select.append('<option value="' + d + '" >' + d + '</option>');
-                    });
-
-
-                } else {
-                    var title = $('#rigTableType4 tfoot th').eq($(this).index()).text();
-                    var x = $('#rigTableType4 tfoot th').index($(this));
-                    var y = 'rigFormType4';
-                    //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                    $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                    // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-                }
-
-            }
-        });
-        $("#rigTableType4 tfoot input").on('keyup change', function () {
-            var table = $('#rigTableType4').DataTable();
-            table
-                    .column($(this).parent().index() + ':visible')
-                    .search(this.value)
-                    .draw();
-        });
-
-    });
+                        });
 
 
 
-    function see_informing(i) {// скрыть/показать детализ инф в табл выездов
+                        function see_informing(i) {// скрыть/показать детализ инф в табл выездов
 
-        var p = document.getElementById('span_inf' + i);
+                            var p = document.getElementById('span_inf' + i);
 
-        if (p.style.display == "none") {
-            p.style.display = "block";
+                            if (p.style.display == "none") {
+                                p.style.display = "block";
 
-        } else {
-            p.style.display = "none";
-        }
+                            } else {
+                                p.style.display = "none";
+                            }
 
-    }
+                        }
 </script>
 
 

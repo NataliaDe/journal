@@ -107,6 +107,12 @@
         /* all after # explode, exit,arrival......is_return , result -all  after ? */
         $arr_time= explode('?', $arr_mark[1]);
 
+        /* grochs + pasp */
+        $podr= explode('%', $arr_time[0]);
+        $pasp=$podr[1];
+        $grochs_parts= explode('$', $podr[0]);
+        $grochs=$grochs_parts[1];
+
           /* all  after ? explode.  exit,arrival......is_return*/
 $each_time= explode('&', $arr_time[1]);
 
@@ -134,7 +140,7 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
                     <td><?= date('H:i', strtotime($row['time_msg'])) ?></td>
                     <td><?= $row['local_name'] ?></td>
                     <td><?= $row['address'] ?></td>
-                    <td><?= $mark ?></td>
+                    <td><?= $mark ?><?= ' ('.$pasp.', '.$grochs.')' ?></td>
                     <td><?= ($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit)) ?></td>
                     <td><?= ($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival=='-') ? '' : date('d.m.Y H:i', strtotime($t_arrival)) ?></td>
                     <td><?= ($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc']=='-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
@@ -228,7 +234,8 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
                 $('#archiveTable2').DataTable({
            // "pageLength": 50,
             "lengthMenu": [[-1,10, 25, 50], ["Все",10, 25, 50]],
-             "order": [[ 0, "asc" ]],
+//             "order": [[ 0, "asc" ]],
+            "order": [],
             language: {
                 "processing": "Подождите...",
                 "search": "Поиск:",
@@ -309,8 +316,8 @@ $t_is_return=($each_time[6] == 0)?'нет':'да';
     });
 
           });
-          
-          
+
+
 function changeLinkExcel(){
 
         var id_rig=$('#inptarchiveTable21').val();

@@ -104,7 +104,7 @@
                         <?php
                     }
                     ?>
-                       
+
                     </div>
                 </div>
                 <?php
@@ -132,11 +132,11 @@
                         <?php
                         if (isset($user['can_edit']) && $user['can_edit'] == 1) {
                             ?>
-                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" checked="" >   
+                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" checked="" >
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" >                  
+                            <input id="checkbox1" type="checkbox" name="can_edit" value="1" >
                             <?php
                         }
                         ?>
@@ -157,7 +157,7 @@
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox2" type="checkbox" name="is_admin" value="1" >                 
+                            <input id="checkbox2" type="checkbox" name="is_admin" value="1" >
                             <?php
                         }
                         ?>
@@ -179,7 +179,7 @@
                             <?php
                         } else {
                             ?>
-                            <input id="checkbox3" type="checkbox" name="auto_ate" value="1" >             
+                            <input id="checkbox3" type="checkbox" name="auto_ate" value="1" >
                             <?php
                         }
                         ?>
@@ -194,7 +194,7 @@
         </div>
 <!---------------------- Адрес выезда, заполняемый по умолчанию --------------------------------------->
         <p class="line"><span>Адрес выезда, заполняемый по умолчанию</span></p>
-        
+
             <div class="col-lg-2">
         <div class="form-group" name="local">
             <label for="id_local">Район/Город</label>
@@ -215,7 +215,7 @@
 
         </div>
     </div>
-        
+
         <div class="col-lg-3">
         <div class="form-group">
             <label for="id_locality">Населенный пункт</label>
@@ -227,7 +227,7 @@
                                 printf("<p><option  value='%s' class='%s' selected ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']);
                             }
                             else{
-                                 printf("<p><option  value='%s' class='%s' ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']); 
+                                 printf("<p><option  value='%s' class='%s' ><label>%s (%s)</label></option></p>", $row['id'],$row['id_local'], $row['name'],$row['local_name']);
                             }
                         }
 
@@ -255,15 +255,15 @@
             </div>
         </div>
         </div>
-		
-		
-		
-		
+
+
+
+
 		 <p class="line"><span>Информация для специального донесения</span></p>
 
-		 
-		 
-		 
+
+
+
         <div class="row">
             <div class="form-group col-md-3">
                 <label for="hs_vid" >Связать с пользователем СД</label>
@@ -280,8 +280,8 @@
                 </select>
             </div>
         </div>
-		
-		 
+
+
         <div class="row row-data-for-sd <?=(isset($user['id_user_sd']) && !empty($user['id_user_sd'])) ? "hide" : ''?>">
             <div class="col-lg-4">
                 <div class="form-group">
@@ -369,9 +369,9 @@
             </div>
 
         </div>
-		
-		
-		
+
+
+
 
 
         <br>

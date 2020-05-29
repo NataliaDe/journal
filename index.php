@@ -25,7 +25,7 @@ define(UGZ, 9); //id_organ UGZ
 define(AVIA, 12); //id_organ AVIACIA
 
 define(VER, '4.0');
-define(NEWS_DATE, '26.05.2020');
+define(NEWS_DATE, '29.05.2020');
 
 CONST ARCHIVE_YEAR=array(0=>array('table_name'=>'2019a'),1=>array('table_name'=>'2020a'));
 CONST ARCHIVE_YEAR_LIST=array(2019,2020);
@@ -1420,34 +1420,34 @@ $post_info = $informing_m->getPOSTData();
 
 
      //rigtable for rcu
-     $app->get('/table/for_rcu/:id(/:id_rig)(/:is_reset_filter)', function ($id,$id_rig=0, $is_reset_filter=0) use ($app) {
+    $app->get('/table/for_rcu/:id(/:id_rig)(/:is_reset_filter)', function ($id, $id_rig = 0, $is_reset_filter = 0) use ($app) {
 
-		 $filter=[];
-		 $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+        $filter = [];
+        $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
-		         /* MODELS */
+        /* MODELS */
         $sily_m = new Model_Jrig();
         $rig_m = new Model_Rigtable();
         $inner_m = new Model_Innerservice();
         $informing_m = new Model_Informing();
-		$sily_mchs_m = new Model_Silymchs();
+        $sily_mchs_m = new Model_Silymchs();
 
-		 if($is_reset_filter == 1){
+        if ($is_reset_filter == 1) {
             rememberFilterDate($filter);
         }
         $bread_crumb = array('Все выезды');
 
-        $data['id_page']=$id;//номер вклдаки
+        $data['id_page'] = $id; //номер вклдаки
 
-		$data['settings_user'] = getSettingsUser();
-		$data['settings_user_br_table'] = getSettingsUserMode();
+        $data['settings_user'] = getSettingsUser();
+        $data['settings_user_br_table'] = getSettingsUserMode();
 
-		$data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
+        $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
 
-set_notifications($_SESSION['id_user']);
+        set_notifications($_SESSION['id_user']);
 
-		         /* ---- SD ---- */
+        /* ---- SD ---- */
         $is_show_link_sd = get_users_connect_sd($_SESSION['id_user']);
         if (!empty($is_show_link_sd)) {
             $data['is_show_link_sd'] = 1;
@@ -1457,23 +1457,22 @@ set_notifications($_SESSION['id_user']);
 
         /* ---- END SD ---- */
 
-           $rig_m = new Model_Rigtable();
+        $rig_m = new Model_Rigtable();
 
-            $cp = array(8, 9, 12); //вкладки РОСН, УГЗ,Авиация
+        $cp = array(8, 9, 12); //вкладки РОСН, УГЗ,Авиация
 
-               /* -------------- Поиск вызова по введенному id ---------------- */
+        /* -------------- Поиск вызова по введенному id ---------------- */
         if ($id_rig != 0) {
             $rig = search_rig_by_id($rig_m, $id_rig);
             $data['rig'] = $rig;
 
-			$data['search_rig_by_id']=1;
+            $data['search_rig_by_id'] = 1;
         }
-        /* -------------- END Поиск вызова по введенному id ---------------- */
-        elseif ($id_rig == 0) {//обычная таблица
+        /* -------------- END Поиск вызова по введенному id ---------------- */ elseif ($id_rig == 0) {//обычная таблица
 
             /* -------- таблица выездов в зависимости от авт пользователя -------- */
 
-			if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
+            if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
                 $rig_m->setDateStart($_SESSION['remember_filter_date_start']);
             }
             if (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
@@ -1487,26 +1486,26 @@ set_notifications($_SESSION['id_user']);
             }
 
             if (!in_array($id, $cp)) {//выезды за области без ЦП
-                $data['rig'] = $rig_m->selectAllByIdRegion($id, 0, 0,$filter); //без ЦП
+                $data['rig'] = $rig_m->selectAllByIdRegion($id, 0, 0, $filter); //без ЦП
             } else {//выезды за РОСН, УГЗ, АВиацию
-                $data['rig'] = $rig_m->selectAllByIdOrgan($id, 0,$filter); //за весь орган
+                $data['rig'] = $rig_m->selectAllByIdOrgan($id, 0, $filter); //за весь орган
             }
 
-			            if (!empty($data['rig']))
+            if (!empty($data['rig']))
                 usort($data['rig'], "order_rigs");
 
             /* ----- КОНЕЦ таблица выездов в зависимости от авт пользователя --------- */
         }
 
-                //-------- цвет статусов выездов ----------*/
-          $reasonrigcolor_m = new Model_Reasonrigcolor();
+        //-------- цвет статусов выездов ----------*/
+        $reasonrigcolor_m = new Model_Reasonrigcolor();
         $reasonrigcolor = $reasonrigcolor_m->selectAllByIdUser($_SESSION['id_user']); //цвет причин выездов
-        $reasonrig_color=array();
+        $reasonrig_color = array();
         foreach ($reasonrigcolor as $value) {
-            $reasonrig_color[$value['id_reasonrig']]=$value['color'];
+            $reasonrig_color[$value['id_reasonrig']] = $value['color'];
         }
-        $data['reasonrig_color']=$reasonrig_color;
-           /*-------- END цвет статусов выездов ----------*/
+        $data['reasonrig_color'] = $reasonrig_color;
+        /* -------- END цвет статусов выездов ---------- */
 
 
 
@@ -1514,25 +1513,24 @@ set_notifications($_SESSION['id_user']);
         $id_rig_arr = array();
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
-		$id_rig_with_informing = array();//rigs with informing
+        $id_rig_with_informing = array(); //rigs with informing
 
         foreach ($data['rig'] as $value) {//id of rigs
-
-		    if($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])){
-                $id_rig_with_informing[] = $value['id'];// rigs with informing
+            if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
+                $id_rig_with_informing[] = $value['id']; // rigs with informing
             }
 
-            if ($value['id'] != null){
+            if ($value['id'] != null) {
                 $id_rig_arr[] = $value['id'];
-				$id_rig_informing[] = $value['id'];
-			}
+                $id_rig_informing[] = $value['id'];
+            }
 
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
             }
         }
 
-		if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
+        if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
             $sily_mchs = $sily_m->selectAllInIdRig($id_rig_arr);        // in format mas[id_rig]=>array()
             $data['sily_mchs'] = $sily_mchs;
         }
@@ -1581,39 +1579,37 @@ set_notifications($_SESSION['id_user']);
             $data['rig_cars'] = $rig_cars;
             $data['rig_innerservice'] = $rig_innerservice;
             $data['rig_informing'] = $rig_informing;
+        } elseif (isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')) {//type2 or tupe 3
+
+
+
+            /* --- for table type 2 ---- */
+            $res = getSilyForType2($sily_mchs);
+            $data['teh_mark'] = $res['teh_mark'];
+            $data['exit_time'] = $res['exit_time'];
+            $data['arrival_time'] = $res['arrival_time'];
+            $data['follow_time'] = $res['follow_time'];
+            $data['end_time'] = $res['end_time'];
+            $data['return_time'] = $res['return_time'];
+            $data['distance'] = $res['distance'];
+            /* --- END for table type 2 ---- */
         }
-			 elseif(isset($data['settings_user']['vid_rig_table']) && ($data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type2' || $data['settings_user']['vid_rig_table']['name_sign'] == 'level3_type3')){//type2 or tupe 3
 
 
-
-			  /* --- for table type 2 ---- */
-		$res=getSilyForType2($sily_mchs);
-        $data['teh_mark'] = $res['teh_mark'];
-        $data['exit_time'] = $res['exit_time'];
-        $data['arrival_time'] = $res['arrival_time'];
-        $data['follow_time'] = $res['follow_time'];
-        $data['end_time'] =  $res['end_time'];
-        $data['return_time'] = $res['return_time'];
-        $data['distance'] = $res['distance'] ;
-		 /* --- END for table type 2 ---- */
-
-			 }
-
-
-			 if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
+        if (!isset($data['settings_user']['vid_rig_table']) || (isset($data['settings_user']['vid_rig_table']) && $data['settings_user']['vid_rig_table']['name_sign'] != 'level3_type4')) {
 
 
             /* fill or no icons */
-            $informing_empty=array();
+            $informing_empty = array();
             if (!empty($id_rig_with_informing)) {
                 $informing_empty = empty_icons($id_rig_with_informing, 'informing');
             }
-            $result_icons_empty=empty_icons($id_rig_arr);
-            $data['result_icons'] =  array_merge($result_icons_empty,$informing_empty);
+            $result_icons_empty = empty_icons($id_rig_arr);
+            $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
 
-			if (!empty($id_rig_with_informing)) {
+            if (!empty($id_rig_with_informing)) {
                 $ids_rig_not_full_info = $informing_m->getNotFullInfo($id_rig_with_informing);
                 foreach ($ids_rig_not_full_info as $value) {
                     $data['not_full_info'][] = $value['id_rig'];
@@ -1629,16 +1625,15 @@ set_notifications($_SESSION['id_user']);
 
             $data['rig'] = getResultsBattle($data['rig']); //results battle
             $data['trunk_by_rig'] = getTrunkByRigs($id_rig_arr);
+        }
 
-			 }
-
-			                  // empty fields
+        // empty fields
         if (!empty($data['rig']))
             $data['rig'] = getEmptyFields($data['rig']);
 
 
-		 /* is updeting now ?  */
-        foreach ($data['rig'] as $k=>$r) {
+        /* is updeting now ?  */
+        foreach ($data['rig'] as $k => $r) {
             $is_update_now = is_update_rig_now_refresh_table($data['rig'][$k], $r['id']);
             //  echo $is_update_now;exit();
             if (!empty($is_update_now)) {
@@ -1646,10 +1641,8 @@ set_notifications($_SESSION['id_user']);
                 $data['rig'][$k]['is_update_now'] = $is_update_now;
             }
             //  exit();
-
-
         }
-         /* is updeting now ?  */
+        /* is updeting now ?  */
 
 
 
@@ -1663,7 +1656,7 @@ set_notifications($_SESSION['id_user']);
     });
 
 
-         // table for rcu - filter on dates
+    // table for rcu - filter on dates
      $app->post('/table/for_rcu/:id(/:id_rig)', function ($id,$id_rig=0) use ($app) {
 
         $bread_crumb = array('Все выезды');
@@ -8633,6 +8626,8 @@ $data['table_name_year']=$table_name_year;
                 . '  ( SELECT id_rig FROM jarchive.'.$table_name_year.' WHERE (date_msg = ? and time_msg< ? )'
             . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
 
+           //     $sql = ' FROM jarchive.' . $table_name_year . '  WHERE  concat(date_msg," ",time_msg) >= ? AND concat(date_msg," ",time_msg) < ? AND is_delete = 0 ';
+
 
         $param[] = $date_start;
         $param[] = $date_end;
@@ -8641,7 +8636,9 @@ $data['table_name_year']=$table_name_year;
         $param[] = '06:00:00';
         $param[] = $date_end;
         $param[] = '06:00:00';
-      //  $param[]=0;
+
+//        $param[] = $date_start.' 06:00:00';
+//        $param[] = $date_end.' 06:00:00';
 
 
 
@@ -8673,7 +8670,8 @@ $data['table_name_year']=$table_name_year;
             $reasonrig_for_export='no';
         }
 
-        $sql=$sql.' ORDER BY id_rig ASC';
+        //$sql=$sql.' ORDER BY id_rig ASC';
+        $sql=$sql.' ORDER BY concat(date_msg," ",time_msg) DESC';
 
 if($id_tab=='table-content1'){//rig
 
@@ -15393,6 +15391,327 @@ $app->get('/rcu_boss_2020', function () use ($app, $log) {
 
 
 
+
+     /* ------------ export rigtable to excel -------------- */
+$app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from, $to,$reasonrig, $id_region = 0) use ($app) {
+
+    $filter = [];
+    $from=trim($from);
+    $to=trim($to);
+
+    $filter['reasonrig'] = explode(',', trim($reasonrig));
+
+
+    /* MODELS */
+    $sily_m = new Model_Jrig();
+    $rig_m = new Model_Rigtable();
+    $inner_m = new Model_Innerservice();
+    $informing_m = new Model_Informing();
+    $sily_mchs_m = new Model_Silymchs();
+
+
+    $cp = array(8, 9, 12); //вкладки РОСН, УГЗ,Авиация
+
+
+    $caption = '';
+
+    if ($id_region != 0) {//rcu
+        if (!in_array($id_region, $cp)) {//выезды за области без ЦП
+            $data['rig'] = $rig_m->selectAllByIdRegion($id_region, 0, 0, $filter); //без ЦП
+        } else {//выезды за РОСН, УГЗ, АВиацию
+            $data['rig'] = $rig_m->selectAllByIdOrgan($id_region, 0, $filter); //за весь орган
+        }
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs");
+
+        if (!in_array($id_region, $cp)) {
+            $region_name = R::getCell('select name from regions where id = ?', array($id_region));
+
+            if ($id_region != 3)
+                $caption = $region_name . ' область';
+        } elseif ($id_region == ROSN) {
+            $caption = 'РОСН';
+        } elseif ($id_region == UGZ) {
+            $caption = 'УГЗ';
+        } elseif ($id_region == AVIA) {
+            $caption = 'Авиация';
+        }
+    } else {
+
+    }
+
+
+    //-------- цвет статусов выездов ----------*/
+    $reasonrigcolor_m = new Model_Reasonrigcolor();
+    $reasonrigcolor = $reasonrigcolor_m->selectAllByIdUser($_SESSION['id_user']); //цвет причин выездов
+    $reasonrig_color = array();
+    foreach ($reasonrigcolor as $value) {
+        $reasonrig_color[$value['id_reasonrig']] = $value['color'];
+    }
+    $data['reasonrig_color'] = $reasonrig_color;
+    /* -------- END цвет статусов выездов ---------- */
+
+
+    $id_rig_arr = array();
+    $id_rig_informing = array();
+    $id_rig_sis_mes = array();
+
+
+    foreach ($data['rig'] as $value) {//id of rigs
+        if ($value['id'] != null) {
+            $id_rig_arr[] = $value['id'];
+            $id_rig_informing[] = $value['id'];
+        }
+
+        if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
+            $id_rig_sis_mes[] = $value['id'];
+        }
+    }
+
+
+    $sily_mchs = $sily_m->selectAllInIdRig($id_rig_arr);        // in format mas[id_rig]=>array()
+    $data['sily_mchs'] = $sily_mchs;
+
+
+    /* --- for table type 2 ---- */
+    $res = getSilyForType2($sily_mchs);
+    $data['teh_mark'] = $res['teh_mark'];
+    $data['exit_time'] = $res['exit_time'];
+    $data['arrival_time'] = $res['arrival_time'];
+    $data['follow_time'] = $res['follow_time'];
+    $data['end_time'] = $res['end_time'];
+    $data['return_time'] = $res['return_time'];
+    $data['distance'] = $res['distance'];
+    /* --- END for table type 2 ---- */
+
+
+    $objPHPExcel = new PHPExcel();
+    $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+    $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/excel_rigtable.xlsx');
+
+    $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+    $sheet = $objPHPExcel->getActiveSheet();
+
+
+
+
+
+
+
+    if (date("H:i:s") <= '06:00:00') {//до 06 утра
+        $start_date = date("d.m.Y", time() - (60 * 60 * 24));
+        $end_date = date("d.m.Y");
+    } else {
+        $start_date = date("d.m.Y");
+        $end_date = date("d.m.Y", time() + (60 * 60 * 24));
+    }
+
+    $sheet->setCellValue('A1', 'Выезды с с 06:00 ' . $start_date . ' до 06:00 ' . $end_date); //выбранный период
+    $sheet->setCellValue('A2', $caption); //выбранный область и район
+
+    $r = 8; //начальная строка для записи
+
+
+    $i = 0; //счетчик кол-ва записей № п/п
+    if (!empty($data['rig'])) {
+        foreach ($data['rig'] as $row) {
+            $i++;
+            $c = 0; //начальный столбец для записи
+
+            if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                $t_loc = new DateTime($row['time_loc']);
+                $time_loc = $t_loc->Format('H:i');
+            } else {
+                $time_loc = '';
+            }
+
+
+            if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                $t_likv = new DateTime($row['time_likv']);
+                $time_likv = $t_likv->Format('H:i');
+            } elseif ($row['is_likv_before_arrival'] == 1) {
+                $time_likv = 'ликв.до прибытия';
+            } elseif ($row['is_closed'] == 1) {
+                $time_likv = 'не учитывать даты';
+            } else {
+                $time_likv = '';
+            }
+
+
+            if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
+
+            } else {
+
+            }
+
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $i);
+            $c++;
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['id']);
+            $c++;
+            $sheet->setCellValueByColumnAndRow($c, $r, date('d.m.Y', strtotime($row['date_msg'])));
+            $c++;
+            $sheet->setCellValueByColumnAndRow($c, $r, date('H:i', strtotime($row['time_msg'])));
+            $c++;
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['local_name']);
+            $c++;
+
+
+            if ($row['address'] != NULL) {
+                $addr = $row['address'] . chr(10) . $row['additional_field_address'];
+            } else {
+                $addr = $row['additional_field_address'];
+            }
+
+
+
+            if (!empty($row['object'])) {
+                $addr = $addr . chr(10);
+                $addr = $addr . '(' . $row['object'] . ')';
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $addr);
+            $c++;
+
+            //  short on technic
+            $teh = '';
+            if (isset($data['teh_mark'][$row['id']]) && !empty($data['teh_mark'][$row['id']])) {
+
+                foreach ($data['teh_mark'][$row['id']] as $si) {
+
+                    if (!empty($teh))
+                        $teh = $teh . chr(10) . strip_tags($si);
+                    else
+                        $teh = strip_tags($si);
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $teh);
+            $c++;
+
+
+            $exit = '';
+            if (isset($data['exit_time'][$row['id']]) && !empty($data['exit_time'][$row['id']])) {
+
+                foreach ($data['exit_time'][$row['id']] as $si) {
+                    if (!empty($exit))
+                        $exit = $exit . chr(10) . $si;
+                    else
+                        $exit = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $exit);
+            $c++;
+
+
+
+
+            $arrival = '';
+            if (isset($data['arrival_time'][$row['id']]) && !empty($data['arrival_time'][$row['id']])) {
+
+                foreach ($data['arrival_time'][$row['id']] as $si) {
+                    if (!empty($arrival))
+                        $arrival = $arrival . chr(10) . $si;
+                    else
+                        $arrival = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $arrival);
+            $c++;
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $time_loc);
+            $c++;
+            $sheet->setCellValueByColumnAndRow($c, $r, $time_likv);
+            $c++;
+
+            $end_time = '';
+            if (isset($data['end_time'][$row['id']]) && !empty($data['end_time'][$row['id']])) {
+
+                foreach ($data['end_time'][$row['id']] as $si) {
+                    if (!empty($end_time))
+                        $end_time = $end_time . chr(10) . $si;
+                    else
+                        $end_time = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $end_time);
+            $c++;
+
+            $return_time = '';
+            if (isset($data['return_time'][$row['id']]) && !empty($data['return_time'][$row['id']])) {
+
+                foreach ($data['return_time'][$row['id']] as $si) {
+                    if (!empty($return_time))
+                        $return_time = $return_time . chr(10) . $si;
+                    else
+                        $return_time = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $return_time);
+            $c++;
+
+
+            $follow = '';
+            if (isset($data['follow_time'][$row['id']]) && !empty($data['follow_time'][$row['id']])) {
+
+                foreach ($data['follow_time'][$row['id']] as $si) {
+                    if (!empty($follow))
+                        $follow = $follow . chr(10) . $si;
+                    else
+                        $follow = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $follow);
+            $c++;
+
+
+            $distance = '';
+            if (isset($data['distance'][$row['id']]) && !empty($data['distance'][$row['id']])) {
+
+                foreach ($data['distance'][$row['id']] as $si) {
+                    if (!empty($distance))
+                        $distance = $distance . chr(10) . $si;
+                    else
+                        $distance = $si;
+                }
+            }
+            $sheet->setCellValueByColumnAndRow($c, $r, $distance);
+            $c++;
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['inf_detail']);
+            $c++;
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['reasonrig_name']);
+            $c++;
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['view_work']);
+            $c++;
+
+
+
+            $creator = $row['auth_locorg'];
+            if (isset($row['date_insert']) && !empty($row['date_insert'])) {
+                $creator = $creator . ' ' . date('d.m.Y H:i:s', strtotime($row['date_insert']));
+            }
+
+
+            $sheet->setCellValueByColumnAndRow($c, $r, $creator);
+            $c++;
+
+
+
+
+            $r++;
+        }
+    }
+
+
+
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="Выезды за сутки.xlsx"');
+    header('Cache-Control: max-age=0');
+    $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+    $objWriter->save('php://output');
+});
 
 
 
