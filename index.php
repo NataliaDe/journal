@@ -36,6 +36,8 @@ CONST LIST_MONTH = array(1  => 'январь', 2  => 'февраль', 3  => 'м
 define(ID_BOKK, 23);// = journal.service.id
 
 const REASONRIG_WITH_INFORMING=array(34,14,69,79,74,64,73);
+const REASON_FIRE=34;
+CONST REASON_HS=73;
 
 /* ----------------- END CONSTANT ------------------- */
 
@@ -44,6 +46,7 @@ use \RedBeanPHP\Facade as R;
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 use Dompdf\Dompdf;
+require 'libraries/PHPExcel.php';
 
 
 
@@ -2001,6 +2004,7 @@ set_notifications($_SESSION['id_user']);
 if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
             $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
             $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
+
             $data['rig'] = array_merge($rig,$rig_neighbor);
 }
 else{
@@ -2299,6 +2303,7 @@ else{
 			if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
             $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
             $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
+
             $data['rig'] = array_merge($rig,$rig_neighbor);
 			}
 			else{
@@ -3493,6 +3498,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         $is_switch_by_podr = (isset($_POST['is_switch_by_podr']) && $_POST['is_switch_by_podr'] == 1) ? 1 : 0;
 
         $rig = new Model_Rigtable();
+        $sily_m = new Model_Jrig();
 
         if ($is_switch_by_podr == 1) {//by podr
             $result = $rig->validateRep1(1); //результат по вызову
@@ -3523,8 +3529,11 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
              exit();
         }
 
+
         /* ------- все id вызовов, для которых надо выбрать остальные данные --------- */
-        foreach ($result as $row) {
+        foreach ($result as $key=>$row) {
+//            if(!empty($sily_m->is_neighbor_rig($row['id'])))
+//                $result[$key]['is_neighbor_rig']=1;
             $id_rig[] = $row['id'];
         }
         /* ------- КОНЕЦ все id вызовов, для которых надо выбрать остальные данные --------- */
@@ -3537,7 +3546,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
 
         /* -------выбор инф по СиС МЧС-------- */
-        $sily_m = new Model_Jrig();
+
         $sily_mchs = $sily_m->selectAllInIdRig($id_rig);        // в формате mas[id_rig]=>array()
         /* -------КОНЕЦ выбор инф по СиС МЧС-------- */
 
@@ -3655,6 +3664,18 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             }
 
  /*------------------- данные по вызову --------------------------*/
+//            if (isset($row['is_neighbor_rig']) && $row['is_neighbor_rig'] == 1) {
+//                $style_is_neihbor_rig = array(
+//                    'fill' => array(
+//                        'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+//                        'color' => array(
+//                            'rgb' => 'ebf1de'
+//                        )
+//                    )
+//                );
+//                $sheet->getStyle('A' . $r)->applyFromArray($style_is_neihbor_rig);
+//            }
+
             $sheet->setCellValue('A' . $r, $i); //№ п/п
             $sheet->setCellValue('B' . $r, date('d.m.Y', strtotime($row['date_msg'])));
             $sheet->setCellValue('C' . $r, date('H:i', strtotime($row['time_msg'])));
@@ -13529,6 +13550,57 @@ function getResultsBattle($rig)
     foreach ($rig as $k => $r) {
         $result = R::getRow('select * from results_battle where id_rig = ?', array($r['id']));
 
+        if($r['id_reasonrig'] == REASON_FIRE || $r['id_reasonrig'] == REASON_HS ){
+        $rb1 = R::getRow('select * from rb_chapter_1 where id_rig = ?', array($r['id']));
+        $rb2 = R::getRow('select * from rb_chapter_2 where id_rig = ?', array($r['id']));
+        $rb3 = R::getRow('select * from rb_chapter_3 where id_rig = ?', array($r['id']));
+
+        $rb_arr = [];
+        $rb_1_arr = [];
+        $rb_2_arr = [];
+        $rb_3_arr = [];
+        $exclude = array('id', 'date_insert', 'id_user', 'id_rig', 'last_update');
+
+
+        if (!empty($result)) {
+            foreach ($result as $n => $value) {
+                if (!in_array($n, $exclude))
+                    $rb_arr[] = $value;
+            }
+        }
+
+        if (!empty($rb1)) {
+            foreach ($rb1 as $n => $value) {
+                if (!in_array($n, $exclude))
+                    $rb_1_arr[] = $value;
+            }
+        }
+
+        if (!empty($rb2)) {
+            foreach ($rb2 as $n => $value) {
+                if (!in_array($n, $exclude))
+                    $rb_2_arr[] = $value;
+            }
+        }
+        if (!empty($rb3)) {
+            foreach ($rb3 as $n => $value) {
+                if (!in_array($n, $exclude))
+                    $rb_3_arr[] = $value;
+            }
+        }
+
+        $max = (isset($rb_arr) && !empty($rb_arr)) ? max($rb_arr) : 0;
+        $max_rb1 = (isset($rb_1_arr) && !empty($rb_1_arr)) ? max($rb_1_arr) : 0;
+        $max_rb2 = (isset($rb_2_arr) && !empty($rb_2_arr)) ? max($rb_2_arr) : 0;
+        $max_rb3 = (isset($rb_3_arr) && !empty($rb_3_arr)) ? max($rb_3_arr) : 0;
+          //      echo $r['id'];        echo '<br>';
+        //echo $max.'='.$max_rb1.'='.$max_rb2.'='.$max_rb3; echo '<br>'; echo '<br>';
+
+        if ($max == 0 && $max_rb1 == 0 && $max_rb2 == 0 && $max_rb3 == 0)
+            $rig[$k]['is_empty_rb'] = 1;
+        }
+
+
         if (!empty($result)) {
             //  echo $is_update_now;
             $rig[$k]['dead_man'] = $result['dead_man'];
@@ -13536,8 +13608,7 @@ function getResultsBattle($rig)
             $rig[$k]['save_man'] = $result['save_man'];
             $rig[$k]['inj_man'] = $result['inj_man'];
             $rig[$k]['ev_man'] = $result['ev_man'];
-        }
-        else{
+        } else {
             $rig[$k]['dead_man'] = 0;
             $rig[$k]['save_man'] = 0;
             $rig[$k]['inj_man'] = 0;
@@ -13545,10 +13616,10 @@ function getResultsBattle($rig)
         }
         //  exit();
     }
+    //exit();
     return $rig;
 }
 /* END get results battle */
-
 
 function getSettingsUserMode()
 {
@@ -15393,13 +15464,7 @@ $app->get('/rcu_boss_2020', function () use ($app, $log) {
 
 
      /* ------------ export rigtable to excel -------------- */
-$app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from, $to,$reasonrig, $id_region = 0) use ($app) {
-
-    $filter = [];
-    $from=trim($from);
-    $to=trim($to);
-
-    $filter['reasonrig'] = explode(',', trim($reasonrig));
+$app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from, $to, $reasonrig, $id_region = 0) use ($app) {
 
 
     /* MODELS */
@@ -15409,9 +15474,40 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
     $informing_m = new Model_Informing();
     $sily_mchs_m = new Model_Silymchs();
 
+    $data['settings_user'] = getSettingsUser();
+    $data['settings_user_br_table'] = getSettingsUserMode();
+
+    $filter = [];
+
+    if (isset($reasonrig) && !empty($reasonrig) && $reasonrig != 0)
+        $filter['reasonrig'] = explode(',', trim($reasonrig));
+    elseif (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {//mode
+        $filter['reasonrig'] = $data['settings_user_br_table'];
+    }
+
+
+    if (isset($from) && !empty($from)) {
+        $rig_m->setDateStart(trim($from));
+    } else {
+        if (date("H:i:s") <= '06:00:00') {//до 06 утра
+            $rig_m->setDateStart(date("d.m.Y", time() - (60 * 60 * 24)));
+        } else {
+            $rig_m->setDateStart(date("d.m.Y"));
+        }
+    }
+
+    if (isset($to) && !empty($to)) {
+        $rig_m->setDateEnd(trim($to));
+    } else {
+        if (date("H:i:s") <= '06:00:00') {//до 06 утра
+            $rig_m->setDateEnd(date("d.m.Y"));
+        } else {
+            $rig_m->setDateEnd(date("d.m.Y", time() + (60 * 60 * 24)));
+        }
+    }
+
 
     $cp = array(8, 9, 12); //вкладки РОСН, УГЗ,Авиация
-
 
     $caption = '';
 
@@ -15437,26 +15533,42 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
         } elseif ($id_region == AVIA) {
             $caption = 'Авиация';
         }
-    } else {
+    } elseif ($_SESSION['id_level'] == 3) {
+        $caption = $_SESSION['locorg_name'];
 
+
+        //выезды за ГРОЧС
+        $rig = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0, $filter); //за ГРОЧС
+
+        if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
+            $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
+            $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
+            $data['rig'] = array_merge($rig, $rig_neighbor);
+        } else {
+            $data['rig'] = $rig;
+        }
+    } elseif ($_SESSION['id_level'] == 2) {
+        $caption = $_SESSION['locorg_name'];
+
+        if ($_SESSION['sub'] == 2) {// UGZ, ROSN, AVIA
+            $data['rig'] = $rig_m->selectAllByIdOrgan($_SESSION['id_organ'], 0, $filter); //за весь орган
+        } else {// UMCHS
+            $rig = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0, $filter); //выезды за всю область(не включая ЦП), не удаленные записи
+
+            if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
+                $rig_neighbor_id = $rig_m->selectIdRigByIdRegion(0, $_SESSION['id_region'], $filter); //за ГРОЧС
+                $rig_neighbor = $rig_m->selectAllByIdRegionNeighbor($rig_neighbor_id, $filter);
+                $data['rig'] = array_merge($rig, $rig_neighbor);
+            } else {
+                $data['rig'] = $rig;
+            }
+        }
     }
-
-
-    //-------- цвет статусов выездов ----------*/
-    $reasonrigcolor_m = new Model_Reasonrigcolor();
-    $reasonrigcolor = $reasonrigcolor_m->selectAllByIdUser($_SESSION['id_user']); //цвет причин выездов
-    $reasonrig_color = array();
-    foreach ($reasonrigcolor as $value) {
-        $reasonrig_color[$value['id_reasonrig']] = $value['color'];
-    }
-    $data['reasonrig_color'] = $reasonrig_color;
-    /* -------- END цвет статусов выездов ---------- */
 
 
     $id_rig_arr = array();
     $id_rig_informing = array();
     $id_rig_sis_mes = array();
-
 
     foreach ($data['rig'] as $value) {//id of rigs
         if ($value['id'] != null) {
@@ -15494,25 +15606,10 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
     $sheet = $objPHPExcel->getActiveSheet();
 
 
-
-
-
-
-
-    if (date("H:i:s") <= '06:00:00') {//до 06 утра
-        $start_date = date("d.m.Y", time() - (60 * 60 * 24));
-        $end_date = date("d.m.Y");
-    } else {
-        $start_date = date("d.m.Y");
-        $end_date = date("d.m.Y", time() + (60 * 60 * 24));
-    }
-
-    $sheet->setCellValue('A1', 'Выезды с с 06:00 ' . $start_date . ' до 06:00 ' . $end_date); //выбранный период
+    $sheet->setCellValue('A1', 'Выезды с с 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $rig_m->date_start)->format('d.m.Y')) . ' до 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $rig_m->date_end)->format('d.m.Y'))); //выбранный период
     $sheet->setCellValue('A2', $caption); //выбранный область и район
 
     $r = 8; //начальная строка для записи
-
-
     $i = 0; //счетчик кол-ва записей № п/п
     if (!empty($data['rig'])) {
         foreach ($data['rig'] as $row) {
@@ -15538,11 +15635,22 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
                 $time_likv = '';
             }
 
-
+            // Заполнение цветом
             if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
-
-            } else {
-
+                $style_neighbor = array(
+                    'fill'    => array(
+                        'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                        'color' => array(
+                            'rgb' => 'ebf1de'
+                        )
+                    ),
+                    'borders' => array(
+                        'allborders' => array(
+                            'style' => PHPExcel_Style_Border::BORDER_THIN
+                        )
+                    )
+                );
+                $sheet->getStyleByColumnAndRow($c, $r, $c + 18, $r)->applyFromArray($style_neighbor);
             }
 
 
@@ -15696,15 +15804,9 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
 
             $sheet->setCellValueByColumnAndRow($c, $r, $creator);
             $c++;
-
-
-
-
             $r++;
         }
     }
-
-
 
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="Выезды за сутки.xlsx"');

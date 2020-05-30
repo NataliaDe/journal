@@ -6,9 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Svg\\' => array($vendorDir . '/phenx/php-svg-lib/src/Svg'),
     'RedBeanPHP\\' => array($vendorDir . '/gabordemooij/redbean/RedBeanPHP'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
-    'ParseCsv\\extensions\\' => array($vendorDir . '/parsecsv/php-parsecsv/src/extensions'),
     'ParseCsv\\' => array($vendorDir . '/parsecsv/php-parsecsv/src'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

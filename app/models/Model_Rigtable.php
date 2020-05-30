@@ -155,7 +155,7 @@ class Model_Rigtable {
 		        if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
-		
+
         return $this->getRigTable($sql, $param);
     }
 
@@ -169,7 +169,7 @@ class Model_Rigtable {
 				        if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
-		
+
         return $this->getRigTable($sql, $param);
     }
 
@@ -180,11 +180,11 @@ class Model_Rigtable {
         $sql = 'SELECT * FROM journal.rigtable WHERE id_organ_user = ? and is_delete = ?  ';
         $param = array($id_organ_user, $is_delete);
 
-		
+
         if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
-		
+
         return $this->getRigTable($sql, $param);
     }
 
@@ -205,12 +205,12 @@ class Model_Rigtable {
         $param[] = $this->time1;
         $param[] = $this->date_end;
         $param[] = $this->time2;*/
-		
-		
+
+
 		 $date_filter = ' AND full_time_msg >= ? AND full_time_msg < ?'; // с 06 утра до 06 утра
             $param[] = $this->date_start . ' ' . $this->time1;
             $param[] = $this->date_end . ' ' . $this->time2;
-		
+
 
         } else {//с 06 00 до 06 00 за текущие сутки
 
@@ -227,7 +227,7 @@ class Model_Rigtable {
         $param[] = $this->time1;
         $param[] = $this->date2;
         $param[] = $this->time2;*/
-		
+
 		 $date_filter = ' AND full_time_msg >= ? AND full_time_msg < ?'; // с 06 утра до 06 утра
             $param[] = $this->date1 . ' ' . $this->time1;
             $param[] = $this->date2 . ' ' . $this->time2;
@@ -326,12 +326,12 @@ class Model_Rigtable {
                elseif($y['date_start'] != NULL || $y['date_end'] != NULL) {
             $error['date_start_end'] = ' Необходимо выбрать две даты ';
         }
-		
-		
+
+
 		        if (isset($x['reasonrig']) && !empty($x['reasonrig'])) {
             $y['reasonrig'] = $x['reasonrig'];
         }
-		
+
 		        if (isset($x['remember_filter_date']) && !empty($x['remember_filter_date'])) {
             $y['remember_filter_date'] = $x['remember_filter_date'];
         }
@@ -357,7 +357,7 @@ class Model_Rigtable {
     public function validateRep1($mode_by_podr=0) {
         $x = $_POST;
         $y = array();
-		
+
 		$y['is_switch_by_podr']=$mode_by_podr;
 
         $y['id_region'] = (isset($x['id_region']) && !empty($x['id_region'])) ? intval($x['id_region']) : 0; //куда был выезд
@@ -385,16 +385,16 @@ class Model_Rigtable {
         } else {
             $y['date_end'] = date("Y-m-d");
         }
-		
-		
+
+
 		        if (isset($x['reasonrig']) && !empty($x['reasonrig'])) {
             $y['reasonrig'] = $x['reasonrig'];
         }
-		
+
 		        if (isset($x['id_pasp']) && !empty($x['id_pasp'])) {
             $y['id_pasp'] = $x['id_pasp'];
         }
-		
+
         /*         * * END проверка на вшивость дат ** */
 
 //        print_r($y);
@@ -415,7 +415,7 @@ class Model_Rigtable {
             $sql = 'SELECT r.* FROM journal.silymchs AS s  LEFT JOIN rigtable AS r ON r.`id`=s.`id_rig` WHERE  r.is_delete = ?  ';
         } else
             $sql = 'SELECT r.* FROM journal.rigtable as r WHERE  r.is_delete = ?  ';
-		
+
         $param = array(0);//все не удаленные выезды
 
         /*$date_filter = ' AND r.date_msg between ? and ? and r.id not in '
@@ -428,7 +428,7 @@ class Model_Rigtable {
         $param[] = $this->time1;
         $param[] = $this->date_end;
         $param[] = $this->time2;*/
-		
+
 		        $date_filter = ' AND full_time_msg >= ? AND full_time_msg < ?'; // с 06 утра до 06 утра
         $param[] = $this->date_start . ' ' . $this->time1;
         $param[] = $this->date_end . ' ' . $this->time2;
@@ -437,14 +437,14 @@ class Model_Rigtable {
         if (isset($date_filter)) { //добавляем
             $sql = $sql . $date_filter;
         }
-		
+
         if (isset($y['reasonrig']) && !empty($y['reasonrig'])) {
             $reasonrig = ' AND r.id_reasonrig IN('.implode(',', $y['reasonrig']).')';
             //$reasonrig = ' AND r.id_reasonrig = ?  ';
             //$param[] = $y['reasonrig'];
         }
-		
-		
+
+
         if ($y['is_switch_by_podr'] == 1) {
 
             if ($y['id_region'] != 0) { //куда был выезд
@@ -484,7 +484,7 @@ class Model_Rigtable {
           //  echo $sql;            print_r($param);exit();
             return R::getAll($sql, $param);
         }
-		
+
 
 
         if ($y['id_region'] != 0) { //куда был выезд
@@ -496,9 +496,9 @@ class Model_Rigtable {
             $local = ' AND r.id_local = ?  ';
             $param[] = $y['id_local'];
         }
-		
 
-		
+
+
 		        if($y['id_local'] != 0 && $y['is_neighbor'] == 0 && $y['id_region'] != 3){//not show neighbor rigs
 
             $local_neigbor = ' AND r.id_local_user = ?  ';
@@ -518,11 +518,11 @@ class Model_Rigtable {
         if (isset($local)) { //добавляем
             $sql = $sql . $local;
         }
-		
+
 		        if (isset($reasonrig)) {
             $sql = $sql . $reasonrig;
         }
-		
+
 		        if (isset($local_neigbor)) {
             $sql = $sql . $local_neigbor;
         }
@@ -548,14 +548,14 @@ class Model_Rigtable {
 
         return $this->getRigTable($sql, $param);
     }
-	
-	
+
+
    public function selectIdRigByIdGrochs($is_delete,$id_grochs, $filter = null)
     {
 
         $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE grochs_of_teh = ? and is_delete = ? and id_locorg_user <> ?  ';
         $param = array($id_grochs, $is_delete,$id_grochs);
-		
+
 		 if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
@@ -586,7 +586,7 @@ class Model_Rigtable {
 			        if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
-			
+
             return R::getAll($sql);
         } else {
             return array();
@@ -608,7 +608,7 @@ class Model_Rigtable {
 
         $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE region_of_teh = ? and is_delete = ? and id_region_user <> ?  ';
         $param = array($id_region, $is_delete,$id_region);
-		
+
 		                if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
             $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
         }
@@ -635,11 +635,11 @@ class Model_Rigtable {
             else
                 $sql = 'SELECT r.*, 1 AS is_neighbor FROM journal.rigtable AS r WHERE r.id = '.$id_rigs;
 
-			
+
             if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
                 $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
             }
-			
+
             return R::getAll($sql);
         } else {
             return array();
@@ -655,7 +655,7 @@ class Model_Rigtable {
         return R::getAll($sql, $param);
     }
 
-	
+
 	      public function selectAllForCsv($is_delete, $data)
     {
         //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
@@ -692,7 +692,7 @@ class Model_Rigtable {
         $param[] = $this->time1;
         $param[] = $this->date_end;
         $param[] = $this->time2;*/
-		
+
 		 $date_filter = ' AND full_time_msg >= ? AND full_time_msg < ?'; // с 06 утра до 06 утра
             $param[] = $this->date_start . ' ' . $this->time1;
             $param[] = $this->date_end . ' ' . $this->time2;
@@ -712,7 +712,7 @@ class Model_Rigtable {
         $param[] = $this->time1;
         $param[] = $this->date2;
         $param[] = $this->time2;*/
-		
+
 		            $date_filter = ' AND full_time_msg >= ? AND full_time_msg < ?'; // с 06 утра до 06 утра
             $param[] = $this->date1 . ' ' . $this->time1;
             $param[] = $this->date2 . ' ' . $this->time2;
@@ -731,14 +731,14 @@ class Model_Rigtable {
 //            exit();
         return R::getAll($sql, $param);
     }
-	
-	
+
+
 	    public function setStartEndDates($start_date,$end_date)
     {
            $this->setDateStart($start_date);
             $this->setDateEnd($end_date);
     }
-	
+
 	    public function selectAllRigByReason($reason_ids, $is_delete, $id_region=0) {
 
         $sql = 'SELECT * FROM journal.rigtable WHERE  is_delete = ?  AND latitude is not null and longitude is not null AND latitude <> 0 AND longitude <> 0';

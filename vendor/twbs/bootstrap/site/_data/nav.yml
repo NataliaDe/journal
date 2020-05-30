@@ -64,12 +64,14 @@
     - title: Flex
     - title: Float
     - title: Image replacement
+    - title: Interactions
     - title: Overflow
     - title: Position
-    - title: Screenreaders
+    - title: Screen readers
     - title: Shadows
     - title: Sizing
     - title: Spacing
+    - title: Stretched link
     - title: Text
     - title: Vertical align
     - title: Visibility

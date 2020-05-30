@@ -134,13 +134,13 @@ $(function () {
         '</ol>' +
         '<div class="carousel-inner">' +
         '<div class="carousel-item active">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '</div>' +
         '<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"/>' +
@@ -534,7 +534,7 @@ $(function () {
         '<div class="carousel-item active">' +
         '<img alt="">' +
         '</div>' +
-        '<script type="text/x-metamorph" id="thingy"/>' +
+        '<script type="text/x-metamorph" id="thingy"></script>' +
         '<div class="carousel-item">' +
         '<img alt="">' +
         '</div>' +
@@ -560,7 +560,7 @@ $(function () {
         '<div class="carousel-item active">' +
         '<img alt="">' +
         '</div>' +
-        '<script type="text/x-metamorph" id="thingy"/>' +
+        '<script type="text/x-metamorph" id="thingy"></script>' +
         '<div class="carousel-item">' +
         '<img alt="">' +
         '</div>' +
@@ -763,13 +763,13 @@ $(function () {
         '</ol>' +
         '<div class="carousel-inner">' +
         '<div class="carousel-item active" id="one">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="two">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="three">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '</div>' +
         '<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"/>' +
@@ -810,13 +810,13 @@ $(function () {
         '</ol>' +
         '<div class="carousel-inner">' +
         '<div class="carousel-item active" id="one">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="two">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="three">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '</div>' +
         '<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"/>' +
@@ -844,13 +844,13 @@ $(function () {
         '</ol>' +
         '<div class="carousel-inner">' +
         '<div class="carousel-item active" id="one">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="two">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="three">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '</div>' +
         '<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"/>' +
@@ -892,13 +892,13 @@ $(function () {
         '</ol>' +
         '<div class="carousel-inner">' +
         '<div class="carousel-item active" id="one">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="two">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '<div class="carousel-item" id="three">' +
-        '<div class="carousel-caption"/>' +
+        '<div class="carousel-caption"></div>' +
         '</div>' +
         '</div>' +
         '<a class="left carousel-control" href="#carousel-example-generic" data-slide="prev"/>' +
@@ -948,7 +948,7 @@ $(function () {
     $textArea.trigger(eventKeyDown)
   })
 
-  QUnit.test('Should not go to the next item when the carousel is not visible', function (assert) {
+  QUnit.test('should not go to the next item when the carousel is not visible', function (assert) {
     assert.expect(2)
     var done = assert.async()
     var html = '<div id="myCarousel" class="carousel slide" data-interval="50" style="display: none;">' +
@@ -985,7 +985,7 @@ $(function () {
     }, 80)
   })
 
-  QUnit.test('Should not go to the next item when the parent of the carousel is not visible', function (assert) {
+  QUnit.test('should not go to the next item when the parent of the carousel is not visible', function (assert) {
     assert.expect(2)
     var done = assert.async()
     var html = '<div id="parent" style="display: none;">' +
@@ -1118,7 +1118,7 @@ $(function () {
     }
 
     document.documentElement.ontouchstart = $.noop
-    assert.expect(3)
+    assert.expect(4)
     Simulator.setType('pointer')
 
     var $styles = $(stylesCarousel).appendTo('head')
@@ -1147,6 +1147,7 @@ $(function () {
       assert.ok(true, 'slid event fired')
       assert.ok(!$item.hasClass('active'))
       assert.ok(spy.called)
+      assert.strictEqual(carousel.touchDeltaX, 0)
       $styles.remove()
       delete document.documentElement.ontouchstart
       done()
@@ -1160,7 +1161,7 @@ $(function () {
   })
 
   QUnit.test('should allow swipeleft and call next with touch events', function (assert) {
-    assert.expect(3)
+    assert.expect(4)
     clearPointerEvents()
     Simulator.setType('touch')
     document.documentElement.ontouchstart = $.noop
@@ -1190,6 +1191,7 @@ $(function () {
       assert.ok(true, 'slid event fired')
       assert.ok(!$item.hasClass('active'))
       assert.ok(spy.called)
+      assert.strictEqual(carousel.touchDeltaX, 0)
       restorePointerEvents()
       delete document.documentElement.ontouchstart
       done()
@@ -1269,5 +1271,65 @@ $(function () {
 
     assert.strictEqual(spy.called, true)
     sandbox.restore()
+  })
+
+  QUnit.test('should not cycle when there is no attribute data-ride', function (assert) {
+    assert.expect(1)
+
+    var spy = sinon.spy(Carousel.prototype, 'cycle')
+
+    var carouselHTML = '<div class="carousel"></div>'
+    var $carousel = $(carouselHTML)
+    $carousel.appendTo('#qunit-fixture')
+    $carousel.bootstrapCarousel()
+
+    assert.strictEqual(spy.called, false)
+    spy.restore()
+  })
+
+  QUnit.test('should cycle when there is data-ride attribute', function (assert) {
+    assert.expect(1)
+
+    var spy = sinon.spy(Carousel.prototype, 'cycle')
+
+    var carouselHTML = '<div class="carousel" data-ride="carousel"></div>'
+    var $carousel = $(carouselHTML)
+    $carousel.appendTo('#qunit-fixture')
+    $carousel.bootstrapCarousel()
+
+    assert.strictEqual(spy.called, true)
+    spy.restore()
+  })
+
+  QUnit.test('should init carousels with data-ride on load event', function (assert) {
+    assert.expect(1)
+
+    var done = assert.async()
+    var spy = sinon.spy(Carousel, '_jQueryInterface')
+
+    var carouselHTML = '<div class="carousel" data-ride="carousel"></div>'
+    var $carousel = $(carouselHTML)
+    $carousel.appendTo('#qunit-fixture')
+
+    $(window).trigger($.Event('load'))
+
+    setTimeout(function () {
+      assert.strictEqual(spy.called, true)
+      spy.restore()
+      done()
+    }, 5)
+  })
+
+  QUnit.test('should not add touch event listeners when touch option set to false', function (assert) {
+    assert.expect(1)
+
+    var spy = sinon.spy(Carousel.prototype, '_addTouchEventListeners')
+    var $carousel = $('<div class="carousel" data-ride="carousel" data-touch="false"></div>')
+
+    $carousel.appendTo('#qunit-fixture')
+    $carousel.bootstrapCarousel()
+
+    assert.strictEqual(spy.called, false)
+    spy.restore()
   })
 })

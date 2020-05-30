@@ -151,12 +151,10 @@ class DBAdapter extends Observable implements Adapter
 
 		$rows  = $this->db->GetAll( $sql, $bindings );
 
-		if ( !$rows ) {
-			return array();
-		}
+		if ( !$rows ) return array();
 
 		$assoc = array();
-		
+
 		foreach ( $rows as $row ) {
 			if ( empty( $row ) ) continue;
 

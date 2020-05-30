@@ -94,7 +94,7 @@ if(isset($row['is_return']) && $row['is_return']==1 ){//отбой техник�
                 $y[$key]['time_end'] = NULL;
                 $y[$key]['time_follow'] = NULL;
               //  $y[$key]['distance'] = 0;
-			  
+
 			  $y[$key]['distance'] = (isset($row['distance']) && !empty($row['distance'])) ? $row['distance'] : 0;
 
 $y[$key]['is_return'] = 1;
@@ -169,7 +169,7 @@ $y[$key]['is_return'] = 0;
             } else {
                 $y[$key]['time_follow'] = NULL;
             }*/
-			
+
 
 			if (isset($y[$key]['time_exit']) && !empty($y[$key]['time_exit']) && isset($y[$key]['time_arrival']) && !empty($y[$key]['time_arrival'])) {
 
@@ -182,9 +182,9 @@ $y[$key]['is_return'] = 0;
                 } else {
                     $y[$key]['time_follow'] = '00:00:00';
                 }
-			
-			
-			
+
+
+
    /*             * **** END время следования ******* */
 
             /*             * * проверка на вшивость Время окончания работ ** */
@@ -247,8 +247,8 @@ $y[$key]['is_return'] = 0;
             R::store($sily);
         }
     }
-	
-	
+
+
 	    public function get_jrig_by_rigs($ids_rig)
     {
         $jrig = R::getAll("SELECT
@@ -301,6 +301,18 @@ FROM (((((((((`journal`.`silymchs` `s`
 
 
         return $jrig;
+    }
+
+       public function is_neighbor_rig($id_rig)
+    {
+
+        return R::getAll('SELECT r.id
+FROM silymchs AS s
+LEFT JOIN rig AS r ON r.id=s.id_rig
+LEFT JOIN user AS u ON u.id=r.id_user
+LEFT JOIN ss.locorg AS locor ON locor.id=u.id_locorg
+WHERE r.id IS NOT NULL AND s.id_local IS NOT NULL AND locor.id_local IS NOT NULL AND r.is_delete=?
+AND r.id=? AND s.id_local <> locor.id_local ', array(0,$id_rig));
     }
 
 }

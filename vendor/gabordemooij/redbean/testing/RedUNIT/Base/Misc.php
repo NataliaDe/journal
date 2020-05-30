@@ -30,6 +30,34 @@ use RedBeanPHP\SimpleModel as SimpleModel;
 class Misc extends Base
 {
 	/**
+	 * Can we use data definition templates?
+	 *
+	 * @return void
+	 */
+	public function testDDLTemplates()
+	{
+		R::nuke();
+		R::debug( TRUE, 1 );
+		$writer = R::getWriter();
+		$writer->setDDLTemplate( 'createTable', 'joke', $writer->getDDLTemplate( 'createTable', 'joke' ) . ' /* haha */ ' );
+		$writer->setDDLTemplate( 'addColumn', 'joke', $writer->getDDLTemplate( 'addColumn', 'joke' ) . ' /* hihi */ ' );
+		$writer->setDDLTemplate( 'widenColumn', 'joke', $writer->getDDLTemplate( 'widenColumn', 'joke' ) . ' /* hoho */ ' );
+		$joke = R::dispense('joke');
+		R::store( $joke );
+		$logs = R::getDatabaseAdapter()->getDatabase()->getLogger()->grep( 'haha' );
+		asrt( count( $logs ), 1 );
+		$joke->punchline = 1;
+		R::store( $joke );
+		$logs = R::getDatabaseAdapter()->getDatabase()->getLogger()->grep( 'hihi' );
+		asrt( count( $logs ), 1 );
+		$joke->punchline = '...';
+		R::store( $joke );
+		$logs = R::getDatabaseAdapter()->getDatabase()->getLogger()->grep( 'hoho' );
+		asrt( count( $logs ), 1 );
+		R::debug( FALSE );
+	}
+
+	/**
 	 * Github issue:
 	 * Remove $NULL to directly return NULL #625
 	 * @@ -1097,8 +1097,7 @@ public function &__get( $property )
@@ -66,6 +94,7 @@ class Misc extends Base
 	 public function testPartialBeansAtSetup()
 	 {
 		 if (self::$setupPartialBeansTestDone) return; /* only needs to be tested once */
+		 $currentDB = R::$currentDB;
 		 $key  = 'partialBeanBase' . time();
 		 $dsn  = 'sqlite:/tmp/test.txt';
 		 $user = '';
@@ -80,6 +109,7 @@ class Misc extends Base
 		 $wasItSet = $redbean->getCurrentRepository()->usePartialBeans( FALSE );
 		 asrt( $wasItSet, TRUE );
 		 self::$setupPartialBeansTestDone = 1;
+		 R::selectDatabase( $currentDB );
 	 }
 
 	/**
@@ -352,13 +382,28 @@ class Misc extends Base
 	public function testTransactions()
 	{
 		testpack( 'transactions' );
-		R::begin();
+		$false = R::begin();
+		asrt( $false, FALSE );
 		$bean = R::dispense( 'bean' );
 		R::store( $bean );
 		R::commit();
 		asrt( R::count( 'bean' ), 1 );
-		R::wipe( 'bean' );
-		R::freeze( 1 );
+		R::trash( $bean );
+		R::setAllowFluidTransactions( TRUE );
+		asrt( R::begin(), TRUE );
+		$bean = R::dispense( 'bean' );
+		R::store( $bean );
+		asrt( R::commit(), TRUE );
+		asrt( R::count( 'bean' ), 1 );
+		R::trash( $bean );
+		asrt( R::begin(), TRUE );
+		$bean = R::dispense( 'bean' );
+		R::store( $bean );
+		R::rollback();
+		asrt( R::count( 'bean' ), 0 );
+		R::setAllowFluidTransactions( FALSE );
+		R::wipe('bean');
+		R::freeze( TRUE );
 		R::begin();
 		$bean = R::dispense( 'bean' );
 		R::store( $bean );

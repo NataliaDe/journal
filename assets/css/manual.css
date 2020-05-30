@@ -751,3 +751,8 @@ background-color: black;
 }
 
 /*--------------- END notifications ---------------- */
+
+
+.rb-warning{
+    color: #ff8f03;
+}

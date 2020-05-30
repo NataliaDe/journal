@@ -46,6 +46,11 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	/**
 	 * @var boolean
 	 */
+	protected static $useFluidCount = FALSE;
+
+	/**
+	 * @var boolean
+	 */
 	protected static $convertArraysToJSON = FALSE;
 
 	/**
@@ -62,11 +67,6 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 * @var array
 	 */
 	protected static $aliases = array();
-
-	/**
-	 * @var boolean
-	 */
-	protected static $autoResolve = FALSE;
 
 	/**
 	 * If this is set to TRUE, the __toString function will
@@ -136,6 +136,23 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 * @var boolean
 	 */
 	protected $all = FALSE;
+
+	/**
+	 * If fluid count is set to TRUE then $bean->ownCount() will
+	 * return 0 if the table does not exists.
+	 * Only for backward compatibility.
+	 * Returns previouds value.
+	 *
+	 * @param boolean $toggle toggle
+	 *
+	 * @return boolean
+	 */
+	public static function useFluidCount( $toggle )
+	{
+		$old = self::$useFluidCount;
+		self::$useFluidCount = $toggle;
+		return $old;
+	}
 
 	/**
 	 * If this is set to TRUE, the __toString function will
@@ -265,18 +282,13 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	}
 
 	/**
-	 * Enables or disables auto-resolving fetch types.
-	 * Auto-resolving aliased parent beans is convenient but can
-	 * be slower and can create infinite recursion if you
-	 * used aliases to break cyclic relations in your domain.
+	 * Return list of global aliases
 	 *
-	 * @param boolean $automatic TRUE to enable automatic resolving aliased parents
-	 *
-	 * @return void
+	 * @return array
 	 */
-	public static function setAutoResolve( $automatic = TRUE )
+	public static function getAliases()
 	{
-		self::$autoResolve = (boolean) $automatic;
+		return self::$aliases;
 	}
 
 	/**
@@ -300,52 +312,6 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 			}
 		}
 		return $beans;
-	}
-
-	/**
-	 * Parses the join in the with-snippet.
-	 * For instance:
-	 *
-	 * <code>
-	 * $author
-	 * 	->withCondition(' @joined.detail.title LIKE ? ')
-	 *  ->ownBookList;
-	 * </code>
-	 *
-	 * will automatically join 'detail' on book to
-	 * access the title field.
-	 *
-	 * @note this feature requires Narrow Field Mode and Join Feature
-	 * to be both activated (default).
-	 *
-	 * @param string $type the source type for the join
-	 *
-	 * @return string
-	 */
-	private function parseJoin( $type )
-	{
-		if ( strpos($this->withSql, '@joined.' ) === FALSE ) {
-			return '';
-		}
-		
-		$joinSql = ' ';
-		$joins = array();
-		$writer   = $this->beanHelper->getToolBox()->getWriter();
-		$oldParts = $parts = explode( '@joined.', $this->withSql );
-		array_shift( $parts );
-		foreach($parts as $part) {
-			$explosion = explode( '.', $part );
-			$joinInfo  = reset( $explosion );
-			//Dont join more than once..
-			if ( !isset( $joins[$joinInfo] ) ) {
-				$joins[ $joinInfo ] = TRUE;
-				$joinSql  .= $writer->writeJoin( $type, $joinInfo, 'LEFT' );
-			}
-		}
-		$this->withSql = implode( '', $oldParts );
-		$joinSql      .= ' WHERE ';
-		
-		return $joinSql;
 	}
 
 	/**
@@ -432,18 +398,18 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		$beans = array();
 		if ( $this->getID() ) {
 			reset( $this->withParams );
-			$joinSql = $this->parseJoin( $type );
 			$firstKey = count( $this->withParams ) > 0
 				? key( $this->withParams )
 				: 0;
 			if ( is_int( $firstKey ) ) {
+				$sql = "{$myFieldLink} = ? {$this->withSql}";
 				$bindings = array_merge( array( $this->getID() ), $this->withParams );
-				$beans = $redbean->find( $type, array(), "{$joinSql} $myFieldLink = ? " . $this->withSql, $bindings );
 			} else {
+				$sql = "{$myFieldLink} = :slot0 {$this->withSql}";
 				$bindings           = $this->withParams;
 				$bindings[':slot0'] = $this->getID();
-				$beans = $redbean->find( $type, array(), "{$joinSql} $myFieldLink = :slot0 " . $this->withSql, $bindings );
 			}
+			$beans = $redbean->find( $type, array(), $sql, $bindings );
 		}
 		foreach ( $beans as $beanFromList ) {
 			$beanFromList->__info['sys.parentcache.' . $parentField] = $this;
@@ -592,6 +558,7 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		$this->properties = $row;
 		$this->__info['sys.orig'] = $row;
 		$this->__info['changed'] = FALSE;
+		$this->__info['changelist'] = array();
 		return $this;
 	}
 
@@ -1141,14 +1108,6 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 				$bean = NULL;
 				if ( !is_null( $this->properties[$fieldLink] ) ) {
 					$bean = $redbean->load( $type, $this->properties[$fieldLink] );
-					//If the IDs dont match, we failed to load, so try autoresolv in that case...
-					if ( $bean->id !== $this->properties[$fieldLink] && self::$autoResolve ) {
-						$type = $this->beanHelper->getToolbox()->getWriter()->inferFetchType( $this->__info['type'], $property );
-						if ( !is_null( $type) ) {
-							$bean = $redbean->load( $type, $this->properties[$fieldLink] );
-							$this->__info["sys.autoresolved.{$property}"] = $type;
-						}
-					}
 				}
 			}
 			$this->properties[$property] = $bean;
@@ -1156,7 +1115,7 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 			return $this->properties[$property];
 		}
 
-		//Implicit: elseif ( $isOwn || $isShared ) {
+		/* Implicit: elseif ( $isOwn || $isShared ) */
 		if ( $this->noLoad ) {
 			$beans = array();
 		} elseif ( $isOwn ) {
@@ -1167,7 +1126,7 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		$this->properties[$property]          = $beans;
 		$this->__info["sys.shadow.$property"] = $beans;
 		$this->__info['tainted']              = TRUE;
-		
+
 		$this->clearModifiers();
 		return $this->properties[$property];
 
@@ -1248,7 +1207,7 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 				throw new RedException( 'Cannot cast to bean.' );
 			}
 		}
-		
+
 		if ( $isFieldLink ){
 			unset( $this->properties[ $fieldName ]);
 			$this->properties[ $property ] = NULL;
@@ -1408,13 +1367,13 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		if ( empty( $this->__info['model'] ) ) {
 			return NULL;
 		}
-		
+
 		$overrideDontFail = FALSE;
 		if ( strpos( $method, '@' ) === 0 ) {
 			$method = substr( $method, 1 );
 			$overrideDontFail = TRUE;
 		}
-		
+
 		if ( !method_exists( $this->__info['model'], $method ) ) {
 
 			if ( self::$errorHandlingFUSE === FALSE || $overrideDontFail ) {
@@ -1630,7 +1589,7 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 	 * @return OODBBean
 	 * @throws RedException
 	 */
-	public function traverse( $property, $function, $maxDepth = NULL )
+	public function traverse( $property, $function, $maxDepth = NULL, $depth = 1 )
 	{
 		$this->via = NULL;
 		if ( strpos( $property, 'shared' ) !== FALSE ) {
@@ -1653,13 +1612,13 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		if ( !is_array( $beans ) ) $beans = array( $beans );
 
 		foreach( $beans as $bean ) {
-			$function( $bean );
+			$function( $bean, $depth );
 			$bean->fetchType  = $oldFetchType;
 			$bean->aliasName  = $oldAliasName;
 			$bean->withSql    = $oldWith;
 			$bean->withParams = $oldBindings;
 
-			$bean->traverse( $property, $function, $maxDepth );
+			$bean->traverse( $property, $function, $maxDepth, $depth + 1 );
 		}
 
 		return $this;
@@ -2117,17 +2076,21 @@ class OODBBean implements\IteratorAggregate,\ArrayAccess,\Countable,Jsonable
 		$count = 0;
 		if ( $this->getID() ) {
 			reset( $this->withParams );
-			$joinSql = $this->parseJoin( $type );
 			$firstKey = count( $this->withParams ) > 0
 				? key( $this->withParams )
 				: 0;
 			if ( is_int( $firstKey ) ) {
+				$sql = "{$myFieldLink} = ? {$this->withSql}";
 				$bindings = array_merge( array( $this->getID() ), $this->withParams );
-				$count    = $this->beanHelper->getToolbox()->getWriter()->queryRecordCount( $type, array(), "{$joinSql} $myFieldLink = ? " . $this->withSql, $bindings );
 			} else {
+				$sql = "{$myFieldLink} = :slot0 {$this->withSql}";
 				$bindings           = $this->withParams;
 				$bindings[':slot0'] = $this->getID();
-				$count              = $this->beanHelper->getToolbox()->getWriter()->queryRecordCount( $type, array(), "{$joinSql} $myFieldLink = :slot0 " . $this->withSql, $bindings );
+			}
+			if ( !self::$useFluidCount ) {
+				$count = $this->beanHelper->getToolbox()->getWriter()->queryRecordCount( $type, array(), $sql, $bindings );
+			} else {
+				$count = $this->beanHelper->getToolbox()->getRedBean()->count( $type, $sql, $bindings );
 			}
 		}
 		$this->clearModifiers();
