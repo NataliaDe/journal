@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
 {
     public static $prefixLengthsPsr4 = array (
+        'S' => 
+        array (
+            'Svg\\' => 4,
+        ),
         'R' => 
         array (
             'RedBeanPHP\\' => 11,
@@ -14,7 +18,6 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'P' => 
         array (
             'Psr\\Log\\' => 8,
-            'ParseCsv\\extensions\\' => 20,
             'ParseCsv\\' => 9,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -39,6 +42,10 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
     );
 
     public static $prefixDirsPsr4 = array (
+        'Svg\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
+        ),
         'RedBeanPHP\\' => 
         array (
             0 => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP',
@@ -46,10 +53,6 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
-        ),
-        'ParseCsv\\extensions\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/parsecsv/php-parsecsv/src/extensions',
         ),
         'ParseCsv\\' => 
         array (
@@ -88,10 +91,6 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
     public static $prefixesPsr0 = array (
         'S' => 
         array (
-            'Svg\\' => 
-            array (
-                0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src',
-            ),
             'Slim' => 
             array (
                 0 => __DIR__ . '/..' . '/slim/slim',
@@ -124,7 +123,7 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'CGIFIMAGE' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFIMAGEHEADER' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
         'CGIFLZW' => __DIR__ . '/..' . '/mpdf/mpdf/classes/gif.php',
-        'Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
+        'Dompdf\\Cpdf' => __DIR__ . '/..' . '/dompdf/dompdf/lib/Cpdf.php',
         'HTML5_Data' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Data.php',
         'HTML5_InputStream' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/InputStream.php',
         'HTML5_Parser' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Parser.php',

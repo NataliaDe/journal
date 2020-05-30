@@ -457,7 +457,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 ?>
 
                 <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
-                    <i class="fa fa-lg fa-male" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
+                    <i class="fa fa-lg fa-male <?= (isset($row['is_empty_rb']) && $row['is_empty_rb'] == 1) ? 'rb-warning' : '' ?>" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Результаты боевой работы"></i></a>
 
                 <a href="<?= $baseUrl ?>/trunk/<?= $row['id'] ?>" target="_blank">
                     <i class="fa fa-lg fa-free-code-camp" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Подача стволов" style="color: <?= (isset($trunk_by_rig) && isset($trunk_by_rig[$row['id']]) && !empty($trunk_by_rig[$row['id']])) ? 'green' : '' ?>"></i></a>

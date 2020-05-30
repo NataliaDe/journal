@@ -29,7 +29,7 @@ use RedBeanPHP\Util\Feature;
  * RedBean Facade
  *
  * Version Information
- * RedBean Version @version 5.2
+ * RedBean Version @version 5.5
  *
  * This class hides the object landscape of
  * RedBeanPHP behind a single letter class providing
@@ -49,7 +49,7 @@ class Facade
 	/**
 	 * RedBeanPHP version constant.
 	 */
-	const C_REDBEANPHP_VERSION = '5.2';
+	const C_REDBEANPHP_VERSION = '5.5';
 
 	/**
 	 * @var ToolBox
@@ -117,6 +117,16 @@ class Facade
 	private static $exportCaseStyle = 'default';
 
 	/**
+	 * @var flag allows transactions through facade in fluid mode
+	 */
+	private static $allowFluidTransactions = FALSE;
+
+	/**
+	 * @var flag allows to unfreeze if needed with store(all)
+	 */
+	private static $allowHybridMode = FALSE;
+
+	/**
 	 * Not in use (backward compatibility SQLHelper)
 	 */
 	public static $f;
@@ -164,6 +174,22 @@ class Facade
 		} else {
 			return Facade::$adapter->$method( $sql, $bindings );
 		}
+	}
+
+	/**
+	 * Sets allow hybrid mode flag. In Hybrid mode (default off),
+	 * store/storeAll take an extra argument to switch to fluid
+	 * mode in case of an exception. You can use this to speed up
+	 * fluid mode. This method returns the previous value of the
+	 * flag.
+	 *
+	 * @param boolean $hybrid
+	 */
+	public static function setAllowHybridMode( $hybrid )
+	{
+		$old = self::$allowHybridMode;
+		self::$allowHybridMode = $hybrid;
+		return $old;
 	}
 
 	/**
@@ -275,6 +301,41 @@ class Facade
 	}
 
 	/**
+	 * Toggles fluid transactions. By default fluid transactions
+	 * are not active. Starting, committing or rolling back a transaction
+	 * through the facade in fluid mode will have no effect. If you wish
+	 * to replace this standard portable behavor with behavior depending
+	 * on how the used database platform handles fluid (DDL) transactions
+	 * set this flag to TRUE.
+	 *
+	 * @param boolean $mode allow fluid transaction mode
+	 *
+	 * @return void
+	 */
+	public static function setAllowFluidTransactions( $mode )
+	{
+		self::$allowFluidTransactions = $mode;
+	}
+
+	/**
+	 * Toggles support for IS-NULL-conditions.
+	 * If IS-NULL-conditions are enabled condition arrays
+	 * for functions including findLike() are treated so that
+	 * 'field' => NULL will be interpreted as field IS NULL
+	 * instead of being skipped. Returns the previous
+	 * value of the flag.
+	 *
+	 * @param boolean $flag TRUE or FALSE
+	 *
+	 * @return boolean
+	 */
+	public static function useISNULLConditions( $mode )
+	{
+		self::getWriter()->flushCache(); /* otherwise same queries might fail (see Unit test XNull) */
+		return AQueryWriter::useISNULLConditions( $mode );
+	}
+
+	/**
 	 * Wraps a transaction around a closure or string callback.
 	 * If an Exception is thrown inside, the operation is automatically rolled back.
 	 * If no Exception happens, it commits automatically.
@@ -337,11 +398,49 @@ class Facade
 			throw new RedException( 'A database has already been specified for this key.' );
 		}
 
+		self::$toolboxes[$key] = self::createToolbox($dsn, $user, $pass, $frozen, $partialBeans);
+	}
+
+	/**
+	 * Creates a toolbox. This method can be called if you want to use redbean non-static.
+   * It has the same interface as R::setup(). The createToolbx() method can be called
+   * without any arguments, in this case it will try to create a SQLite database in
+   * /tmp called red.db (this only works on UNIX-like systems).
+	 *
+	 * Usage:
+	 *
+	 * <code>
+	 * R::createToolbox( 'mysql:host=localhost;dbname=mydatabase', 'dba', 'dbapassword' );
+	 * </code>
+	 *
+	 * You can replace 'mysql:' with the name of the database you want to use.
+	 * Possible values are:
+	 *
+	 * - pgsql  (PostgreSQL database)
+	 * - sqlite (SQLite database)
+	 * - mysql  (MySQL database)
+	 * - mysql  (also for Maria database)
+	 * - sqlsrv (MS SQL Server - community supported experimental driver)
+	 * - CUBRID (CUBRID driver - basic support provided by Plugin)
+	 *
+	 * Note that createToolbox() will not immediately establish a connection to the database.
+	 * Instead, it will prepare the connection and connect 'lazily', i.e. the moment
+	 * a connection is really required, for instance when attempting to load a bean.
+	 *
+	 * @param string  $dsn      Database connection string
+	 * @param string  $username Username for database
+	 * @param string  $password Password for database
+	 * @param boolean $frozen   TRUE if you want to setup in frozen mode
+	 *
+	 * @return ToolBox
+	 */
+  public static function createToolbox( $dsn = NULL, $username = NULL, $password = NULL, $frozen = FALSE, $partialBeans = FALSE )
+  {
 		if ( is_object($dsn) ) {
 			$db  = new RPDO( $dsn );
 			$dbType = $db->getDatabaseType();
 		} else {
-			$db = new RPDO( $dsn, $user, $pass, TRUE );
+			$db = new RPDO( $dsn, $username, $password, TRUE );
 			$dbType = substr( $dsn, 0, strpos( $dsn, ':' ) );
 		}
 
@@ -363,12 +462,27 @@ class Facade
 		$writerClass = '\\RedBeanPHP\\QueryWriter\\'.$writers[$wkey];
 		$writer      = new $writerClass( $adapter );
 		$redbean     = new OODB( $writer, $frozen );
-		
+
 		if ( $partialBeans ) {
 			$redbean->getCurrentRepository()->usePartialBeans( $partialBeans );
 		}
 
-		self::$toolboxes[$key] = new ToolBox( $redbean, $adapter, $writer );
+		return new ToolBox( $redbean, $adapter, $writer );
+  }
+
+	/**
+	 * Sets PDO attributes for MySQL SSL connection.
+	 *
+	 * @param string $key  path client key i.e. '/etc/mysql/ssl/client-key.pem'
+	 * @param string $cert path client cert i.e. '/etc/mysql/ssl/client-cert.pem'
+	 * @param string $ca   path certifying agent certificate '/etc/mysql/ssl/ca-cert.pem'
+	 * @param string $id   apply to toolbox (default = 'default')
+	 */
+	public static function useMysqlSSL( $key, $cert, $ca, $id = 'default' ) {
+		$pdo = self::$toolboxes[$id]->getDatabaseAdapter()->getDatabase()->getPDO();
+		$pdo->setAttribute( \PDO::MYSQL_ATTR_SSL_KEY,  $key);
+		$pdo->setAttribute( \PDO::MYSQL_ATTR_SSL_CERT,  $cert);
+		$pdo->setAttribute( \PDO::MYSQL_ATTR_SSL_CA,  $ca);
 	}
 
 	/**
@@ -526,13 +640,29 @@ class Facade
 	 * key ID $id assigned by the database. We can now use this
 	 * ID to load the bean from the database again and delete it.
 	 *
-	 * @param OODBBean|SimpleModel $bean bean to store
+	 * If the second parameter is set to TRUE and
+	 * Hybrid mode is allowed (default OFF for novice), then RedBeanPHP
+	 * will automatically temporarily switch to fluid mode to attempt to store the
+	 * bean in case of an SQLException.
+	 *
+	 * @param OODBBean|SimpleModel $bean             bean to store
+	 * @param boolean              $unfreezeIfNeeded retries in fluid mode in hybrid mode
 	 *
 	 * @return integer|string
 	 */
-	public static function store( $bean )
+	public static function store( $bean, $unfreezeIfNeeded = FALSE )
 	{
-		return self::$redbean->store( $bean );
+		$result = NULL;
+		try {
+			$result = self::$redbean->store( $bean );
+		} catch (SQLException $exception) {
+			$wasFrozen = self::$redbean->isFrozen();
+			if ( !self::$allowHybridMode || !$unfreezeIfNeeded ) throw $exception;
+			self::freeze( FALSE );
+			$result = self::$redbean->store( $bean );
+			self::freeze( $wasFrozen );
+		}
+		return $result;
 	}
 
 	/**
@@ -646,6 +776,52 @@ class Facade
 	}
 
 	/**
+	 * Same as find(), but selects the beans for update, thus locking the beans.
+	 * This equals an SQL query like 'SELECT ... FROM ... FOR UPDATE'.
+	 * Use this method if you want to load a bean you intend to UPDATE.
+	 * This method should be used to 'LOCK a bean'.
+	 *
+	 * Usage:
+	 *
+	 * <code>
+	 * $bean = R::findForUpdate(
+	 *    'bean',
+	 *    ' title LIKE ? ',
+	 *    array('title')
+	 * );
+	 * ...update...
+	 * R::store( $bean );
+	 * </code>
+	 *
+	 * @param string $type     the type of bean you are looking for
+	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
+	 * @param array  $bindings array of values to be bound to parameters in query
+	 *
+	 * @return array
+	 */
+	public static function findForUpdate( $type, $sql = NULL, $bindings = array() )
+	{
+		return self::find( $type, $sql, $bindings, AQueryWriter::C_SELECT_SNIPPET_FOR_UPDATE );
+	}
+
+	/**
+	 * Convenience method.
+	 * Same as findForUpdate but returns just one bean and adds LIMIT-clause.
+	 *
+	 * @param string $type     the type of bean you are looking for
+	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
+	 * @param array  $bindings array of values to be bound to parameters in query
+	 *
+	 * @return array
+	 */
+	public static function findOneForUpdate( $type, $sql = NULL, $bindings = array() )
+	{
+		$sql = self::getWriter()->glueLimitOne( $sql );
+		$beans = self::findForUpdate($type, $sql, $bindings);
+		return !empty($beans) ? reset($beans) : NULL;
+	}
+
+	/**
 	 * Removes a bean from the database.
 	 * This function will remove the specified OODBBean
 	 * Bean Object from the database.
@@ -714,11 +890,11 @@ class Facade
 	 *
 	 * <code>
 	 *  $book = R::dispense( [
-     *   '_type' => 'book',
-     *   'title'  => 'Gifted Programmers',
-     *   'author' => [ '_type' => 'author', 'name' => 'Xavier' ],
-     *   'ownPageList' => [ ['_type'=>'page', 'text' => '...'] ]
-     * ] );
+	 *   '_type' => 'book',
+	 *   'title'  => 'Gifted Programmers',
+	 *   'author' => [ '_type' => 'author', 'name' => 'Xavier' ],
+	 *   'ownPageList' => [ ['_type'=>'page', 'text' => '...'] ]
+	 * ] );
 	 * </code>
 	 *
 	 * @param string|array $typeOrBeanArray   type or bean array to import
@@ -810,11 +986,13 @@ class Facade
 	 * @param string $type     the type of bean you are looking for
 	 * @param string $sql      SQL query to find the desired bean, starting right after WHERE clause
 	 * @param array  $bindings array of values to be bound to parameters in query
+	 * @param string $snippet  SQL snippet to include in query (for example: FOR UPDATE)
 	 *
 	 * @return array
 	 */
-	public static function find( $type, $sql = NULL, $bindings = array() )
+	public static function find( $type, $sql = NULL, $bindings = array(), $snippet = NULL )
 	{
+		if ( $snippet !== NULL ) self::$writer->setSQLSelectSnippet( $snippet );
 		return self::$finder->find( $type, $sql, $bindings );
 	}
 
@@ -1238,12 +1416,13 @@ class Facade
 	 * @param    array|OODBBean $beans   beans to be exported
 	 * @param    boolean        $parents whether you want parent beans to be exported
 	 * @param    array          $filters whitelist of types
+	 * @param    boolean        $meta      export meta data as well
 	 *
 	 * @return array
 	 */
-	public static function exportAll( $beans, $parents = FALSE, $filters = array())
+	public static function exportAll( $beans, $parents = FALSE, $filters = array(), $meta = FALSE )
 	{
-		return self::$duplicationManager->exportAll( $beans, $parents, $filters, self::$exportCaseStyle );
+		return self::$duplicationManager->exportAll( $beans, $parents, $filters, self::$exportCaseStyle, $meta );
 	}
 
 	/**
@@ -1320,10 +1499,11 @@ class Facade
 	 * @param array  $row       one row from the database
 	 * @param string $metamask  metamask (see convertToBeans)
 	 *
-	 * @return RedBeanPHP\OODBBean
+	 * @return OODBBean|NULL
 	 */
 	public static function convertToBean( $type, $row, $metamask = NULL )
 	{
+		if ( !count( $row ) ) return NULL;
 		$beans = self::$redbean->convertToBeans( $type, array( $row ), $metamask );
 		$bean  = reset( $beans );
 		return $bean;
@@ -1512,6 +1692,40 @@ class Facade
 	}
 
 	/**
+	 * Same as taggedAll() but counts beans only (does not return beans).
+	 *
+	 * @see R::taggedAll
+	 *
+	 * @param string       $beanType type of bean you are looking for
+	 * @param array|string $tagList  list of tags to match
+	 * @param string       $sql      additional sql snippet
+	 * @param array        $bindings bindings
+	 *
+	 * @return integer
+	 */
+	public static function countTaggedAll( $beanType, $tagList, $sql = '', $bindings = array() )
+	{
+		return self::$tagManager->countTaggedAll( $beanType, $tagList, $sql, $bindings );
+	}
+
+	/**
+	 * Same as tagged() but counts beans only (does not return beans).
+	 *
+	 * @see R::tagged
+	 *
+	 * @param string       $beanType type of bean you are looking for
+	 * @param array|string $tagList  list of tags to match
+	 * @param string       $sql      additional sql snippet
+	 * @param array        $bindings bindings
+	 *
+	 * @return integer
+	 */
+	public static function countTagged( $beanType, $tagList, $sql = '', $bindings = array() )
+	{
+		return self::$tagManager->countTagged( $beanType, $tagList, $sql, $bindings );
+	}
+
+	/**
 	 * Wipes all beans of type $beanType.
 	 *
 	 * @param string $beanType type of bean you want to destroy entirely
@@ -1595,11 +1809,18 @@ class Facade
 	 * If an exception occurs, the transaction gets rolled back and the database
 	 * will be left 'untouched'.
 	 *
+	 * In fluid mode transactions will be ignored and all queries will
+	 * be executed as-is because database schema changes will automatically
+	 * trigger the transaction system to commit everything in some database
+	 * systems. If you use a database that can handle DDL changes you might wish
+	 * to use setAllowFluidTransactions(TRUE). If you do this, the behavior of
+	 * this function in fluid mode will depend on the database platform used.
+	 *
 	 * @return bool
 	 */
 	public static function begin()
 	{
-		if ( !self::$redbean->isFrozen() ) return FALSE;
+		if ( !self::$allowFluidTransactions && !self::$redbean->isFrozen() ) return FALSE;
 		self::$adapter->startTransaction();
 		return TRUE;
 	}
@@ -1629,11 +1850,18 @@ class Facade
 	 * If an exception occurs, the transaction gets rolled back and the database
 	 * will be left 'untouched'.
 	 *
+	 * In fluid mode transactions will be ignored and all queries will
+	 * be executed as-is because database schema changes will automatically
+	 * trigger the transaction system to commit everything in some database
+	 * systems. If you use a database that can handle DDL changes you might wish
+	 * to use setAllowFluidTransactions(TRUE). If you do this, the behavior of
+	 * this function in fluid mode will depend on the database platform used.
+	 *
 	 * @return bool
 	 */
 	public static function commit()
 	{
-		if ( !self::$redbean->isFrozen() ) return FALSE;
+		if ( !self::$allowFluidTransactions && !self::$redbean->isFrozen() ) return FALSE;
 		self::$adapter->commit();
 		return TRUE;
 	}
@@ -1663,11 +1891,18 @@ class Facade
 	 * If an exception occurs, the transaction gets rolled back and the database
 	 * will be left 'untouched'.
 	 *
+	 * In fluid mode transactions will be ignored and all queries will
+	 * be executed as-is because database schema changes will automatically
+	 * trigger the transaction system to commit everything in some database
+	 * systems. If you use a database that can handle DDL changes you might wish
+	 * to use setAllowFluidTransactions(TRUE). If you do this, the behavior of
+	 * this function in fluid mode will depend on the database platform used.
+	 *
 	 * @return bool
 	 */
 	public static function rollback()
 	{
-		if ( !self::$redbean->isFrozen() ) return FALSE;
+		if ( !self::$allowFluidTransactions && !self::$redbean->isFrozen() ) return FALSE;
 		self::$adapter->rollback();
 		return TRUE;
 	}
@@ -1722,6 +1957,48 @@ class Facade
 	}
 
 	/**
+	 * Convenience method to quickly attach parent beans.
+	 * Although usually this can also be done with findMulti(), that
+	 * approach can be a bit verbose sometimes. This convenience method
+	 * uses a default yet overridable SQL snippet to perform the
+	 * operation, leveraging the power of findMulti().
+	 *
+	 * Usage:
+	 *
+	 * <code>
+	 * $users = R::find('user');
+	 * $users = R::loadJoined( $users, 'country' );
+	 * </code>
+	 *
+	 * This is an alternative for:
+	 *
+	 * <code>
+	 * $all = R::findMulti('country',
+	 *    R::genSlots( $users,
+	 *       'SELECT country.* FROM country WHERE id IN ( %s )' ),
+	 *    array_column( $users, 'country_id' ),
+	 *    [Finder::onmap('country', $gebruikers)]
+	 * );
+	 * </code>
+	 *
+	 * @param array  $beans       a list of OODBBeans
+	 * @param string $type        a type string
+	 * @param string $sqlTemplate an SQL template string for the SELECT-query
+	 *
+	 * @return array
+	 */
+	public static function loadJoined( $beans, $type, $sqlTemplate = 'SELECT %s.* FROM %s WHERE id IN (%s)' )
+	{
+		if (!count($beans)) return array();
+		$ids  = array();
+		$key  = "{$type}_id";
+		foreach( $beans as $bean ) $ids[] = $bean->{$key};
+		$result = self::findMulti($type, self::genSlots( $beans,sprintf($sqlTemplate, $type, $type, '%s')), $ids, array( Finder::onmap($type, $beans) ) );
+		$bean = reset($beans);
+		return $result[ $bean->getMeta('type') ];
+	}
+
+	/**
 	 * Flattens a multi dimensional bindings array for use with genSlots().
 	 *
 	 * Usage:
@@ -1753,8 +2030,29 @@ class Facade
 	 */
 	public static function nuke()
 	{
-		if ( !self::$redbean->isFrozen() ) {
-			self::$writer->wipeAll();
+		return self::wipeAll( TRUE );
+	}
+
+	/**
+	 * Truncates or drops all database tables/views.
+	 * Empties the database. If the deleteTables flag is set to TRUE
+	 * this function will also remove the database structures.
+	 * The latter only works in fluid mode.
+	 *
+	 * @param boolean $alsoDeleteTables TRUE to clear entire database.
+	 *
+	 * @return void
+	 */
+	public static function wipeAll( $alsoDeleteTables = FALSE )
+	{
+		if ( $alsoDeleteTables ) {
+			if ( !self::$redbean->isFrozen() ) {
+				self::$writer->wipeAll();
+			}
+		} else {
+			foreach ( self::$writer->getTables() as $table ) {
+				self::wipe( $table );
+			}
 		}
 	}
 
@@ -1764,15 +2062,21 @@ class Facade
 	 * function.
 	 * A loop saver.
 	 *
-	 * @param array $beans list of beans to be stored
+	 * If the second parameter is set to TRUE and
+	 * Hybrid mode is allowed (default OFF for novice), then RedBeanPHP
+	 * will automatically temporarily switch to fluid mode to attempt to store the
+	 * bean in case of an SQLException.
+	 *
+	 * @param array   $beans            list of beans to be stored
+	 * @param boolean $unfreezeIfNeeded retries in fluid mode in hybrid mode
 	 *
 	 * @return array
 	 */
-	public static function storeAll( $beans )
+	public static function storeAll( $beans, $unfreezeIfNeeded = FALSE )
 	{
 		$ids = array();
 		foreach ( $beans as $bean ) {
-			$ids[] = self::store( $bean );
+			$ids[] = self::store( $bean, $unfreezeIfNeeded );
 		}
 		return $ids;
 	}
@@ -1788,9 +2092,11 @@ class Facade
 	 */
 	public static function trashAll( $beans )
 	{
+		$numberOfDeletion = 0;
 		foreach ( $beans as $bean ) {
-			self::trash( $bean );
+			$numberOfDeletion += self::trash( $bean );
 		}
+		return $numberOfDeletion;
 	}
 
 	/**
@@ -2242,18 +2548,19 @@ class Facade
 	 * @param string $mode     mode for function: i.e. read or write
 	 * @param string $field    field (table.column) to bind function to
 	 * @param string $function SQL function to bind to specified column
+	 * @param boolean $isTemplate TRUE if $function is an SQL string, FALSE for just a function name
 	 *
 	 * @return void
 	 */
-	public static function bindFunc( $mode, $field, $function )
+	public static function bindFunc( $mode, $field, $function, $isTemplate = FALSE )
 	{
-		self::$redbean->bindFunc( $mode, $field, $function );
+		self::$redbean->bindFunc( $mode, $field, $function, $isTemplate );
 	}
 
 	/**
 	 * Sets global aliases.
 	 * Registers a batch of aliases in one go. This works the same as
-	 * fetchAs and setAutoResolve but explicitly. For instance if you register
+	 * fetchAs but explicitly. For instance if you register
 	 * the alias 'cover' for 'page' a property containing a reference to a
 	 * page bean called 'cover' will correctly return the page bean and not
 	 * a (non-existant) cover bean.
@@ -2278,9 +2585,7 @@ class Facade
 	 * cover => page
 	 *
 	 * From that point on, every bean reference to a cover
-	 * will return a 'page' bean. Note that with autoResolve this
-	 * feature along with fetchAs() is no longer very important, although
-	 * relying on explicit aliases can be a bit faster.
+	 * will return a 'page' bean.
 	 *
 	 * @param array $list list of global aliases to use
 	 *
@@ -2301,12 +2606,13 @@ class Facade
 	 *
 	 * @param string $type type of bean to search for
 	 * @param array  $like criteria set describing the bean to search for
+	 * @param boolean $hasBeenCreated set to TRUE if bean has been created
 	 *
 	 * @return OODBBean
 	 */
-	public static function findOrCreate( $type, $like = array(), $sql = '' )
+	public static function findOrCreate( $type, $like = array(), $sql = '', &$hasBeenCreated = false )
 	{
-		return self::$finder->findOrCreate( $type, $like, $sql = '' );
+		return self::$finder->findOrCreate( $type, $like, $sql = '', $hasBeenCreated );
 	}
 
 	/**
@@ -2498,20 +2804,9 @@ class Facade
 	}
 
 	/**
-	 * Alias for setAutoResolve() method on OODBBean.
-	 * Enables or disables auto-resolving fetch types.
-	 * Auto-resolving aliased parent beans is convenient but can
-	 * be slower and can create infinite recursion if you
-	 * used aliases to break cyclic relations in your domain.
-	 *
-	 * @param boolean $automatic TRUE to enable automatic resolving aliased parents
-	 *
-	 * @return void
+	 * @deprecated
 	 */
-	public static function setAutoResolve( $automatic = TRUE )
-	{
-		OODBBean::setAutoResolve( (boolean) $automatic );
-	}
+	public static function setAutoResolve( $automatic = TRUE ){}
 
 	/**
 	 * Toggles 'partial bean mode'. If this mode has been
@@ -2534,8 +2829,10 @@ class Facade
 
 	/**
 	 * Exposes the result of the specified SQL query as a CSV file.
+	 *
 	 * Usage:
 	 *
+	 * <code>
 	 * R::csv( 'SELECT
 	 *                 `name`,
 	 *                  population
@@ -2545,6 +2842,7 @@ class Facade
 	 *          array( 'city', 'population' ),
 	 *          '/tmp/cities.csv'
 	 * );
+	 * </code>
 	 *
 	 * The command above will select all cities in Denmark
 	 * and create a CSV with columns 'city' and 'population' and
@@ -2746,6 +3044,7 @@ class Facade
 		if ( !array_key_exists( $key, self::$toolboxes ) ) {
 			return FALSE;
 		}
+		unset( self::$toolboxes[$key] );
 		return TRUE;
 	}
 
@@ -2791,8 +3090,10 @@ class Facade
 	 *
 	 * So invoking this method is the same as:
 	 *
+	 * <code>
 	 * AQueryWriter::useJSONColumns( $flag );
 	 * OODBBean::convertArraysToJSON( $flag );
+	 * </code>
 	 *
 	 * Unlike the methods above, that return the previous state, this
 	 * method does not return anything (void).
@@ -2808,19 +3109,15 @@ class Facade
 	}
 
 	/**
-	 * @experimental
-	 *
 	 * Given a bean and an optional SQL snippet,
-	 * this method will return all child beans in a hierarchically structured
+	 * this method will return the bean together with all 
+	 * child beans in a hierarchically structured
 	 * bean table.
 	 *
 	 * @note that not all database support this functionality. You'll need
 	 * at least MariaDB 10.2.2 or Postgres. This method does not include
 	 * a warning mechanism in case your database does not support this
 	 * functionality.
-	 *
-	 * @note that this functionality is considered 'experimental'.
-	 * It may still contain bugs.
 	 *
 	 * @param OODBBean $bean     bean to find children of
 	 * @param string   $sql      optional SQL snippet
@@ -2832,10 +3129,8 @@ class Facade
 	}
 
 	/**
-	 * @experimental
-	 *
 	 * Given a bean and an optional SQL snippet,
-	 * this method will return all parent beans in a hierarchically structured
+	 * this method will count all child beans in a hierarchically structured
 	 * bean table.
 	 *
 	 * @note that not all database support this functionality. You'll need
@@ -2843,8 +3138,43 @@ class Facade
 	 * a warning mechanism in case your database does not support this
 	 * functionality.
 	 *
-	 * @note that this functionality is considered 'experimental'.
-	 * It may still contain bugs.
+	 * @param OODBBean $bean     bean to find children of
+	 * @param string   $sql      optional SQL snippet
+	 * @param array    $bindings SQL snippet parameter bindings
+	 */
+	public static function countChildren( OODBBean $bean, $sql = NULL, $bindings = array() )
+	{
+		return self::$tree->countChildren( $bean, $sql, $bindings );
+	}
+
+	/**
+	 * Given a bean and an optional SQL snippet,
+	 * this method will count all parent beans in a hierarchically structured
+	 * bean table.
+	 *
+	 * @note that not all database support this functionality. You'll need
+	 * at least MariaDB 10.2.2 or Postgres. This method does not include
+	 * a warning mechanism in case your database does not support this
+	 * functionality.
+	 *
+	 * @param OODBBean $bean     bean to find children of
+	 * @param string   $sql      optional SQL snippet
+	 * @param array    $bindings SQL snippet parameter bindings
+	 */
+	public static function countParents( OODBBean $bean, $sql = NULL, $bindings = array() )
+	{
+		return self::$tree->countParents( $bean, $sql, $bindings );
+	}
+
+	/**
+	 * Given a bean and an optional SQL snippet,
+	 * this method will return the bean along with all parent beans
+	 * in a hierarchically structured bean table.
+	 *
+	 * @note that not all database support this functionality. You'll need
+	 * at least MariaDB 10.2.2 or Postgres. This method does not include
+	 * a warning mechanism in case your database does not support this
+	 * functionality.
 	 *
 	 * @param OODBBean $bean     bean to find parents of
 	 * @param string   $sql      optional SQL snippet
@@ -2873,13 +3203,16 @@ class Facade
 	 * the label.
 	 *
 	 * Usage:
+	 *
+	 * <code>
 	 * R::useFeatureSet( 'novice/latest' );
+	 * </code>
 	 *
 	 * @param string $label label
 	 *
 	 * @return void
 	 */
-	public static function usefeatureSet( $label ) {
+	public static function useFeatureSet( $label ) {
 		return Feature::feature($label);
 	}
 
@@ -2908,8 +3241,8 @@ class Facade
 	 */
 	public static function ext( $pluginName, $callable )
 	{
-		if ( !ctype_alnum( $pluginName ) ) {
-			throw new RedException( 'Plugin name may only contain alphanumeric characters.' );
+		if ( !preg_match( '#^[a-zA-Z_][a-zA-Z0-9_]*$#', $pluginName ) ) {
+			throw new RedException( 'Plugin name may only contain alphanumeric characters and underscores and cannot start with a number.' );
 		}
 		self::$plugins[$pluginName] = $callable;
 	}
@@ -2925,10 +3258,10 @@ class Facade
 	 */
 	public static function __callStatic( $pluginName, $params )
 	{
-		if ( !ctype_alnum( $pluginName) ) {
-			throw new RedException( 'Plugin name may only contain alphanumeric characters.' );
-		}
 		if ( !isset( self::$plugins[$pluginName] ) ) {
+			if ( !preg_match( '#^[a-zA-Z_][a-zA-Z0-9_]*$#', $pluginName ) ) {
+				throw new RedException( 'Plugin name may only contain alphanumeric characters and underscores and cannot start with a number.' );
+			}
 			throw new RedException( 'Plugin \''.$pluginName.'\' does not exist, add this plugin using: R::ext(\''.$pluginName.'\')' );
 		}
 		return call_user_func_array( self::$plugins[$pluginName], $params );

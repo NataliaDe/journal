@@ -20,17 +20,16 @@ $(function () {
     assert.strictEqual(Util.getSelectorFromElement($el2[0]), null)
   })
 
-  QUnit.test('Util.getSelectorFromElement should throw error when there is a bad selector', function (assert) {
+  QUnit.test('Util.getSelectorFromElement should return null when there is a bad selector', function (assert) {
     assert.expect(2)
 
     var $el = $('<div data-target="#1"></div>').appendTo($('#qunit-fixture'))
 
-    try {
-      assert.ok(true, 'trying to use a bad selector')
-      Util.getSelectorFromElement($el[0])
-    } catch (e) {
-      assert.ok(e instanceof DOMException)
-    }
+    assert.strictEqual(Util.getSelectorFromElement($el[0]), null)
+
+    var $el2 = $('<a href="/posts"></a>').appendTo($('#qunit-fixture'))
+
+    assert.strictEqual(Util.getSelectorFromElement($el2[0]), null)
   })
 
   QUnit.test('Util.typeCheckConfig should thrown an error when a bad config is passed', function (assert) {
@@ -50,6 +49,25 @@ $(function () {
     } catch (err) {
       assert.strictEqual(err.message, 'COLLAPSE: Option "parent" provided type "number" but expected type "(string|element)".')
     }
+  })
+
+  QUnit.test('Util.typeCheckConfig should return null/undefined stringified when passed', function (assert) {
+    assert.expect(1)
+    var namePlugin = 'collapse'
+    var defaultType = {
+      toggle: '(null|undefined)'
+    }
+    var config = {
+      toggle: null
+    }
+
+    Util.typeCheckConfig(namePlugin, config, defaultType)
+
+    config.toggle = undefined
+
+    Util.typeCheckConfig(namePlugin, config, defaultType)
+
+    assert.strictEqual(true, true)
   })
 
   QUnit.test('Util.isElement should check if we passed an element or not', function (assert) {
@@ -138,9 +156,9 @@ $(function () {
       mode: 'open'
     })
 
-    assert.equal(shadowRoot, Util.findShadowRoot(shadowRoot))
+    assert.strictEqual(shadowRoot, Util.findShadowRoot(shadowRoot))
     shadowRoot.innerHTML = '<button>Shadow Button</button>'
-    assert.equal(shadowRoot, Util.findShadowRoot(shadowRoot.firstChild))
+    assert.strictEqual(shadowRoot, Util.findShadowRoot(shadowRoot.firstChild))
   })
 
   QUnit.test('Util.findShadowRoot should return null when attachShadow is not available', function (assert) {
@@ -148,7 +166,7 @@ $(function () {
 
     var $div = $('<div id="test"></div>').appendTo($('#qunit-fixture'))
     if (!document.documentElement.attachShadow) {
-      assert.equal(null, Util.findShadowRoot($div[0]))
+      assert.strictEqual(null, Util.findShadowRoot($div[0]))
     } else {
       var sandbox = sinon.createSandbox()
 
@@ -157,8 +175,13 @@ $(function () {
         return $div
       })
 
-      assert.equal(null, Util.findShadowRoot($div[0]))
+      assert.strictEqual(null, Util.findShadowRoot($div[0]))
       sandbox.restore()
     }
+  })
+
+  QUnit.test('Util.jQueryDetection should detect jQuery', function (assert) {
+    assert.expect(0)
+    Util.jQueryDetection()
   })
 })

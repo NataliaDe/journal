@@ -29,6 +29,317 @@ use RedBeanPHP\Finder;
 class Finding extends Base {
 
 	/**
+	 * Can we quickly attach additional beans?
+	 *
+	 * @return void
+	 */
+	public function testPreloadUsingFindMulti()
+	{
+		R::nuke();
+		$gebruiker1 = R::dispense('gebruiker');
+		$gebruiker2 = R::dispense('gebruiker');
+		$gebruiker3 = R::dispense('gebruiker');
+		$country1 = R::dispense('country');
+		$country2 = R::dispense('country');
+		$country3 = R::dispense('country');
+		$language1 = R::dispense('language');
+		$language2 = R::dispense('language');
+		$language3 = R::dispense('language');
+		$gebruiker1->name = 'a';
+		$gebruiker2->name = 'b';
+		$gebruiker3->name = 'c';
+		$country1->name = 'Netherlands';
+		$country2->name = 'France';
+		$country3->name = 'USA';
+		$language1->name = 'Dutch';
+		$language2->name = 'French';
+		$language3->name = 'English';
+		$gebruiker1->country = $country1;
+		$gebruiker1->language = $language1;
+		$gebruiker2->country = $country2;
+		$gebruiker2->language = $language2;
+		$gebruiker3->country = $country3;
+		$gebruiker3->language = $language3;
+		R::storeAll(array($gebruiker1,$gebruiker2,$gebruiker3));
+		$gebruikers = R::find('gebruiker'); //imagine some difficult query here
+		//can we attach other beans using findMulti?
+		$all = R::findMulti(
+			'country',
+			'SELECT country.* FROM country WHERE id IN ('. R::genSlots( $gebruikers ) . ') ', colfield( $gebruikers, 'country_id' ),
+			array(
+				array(
+					'a' => 'country',
+					'b' => $gebruikers,
+					'matcher' => function( $a, $b ) {
+						return ($b->country_id == $a->id);
+					},
+					'do' => function( $a, $b ) {
+						$b->noLoad()->country = $a;
+					}
+				)
+			)
+		);
+		asrt(count($all),2);
+		asrt(isset($all['country']), TRUE);
+		asrt(isset($all['gebruiker']), TRUE);
+		asrt(count($all['country']), 3);
+		asrt(count($all['gebruiker']), 3);
+		foreach($all['gebruiker'] as $gebruiker) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+		}
+		//Using a static mapper makes it more readable
+		$gebruikers = R::find('gebruiker'); //imagine some difficult query here
+		$all = R::findMulti(
+			'country',
+			'SELECT country.* FROM country WHERE id IN ('. R::genSlots( $gebruikers ) . ') ', colfield( $gebruikers, 'country_id' ),
+			array(
+				Finder::onMap('country', $gebruikers)
+			)
+		);
+		asrt(count($all),2);
+		asrt(isset($all['country']), TRUE);
+		asrt(isset($all['gebruiker']), TRUE);
+		asrt(count($all['country']), 3);
+		asrt(count($all['gebruiker']), 3);
+		foreach($all['gebruiker'] as $gebruiker) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+		}
+		//More generic scenario
+		$all = R::findMulti(
+			'gebruiker,country',
+			'
+			SELECT gebruiker.*, country.* FROM gebruiker
+			LEFT JOIN country ON gebruiker.country_id = country.id',
+			array(),
+			array(
+				Finder::onMap('country', 'gebruiker')
+			)
+		);
+		asrt(count($all),2);
+		asrt(isset($all['country']), TRUE);
+		asrt(isset($all['gebruiker']), TRUE);
+		asrt(count($all['country']), 3);
+		asrt(count($all['gebruiker']), 3);
+		foreach($all['gebruiker'] as $gebruiker) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+			if ( $gebruiker->name == 'a' ) {
+				asrt( (
+					$gebruiker->name == 'a' &&
+					$gebruiker->country->name == 'Netherlands' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'b' ) {
+				asrt( (
+					$gebruiker->name == 'b' &&
+					$gebruiker->country->name == 'France' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'c' ) {
+				asrt( (
+					$gebruiker->name == 'c' &&
+					$gebruiker->country->name == 'USA' ),
+				TRUE );
+			}
+			else {
+				fail();
+			}
+			pass();
+		}
+		//Even more compact
+		$gebruikers = R::find('gebruiker'); //imagine some difficult query here
+		$all = R::findMulti(
+			'country',
+			R::genSlots( $gebruikers, 'SELECT country.* FROM country WHERE id IN ( %s )' ), colfield( $gebruikers, 'country_id' ),
+			array(
+				Finder::onMap('country', $gebruikers)
+			)
+		);
+		asrt(count($all),2);
+		asrt(isset($all['country']), TRUE);
+		asrt(isset($all['gebruiker']), TRUE);
+		asrt(count($all['country']), 3);
+		asrt(count($all['gebruiker']), 3);
+		foreach($all['gebruiker'] as $gebruiker) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+			if ( $gebruiker->name == 'a' ) {
+				asrt( (
+					$gebruiker->name == 'a' &&
+					$gebruiker->country->name == 'Netherlands' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'b' ) {
+				asrt( (
+					$gebruiker->name == 'b' &&
+					$gebruiker->country->name == 'France' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'c' ) {
+				asrt( (
+					$gebruiker->name == 'c' &&
+					$gebruiker->country->name == 'USA' ),
+				TRUE );
+			}
+			else {
+				fail();
+			}
+			pass();
+		}
+		//Yet, even more compact
+		$gebruikers = R::find('gebruiker'); //imagine some difficult query here
+		$gebruikers = R::loadJoined( $gebruikers, 'country' );
+		$gebruikers = R::loadJoined( $gebruikers, 'language' );
+		asrt(count($gebruikers), 3);
+		foreach($gebruikers as $gebruiker) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+			if ( $gebruiker->name == 'a' ) {
+				asrt( (
+					$gebruiker->name == 'a' &&
+					$gebruiker->country->name == 'Netherlands' &&
+					$gebruiker->language->name == 'Dutch' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'b' ) {
+				asrt( (
+					$gebruiker->name == 'b' &&
+					$gebruiker->country->name == 'France' &&
+					$gebruiker->language->name == 'French' ),
+				TRUE );
+			}
+			elseif ( $gebruiker->name == 'c' ) {
+				asrt( (
+					$gebruiker->name == 'c' &&
+					$gebruiker->country->name == 'USA' &&
+					$gebruiker->language->name == 'English' ),
+				TRUE );
+			}
+			else {
+				fail();
+			}
+			pass();
+		}
+	}
+
+	/**
+	 * Test whether we can also preload own-lists.
+	 */
+	public function testPreloadingOwnListWithMulti()
+	{
+		R::nuke();
+		R::freeze(TRUE);
+		for($i=0;$i<10;$i++) {
+			R::freeze((boolean)($i));
+			$book = R::dispense('book');
+			$book->title = "book{$i}";
+			list($pages) = R::dispenseAll('page*2');
+			$pages[0]->title = "1/{$i}";
+			$pages[1]->title = "2/{$i}";
+			$book->noLoad()->ownPage = $pages;
+			R::store($book);
+		}
+		$books = R::find('book');
+		$all = R::findMulti( 'page',
+			'SELECT page.* FROM page where book_id IN ('. R::genSlots($books).')',
+			colfield($books,'id'),
+			array(array(
+			'a' => 'page',
+			'b' => $books,
+			'matcher' => TRUE,
+			'do' => function($page, $books){
+				$books[$page->book_id]->noLoad()->ownPage[] = $page;
+			},
+			))
+		);
+		asrt(count($all),2);
+		asrt(count($all['book']),10);
+		asrt(count($all['page']),20);
+		$i=0;
+		foreach($all['book'] as $book) {
+			asrt(count($book->noLoad()->ownPageList),2);
+			asrt($book->title,"book{$i}");
+			$pages = $book->noLoad()->ownPageList;
+			usort($pages, function($a,$b){ return $a->title > $b->title; });
+			$first = reset($pages);
+			asrt( $first->title, "1/$i" );
+			$last = end($pages);
+			asrt( $last->title, "2/$i" );
+			$i++;
+		}
+		R::freeze(FALSE);
+	}
+
+	/**
+	 * Test somewhat more complex findMulti plus onmap()
+	 *
+	 * @return void
+	 */
+	public function testComplexFindMultis()
+	{
+		R::nuke();
+		$gebruiker1 = R::dispense('gebruiker');
+		$gebruiker2 = R::dispense('gebruiker');
+		$gebruiker3 = R::dispense('gebruiker');
+		$country1 = R::dispense('country');
+		$country2 = R::dispense('country');
+		$country3 = R::dispense('country');
+		$language1 = R::dispense('language');
+		$language2 = R::dispense('language');
+		$language3 = R::dispense('language');
+		$gebruiker1->name = 'a';
+		$gebruiker2->name = 'b';
+		$gebruiker3->name = 'c';
+		$country1->name = 'Netherlands';
+		$country2->name = 'France';
+		$country3->name = 'USA';
+		$language1->name = 'Dutch';
+		$language2->name = 'French';
+		$language3->name = 'English';
+		$gebruiker1->country = $country1;
+		$gebruiker1->language = $language1;
+		$gebruiker2->country = $country2;
+		$gebruiker2->language = $language2;
+		$gebruiker3->country = $country3;
+		$gebruiker3->language = $language3;
+		R::storeAll(array($gebruiker1,$gebruiker2,$gebruiker3));
+		$all = R::findMulti(
+		'gebruiker,country,language', '
+			SELECT gebruiker.*, country.*, language.*
+			FROM gebruiker
+			INNER JOIN country ON country.id = gebruiker.country_id
+			INNER JOIN language ON language.id = gebruiker.language_id
+		',
+		array(),
+		array(
+			Finder::onMap('country','gebruiker'),
+			Finder::onMap('language', 'gebruiker')
+		));
+		asrt(count($all), 3);
+		asrt(isset($all['gebruiker']), TRUE);
+		asrt(isset($all['country']), TRUE);
+		asrt(isset($all['language']), TRUE);
+		asrt(count($all['gebruiker']), 3);
+		asrt(count($all['country']), 3);
+		asrt(count($all['language']), 3);
+		foreach( $all['gebruiker'] as $gebruiker ) {
+			asrt( $gebruiker->noLoad()->country instanceof OODBBean, TRUE );
+			asrt( $gebruiker->noLoad()->language instanceof OODBBean, TRUE );
+		}
+	}
+
+	/**
+	 * Improve the sql check in glueLimitOne #776.
+	 *
+	 * @return void
+	 */
+	public function testIssue776()
+	{
+		$writer = R::getWriter();
+		asrt( 'SELECT * FROM people LIMIT 2', $writer->glueLimitOne('SELECT * FROM people LIMIT 2') );
+		asrt( 'SELECT * FROM limits LIMIT 2', $writer->glueLimitOne('SELECT * FROM limits LIMIT 2') );
+		asrt( 'SELECT * FROM people LIMIT 1 ', $writer->glueLimitOne('SELECT * FROM people') );
+		asrt( 'SELECT * FROM limits LIMIT 1 ', $writer->glueLimitOne('SELECT * FROM limits') );
+	}
+
+	/**
 	 * Helper for testing findLike.
 	 *
 	 * @param array   $flowers beans
@@ -92,6 +403,73 @@ class Finding extends Base {
 		$books[4]->sharedCategoryList = array( $categories[0], $categories[2] );
 		R::storeAll( $books );
 	}
+
+	/**
+	 * Test NM-Map.
+	 *
+	 * @return void
+	 */
+	public function testNMMap()
+	{
+		R::nuke();
+		$book1 = R::dispense( 'book' );
+		$book1->title = 'book 1';
+		R::tag( $book1, array('tag 1','tag 2') );
+		$book2 = R::dispense( 'book' );
+		$book2->title = 'book 2';
+		R::tag( $book2, array('tag 2', 'tag 3') );
+		$collection = R::findMulti( 'book,book_tag,tag',
+			'SELECT book.*, book_tag.*, tag.* FROM book
+			LEFT JOIN book_tag ON book_tag.book_id = book.id
+			LEFT JOIN tag ON book_tag.tag_id = tag.id
+			ORDER BY tag.title ASC
+			', array(), array(
+			Finder::nmMap( 'book', 'tag' ),
+		));
+		asrt( count( $collection ), 3 );
+		asrt( isset( $collection['book'] ), TRUE );
+		asrt( isset( $collection['book_tag'] ), TRUE );
+		asrt( isset( $collection['tag'] ), TRUE );
+		$books = $collection['book'];
+		foreach( $books as $book ) {
+			asrt( count( $book->noLoad()->sharedTagList ), 2 );
+			$tags = array();
+			if ( $book->title == 'book 1' ) {
+				foreach( $book->sharedTagList as $tag ) {
+					$tags[] = $tag->title;
+				}
+				asrt( implode( ',', $tags ), 'tag 1,tag 2' );
+			}
+			$tags = array();
+			if ( $book->title == 'book 2' ) {
+				foreach( $book->sharedTagList as $tag ) {
+					$tags[] = $tag->title;
+				}
+				asrt( implode( ',', $tags ), 'tag 2,tag 3' );
+			}
+		}
+	}
+
+	/**
+	 * Test explicit param binding.
+	 *
+	 * @return void
+	 */
+	 public function testExplParaBin()
+	 {
+		 R::nuke();
+		 $bean = R::dispense('bean');
+		 $bean->property = 1;
+		 $bean->property2 = 2;
+		 $bean->property3 = '3';
+		 R::store($bean);
+		 $value = 1;
+		 $value2 = 2;
+		 $value3 = '3';
+		 $found = R::findOne( 'bean', ' property = ? AND property2 = ? AND property3 = ? ',
+		 array($value, array( $value2, \PDO::PARAM_INT ),array( $value3, \PDO::PARAM_STR )));
+		 asrt( $bean->id, $found->id );
+	 }
 
 	/**
 	 * FindMulti should not throw errors in case of
@@ -616,13 +994,16 @@ class Finding extends Base {
 	public function testFindOrCreate()
 	{
 		R::nuke();
-		$book = R::findOrCreate( 'book', array( 'title' => 'my book', 'price' => 50 ) );
+		$created = false;
+		$book = R::findOrCreate( 'book', array( 'title' => 'my book', 'price' => 50 ), '', $created );
 		asrt( ( $book instanceof OODBBean ), TRUE );
+		asrt( $created, true );
 		$id = $book->id;
-		$book = R::findOrCreate( 'book', array( 'title' => 'my book', 'price' => 50 ) );
+		$book = R::findOrCreate( 'book', array( 'title' => 'my book', 'price' => 50 ), '', $created );
 		asrt( $book->id, $id );
 		asrt( $book->title, 'my book' );
 		asrt( (int) $book->price, 50 );
+		asrt( $created, false );
 	}
 
 	/**

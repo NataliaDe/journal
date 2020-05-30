@@ -38,58 +38,66 @@ if (isset($search_rig_by_id)) {
 
 
 
-    <?php
-    if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
-
-        $from_filter = $_POST['date_start'];
-    } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
-
-        $from_filter = $_SESSION['remember_filter_date_start'];
-    } else {
-
-        $from_filter = $default_start_date;
-    }
-
-    ?>
-
-
             <?php
-            if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
-
-                $to_filter = $_POST['date_end'];
-            } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
-
-                $to_filter = $_SESSION['remember_filter_date_end'];
-            } else {
-                $to_filter = $default_end_date;
-            }
+            if ((isset($settings_user['is_excel_rigtable']) && $settings_user['is_excel_rigtable']['name_sign'] == 'yes')) {
 
 
-            $reason = 0;
-            if ((isset($_POST['reasonrig']) && !empty($_POST['reasonrig']))) {
-                $reason = implode(',', $_POST['reasonrig']);
-            } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 &&
-                isset($_SESSION['remember_filter_reasonrig']) && !empty($_SESSION['remember_filter_reasonrig'])) {
-                $reason = implode(',', $_SESSION['remember_filter_reasonrig']);
-            }
+                if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
+
+                    $from_filter = $_POST['date_start'];
+                } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_start']) && !empty($_SESSION['remember_filter_date_start'])) {
+
+                    $from_filter = $_SESSION['remember_filter_date_start'];
+                } else {
+
+                    $from_filter = $default_start_date;
+                }
+
+                ?>
+
+
+                <?php
+                if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
+
+                    $to_filter = $_POST['date_end'];
+                } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 && isset($_SESSION['remember_filter_date_end']) && !empty($_SESSION['remember_filter_date_end'])) {
+
+                    $to_filter = $_SESSION['remember_filter_date_end'];
+                } else {
+                    $to_filter = $default_end_date;
+                }
+
+
+                $reason = 0;
+                if ((isset($_POST['reasonrig']) && !empty($_POST['reasonrig']))) {
+                    $reason = implode(',', $_POST['reasonrig']);
+                } elseif (isset($_SESSION['is_remember_filter_date']) && $_SESSION['is_remember_filter_date'] == 1 &&
+                    isset($_SESSION['remember_filter_reasonrig']) && !empty($_SESSION['remember_filter_reasonrig'])) {
+                    $reason = implode(',', $_SESSION['remember_filter_reasonrig']);
+                }
 
 
 
-            $export_rigtable = $baseUrl . '/export_rigtable/' . $from_filter . '/' . $to_filter . '/' . $reason;
+                $export_rigtable = $baseUrl . '/export_rigtable/' . $from_filter . '/' . $to_filter . '/' . $reason;
 
 
-            if ($_SESSION['id_level'] == 1) {
-                $export_rigtable = $export_rigtable . '/' . $id_page;
+                if ($_SESSION['id_level'] == 1) {
+                    $export_rigtable = $export_rigtable . '/' . $id_page;
+                }
+
+                ?>
+
+
+
+
+                <a href="<?= $export_rigtable ?>"><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Excel"></i></a>
+
+                <?php
             }
 
             ?>
-
-
-
-
-            <a href="<?= $export_rigtable ?>"><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Excel выезды за текущие сутки"></i></a>
         </b></center>
-            <?php
-        }
+    <?php
+}
 
-        ?>
+?>

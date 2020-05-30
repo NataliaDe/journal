@@ -41,6 +41,93 @@ class Database extends Base
 	}
 
 	/**
+	 * Can we use meta mask with find() ?
+	 *
+	 * @return void
+	 */
+	public function testSelectFindOne()
+	{
+			R::store(R::dispense('book'));
+			R::store(R::dispense('book'));
+			if ($this->currentlyActiveDriverID == 'pgsql') {
+				R::getWriter()->setSQLFilters(array('r'=>array('book'=>array('__meta_total'=>'COUNT(*) OVER()'))), FALSE);
+			} else {
+				R::getWriter()->setSQLFilters(array('r'=>array('book'=>array('__meta_total'=>'2'))), FALSE);
+			}
+			$books = R::find('book', 'LIMIT 1');
+			$book = reset($books);
+			$bundle = $book->getMeta('data.bundle');
+			asrt(intval($bundle['__meta_total']),2);
+			R::getWriter()->setSQLFilters(array(), FALSE);
+	}
+
+	/**
+	 * Test whether we cannot just bind function names but
+	 * also function templates, i.e. little SQL snippets.
+	 *
+	 * @return void
+	 */
+	public function testBindFuncFunctionTemplates()
+	{
+		R::bindFunc('read', 'xbean.lucky', '111 * %s', TRUE);
+		$bean = R::dispense('xbean');
+		$bean->lucky = 7;
+		$id = R::store( $bean );
+		$bean = R::load( 'xbean', $id );
+		asrt( intval($bean->lucky), 777 );
+		R::bindFunc('write', 'xbean.triple', '3 * %s', TRUE);
+		$bean->triple = 3;
+		R::store($bean);
+		$bean = $bean->fresh();
+		asrt( intval($bean->triple), 9);
+		R::bindFunc('read', 'xbean.lucky', NULL);
+		R::bindFunc('write', 'xbean.triple', NULL);
+		R::getRedBean()->clearAllFuncBindings();
+	}
+
+	/**
+	 * Make ConvertToBean work together with getRow #759.
+	 * When no results are found for getRow it returns []
+	 * Then when you give that to convertToBean it wraps your
+	 * single row into an array of multiple rows, so you get [[]].
+	 * Then this loop has something to
+	 * iterate on foreach ( $rows as $row ) { ...
+	 * And then it crashes on: $id = $row['id'];
+	 */
+	public function testHarmonizeConvertToBeanAndGetRow()
+	{
+		R::nuke();
+		$book = R::convertToBean( 'book', R::getRow( 'SELECT * FROM book' ) );
+		asrt( is_null( $book ), TRUE );
+		$book = R::convertToBean( 'book', array() );
+		asrt( is_null( $book ), TRUE );
+	}
+
+	/**
+	 * Test for bugfix:
+	 * adhere to return type specification for R::getRow #728
+	 * public static function getRow is documented as a function
+	 * that returns an array. However, in a situation
+	 * where the resultset is empty, this returns a boolean
+	 * and causes an unexpected failure in
+	 * code like this because it is expecting an array.
+	 */
+	public function testReturnTypeGetRow()
+	{
+		R::nuke();
+		$book = R::dispense( 'book' );
+		R::store( $book );
+		$row = R::getRow('SELECT * FROM book');
+		asrt( is_array( $row ), TRUE );
+		R::trash( $book );
+		$row = R::getRow('SELECT * FROM book');
+		asrt( is_array( $row ), TRUE );
+		R::nuke();
+		$row = R::getRow('SELECT * FROM book');
+		asrt( is_array( $row ), TRUE );
+	}
+
+	/**
 	 * Test the (protected) database capability checker method
 	 * of the RedBeanPHP PDO driver (RPDO).
 	 */
