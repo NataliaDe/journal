@@ -279,16 +279,6 @@
             "log",
             "logging",
             "psr-3"
-        ],
-        "funding": [
-            {
-                "url": "https://github.com/Seldaek",
-                "type": "github"
-            },
-            {
-                "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
-                "type": "tidelift"
-            }
         ]
     },
     {
@@ -540,13 +530,7 @@
                 "name": "Brent R. Matzelle"
             }
         ],
-        "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
-        "funding": [
-            {
-                "url": "https://github.com/synchro",
-                "type": "github"
-            }
-        ]
+        "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
     },
     {
         "name": "phpoffice/phpexcel",
@@ -861,12 +845,6 @@
             "responsive",
             "sass",
             "web"
-        ],
-        "funding": [
-            {
-                "url": "https://opencollective.com/bootstrap",
-                "type": "open_collective"
-            }
         ]
     }
 ]

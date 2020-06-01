@@ -12,7 +12,7 @@ return array(
     'CGIFIMAGE' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
     'CGIFIMAGEHEADER' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
     'CGIFLZW' => $vendorDir . '/mpdf/mpdf/classes/gif.php',
-    'Dompdf\\Cpdf' => $vendorDir . '/dompdf/dompdf/lib/Cpdf.php',
+    'Cpdf' => $vendorDir . '/dompdf/dompdf/lib/Cpdf.php',
     'HTML5_Data' => $vendorDir . '/dompdf/dompdf/lib/html5lib/Data.php',
     'HTML5_InputStream' => $vendorDir . '/dompdf/dompdf/lib/html5lib/InputStream.php',
     'HTML5_Parser' => $vendorDir . '/dompdf/dompdf/lib/html5lib/Parser.php',
