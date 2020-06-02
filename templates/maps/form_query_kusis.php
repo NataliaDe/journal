@@ -22,10 +22,23 @@
         </select>
     </div>
 
+
+            <div class="form-group" id="show_closest_podr_div" >
+            <div class="checkbox checkbox-success" style="padding-left: 8px; cursor: pointer">
+                <input id="show_closest_podr" type="checkbox" name="show_closest_podr" value="1" >
+                <label for="show_closest_podr" style=" cursor: pointer">
+                    Показать ближайшие подразделения
+                </label>
+            </div>
+
+
+        </div>
+
     <input type="hidden" id="current_local_map" value="">
 
     <div class="form-group">
         <button class="btn bg-success" type="button" id="show_podr">Показать подразделения</button>
+<!--        <button class="btn bg-danger" type="button" id="show_closest_podr">Показать ближайшие подразделения</button>-->
         <button class="btn bg-secondary" type="button" id="reset_filter">Сбросить фильтр</button>
     </div>
 

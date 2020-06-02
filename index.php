@@ -24,8 +24,10 @@ define(ROSN, 8); //id_organ ROSN
 define(UGZ, 9); //id_organ UGZ
 define(AVIA, 12); //id_organ AVIACIA
 
+define(DIVIZ_COU_ID,8);//id divizion of cou
+
 define(VER, '4.0');
-define(NEWS_DATE, '01.06.2020');
+define(NEWS_DATE, '02.06.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -992,9 +994,16 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
                 $data['podr'] = R::getAll('select g.*,r.id_loc_org,  r.locorg_name, r.pasp_name as pasp_name_1, concat(r.pasp_name,", ",r.locorg_name,", ",r.region_name) as pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp  ');
             } elseif ($_SESSION['id_level'] == 3 && !in_array($_SESSION['id_organ'], $cp)) {//rochs
                 //$data['podr'] = R::getAll('select g.*,r.id_loc_org,  r.locorg_name, r.pasp_name from guidepasp as g left join pasp as r on r.id=g.id_pasp where r.id_loc_org = ? ', array($_SESSION['id_locorg']));
-                $data['podr'] = R::getAll('select g.*, r.id_loc_org, r.locorg_name, (CASE WHEN ( r.of_gohs is not null and r.name_paso_object is not null ) THEN CONCAT(r.pasp_name," ",r.locorg_name, " (",r.name_paso_object,")")
+
+                if (!isset($data['settings_user']['is_show_paso_zanyatia']) || ((isset($data['settings_user']['is_show_paso_zanyatia']) && $data['settings_user']['is_show_paso_zanyatia']['name_sign'] == 'yes'))) {
+                    $data['podr'] = R::getAll('select g.*, r.id_loc_org, r.locorg_name, (CASE WHEN ( r.of_gohs is not null and r.name_paso_object is not null ) THEN CONCAT(r.pasp_name," ",r.locorg_name, " (",r.name_paso_object,")")
 when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
- WHEN (r.of_gohs IS  NULL AND r.`id_organ`=6)  THEN CONCAT(r.locorg_name) ELSE r.pasp_name END) AS `pasp_name`, r.of_gohs from guidepasp as g left join pasp as r on r.id=g.id_pasp where (r.id_loc_org = ? or r.of_gohs = ?) or (r.id_region = ? AND r.id_organ = ?) ', array($_SESSION['id_locorg'], $_SESSION['id_locorg'], $_SESSION['id_region'], PASO));
+ WHEN (r.of_gohs IS  NULL AND r.`id_organ`=6)  THEN CONCAT(r.locorg_name) ELSE r.pasp_name END) AS `pasp_name`, r.of_gohs from guidepasp as g left join pasp as r on r.id=g.id_pasp where (r.id_loc_org = ? or r.of_gohs = ?) or (r.id_region = ? AND r.id_organ = ? AND r.id_divizion <> ?) ', array($_SESSION['id_locorg'], $_SESSION['id_locorg'], $_SESSION['id_region'], PASO, DIVIZ_COU_ID));
+                } else {
+                    $data['podr'] = R::getAll('select g.*, r.id_loc_org, r.locorg_name, (CASE WHEN ( r.of_gohs is not null and r.name_paso_object is not null ) THEN CONCAT(r.pasp_name," ",r.locorg_name, " (",r.name_paso_object,")")
+when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
+ WHEN (r.of_gohs IS  NULL AND r.`id_organ`=6)  THEN CONCAT(r.locorg_name) ELSE r.pasp_name END) AS `pasp_name`, r.of_gohs from guidepasp as g left join pasp as r on r.id=g.id_pasp where (r.id_loc_org = ? or r.of_gohs = ?)  ', array($_SESSION['id_locorg'], $_SESSION['id_locorg']));
+                }
             } elseif ($_SESSION['id_level'] == 3 && in_array($_SESSION['id_organ'], $cp)) {//rosn pinsk
                 $data['podr'] = R::getAll('select g.*,r.id_loc_org,  r.locorg_name, r.pasp_name  from guidepasp as g left join pasp as r on r.id=g.id_pasp  where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
                 // $data['podr'] = R::getAll('select id,pasp_name, locorg_name, latitude, longitude from pasp where id_loc_org = ? and id_organ = ?', array($_SESSION['id_locorg'], $_SESSION['id_organ']));
@@ -13308,10 +13317,10 @@ $app->post('/change_mode', function () use ($app) {
 
 $app->group('/maps', function () use ($app) {
 
-    function rigs_for_map($reason_rig_array)
+    function rigs_for_map($reason_rig_array,$filter=NULL)
     {
         $rig_m = new Model_Rigtable();
-        $points = $rig_m->selectAllRigByReason($reason_rig_array, 0);
+        $points = $rig_m->selectAllRigByReason($reason_rig_array, 0,0,$filter);
         return $points;
     }
     $app->get('/', function () use ($app) {
@@ -13410,6 +13419,29 @@ $app->group('/maps', function () use ($app) {
             $res['card_by_rig_url'] = 'card_rig/0/' . $value['id'];
 
             $res1[] = $res;
+
+            /* ss */
+
+//        $podr = R::getAll('select p.*, (
+//    6371 * ACOS (
+//      COS ( RADIANS(?) )
+//      * COS( RADIANS( p.`latitude` ) )
+//      * COS( RADIANS( p.`longitude` ) - RADIANS(?) )
+//      + SIN ( RADIANS(?) )
+//      * SIN( RADIANS( p.`latitude` ) )
+//    )
+//  ) AS distance from journal.pasp as p where p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 '
+//                        . 'and p.longitude is not null HAVING distance < 5 ',array($value['latitude'],$value['longitude'],$value['latitude']));
+//
+//        if (!empty($podr)) {
+//                foreach ($podr as $row) {
+//                    $ss = array();
+//                    $ss['location'] = array('type' => 'Point', 'coordinates' => array($row['longitude'], $row['latitude']));
+//                    $ss['address'] = $value['address_disloc'];
+//                   // $ss['new_icon'] = 'assets/leaflet/images/marker-icon-violet.png';
+//                    $res1[] = $ss;
+//                }
+//            }
         }
 
 
@@ -13431,58 +13463,179 @@ $app->group('/maps', function () use ($app) {
     $app->post('/getjson', function () use ($app) {
 
         $data['map_mode'] = 1;
+        $rig_m = new Model_Rigtable();
 
         /* data for map */
 
         $res1 = array();
         $res = array();
+        $ecxlude_ids = array();
+        $dubl_ids=[];
 
         $res['location'] = array('type' => 'Point', 'coordinates' => array("27.546803", "53.855383"));
         $res['name'] = 'hh';
-//$res['new_icon']='assets/images/leaflet/menu.png';
-
 
         $id_region = $app->request()->post('id_region');
         $id_local = $app->request()->post('id_local');
+        $show_closest_podr = $app->request()->post('show_closest_podr');
 
-        $sql = 'select * from journal.pasp as p where p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null ';
+        $filter['id_region'] = $id_region;
+        $filter['id_local'] = $id_local;
 
-        if (isset($id_region) && !empty($id_region)) {
-            $sql = $sql . ' and p.id_region IN(' . implode(',', $id_region) . ') ';
-        }
-        if (isset($id_local) && !empty($id_local)) {
-            $sql = $sql . ' and p.id_local IN(' . implode(',', $id_local) . ')';
-        }
+        if ($show_closest_podr == 0 || (isset($id_region) && !empty($id_region)) || (isset($id_local) && !empty($id_local))) {
 
 
-        $podr = R::getAll($sql);
+            $sql = 'select * from journal.pasp as p where p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null ';
 
-        if (!empty($podr)) {
+            if (isset($id_region) && !empty($id_region)) {
+                $sql = $sql . ' and p.id_region IN(' . implode(',', $id_region) . ') ';
+            }
+            if (isset($id_local) && !empty($id_local)) {
+                $sql = $sql . ' and p.id_local IN(' . implode(',', $id_local) . ')';
+            }
+            $sql=$sql.' order by p.pasp_name asc';
 
-            foreach ($podr as $value) {
+            $podr = R::getAll($sql);
+
+
+
+            if (!empty($podr)) {
+
+                foreach ($podr as $value) {
+
+                    if (!in_array($value['id'], $dubl_ids)) {
+                        $ecxlude_ids[] = $value['id'];
+
+                        $res = array();
+                        $res['location'] = array('type' => 'Point', 'coordinates' => array($value['longitude'], $value['latitude']));
+                        $res['locorg_name'] = $value['locorg_name'];
+                        $res['pasp_name'] = $value['pasp_name'];
+
+                        $obl = '';
+                        if ($value['id_region'] != 3)
+                            $obl = $value['region_name'] . ' обл., ';
+
+                        $res['address_disloc'] = $obl . $value['address_disloc'];
+                        // $res['new_icon'] = 'assets/images/leaflet/coffee.png';
+                        $res['ss_url_text'] = 'перейти в карточку сил и средств';
+                        $res['ss_url'] = '/ss/card/' . $value['id_region'] . '/' . $value['id_loc_org'];
+
+
+                        /* dublicate pasp */
+                        $coords['longitude'] = $value['longitude'];
+                        $coords['latitude'] = $value['latitude'];
+                        $coords['id_region'] = $id_region;
+                        $coords['id_local'] = $id_local;
+                        $coords['id'] = $value['id'];
+
+                        //echo $res['pasp_name'];
+                        $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
+                       // print_r($duplicate_pasp);
+                        if (!empty($duplicate_pasp)) {
+
+                            foreach ($duplicate_pasp as $key => $dublicate) {
+                                $dubl_ids[] = $dublicate['id'];
+                                if ($dublicate['id_loc_org'] != $value['id_loc_org'])
+                                    $res['pasp_name'] = $res['pasp_name'] . '; ' . $dublicate['locorg_name'] . ', ' . $dublicate['pasp_name'];
+                                else
+                                    $res['pasp_name'] = $res['pasp_name'] . '; ' . $dublicate['pasp_name'];
+                            }
+                        }
+
+
+
+                        $res1[] = $res;
+                    }
+                }
+            }
+            else {//empty result
                 $res = array();
-                $res['location'] = array('type' => 'Point', 'coordinates' => array($value['longitude'], $value['latitude']));
-                $res['locorg_name'] = $value['locorg_name'];
-                $res['pasp_name'] = $value['pasp_name'];
-
-                $obl = '';
-                if ($value['id_region'] != 3)
-                    $obl = $value['region_name'] . ' обл., ';
-
-                $res['address_disloc'] = $obl . $value['address_disloc'];
-                // $res['new_icon'] = 'assets/images/leaflet/coffee.png';
-                $res['ss_url_text'] = 'перейти в карточку сил и средств';
-                $res['ss_url'] = '/ss/card/' . $value['id_region'] . '/' . $value['id_loc_org'];
-
                 $res1[] = $res;
             }
-        } else {//empty result
-            $res = array();
-            $res1[] = $res;
         }
 
+        if ($show_closest_podr == 1) {
+
+            /* set reasonrig
+             * 14 - other
+             * 34 - fire
+             * 38 - help for people
+             * 76 - help for organization
+             * 79 - fire in eco system */
+            $reasons = array(14, 34, 38, 76, 79);
+            $points = rigs_for_map($reasons, $filter);
+
+            foreach ($points as $value) {
+
+                $circle = [];
+                $circle['is_circle'] = 1;
+                $circle['lat'] = $value['latitude'];
+                $circle['lon'] = $value['longitude'];
+                $res1[] = $circle;
+
+                /* ss */
+
+                $podr = R::getAll('select p.*, (
+    6371 * ACOS (
+      COS ( RADIANS(?) )
+      * COS( RADIANS( p.`latitude` ) )
+      * COS( RADIANS( p.`longitude` ) - RADIANS(?) )
+      + SIN ( RADIANS(?) )
+      * SIN( RADIANS( p.`latitude` ) )
+    )
+  ) AS distance from journal.pasp as p where p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 '
+                        . 'and p.longitude is not null HAVING distance < 5 order by p.pasp_name asc', array($value['latitude'], $value['longitude'], $value['latitude']));
+
+                if (!empty($podr)) {
+                    foreach ($podr as $row) {
 
 
+                        if (!in_array($row['id'], $ecxlude_ids) && !in_array($row['id'], $dubl_ids)) {
+                            $ss = array();
+                            $ss['location'] = array('type' => 'Point', 'coordinates' => array($row['longitude'], $row['latitude']));
+                            $ss['locorg_name'] = $row['locorg_name'];
+                            $ss['pasp_name'] = $row['pasp_name'];
+
+                            $obl = '';
+                            if ($row['id_region'] != 3)
+                                $obl = $row['region_name'] . ' обл., ';
+
+                            $ss['address_disloc'] = $obl . $row['address_disloc'];
+                            $ss['ss_url_text'] = 'перейти в карточку сил и средств';
+                            $ss['ss_url'] = '/ss/card/' . $row['id_region'] . '/' . $row['id_loc_org'];
+                            $ss['is_closest_podr'] = 1;
+
+                                                    /* dublicate pasp */
+                        $coords['longitude'] = $row['longitude'];
+                        $coords['latitude'] = $row['latitude'];
+                        $coords['id_region'] = $id_region;
+                        $coords['id_local'] = $id_local;
+                        $coords['id'] = $row['id'];
+
+                        $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
+
+                        if (!empty($duplicate_pasp)) {
+
+                            foreach ($duplicate_pasp as $key => $dublicate) {
+                                // echo $ss['pasp_name'] . '; ' . $dublicate['pasp_name'];
+                                $dubl_ids[] = $dublicate['id'];
+                                if ($dublicate['id_loc_org'] != $row['id_loc_org'])
+                                    $ss['pasp_name'] = $ss['pasp_name'] . '; ' . $dublicate['locorg_name'] . ', ' . $dublicate['pasp_name'];
+                                else
+                                    $ss['pasp_name'] = $ss['pasp_name'] . '; ' . $dublicate['pasp_name'];
+                            }
+                        }
+
+
+                            $res1[] = $ss;
+                        }
+                    }
+                }
+            }
+        }
+        else {
+
+        }
 
 
         if (empty($res1))
