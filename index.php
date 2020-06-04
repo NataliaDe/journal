@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '02.06.2020');
+define(NEWS_DATE, '04.06.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -40,6 +40,19 @@ define(ID_BOKK, 23); // = journal.service.id
 const REASONRIG_WITH_INFORMING = array(34, 14, 69, 79, 74, 64, 73);
 const REASON_FIRE = 34;
 CONST REASON_HS = 73;
+CONST REASON_OTHER_ZAGOR = 14;
+CONST REASON_HELP = array(76,38);
+CONST REASON_DEMERK = 68;
+CONST REASON_MOLNIA = 74;
+CONST REASON_LTT = 79;
+
+CONST CITY_VID=array(111,112,113,212,213,300);//city
+
+
+
+/* PHPWORD */
+//const cell_center = array('valign' => 'center', 'align' => 'center');
+
 
 /* ----------------- END CONSTANT ------------------- */
 
@@ -49,6 +62,15 @@ use PHPMailer\PHPMailer\Exception;
 use Dompdf\Dompdf;
 
 require 'libraries/PHPExcel.php';
+
+//require('libraries/PhpWord.php');
+//require_once('libraries/PhpWord/TemplateProcessor.php');
+//require_once('libraries/PhpWord/Writer/Word2007.php');
+//require_once('libraries/htmltoopenxml/src/Parser.php');
+//require_once('libraries/PhpWord/Element/Field.php');
+//require_once('libraries/PhpWord/Element/Table.php');
+//require_once('libraries/PhpWord/Element/TextRun.php');
+//require_once('libraries/PhpWord/SimpleType/TblWidth.php');
 
 //require('/vendor/setasign/fpdf.php');
 
@@ -94,6 +116,7 @@ use App\MODELS\Model_Helpers;
 use App\MODELS\Model_Archivedate;
 use App\MODELS\Model_Archiveyear;
 
+use App\CLASSES\Class_Phpword;
 /* ----------------- END MODELS ----------------- */
 
 
@@ -404,6 +427,11 @@ function get_users_connect_sd($id_user = 0)
 function order_rigs($a, $b)
 {
     return strcmp($b["full_time_msg"], $a["full_time_msg"]);
+}
+
+function order_rigs_asc($a, $b)
+{
+    return strcmp($a["full_time_msg"], $b["full_time_msg"]);
 }
 
 function get_notifications($id_user)
@@ -13470,7 +13498,7 @@ $app->group('/maps', function () use ($app) {
         $res1 = array();
         $res = array();
         $ecxlude_ids = array();
-        $dubl_ids=[];
+        $dubl_ids = [];
 
         $res['location'] = array('type' => 'Point', 'coordinates' => array("27.546803", "53.855383"));
         $res['name'] = 'hh';
@@ -13493,7 +13521,7 @@ $app->group('/maps', function () use ($app) {
             if (isset($id_local) && !empty($id_local)) {
                 $sql = $sql . ' and p.id_local IN(' . implode(',', $id_local) . ')';
             }
-            $sql=$sql.' order by p.pasp_name asc';
+            $sql = $sql . ' order by p.pasp_name asc';
 
             $podr = R::getAll($sql);
 
@@ -13507,6 +13535,7 @@ $app->group('/maps', function () use ($app) {
                         $ecxlude_ids[] = $value['id'];
 
                         $res = array();
+                        $res['id'] = $value['id'];
                         $res['location'] = array('type' => 'Point', 'coordinates' => array($value['longitude'], $value['latitude']));
                         $res['locorg_name'] = $value['locorg_name'];
                         $res['pasp_name'] = $value['pasp_name'];
@@ -13530,7 +13559,7 @@ $app->group('/maps', function () use ($app) {
 
                         //echo $res['pasp_name'];
                         $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
-                       // print_r($duplicate_pasp);
+                        // print_r($duplicate_pasp);
                         if (!empty($duplicate_pasp)) {
 
                             foreach ($duplicate_pasp as $key => $dublicate) {
@@ -13604,36 +13633,44 @@ $app->group('/maps', function () use ($app) {
                             $ss['ss_url_text'] = 'перейти в карточку сил и средств';
                             $ss['ss_url'] = '/ss/card/' . $row['id_region'] . '/' . $row['id_loc_org'];
                             $ss['is_closest_podr'] = 1;
+                            $ss['distance'] = number_format($row['distance'], 1, '.', '');
 
-                                                    /* dublicate pasp */
-                        $coords['longitude'] = $row['longitude'];
-                        $coords['latitude'] = $row['latitude'];
-                        $coords['id_region'] = $id_region;
-                        $coords['id_local'] = $id_local;
-                        $coords['id'] = $row['id'];
+                            /* dublicate pasp */
+                            $coords['longitude'] = $row['longitude'];
+                            $coords['latitude'] = $row['latitude'];
+                            $coords['id_region'] = $id_region;
+                            $coords['id_local'] = $id_local;
+                            $coords['id'] = $row['id'];
 
-                        $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
+                            $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
 
-                        if (!empty($duplicate_pasp)) {
+                            if (!empty($duplicate_pasp)) {
 
-                            foreach ($duplicate_pasp as $key => $dublicate) {
-                                // echo $ss['pasp_name'] . '; ' . $dublicate['pasp_name'];
-                                $dubl_ids[] = $dublicate['id'];
-                                if ($dublicate['id_loc_org'] != $row['id_loc_org'])
-                                    $ss['pasp_name'] = $ss['pasp_name'] . '; ' . $dublicate['locorg_name'] . ', ' . $dublicate['pasp_name'];
-                                else
-                                    $ss['pasp_name'] = $ss['pasp_name'] . '; ' . $dublicate['pasp_name'];
+                                foreach ($duplicate_pasp as $key => $dublicate) {
+                                    // echo $ss['pasp_name'] . '; ' . $dublicate['pasp_name'];
+                                    $dubl_ids[] = $dublicate['id'];
+                                    if ($dublicate['id_loc_org'] != $row['id_loc_org'])
+                                        $ss['pasp_name'] = $ss['pasp_name'] . ' (' . $dublicate['locorg_name'] . ', ' . $dublicate['pasp_name'].')';
+                                    else
+                                        $ss['pasp_name'] = $ss['pasp_name'] . ' (' . $dublicate['pasp_name'].')';
+                                }
                             }
-                        }
 
 
                             $res1[] = $ss;
                         }
+                        else if (in_array($row['id'], $ecxlude_ids)) {
+
+                            foreach ($res1 as $a => $arr) {
+                                if (isset($arr['id']) && $arr['id'] == $row['id']) {
+                                    $res1[$a]['distance'] = number_format($row['distance'], 1, '.', '');
+                                }
+                            }
+                        }
                     }
                 }
             }
-        }
-        else {
+        } else {
 
         }
 
@@ -15294,8 +15331,6 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
             $data['rig'] = $rig_m->selectAllByIdOrgan($id_region, 0, $filter); //за весь орган
         }
 
-        if (!empty($data['rig']))
-            usort($data['rig'], "order_rigs");
 
         if (!in_array($id_region, $cp)) {
             $region_name = R::getCell('select name from regions where id = ?', array($id_region));
@@ -15593,6 +15628,751 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
     $objWriter->save('php://output');
 });
+
+
+
+
+/* ------------ export rigtable to word -------------- */
+$app->get('/export_word/:from/:to/:reasonrig(/:id_region)', function ($from, $to, $reasonrig, $id_region = 0) use ($app) {
+
+
+    /* MODELS */
+    $sily_m = new Model_Jrig();
+    $rig_m = new Model_Rigtable();
+    $inner_m = new Model_Innerservice();
+    $informing_m = new Model_Informing();
+    $sily_mchs_m = new Model_Silymchs();
+
+    $data['settings_user'] = getSettingsUser();
+    $data['settings_user_br_table'] = getSettingsUserMode();
+
+    $filter = [];
+
+    if (isset($reasonrig) && !empty($reasonrig) && $reasonrig != 0)
+        $filter['reasonrig'] = explode(',', trim($reasonrig));
+    elseif (isset($_SESSION['br_table_mode']) && $_SESSION['br_table_mode'] == 1 && !empty($data['settings_user_br_table'])) {//mode
+        $filter['reasonrig'] = $data['settings_user_br_table'];
+    }
+
+
+    if (isset($from) && !empty($from)) {
+        $rig_m->setDateStart(trim($from));
+    } else {
+        if (date("H:i:s") <= '06:00:00') {//до 06 утра
+            $rig_m->setDateStart(date("d.m.Y", time() - (60 * 60 * 24)));
+        } else {
+            $rig_m->setDateStart(date("d.m.Y"));
+        }
+    }
+
+    if (isset($to) && !empty($to)) {
+        $rig_m->setDateEnd(trim($to));
+    } else {
+        if (date("H:i:s") <= '06:00:00') {//до 06 утра
+            $rig_m->setDateEnd(date("d.m.Y"));
+        } else {
+            $rig_m->setDateEnd(date("d.m.Y", time() + (60 * 60 * 24)));
+        }
+    }
+
+
+    $cp = array(8, 9, 12); //вкладки РОСН, УГЗ,Авиация
+
+    $caption = '';
+
+    if ($id_region != 0) {//rcu
+        if (!in_array($id_region, $cp)) {//выезды за области без ЦП
+            $data['rig'] = $rig_m->selectAllByIdRegion($id_region, 0, 0, $filter); //без ЦП
+        } else {//выезды за РОСН, УГЗ, АВиацию
+            $data['rig'] = $rig_m->selectAllByIdOrgan($id_region, 0, $filter); //за весь орган
+        }
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs");
+
+        if (!in_array($id_region, $cp)) {
+            $region_name = R::getCell('select name from regions where id = ?', array($id_region));
+
+            if ($id_region != 3)
+                $caption = $region_name . ' область';
+        } elseif ($id_region == ROSN) {
+            $caption = 'РОСН';
+        } elseif ($id_region == UGZ) {
+            $caption = 'УГЗ';
+        } elseif ($id_region == AVIA) {
+            $caption = 'Авиация';
+        }
+    } elseif ($_SESSION['id_level'] == 3) {
+        $caption = $_SESSION['locorg_name'];
+
+
+        //выезды за ГРОЧС
+        $rig = $rig_m->selectAllByIdLocorg($_SESSION['id_locorg'], 0, $filter); //за ГРОЧС
+
+        if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
+            $rig_neighbor_id = $rig_m->selectIdRigByIdGrochs(0, $_SESSION['id_locorg'], $filter); //за ГРОЧС
+            $rig_neighbor = $rig_m->selectAllByIdLocorgNeighbor($rig_neighbor_id, $filter);
+            $data['rig'] = array_merge($rig, $rig_neighbor);
+        } else {
+            $data['rig'] = $rig;
+        }
+    } elseif ($_SESSION['id_level'] == 2) {
+        $caption = $_SESSION['locorg_name'];
+
+        if ($_SESSION['sub'] == 2) {// UGZ, ROSN, AVIA
+            $data['rig'] = $rig_m->selectAllByIdOrgan($_SESSION['id_organ'], 0, $filter); //за весь орган
+        } else {// UMCHS
+            $rig = $rig_m->selectAllByIdRegion($_SESSION['id_region'], 0, 0, $filter); //выезды за всю область(не включая ЦП), не удаленные записи
+
+            if (isset($data['settings_user']['neighbor_rigs']) && $data['settings_user']['neighbor_rigs']['name_sign'] == 'yes') {
+                $rig_neighbor_id = $rig_m->selectIdRigByIdRegion(0, $_SESSION['id_region'], $filter); //за ГРОЧС
+                $rig_neighbor = $rig_m->selectAllByIdRegionNeighbor($rig_neighbor_id, $filter);
+                $data['rig'] = array_merge($rig, $rig_neighbor);
+            } else {
+                $data['rig'] = $rig;
+            }
+        }
+    }
+
+
+    if (!empty($data['rig']))
+        usort($data['rig'], "order_rigs_asc");
+
+    /* ------- select information on SiS MHS -------- */
+    $id_rig_arr = array();
+    $id_rig_informing = array();
+    $id_rig_sis_mes = array();
+
+    $is_fire = 0;
+    $is_other_zagor = 0;
+    $is_help = 0;
+    $is_demerk = 0;
+    $is_molnia = 0;
+    $is_ltt = 0;
+
+    $all_reasons= array(array(REASON_OTHER_ZAGOR), REASON_HELP, array(REASON_DEMERK),
+        array(REASON_MOLNIA), array(REASON_LTT));
+
+
+    foreach ($data['rig'] as $value) {//id of rigs
+        if ($value['id_reasonrig'] == REASON_FIRE) {
+            $is_fire++;
+        }
+
+        if ($value['id_reasonrig'] == REASON_OTHER_ZAGOR) {
+            $is_other_zagor++;
+        }
+        if (in_array($value['id_reasonrig'], REASON_HELP)) {
+            $is_help++;
+        }
+        if ($value['id_reasonrig'] == REASON_DEMERK) {
+            $is_demerk++;
+        }
+        if ($value['id_reasonrig'] == REASON_MOLNIA) {
+            $is_molnia++;
+        }
+        if ($value['id_reasonrig'] == REASON_LTT) {
+            $is_ltt++;
+        }
+
+
+        if ($value['id'] != null) {
+            $id_rig_arr[] = $value['id'];
+            $id_rig_informing[] = $value['id'];
+        }
+
+        if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
+            $id_rig_sis_mes[] = $value['id'];
+        }
+    }
+
+    /* ------- END select information on SiS MHS-------- */
+
+    $rig_cars = [];
+    $rig_innerservice = [];
+    $rig_informing = [];
+    if (!empty($id_rig_sis_mes)) {
+        //sis mchs
+        $jrig = $sily_m->get_jrig_by_rigs_for_word($id_rig_sis_mes);
+
+        if (!empty($jrig)) {
+            foreach ($jrig as $row) {
+                $rig_cars[$row['id_rig']][] = $row;
+            }
+        }
+    }
+
+    //sis inner
+    if (!empty($id_rig_arr)) {
+        $inner = $inner_m->get_innerservice_by_rigs($id_rig_arr);
+
+        if (!empty($inner)) {
+            foreach ($inner as $row) {
+                $rig_innerservice[$row['id_rig']][] = $row;
+            }
+        }
+    }
+
+
+    //informing
+    if (!empty($id_rig_informing)) {
+        $informing = $informing_m->get_informing_by_rigs($id_rig_informing);
+
+        if (!empty($informing)) {
+            foreach ($informing as $row) {
+
+                $rig_informing[$row['id_rig']][] = $row;
+            }
+        }
+    }
+
+    $data['rig_cars'] = $rig_cars;
+    $data['rig_innerservice'] = $rig_innerservice;
+    $data['rig_informing'] = $rig_informing;
+
+//print_r($data['rig']);exit();
+
+
+
+
+
+    $phpWord = new \PhpOffice\PhpWord\PhpWord();
+    $phpWord->setDefaultFontName('Times New Roman');
+
+    $style_php_word = new Class_Phpword;
+    /* DON'T CHECK WORDS */
+    $phpWord->getSettings()->setThemeFontLang(new PhpOffice\PhpWord\Style\Language(PhpOffice\PhpWord\Style\Language::RU_RU));
+    $phpWord->getSettings()->setHideSpellingErrors(true);
+    $phpWord->getSettings()->setHideGrammaticalErrors(true);
+    //$phpWord->getSettings()->setAutoHyphenation(true);
+
+
+    $section = $phpWord->addSection(
+        array('marginLeft'   => PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), 'marginRight'  => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.75),
+            'marginTop'    => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.95), 'marginBottom' => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.63),
+            'orientation'  => 'landscape')
+    );
+
+
+    $table = $section->addTable((array('borderSize' => 3, 'cellMarginLeft' => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.19), 'cellMarginRight' => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.19))));
+
+    $table->addRow();
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('vMerge' => 'restart', 'valign' => 'center', 'align' => 'center', 'textDirection' => PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR))->addText("№ п/п", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), $style_php_word::cellRowSpan)->addText('Адрес,<w:br/>ведомственная принадлежность', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(10), $style_php_word::cellRowSpan)->addText('Привлекаемые силы<w:br/>МЧС и организаций<w:br/>(подразделение,<w:br/>техника)', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(6), $style_php_word::cellColSpan_6)->addText("Время", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('vMerge' => 'restart', 'valign' => 'center', 'align' => 'center', 'textDirection' => PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR))->addText('Расстоя-<w:br/>ние, км', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    /* second row of head */
+    $table->addRow();
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), $style_php_word::cellRowContinue);
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), $style_php_word::cellRowContinue);
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(10), $style_php_word::cellRowContinue);
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("сообщения<w:br/>о ЧС", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("выезда", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("прибытия<w:br/>к месту<w:br/>ЧС", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("локализа-<w:br/>ции", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("ликвида-<w:br/>ции", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'center', 'align' => 'center'))->addText("возвра-<w:br/>щения", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), $style_php_word::cellRowContinue);
+
+    /* third row of head */
+    $table->addRow();
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_10_yellow)->addText("ПОЖАРЫ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+
+    if ($is_fire > 0) {
+        $i = 0;
+        foreach ($data['rig'] as $row) {
+            if ($row['id_reasonrig'] == REASON_FIRE) {
+                $i++;
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($i, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+                    $addr = '';
+
+                    if(!in_array($row['locality_id_vid'], CITY_VID)){
+                        $addr=$row['local_name'].' район, ';
+                    }
+
+                    if ($row['address_type_table_4'] != NULL) {
+                        $addr = $addr.$row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? '<w:br/>' . $row['additional_field_address'] : ''));
+                    } else {
+                        $addr = $addr.$row['additional_field_address'];
+                    }
+                    if (!empty($row['object'])) {
+                        $addr = $addr . '<w:br/>';
+                        $addr = $addr . '(' . $row['object'] . ')';
+                    }
+
+                    $addr=$addr.'. Хозяин(ка): устанавливается.';
+
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'left'))->addText($addr, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+
+                $cars = '';
+                if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                    foreach ($rig_cars[$row['id']] as $val) {
+//                        if ($val['is_return'] == 1)
+//                            $cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:r></w:p>";
+//                        else
+
+                        if ($cars=='')
+                            $cars = $cars . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+                        else
+                            $cars = $cars . "<w:br/>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+
+                        //$cars = $cars ."<w:br/>";
+                        //$cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr><w:t>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:t></w:r></w:p>";
+                    }
+                    //$table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+                }
+
+                if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                    foreach ($rig_innerservice[$row['id']] as $val) {
+
+                        if ($cars=='')
+                            $cars = $cars . $val['service_name'];
+                        else
+                            $cars = $cars . "<w:br/>" . $val['service_name'];
+                        //$cars = $cars ."<w:p><w:r><w:rPr></w:rPr><w:t>" .$val['service_name'] . "</w:t></w:r></w:p>";
+                    }
+                }
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(10), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText(date('H:i', strtotime($row['time_msg'])), $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+                $t_exit = '';
+                if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                    foreach ($rig_cars[$row['id']] as $val) {
+
+                        if ($t_exit=='')
+                            $t_exit = $t_exit . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                        else
+                            $t_exit = $t_exit . "<w:br/>" . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                    }
+                }
+
+                if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                    foreach ($rig_innerservice[$row['id']] as $val) {
+
+                        if ($t_exit=='')
+                            $t_exit = $t_exit . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                        else
+                            $t_exit = $t_exit . "<w:br/>" . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                    }
+                }
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($t_exit, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+
+                $t_arrival = '';
+                if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                    foreach ($rig_cars[$row['id']] as $val) {
+
+                        if ($t_arrival=='')
+                            $t_arrival = $t_arrival . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                        else
+                            $t_arrival = $t_arrival . "<w:br/>" . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                    }
+                }
+
+                if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                    foreach ($rig_innerservice[$row['id']] as $val) {
+
+                        if ($t_arrival=='')
+                            $t_arrival = $t_arrival . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                        else
+                            $t_arrival = $t_arrival . "<w:br/>" . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                    }
+                }
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($t_arrival, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+                if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                    $t_loc = new DateTime($row['time_loc']);
+                    $time_loc = $t_loc->Format('H:i');
+                } else {
+                    $time_loc = '';
+                }
+
+                if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                    $t_likv = new DateTime($row['time_likv']);
+                    $time_likv = $t_likv->Format('H:i');
+                } elseif ($row['is_likv_before_arrival'] == 1) {
+                    $time_likv = 'ликв.до<w:br/>приб.';
+                } elseif ($row['is_closed'] == 1) {
+                    $time_likv = '-';
+                } else {
+                    $time_likv = '';
+                }
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($time_loc, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($time_likv, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+                $t_return = '';
+                if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                    foreach ($rig_cars[$row['id']] as $val) {
+                        if ($t_return=='')
+                            $t_return = $t_return . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                        else
+                            $t_return = $t_return . "<w:br/>" . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                    }
+                }
+
+
+                if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                    foreach ($rig_innerservice[$row['id']] as $val) {
+                        if ($t_return=='')
+                            $t_return = $t_return . '-';
+                        else
+                            $t_return = $t_return . "<w:br/>" . '-';
+                    }
+                }
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($t_return, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+                $distance = '';
+                if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                    foreach ($rig_cars[$row['id']] as $val) {
+                        if ($distance=='')
+                            $distance = $distance . $val['distance'];
+                        else
+                            $distance = $distance . "<w:br/>" . $val['distance'];
+                    }
+                }
+                if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                    foreach ($rig_innerservice[$row['id']] as $val) {
+                        if ($distance=='')
+                            $distance = $distance . $val['distance'];
+                        else
+                            $distance = $distance . "<w:br/>" . $val['distance'];
+                    }
+                }
+
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($distance, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+                /* detail inf */
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), array('gridSpan' => 10, 'align' => 'both'))->addText(trim($row['inf_detail']), array('align' => 'both', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'both'));
+            }
+        }
+    } else {
+        $table->addRow();
+        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), array('gridSpan' => 10, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    }
+
+
+    /* OTHER ZAGOR */
+    $section->addTextBreak(1, $style_php_word::header_style_cell_size, $style_php_word::header_style_cell_font);
+    $table = $section->addTable((array('borderSize' => 3, 'cellMarginLeft' => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.19), 'cellMarginRight' => PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.19))));
+    $table->addRow();
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('vMerge' => 'restart', 'valign' => 'center', 'align' => 'center', 'textDirection' => PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR))->addText("№ п/п", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), $style_php_word::cellRowSpan)->addText('Адрес,<w:br/>ведомственная принадлежность', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(24), $style_php_word::cellRowSpan)->addText('Привлекаемые силы<w:br/>МЧС и организаций<w:br/>(подразделение,<w:br/>техника)', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(4.8), $style_php_word::cellColSpan_6)->addText("Время", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.7), array('vMerge' => 'restart', 'valign' => 'center', 'align' => 'center', 'textDirection' => PhpOffice\PhpWord\Style\Cell::TEXT_DIR_BTLR))->addText('Расстоя-<w:br/>ние, км', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), $style_php_word::cellRowSpan)->addText('Описание', array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+    /* second row of head */
+    $table->addRow();
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), $style_php_word::cellRowContinue);
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), $style_php_word::cellRowContinue);
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(24), $style_php_word::cellRowContinue);
+
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("сооб-<w:br/>щения<w:br/>о ЧС", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("выез-<w:br/>да", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("прибы-<w:br/>тия<w:br/>к месту<w:br/>ЧС", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("лока-<w:br/>лиза-<w:br/>ции", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("лик-<w:br/>вида-<w:br/>ции", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'center', 'align' => 'center'))->addText("воз-<w:br/>враще-<w:br/>ния", array('align' => 'center', 'size' => 10, 'bold' => true), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.7), $style_php_word::cellRowContinue);
+    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), $style_php_word::cellRowContinue);
+
+
+    foreach ($all_reasons as $reason) {
+        $i = 0;
+
+        /* third row of head */
+        if (!in_array(REASON_FIRE, $reason)) {
+            $table->addRow();
+        }
+        if (in_array(REASON_OTHER_ZAGOR, $reason)) {
+            $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_11_yellow)->addText("НЕУЧЕТНЫЕ ЗАГОРАНИЯ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+            if ($is_other_zagor == 0) {
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('gridSpan' => 11, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            }
+        } elseif (empty(array_diff(REASON_HELP, $reason))) {
+            $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_11_yellow)->addText("ОКАЗАНИЕ ПОМОЩИ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+
+            if ($is_help == 0) {
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('gridSpan' => 11, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            }
+        } elseif (in_array(REASON_DEMERK, $reason)) {
+            $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_11_yellow)->addText("ДЕМЕРКУРИЗАЦИЯ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            if ($is_demerk == 0) {
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('gridSpan' => 11, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            }
+        } elseif (in_array(REASON_MOLNIA, $reason)) {
+            $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_11_yellow)->addText("МОЛНИЯ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            if ($is_molnia == 0) {
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('gridSpan' => 11, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            }
+        } elseif (in_array(REASON_LTT, $reason)) {
+            $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(3.0), $style_php_word::cellColSpan_11_yellow)->addText("ЗАГОРАНИЯ В ЭКОСИСТЕМАХ", array('align' => 'center', 'size' => 12, 'bold' => true, 'color' => "red"), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            if ($is_ltt == 0) {
+                $table->addRow();
+                $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('gridSpan' => 11, 'align' => 'center'))->addText("нет", array('align' => 'center', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'center'));
+            }
+        }
+
+
+        if (!in_array(REASON_FIRE, $reason)) {
+
+
+            foreach ($data['rig'] as $row) {
+
+
+                if (in_array($row['id_reasonrig'], $reason)) {
+
+                    $i++;
+                    $table->addRow();
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(1), array('valign' => 'top', 'align' => 'center'))->addText($i, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+                    $addr = '';
+
+                    if(!in_array($row['locality_id_vid'], CITY_VID)){
+                         $addr=$addr.$row['local_name'].' район, ';
+                    }
+
+                    if ($row['address_type_table_4'] != NULL) {
+                        $addr = $addr.$row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? '<w:br/>' . $row['additional_field_address'] : ''));
+                    } else {
+                        $addr = $addr.$row['additional_field_address'];
+                    }
+                    if (!empty($row['object'])) {
+                        $addr = $addr . '<w:br/>';
+                        $addr = $addr . '(' . $row['object'] . ')';
+                    }
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'left'))->addText($addr, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+
+                    $cars = '';
+                    if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                        foreach ($rig_cars[$row['id']] as $val) {
+//                        if ($val['is_return'] == 1)
+//                            $cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:r></w:p>";
+//                        else
+
+                            if ($cars=='')
+                                $cars = $cars . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+                            else
+                                $cars = $cars . "<w:br/>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+
+                            //$cars = $cars ."<w:br/>";
+                            //$cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr><w:t>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:t></w:r></w:p>";
+                        }
+                        //$table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+                    }
+
+                    if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                        foreach ($rig_innerservice[$row['id']] as $val) {
+
+                            if ($cars=='')
+                                $cars = $cars . $val['service_name'];
+                            else
+                                $cars = $cars . "<w:br/>" . $val['service_name'];
+                            //$cars = $cars ."<w:p><w:r><w:rPr></w:rPr><w:t>" .$val['service_name'] . "</w:t></w:r></w:p>";
+                        }
+                    }
+
+                        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(24), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText(date('H:i', strtotime($row['time_msg'])), $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+
+
+                    $t_exit = '';
+                    if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                        foreach ($rig_cars[$row['id']] as $val) {
+
+                            if ($t_exit=='')
+                                $t_exit = $t_exit . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                            else
+                                $t_exit = $t_exit . "<w:br/>" . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                        }
+                    }
+
+                    if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                        foreach ($rig_innerservice[$row['id']] as $val) {
+
+                            if ($t_exit=='')
+                                $t_exit = $t_exit . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                            else
+                                $t_exit = $t_exit . "<w:br/>" . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                        }
+                    }
+
+                        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText($t_exit, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+
+                    $t_arrival = '';
+                    if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                        foreach ($rig_cars[$row['id']] as $val) {
+
+                            if ($t_arrival=='')
+                                $t_arrival = $t_arrival . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                            else
+                                $t_arrival = $t_arrival . "<w:br/>" . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                        }
+                    }
+
+                    if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                        foreach ($rig_innerservice[$row['id']] as $val) {
+
+                            if ($t_arrival=='')
+                                $t_arrival = $t_arrival . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                            else
+                                $t_arrival = $t_arrival . "<w:br/>" . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                        }
+                    }
+
+                        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText($t_arrival, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+
+                    if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                        $t_loc = new DateTime($row['time_loc']);
+                        $time_loc = $t_loc->Format('H:i');
+                    } else {
+                        $time_loc = '';
+                    }
+
+                if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                    $t_likv = new DateTime($row['time_likv']);
+                    $time_likv = $t_likv->Format('H:i');
+                } elseif ($row['is_likv_before_arrival'] == 1) {
+                    $time_likv = 'ликв.<w:br/>до<w:br/>приб.';
+                } elseif ($row['is_closed'] == 1) {
+                    $time_likv = '-';
+                } else {
+                    $time_likv = '';
+                }
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText($time_loc, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText($time_likv, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+                    $t_return = '';
+                    if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                        foreach ($rig_cars[$row['id']] as $val) {
+                            if ($t_return == '')
+                                $t_return = $t_return . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                            else
+                                $t_return = $t_return . "<w:br/>" . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                        }
+                    }
+
+
+                    if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                        foreach ($rig_innerservice[$row['id']] as $val) {
+                            if ($t_return == '')
+                                $t_return = $t_return . '-';
+                            else
+                                $t_return = $t_return . "<w:br/>" . '-';
+                        }
+                    }
+
+                        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.8), array('valign' => 'top', 'align' => 'center'))->addText($t_return, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+
+
+                    $distance = '';
+                    if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                        foreach ($rig_cars[$row['id']] as $val) {
+                            if ($distance=='')
+                                $distance = $distance . $val['distance'];
+                            else
+                                $distance = $distance . "<w:br/>" . $val['distance'];
+                        }
+                    }
+                    if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                        foreach ($rig_innerservice[$row['id']] as $val) {
+                            if ($distance=='')
+                                $distance = $distance . $val['distance'];
+                            else
+                                $distance = $distance . "<w:br/>" . $val['distance'];
+                        }
+                    }
+
+
+                        $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(0.7), array('valign' => 'top', 'align' => 'center'))->addText($distance, $style_php_word::style_cell_font, array('align' => 'center', 'spaceAfter' => 0, 'spacing' => 0));
+
+                    /* detail inf */
+                    $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(8), array('align' => 'both'))->addText(trim($row['inf_detail']), array('align' => 'both', 'size' => 12), array('spaceAfter' => 0, 'spacing' => 0, 'align' => 'both'));
+                }
+            }
+        }
+    }
+
+
+
+
+
+    $phpWord->addParagraphStyle(
+        'leftTab', array('tabs' => array(new \PhpOffice\PhpWord\Style\Tab('left', 9090)))
+    );
+
+    $file_download = $caption.' с 06-00 ' . (\DateTime::createFromFormat('Y-m-d', $rig_m->date_start)->format('d.m.Y')) . ' до 06-00 ' . (\DateTime::createFromFormat('Y-m-d', $rig_m->date_end)->format('d.m.Y')).'.docx';
+    header("Content-Description: File Transfer");
+    header('Content-Disposition: attachment; filename="' . $file_download . '"');
+    header("Content-Type: application/msword");
+    header('Content-Transfer-Encoding: binary');
+    header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+    header('Expires: 0');
+    $objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord, 'Word2007');
+    $objWriter->save("php://output");
+});
+
 
 
 

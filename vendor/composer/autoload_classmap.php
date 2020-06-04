@@ -19,6 +19,7 @@ return array(
     'HTML5_Tokenizer' => $vendorDir . '/dompdf/dompdf/lib/html5lib/Tokenizer.php',
     'HTML5_TreeBuilder' => $vendorDir . '/dompdf/dompdf/lib/html5lib/TreeBuilder.php',
     'PDFBarcode' => $vendorDir . '/mpdf/mpdf/classes/barcode.php',
+    'PclZip' => $vendorDir . '/pclzip/pclzip/pclzip.lib.php',
     'SVG' => $vendorDir . '/mpdf/mpdf/classes/svg.php',
     'TTFontFile' => $vendorDir . '/setasign/tfpdf/font/unifont/ttfonts.php',
     'TTFontFile_Analysis' => $vendorDir . '/mpdf/mpdf/classes/ttfontsuni_analysis.php',

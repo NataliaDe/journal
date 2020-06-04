@@ -413,7 +413,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
                     ?>
                     <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия">
-                        <?= ($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '') ?>
+                        <?= ($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-') ?>
                     </p>
                     <?php
                 }
@@ -424,7 +424,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 foreach ($rig_innerservice[$row['id']] as $val) {
 
                     ?>
-                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '' ?></p>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-' ?></p>
                     <?php
                 }
             }
@@ -433,7 +433,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 foreach ($rig_informing[$row['id']] as $val) {
 
                     ?>
-                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '' ?></p>
+                    <p aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Время прибытия"><?= ($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-' ?></p>
                     <?php
                 }
             }

@@ -39,7 +39,8 @@ if (isset($search_rig_by_id)) {
 
 
             <?php
-            if ((isset($settings_user['is_excel_rigtable']) && $settings_user['is_excel_rigtable']['name_sign'] == 'yes')) {
+            if ((isset($settings_user['is_excel_rigtable']) && $settings_user['is_excel_rigtable']['name_sign'] == 'yes') ||
+                (isset($settings_user['is_word_rigtable']) && $settings_user['is_word_rigtable']['name_sign'] == 'yes')) {
 
 
                 if (isset($_POST['date_start']) && $_POST['date_start'] != '0000-00-00 00:00:00' && $_POST['date_start'] != NULL) {
@@ -80,22 +81,32 @@ if (isset($search_rig_by_id)) {
 
                 $export_rigtable = $baseUrl . '/export_rigtable/' . $from_filter . '/' . $to_filter . '/' . $reason;
 
+                $export_word = $baseUrl . '/export_word/' . $from_filter . '/' . $to_filter . '/' . $reason;
+
 
                 if ($_SESSION['id_level'] == 1) {
+                    $export_word = $export_word . '/' . $id_page;
                     $export_rigtable = $export_rigtable . '/' . $id_page;
+                }
+            }
+
+            if ((isset($settings_user['is_excel_rigtable']) && $settings_user['is_excel_rigtable']['name_sign'] == 'yes')) {
+
+                ?>
+                <a href="<?= $export_rigtable ?>"><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Excel"></i></a>
+                <?php
+            }
+
+
+            if ((isset($settings_user['is_word_rigtable']) && $settings_user['is_word_rigtable']['name_sign'] == 'yes')) {
+
+                ?>
+                <a href="<?= $export_word ?>"><i class="fa fa-file-word-o" aria-hidden="true" style="color:blue; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Word"></i></a>
+                    <?php
                 }
 
                 ?>
 
-
-
-
-                <a href="<?= $export_rigtable ?>"><i class="fa fa-file-excel-o" aria-hidden="true" style="color:green; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Excel"></i></a>
-
-                <?php
-            }
-
-            ?>
         </b></center>
     <?php
 }

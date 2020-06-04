@@ -404,8 +404,12 @@ function addPodrDataToMap(data, map, mark_podr = 0) {
             if (data[i].hasOwnProperty('ss_url_text') && data[i].hasOwnProperty('ss_url_text') !== '')
                 var ss_url_text = data[i].ss_url_text;
 
+            if (data[i].hasOwnProperty('distance') && data[i].hasOwnProperty('distance') !== '')
+                var content_popup = content_popup + '<br>Расст: ' + data[i].distance+ ' км. ';
+
             if (data[i].hasOwnProperty('ss_url'))
                 var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
+
 
 
             geojsonFeature.popupContent = content_popup;

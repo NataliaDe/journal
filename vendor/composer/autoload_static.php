@@ -7,6 +7,10 @@ namespace Composer\Autoload;
 class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
 {
     public static $prefixLengthsPsr4 = array (
+        'Z' => 
+        array (
+            'Zend\\Escaper\\' => 13,
+        ),
         'S' => 
         array (
             'Svg\\' => 4,
@@ -18,6 +22,8 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'P' => 
         array (
             'Psr\\Log\\' => 8,
+            'PhpOffice\\PhpWord\\' => 18,
+            'PhpOffice\\Common\\' => 17,
             'ParseCsv\\' => 9,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -38,10 +44,15 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
             'App\\MW\\' => 7,
             'App\\MODELS\\' => 11,
             'App\\EXC\\' => 8,
+            'App\\CLASSES\\' => 12,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Zend\\Escaper\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/zendframework/zend-escaper/src',
+        ),
         'Svg\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-svg-lib/src/Svg',
@@ -53,6 +64,14 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'Psr\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
+        ),
+        'PhpOffice\\PhpWord\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpword/src/PhpWord',
+        ),
+        'PhpOffice\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
         ),
         'ParseCsv\\' => 
         array (
@@ -85,6 +104,10 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'App\\EXC\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app/exc',
+        ),
+        'App\\CLASSES\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/app/classes',
         ),
     );
 
@@ -130,6 +153,7 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'HTML5_Tokenizer' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/Tokenizer.php',
         'HTML5_TreeBuilder' => __DIR__ . '/..' . '/dompdf/dompdf/lib/html5lib/TreeBuilder.php',
         'PDFBarcode' => __DIR__ . '/..' . '/mpdf/mpdf/classes/barcode.php',
+        'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
         'SVG' => __DIR__ . '/..' . '/mpdf/mpdf/classes/svg.php',
         'TTFontFile' => __DIR__ . '/..' . '/setasign/tfpdf/font/unifont/ttfonts.php',
         'TTFontFile_Analysis' => __DIR__ . '/..' . '/mpdf/mpdf/classes/ttfontsuni_analysis.php',
