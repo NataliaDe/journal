@@ -115,8 +115,10 @@ use App\MODELS\Model_Helpers;
 //архив
 use App\MODELS\Model_Archivedate;
 use App\MODELS\Model_Archiveyear;
+use App\MODELS\Model_Main;
 
 use App\CLASSES\Class_Phpword;
+
 /* ----------------- END MODELS ----------------- */
 
 
@@ -875,6 +877,9 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
         $data['locorg'] = $locorg->selectAll(1); //выбрать все подразд кроме РЦУ, УМЧС(там нет техники)
         $pasp = new Model_Pasp();
         $data['pasp'] = $pasp->selectAll();
+
+        $main_model=new Model_Main();
+        $data['owner_categories']=$main_model->get_owner_categories();
 
         if ($active_tab != 2) {
 

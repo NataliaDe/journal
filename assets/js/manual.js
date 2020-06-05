@@ -1894,6 +1894,16 @@ for (var i = 1; i < 30; i++) {
 // In your Javascript (external .js resource or <script> tag)
 $(document).ready(function () {
     $('.js-example-basic-single').select2();
+
+    $('.select2-owner').select2({
+        placeholder: "Выберите из списка",
+        allowClear: true,
+        "language": {
+            "noResults": function () {
+                return "Ничего не найдено";
+            }
+        }
+    });
 });
 
 $(document).ready(function () {
