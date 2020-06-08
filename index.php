@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '04.06.2020');
+define(NEWS_DATE, '08.06.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -15913,7 +15913,25 @@ $app->get('/export_word/:from/:to/:reasonrig(/:id_region)', function ($from, $to
                         $addr = $addr . '(' . $row['object'] . ')';
                     }
 
-                    $addr=$addr.'. Хозяин(ка): устанавливается.';
+                if (isset($row['id_owner_category']) && $row['id_owner_category'] != 0) {
+                    $addr = $addr . '. ' . mb_convert_case($row['category_name'], MB_CASE_TITLE, "UTF-8") . ': ';
+                }
+                if (isset($row['owner_fio']) && !empty($row['owner_fio'])) {
+                    $addr = $addr . $row['owner_fio'];
+                }
+                if (isset($row['owner_year_birthday']) && !empty($row['owner_year_birthday']) && $row['owner_year_birthday'] != 0) {
+                    $addr = $addr . ', ' . $row['owner_year_birthday'] . ' г.р.';
+                }
+                if (isset($row['owner_position']) && !empty($row['owner_position'])) {
+                    $addr = $addr . ', ' . $row['owner_position'];
+                }
+                if (isset($row['owner_job']) && !empty($row['owner_job'])) {
+                    $addr = $addr . ' ' . $row['owner_job'];
+                }
+
+
+                //$addr=$addr.'. Хозяин(ка): устанавливается.';
+
 
                 $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'left'))->addText($addr, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
 
@@ -16184,6 +16202,26 @@ $app->get('/export_word/:from/:to/:reasonrig(/:id_region)', function ($from, $to
                         $addr = $addr . '<w:br/>';
                         $addr = $addr . '(' . $row['object'] . ')';
                     }
+
+
+
+                    if (isset($row['id_owner_category']) && $row['id_owner_category'] != 0) {
+                        $addr = $addr . '. ' . mb_convert_case($row['category_name'], MB_CASE_TITLE, "UTF-8") . ': ';
+                    }
+                    if (isset($row['owner_fio']) && !empty($row['owner_fio'])) {
+                        $addr = $addr . $row['owner_fio'];
+                    }
+                    if (isset($row['owner_year_birthday']) && !empty($row['owner_year_birthday']) && $row['owner_year_birthday'] != 0) {
+                        $addr = $addr . ', ' . $row['owner_year_birthday'] . ' г.р.';
+                    }
+                    if (isset($row['owner_position']) && !empty($row['owner_position'])) {
+                        $addr = $addr . ', ' . $row['owner_position'];
+                    }
+                    if (isset($row['owner_job']) && !empty($row['owner_job'])) {
+                        $addr = $addr . ' ' . $row['owner_job'];
+                    }
+
+
 
                     $table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'left'))->addText($addr, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
 
