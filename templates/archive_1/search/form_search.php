@@ -41,12 +41,27 @@ if (isset($msg) && !empty($msg)) {
 
                     <option value="">Выберите год</option>
                     <?php
+//                    foreach ($archive_year as $ay) {
+//                        $period=' (с 01.01 '.' по '. date('d.m', strtotime($ay['max_date'])).')';
+//                        if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
+//                            printf("<p><option data-mad='%s' value='%s' selected ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
+//                        } else {
+//                            printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
+//                        }
+//                    }
                     foreach ($archive_year as $ay) {
-                        $period=' (с 01.01 '.' по '. date('d.m', strtotime($ay['max_date'])).')';
+                        $period = ' (с 01.01 ' . ' по ' . date('d.m', strtotime($ay['max_date'])) . ' 06:00:00)';
+                        if (mb_substr($ay['table_name'], 0, -1) == '2019') {
+                            $period = ' (с 01.01 06:00:00' . ' по ' . date('d.m', strtotime($ay['max_date'])) . ' 06:00:00*)';
+                        } elseif (mb_substr($ay['table_name'], 0, -1) == '2020') {
+                            $period = ' (с 01.01 00:00:00*' . ' до ' . date('d.m', strtotime($ay['max_date'])) . ' 06:00:00)';
+                        }
+
+
                         if (isset($_POST['archive_year']) && $ay['table_name'] == $_POST['archive_year']) {
-                            printf("<p><option data-mad='%s' value='%s' selected ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
+                            printf("<p><option data-mad='%s' value='%s' selected ><label>%s</label></option></p>", date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1) . $period);
                         } else {
-                            printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>",date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1).$period);
+                            printf("<p><option data-mad='%s' value='%s' ><label>%s</label></option></p>", date('Y-m-d', strtotime($ay['max_date'])), $ay['table_name'], mb_substr($ay['table_name'], 0, -1) . $period);
                         }
                     }
                     ?>

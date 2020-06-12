@@ -2737,10 +2737,32 @@ $('body').on('change', '#userForm #id_user_sd', function (e) {
     if (user_sd !== '') {
         $('#userForm').find('.row-data-for-sd').removeClass("show");
         $('#userForm').find('.row-data-for-sd').addClass("hide");
+
+
+        var login=$('#userForm #id_user_sd option:selected').data('login');
+        var psw=$('#userForm #id_user_sd option:selected').data('psw');
+        var fio=$('#userForm #id_user_sd option:selected').data('fio');
+        var region=$('#userForm #id_user_sd option:selected').data('region');
+
+        $('#userForm').find('input[name="login"]').val(login);
+        $('#userForm').find('input[name="password"]').val(psw);
+        $('#userForm').find('input[name="name"]').val(fio);
+
+        $('#userForm').find('select[name="id_region"]').val(region);
+        $('#userForm').find('select[name="id_region"]').change();
+
+        $('#userForm').find('input[name="can_edit"]').prop('checked',true);
+        $('#userForm').find('input[name="auto_ate"]').prop('checked',true);
+
+
     } else {
 
         $('#userForm').find('.row-data-for-sd').removeClass("hide");
         $('#userForm').find('.row-data-for-sd').addClass("show");
+
+        $('#userForm').find('input[name="login"]').val('');
+        $('#userForm').find('input[name="password"]').val('');
+        $('#userForm').find('input[name="name"]').val('');
     }
     // alert(user_sd);
 

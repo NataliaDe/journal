@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '08.06.2020');
+define(NEWS_DATE, '09.06.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -8566,7 +8566,7 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         } elseif ($id_tab == 'table-content4') {//innerservice
             $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, innerservice ' . $sql;
         } elseif ($id_tab == 'table-content5') {//results br
-            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, results_battle ' . $sql;
+            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, results_battle, rb_chapter_1,rb_chapter_2,rb_chapter_3 ' . $sql;
         } elseif ($id_tab == 'table-content6') {//trunk
             $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, trunk ' . $sql;
         }
@@ -9821,7 +9821,7 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
         $sql = $sql . ' ORDER BY id_rig ASC';
 
-        $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, results_battle ' . $sql;
+        $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, results_battle, rb_chapter_1,rb_chapter_2,rb_chapter_3 ' . $sql;
 
 
 
@@ -10126,11 +10126,16 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
         $data['region'] = $name_oblast; //области
 
+
+
         $archive_m = new Model_Archivedate();
         $data['archive_date'] = $archive_m->selectAll();
         //$archive_year_m = new Model_Archiveyear();
         // $data['archive_year'] = $archive_year_m->selectAll();
-        $archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+        //$data['archive_year'] = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+        //$archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+
+        $archive_year = ARCHIVE_YEAR;
 
         foreach ($archive_year as $value) {
             $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
@@ -11049,7 +11054,7 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
             $extens = $info->getExtension();
             $new_name_file = $uploaddir . translit($file_name_only) . '.' . $info->getExtension();
 
-            $allowed_extension = array('doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'png');
+            $allowed_extension = array('doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'png','pdf');
 
             $uploadOk = 1;
 
@@ -11715,9 +11720,9 @@ function getCardByIdRig($table_name_year, $id_rig)
                 $results_battle['save_man'] = $arr[2];
                 $results_battle['inj_man'] = $arr[3];
                 $results_battle['ev_man'] = $arr[4];
-                $results_battle['save_an'] = $arr[5];
-                $results_battle['save_plan'] = $arr[6];
-                $results_battle['save_build'] = $arr[7];
+                $results_battle['save_an'] = $arr[11];
+                $results_battle['save_plan'] = $arr[14];
+                $results_battle['save_build'] = $arr[5];
                 $results_battle['save_teh'] = $arr[8];
             }
         }

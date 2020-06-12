@@ -7,8 +7,8 @@
         <label>Описание</label>
         <textarea class="form-control" cols="143" rows="10" name="description" required=""></textarea>
     </div>
-	
-	
+
+
 	<?php
 if((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))){
   $author=  $_SESSION['locorg_name'].', '.$_SESSION['user_name'];
@@ -86,7 +86,7 @@ else{
     </div>
 
 	         <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
-    <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="900000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
 
  Отправить этот файл: <input name="userfile" type="file" />
