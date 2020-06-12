@@ -5,7 +5,7 @@
 
 
     <div class="col-lg-2">
-        <div class="form-group" id="firereason-id">
+        <div class="form-group">
             <label for="id_category">Категория</label>
             <select class="select2-owner form-control" name="id_owner_category"  >
                 <option value="">Выбрать</option>
@@ -33,7 +33,7 @@
     <div class="col-lg-2">
         <div class="form-group">
             <label for="owner_year_birthday">Год рождения</label>
-            <input type="number" min="1920" max="<?= date("Y") ?>" class="form-control"  placeholder="" name="owner_year_birthday"  value="<?= (isset($rig['owner_year_birthday']) ? $rig['owner_year_birthday'] : '') ?>">
+            <input type="number"  max="<?= date("Y") ?>" class="form-control"  placeholder="" name="owner_year_birthday"  value="<?= (isset($rig['owner_year_birthday']) ? $rig['owner_year_birthday'] : '') ?>">
         </div>
     </div>
 

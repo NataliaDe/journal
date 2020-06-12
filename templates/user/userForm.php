@@ -271,7 +271,7 @@
                     <option></option>
                     <?php
                      foreach ($users_sd as $usd) {?>
-                     <option value="<?=$usd['id_user']?>"
+                     <option data-region="<?=$usd['id_region']?>"  data-fio="<?=$usd['fio']?>" data-login="<?=$usd['login']?>" data-psw="<?=$usd['password']?>" value="<?=$usd['id_user']?>"
                              <?=(isset($user['id_user_sd']) && $usd['id_user'] == $user['id_user_sd']) ? "selected" : ''?>
                              ><?= $usd['auth_fio']?> <?=$usd['auth_organ_full']?></option>
                     <?php
