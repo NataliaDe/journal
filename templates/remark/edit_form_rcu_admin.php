@@ -89,7 +89,7 @@
     <?php
     }
 
-	
+
 	    if(isset($value['file_basename']) && !empty($value['file_basename'])){
             $path1=$baseUrl.'/'.$value['file_name'];
         ?>
@@ -100,9 +100,9 @@
     }
     ?>
 
-	
+
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
-    <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="900000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
 
     <?php

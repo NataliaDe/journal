@@ -63,7 +63,7 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
     </div>
 
       <!-- Поле MAX_FILE_SIZE должно быть указано до поля загрузки файла -->
-    <input type="hidden" name="MAX_FILE_SIZE" value="600000" />
+    <input type="hidden" name="MAX_FILE_SIZE" value="900000" />
     <!-- Название элемента input определяет имя в массиве $_FILES -->
 
  Отправить этот файл: <input name="userfile" type="file" />
@@ -77,7 +77,7 @@ if ((isset($_SESSION['locorg_name']) && isset($_SESSION['user_name']))) {
          </label>
      </div>
  </div>
-	
+
     <br><br><br>
     <button class="btn btn-lg btn-success btn-block" type="submit">Сохранить замечание</button>
     <br>

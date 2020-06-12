@@ -24,7 +24,6 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
             'Psr\\Log\\' => 8,
             'PhpOffice\\PhpWord\\' => 18,
             'PhpOffice\\Common\\' => 17,
-            'ParseCsv\\' => 9,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
         'M' => 
@@ -72,10 +71,6 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'PhpOffice\\Common\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpoffice/common/src/Common',
-        ),
-        'ParseCsv\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/parsecsv/php-parsecsv/src',
         ),
         'PHPMailer\\PHPMailer\\' => 
         array (
