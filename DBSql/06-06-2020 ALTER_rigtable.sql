@@ -1,0 +1,1 @@
+r.id_owner_category,r.owner_fio,r.owner_year_birthday,r.owner_address,r.owner_position,r.owner_job
