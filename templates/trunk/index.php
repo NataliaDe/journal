@@ -143,7 +143,7 @@
                                         <div class="col-lg-2">
 
                                            <div class=" times">
-                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" > 
+                                                <input type="time" name="sily[<?= $row['id_teh'] ?>][time_pod][]" value="<?= $tr_edit['time_pod'] ?>" >
                                             </div>
 
 <!--                                            <div class="form-group">
@@ -349,8 +349,8 @@
                     <div class="form-group">
                         <h4>Добавить новый тип</h4>
                         <input type="text" class="form-control" placeholder="Введите наименование типа" required="" id='tag_name' >
-						
-						
+
+
                     <div class="form-group">
                         <div class="checkbox checkbox-success">
                             <input id="is_water" type="checkbox" name="is_water" value="1" >
@@ -359,7 +359,7 @@
                             </label>
                         </div>
                     </div>
-						
+
                         <br>
                         <div class="btn-modal">
                             <button type="button" class="btn btn-bd-primary"  onclick="AddTag();return false;">Добавить</button>
@@ -388,7 +388,7 @@
                                 ?>
                             </select>
                         </div>
-						
+
 						<div class="form-group">
                             <div class="checkbox checkbox-success">
                                 <input id="is_water_edit" type="checkbox" name="is_water_edit" value="1" >
@@ -397,7 +397,7 @@
                                 </label>
                             </div>
                         </div>
-						
+
                         <br>
                          <input type="text" class="form-control" placeholder="Введите новое наименование" required="" id='edit_tag_name' >
                          <br>
@@ -425,9 +425,9 @@
                                 ?>
                             </select>
                         </div>
-						
-						
-						
+
+
+
                         <br>
                         <div class="btn-modal">
                             <button type="button" class="btn btn-bd-primary" id='del_tag_btn'>Удалить</button>

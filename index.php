@@ -12794,9 +12794,9 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
     $app->post('/:id_rig', function ($id_rig) use ($app) {
 
         // print_r($_POST);        echo '<br><br>';
-
         $sily = $app->request()->post('sily');
 
+        $rig_m=new Model_rig();
 
         if (isset($sily) && !empty($sily)) {
 
@@ -12819,11 +12819,20 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
 
                         if (isset($value['trunk'][$j]) && !empty($value['trunk'][$j]) && isset($value['means'][$j]) && !empty($value['means'][$j]) && $value['means'][$j] > 0) {
 
+                            if ($rig_m->isDateTimeValid(trim($value['time_pod'][$j]), "H:i")) {
+
+                                $save_sily['time_pod'] = \DateTime::createFromFormat("H:i", trim($value['time_pod'][$j]))->format('H:i');
+                            } else {
+                                $save_sily['time_pod'] = '';
+                            }
+
+
                             $save_sily['id_silymchs'] = $id_silymchs;
-                            $save_sily['time_pod'] = $value['time_pod'][$j];
+
                             $save_sily['id_trunk_list'] = $value['trunk'][$j];
                             $save_sily['cnt'] = (isset($value['means'][$j]) && !empty($value['means'][$j])) ? intval($value['means'][$j]) : 0;
                             $save_sily['water'] = $value['water'][$j];
+
 
                             //save
                             if (!empty($save_sily)) {
