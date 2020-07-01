@@ -30,11 +30,11 @@
 <script src="<?= $baseUrl ?>/assets/leaflet_extra_markers/dist/js/leaflet.extra-markers.js"></script>
 
 
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/maps_for_mes/manual_leaflet.js"></script>
-<script  type="text/javascript" src="<?= $baseUrl ?>/assets/maps_for_mes/manual_form_actions.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/maps_for_mes/manual_leaflet.js?<?php echo time();?>"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/maps_for_mes/manual_form_actions.js?<?php echo time();?>"></script>
 
 <!--left menu-->
-<script src="<?= $baseUrl ?>/assets/jquery-side-menu/menu.js"></script>
+<script src="<?= $baseUrl ?>/assets/jquery-side-menu/menu.js?<?php echo time();?>"></script>
 
 
 

@@ -2901,3 +2901,11 @@ function removeAllNotifications() {
 }
 
 /*-------------- END notifications ------------------*/
+
+
+    $('#characterForm .distance-sily').keypress(function (key) {
+     if (((key.charCode < 48)&& (key.charCode != 46)) || (key.charCode > 57) )
+        return false;
+});
+
+jQuery("#loc_id_chaned").chained("#reg_id_chaned");

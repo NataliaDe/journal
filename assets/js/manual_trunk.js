@@ -67,7 +67,7 @@ function allowCntTimePod(){
 	    $(".chzn-select-trunk").chosen({
         allow_single_deselect: true
     });
-	
+
      jQuery(".time-pod-mask").mask("99-99");//долгота
 
 $(document).ready(function(){
@@ -130,12 +130,12 @@ while ((is.length > 0)) {
 
                    /* add tags to bd */
         function AddTag() {
-			
+
 			 if($('#is_water').prop('checked'))
                 var is_water= 1;
             else
                 var is_water= 0;
-			
+
             //alert($('#tag_name').val());
             $.ajax({
                 dataType: "json",
@@ -167,13 +167,13 @@ while ((is.length > 0)) {
 
                     /* edit tags to bd */
         function editTag() {
-			
-			
+
+
 			if($('#is_water_edit').prop('checked'))
                 var is_water= 1;
             else
                 var is_water= 0;
-			
+
             //alert($('#tag_name').val());
             $.ajax({
                 dataType: "json",
@@ -187,10 +187,10 @@ while ((is.length > 0)) {
             }).done(function (data) {
 
                 $('#id_edit_trunk option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name);
-                
+
 				$('#tags_del_trunk option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name+ data.water_text);
                 $('#tags_del_trunk option[value=' + $('#id_edit_trunk').val() + ']').attr('data-is-water',data.is_water);
-				
+
                 $('.trunk-select-on-form option[value=' + $('#id_edit_trunk').val() + ']').text(data.tag_name);
 
 
@@ -227,9 +227,9 @@ while ((is.length > 0)) {
             $('#tags_del_trunk').trigger("chosen:updated");
             $('#id_edit_trunk').trigger("chosen:updated");//select edit
         });
-		
-		
-		
+
+
+
 		 /* is water edit trunk */
         $('body').on('change', '#id_edit_trunk', function (e) {
                 var is_water = $('option:selected', this).attr('data-is-water');

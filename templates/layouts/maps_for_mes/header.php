@@ -59,7 +59,7 @@
 
 
 
-        <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/jquery-side-menu/style.css" />
+        <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/jquery-side-menu/style.css?<?php echo time();?>" />
 
 
 
