@@ -1131,7 +1131,8 @@ function addDataToMap(data, map) {
             var ss_url_text = data[i].ss_url_text;
 
         if (data[i].hasOwnProperty('ss_url'))
-            var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
+            //var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
+            var content_popup = content_popup + '</br>' + '<a href="#" class="btn-show-modal-ss" data-toggle="modal" data-target="#modal-show-ss" data-url="' + data[i].ss_url + '">' + ss_url_text + ' </a>';
 
 
 
@@ -1481,7 +1482,8 @@ function addCarFilterDataToMap(data, map, mark_podr = 0) {
             var ss_url_text = data[i].ss_url_text;
 
         if (data[i].hasOwnProperty('ss_url'))
-            var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
+            //var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
+                var content_popup = content_popup + '</br>' + '<a href="#" class="btn-show-modal-ss" data-toggle="modal" data-target="#modal-show-ss" data-url="' + data[i].ss_url + '">' + ss_url_text + ' </a>';
 
 
 

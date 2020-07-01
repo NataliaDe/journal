@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '09.06.2020');
+define(NEWS_DATE, '30.06.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -13576,6 +13576,8 @@ $app->group('/maps', function () use ($app) {
                         $coords['id_local'] = $id_local;
                         $coords['id'] = $value['id'];
 
+
+
                         //echo $res['pasp_name'];
                         $duplicate_pasp = $rig_m->get_dublicate_pasp_by_coords($coords);
                         // print_r($duplicate_pasp);
@@ -13649,7 +13651,8 @@ $app->group('/maps', function () use ($app) {
                                 $obl = $row['region_name'] . ' обл., ';
 
                             $ss['address_disloc'] = $obl . $row['address_disloc'];
-                            $ss['ss_url_text'] = 'перейти в карточку сил и средств';
+                            //$ss['ss_url_text'] = 'перейти в карточку сил и средств';
+                            $ss['ss_url_text'] = 'просмотреть карточку сил и средств';
                             $ss['ss_url'] = '/ss/card/' . $row['id_region'] . '/' . $row['id_loc_org'];
                             $ss['is_closest_podr'] = 1;
                             $ss['distance'] = number_format($row['distance'], 1, '.', '');
@@ -14239,7 +14242,9 @@ $app->group('/maps_for_mes', function () use ($app) {
                         $res['show_number_pasp'] = 1;
                     }
 
-                    $res['ss_url_text'] = 'перейти в карточку сил и средств';
+                    //$res['ss_url_text'] = 'перейти в карточку сил и средств';
+                    //$ss['ss_url_text'] = 'просмотреть карточку сил и средств';
+                    $res['ss_url_text'] = 'просмотреть карточку сил и средств';
                     $res['ss_url'] = '/ss/card/' . $value['region'] . '/' . $value['id_card'];
 
                     if (in_array($value['id_record'], $ids_pasp_otdel)) {
@@ -14468,7 +14473,8 @@ $app->group('/maps_for_min_obl', function () use ($app) {
 
                 $res['address_disloc'] = $obl . $value['address_disloc'];
                 // $res['new_icon'] = 'assets/images/leaflet/coffee.png';
-                $res['ss_url_text'] = 'перейти в карточку сил и средств';
+                //$res['ss_url_text'] = 'перейти в карточку сил и средств';
+                $res['ss_url_text'] = 'просмотреть карточку сил и средств';
                 $res['ss_url'] = '/ss/card/' . $value['id_region'] . '/' . $value['id_loc_org'];
 
                 $res1[] = $res;
@@ -16434,6 +16440,166 @@ $app->get('/export_word/:from/:to/:reasonrig(/:id_region)', function ($from, $to
 
 
 
+
+/* edit np */
+
+$app->get('/np_edit', function () use ($app) {
+
+    $data['title'] = 'Нас.пункты/Редактировать';
+
+    $bread_crumb = array('Нас.пункты', 'Редактировать');
+    $data['bread_crumb'] = $bread_crumb;
+
+    /*     * *** Классификаторы **** */
+    $region = new Model_Region();
+    $data['region'] = $region->selectAll(); //области
+    $local = new Model_Local();
+    $data['local'] = $local->selectAll(); //районы
+
+    $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+    /*     * *** КОНЕЦ Классификаторы **** */
+
+    $app->render('layouts/header.php', $data);
+    $data['path_to_view'] = 'np_edit/form.php';
+    $app->render('layouts/div_wrapper.php', $data);
+    $app->render('layouts/footer.php');
+});
+
+
+$app->post('/np_edit', function () use ($app) {
+
+    $region_m = new Model_Region();
+
+    $post = $app->request()->post();
+
+    if (isset($post['save_edit'])) {//save
+        $id_region = $post['id_region'];
+        $id_local = $post['id_local'];
+
+        $delete = [];
+
+        if (!empty($post['locality'])) {
+
+
+            foreach ($post['locality'] as $row) {
+
+                if (isset($row['is_delete']) && $row['is_delete'] == 1 && isset($row['id']) && !empty($row['id'])) {
+                    $delete[] = $row['id'];
+                } elseif (isset($row['id']) && !empty($row['id'])) {
+                    $main = R::load('locality', $row['id']);
+                    $main->name = $row['name'];
+                    $main->id_vid = $row['id_vid'];
+                    $main->id_selsovet = $row['id_selsovet'];
+                    $main->last_update = date('Y-m-d H:i:s');
+                    R::store($main);
+                } elseif (empty($row['id']) && !empty($row['name']) && (!isset($row['is_delete']) || $row['is_delete'] == 0)) {
+
+                    $main = R::dispense('locality');
+                    $main->id_region = $id_region;
+                    $main->id_local = $id_local;
+                    $main->name = $row['name'];
+                    $main->id_vid = $row['id_vid'];
+                    $main->id_selsovet = $row['id_selsovet'];
+                    $main->date_create = date('Y-m-d H:i:s');
+                    R::store($main);
+                }
+            }
+        }
+
+        if (!empty($post['without_loc'])) {
+
+            foreach ($post['without_loc'] as $row) {
+
+                if (isset($row['is_delete']) && $row['is_delete'] == 1 && isset($row['id']) && !empty($row['id'])) {
+                    $delete[] = $row['id'];
+                } elseif (isset($row['id']) && !empty($row['id'])) {
+                    $main = R::load('locality', $row['id']);
+                    $main->name = $row['name'];
+                    $main->id_vid = $row['id_vid'];
+                    $main->id_selsovet = (isset($row['id_selsovet']) && !empty($row['id_selsovet'])) ? $row['id_selsovet'] : 0;
+                    $main->last_update = date('Y-m-d H:i:s');
+                    R::store($main);
+                } elseif (empty($row['id']) && !empty($row['name']) && (!isset($row['is_delete']) || $row['is_delete'] == 0)) {
+
+                    $main = R::dispense('locality');
+                    $main->id_region = $id_region;
+                    $main->id_local = $id_local;
+                    $main->name = $row['name'];
+                    $main->id_vid = $row['id_vid'];
+                    $main->id_selsovet = $row['id_selsovet'];
+                    $main->date_create = date('Y-m-d H:i:s');
+                    R::store($main);
+                }
+            }
+        }
+
+        if (!empty($delete)) {
+
+            foreach ($delete as $value) {
+                $f = R::load('locality', $value);
+                R::trash($f);
+            }
+        }
+
+        $app->redirect('np_edit');
+    } else {//get all selsovets by local
+        $data['title'] = 'Нас.пункты/Редактировать';
+
+        $bread_crumb = array('Нас.пункты', 'Редактировать');
+        $data['bread_crumb'] = $bread_crumb;
+
+        /*         * *** Классификаторы **** */
+
+        $data['region'] = $region_m->selectAll(); //области
+        $local_m = new Model_Local();
+        $data['local'] = $local_m->selectAll(); //районы
+
+        $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+
+        $id_reg = $app->request()->post('id_region');
+        $id_loc = $app->request()->post('id_local');
+
+
+        $data['vid_locality'] = $local_m->get_vid_locality();
+
+
+        $selsovet = $local_m->get_all_selsovet_by_local($id_loc);
+
+        if (isset($selsovet) && !empty($selsovet)) {
+            foreach ($selsovet as $key => $row) {
+                $selsovet[$key]['locality'] = $local_m->get_all_locality_by_selsovet($row['id']);
+            }
+        }
+
+        $data['selsovet'] = $selsovet;
+
+        $locality_without_selsovet = $local_m->get_locality_without_selsovet($id_loc);
+        $data['locality_without_selsovet'] = $locality_without_selsovet;
+
+
+
+
+
+        $data['bread_crumb'] = $bread_crumb;
+        $app->render('layouts/np_edit/header.php', $data);
+        $data['path_to_view'] = 'np_edit/index_1.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/np_edit/footer.php');
+
+//        $app->render('layouts/header.php', $data);
+//        //$data['path_to_view'] = 'np_edit/index.php';
+//        $data['path_to_view'] = 'np_edit/index_1.php';
+//        $app->render('layouts/div_wrapper.php', $data);
+//        $app->render('layouts/footer.php');
+    }
+});
+
+
+
 /* ---------------------- SPECIAL D auth --------------------- */
 $app->group('/login_to_speciald', 'is_login', function () use ($app, $log) {
 
@@ -16566,5 +16732,8 @@ $app->group('/login_to_speciald', 'is_login', function () use ($app, $log) {
         $app->render('layouts/footer.php');
     });
 });
+
+
+
 
 $app->run();

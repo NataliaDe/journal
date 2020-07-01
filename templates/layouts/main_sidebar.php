@@ -276,6 +276,31 @@
                     </li>
 
 
+                    <?php
+                    if (isset($_SESSION['id_organ']) && $_SESSION['id_organ'] == RCU && $_SESSION['is_admin'] == 1) {//RCU
+                        if (isset($item_active) && $item_active == 'np_edit') {
+
+                            ?>
+                            <li class="active">
+                                <?php
+                            } else {
+
+                                ?>
+                            <li>
+                                <?php
+                            }
+
+                            ?>
+                            <a href="<?= $baseUrl ?>/np_edit"><i class="fa fa-chevron-circle-down"></i> Нас. пункты</a>
+                        </li>
+
+                        <?php
+                    }
+
+                    ?>
+
+
+
                 </ul>
             </li>
 

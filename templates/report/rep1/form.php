@@ -9,7 +9,7 @@
 <br><br>
     <form  role="form" class="form-inline" name="rep1Form" id="rep1Form" method="POST" action="<?= $_SERVER['REQUEST_URI'] ?>">
 
-	
+
     <div class="row" style="padding-left: 20px">
         <div class="form-group " style="    border: solid 1px #f39c12;
              padding-top: 10px;
@@ -39,8 +39,8 @@
 
         <br><br><br>
     </div>
-	
-	
+
+
 	 <div class="row" style="padding-left: 20px">
                 <div class="form-group">
                     <label for="date_start" >с</label>
@@ -224,10 +224,10 @@
 <br>
 <i class="fa fa-hand-o-up" aria-hidden="true" style="color: red"></i><span style="color: red"> -
     рекомендуем строить отчет за период не больше 1 недели в связи с большим объемом данных.</span>
-	
-	
-	
-	
+
+
+
+
 <br>
 <?php
 include dirname(dirname(__FILE__)).'/bokk/form.php';
