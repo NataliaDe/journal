@@ -16443,7 +16443,7 @@ $app->get('/export_word/:from/:to/:reasonrig(/:id_region)', function ($from, $to
 
 /* edit np */
 
-$app->get('/np_edit', function () use ($app) {
+$app->get('/np_edit','is_login', function () use ($app) {
 
     $data['title'] = 'Нас.пункты/Редактировать';
 
@@ -16467,7 +16467,7 @@ $app->get('/np_edit', function () use ($app) {
 });
 
 
-$app->post('/np_edit', function () use ($app) {
+$app->post('/np_edit','is_login', function () use ($app) {
 
     $region_m = new Model_Region();
 
