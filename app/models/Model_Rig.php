@@ -76,6 +76,7 @@ class Model_Rig
 
         $y['fio_head_check'] = (isset($x['fio_head_check']) && !empty($x['fio_head_check'])) ? trim($x['fio_head_check']) : '';
 
+        $y['number_sim'] = (isset($x['number_sim']) &&  !empty($x['number_sim'])) ? trim($x['number_sim']) : NULL;
 
         /* owner */
         $y['id_owner_category'] = (isset($x['id_owner_category']) && !empty($x['id_owner_category'])) ? intval($x['id_owner_category']) : 0;
@@ -87,6 +88,66 @@ class Model_Rig
 
 
 
+        if ($y['latitude'] != 0) {
+            $parts = explode('.', $y['latitude']);
+            if (strlen($parts[1]) < 6) {
+                switch (strlen($parts[1])) {
+                    case 0:
+                        $lat = $parts[0] . '.' . '000000';
+                        break;
+                    case 1:
+                        $lat = $parts[0] . '.' . $parts[1] . '00000';
+                        break;
+                    case 2:
+                        $lat = $parts[0] . '.' . $parts[1] . '0000';
+                        break;
+                    case 3:
+                        $lat = $parts[0] . '.' . $parts[1] . '0000';
+                        break;
+                    case 4:
+                        $lat = $parts[0] . '.' . $parts[1] . '00';
+                        break;
+                    case 5:
+                        $lat = $parts[0] . '.' . $parts[1] . '0';
+                        break;
+
+                    default:
+                        break;
+                }
+                $y['latitude'] = $lat;
+            }
+        }
+
+        if ($y['longitude'] != 0) {
+            $parts = explode('.', $y['longitude']);
+            if (strlen($parts[1]) < 6) {
+                switch (strlen($parts[1])) {
+                    case 0:
+                        $lon = $parts[0] . '.' . '000000';
+                        break;
+                    case 1:
+                        $lon = $parts[0] . '.' . $parts[1] . '00000';
+                        break;
+                    case 2:
+                        $lon = $parts[0] . '.' . $parts[1] . '0000';
+                        break;
+                    case 3:
+                        $lon = $parts[0] . '.' . $parts[1] . '0000';
+                        break;
+                    case 4:
+                        $lon = $parts[0] . '.' . $parts[1] . '00';
+                        break;
+                    case 5:
+                        $lon = $parts[0] . '.' . $parts[1] . '0';
+                        break;
+
+                    default:
+                        break;
+                }
+
+                $y['longitude'] = $lon;
+            }
+        }
 
         return $y;
     }

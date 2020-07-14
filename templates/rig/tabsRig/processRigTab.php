@@ -292,6 +292,15 @@ foreach ($podr as $row) {
             </div>
         </div>
 
+
+
+    <div class="col-lg-2" id="div_sim_number" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && isset($reasons_for_sim) && isset($work_for_sim) && in_array($id_reasonrig, $reasons_for_sim) && in_array($id_workview, $work_for_sim)) ? 'block' : 'none' ?> ">
+        <div class="form-group" id="sim-number-id">
+            <label for="number_sim">№ Сим-карты</label>
+            <input type="text" class="form-control"  placeholder="" name="number_sim" value="<?= (isset($rig['number_sim'])) ? $rig['number_sim'] : '' ?>" >
+        </div>
+    </div>
+
 </div>
 
 <p class="line"><span>Адрес</span></p>
@@ -817,7 +826,7 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
                         $('#check-error-coord').css('display', 'none');
                         //$('#check-set-coord').css('display','inline');
                         $('.coords').css('border', '2px solid #00a65a');
-                        toastr.success('Выбранные координаты установлены', 'Инфо', {progressBar: true, timeOut: 2500});
+                        toastr.success('Выбранные координаты установлены 1', 'Инфо', {progressBar: true, timeOut: 2500});
                     } else {
                         $('#check-set-coord').css('display', 'none');
                         $('#check-error-coord').css('display', 'inline');
@@ -1260,6 +1269,8 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
 
         ?>
                     setCoordToMap(<?= $latitude ?>, <?= $longitude ?>, '<?= $addr_for_map ?>', 1);
+
+
         <?php
     }
 
@@ -1297,7 +1308,7 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
                     map.setView([lat, lon], 17);
 
                     if (sign === 0) {// change pasp name
-                        toastr.success('Выбранные координаты установлены', 'Инфо', {progressBar: true, timeOut: 2500});
+                        toastr.success('Выбранные координаты установлены 2', 'Инфо', {progressBar: true, timeOut: 2500});
                     }
                     //$('#check-set-coord').css('display','inline');
                     $('.coords').css('border', '2px solid #00a65a');

@@ -457,16 +457,22 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
 
-                    </td>
+
                     <?php
                 } else {// не обрезать
 
                     ?>
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span> </td>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span>
                     <?php
                 }
 
                 ?>
+
+
+                    <?= (isset($row['number_sim']) && !empty($row['number_sim'])) ? '<br><br>№ Сим-карты: '.$row['number_sim'] : ''?>
+ </td>
+
+
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_loc ?></td>
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_likv ?></td>
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>"><?= $row['auth_locorg'] ?>

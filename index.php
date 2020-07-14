@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '30.06.2020');
+define(NEWS_DATE, '13.07.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -43,8 +43,12 @@ CONST REASON_HS = 73;
 CONST REASON_OTHER_ZAGOR = 14;
 CONST REASON_HELP = array(76,38);
 CONST REASON_DEMERK = 68;
-CONST REASON_MOLNIA = 74;
+CONST REASON_MOLNIA = 74;// + manual js
 CONST REASON_LTT = 79;
+
+// work view
+CONST REASON_WORK_MOLNIA = 89;// + manual js
+
 
 CONST CITY_VID=array(111,112,113,212,213,300);//city
 
@@ -869,6 +873,8 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
         $cp = array(8, 9, 12);
 
         $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
+        $data['reasons_for_sim']=array(REASON_MOLNIA);
+        $data['work_for_sim']=array(REASON_WORK_MOLNIA);
 
         /*         * *** Классификаторы **** */
         $region = new Model_Region();
@@ -2500,7 +2506,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $service = new Model_Innerservice();
         $post_service = $service->getPOSTData(); //данные по привлекаемым службам
         $silymchs = new Model_Silymchs();
-
+//print_r($post_rig);exit();
         $data['settings_user'] = getSettingsUser();
 
         /* did sily mchs get involved or not */
@@ -13651,8 +13657,8 @@ $app->group('/maps', function () use ($app) {
                                 $obl = $row['region_name'] . ' обл., ';
 
                             $ss['address_disloc'] = $obl . $row['address_disloc'];
-                            //$ss['ss_url_text'] = 'перейти в карточку сил и средств';
-                            $ss['ss_url_text'] = 'просмотреть карточку сил и средств';
+                            $ss['ss_url_text'] = 'перейти в карточку сил и средств';
+                            //$ss['ss_url_text'] = 'просмотреть карточку сил и средств';
                             $ss['ss_url'] = '/ss/card/' . $row['id_region'] . '/' . $row['id_loc_org'];
                             $ss['is_closest_podr'] = 1;
                             $ss['distance'] = number_format($row['distance'], 1, '.', '');
@@ -14242,9 +14248,9 @@ $app->group('/maps_for_mes', function () use ($app) {
                         $res['show_number_pasp'] = 1;
                     }
 
-                    //$res['ss_url_text'] = 'перейти в карточку сил и средств';
-                    //$ss['ss_url_text'] = 'просмотреть карточку сил и средств';
-                    $res['ss_url_text'] = 'просмотреть карточку сил и средств';
+                    $res['ss_url_text'] = 'перейти в карточку сил и средств';
+
+                    //$res['ss_url_text'] = 'просмотреть карточку сил и средств';
                     $res['ss_url'] = '/ss/card/' . $value['region'] . '/' . $value['id_card'];
 
                     if (in_array($value['id_record'], $ids_pasp_otdel)) {
@@ -14473,8 +14479,8 @@ $app->group('/maps_for_min_obl', function () use ($app) {
 
                 $res['address_disloc'] = $obl . $value['address_disloc'];
                 // $res['new_icon'] = 'assets/images/leaflet/coffee.png';
-                //$res['ss_url_text'] = 'перейти в карточку сил и средств';
-                $res['ss_url_text'] = 'просмотреть карточку сил и средств';
+                $res['ss_url_text'] = 'перейти в карточку сил и средств';
+                //$res['ss_url_text'] = 'просмотреть карточку сил и средств';
                 $res['ss_url'] = '/ss/card/' . $value['id_region'] . '/' . $value['id_loc_org'];
 
                 $res1[] = $res;
@@ -15633,6 +15639,8 @@ $app->get('/export_rigtable/:from/:to/:reasonrig(/:id_region)', function ($from,
             $sheet->setCellValueByColumnAndRow($c, $r, $row['view_work']);
             $c++;
 
+            $sheet->setCellValueByColumnAndRow($c, $r, $row['number_sim']);
+            $c++;
 
 
             $creator = $row['auth_locorg'];

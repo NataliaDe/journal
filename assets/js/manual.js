@@ -2349,6 +2349,15 @@ $('#rigForm #id_workview').on('change', function (e) {
         $('#rigForm #div_fio_head_check').hide();
     }
 
+        /*  number sim */
+    if (reason == 74 && work_view == 89) {
+        $('#rigForm #div_sim_number').show();
+        $("#sim-number-id input").addClass('blue-border-input');
+    } else {
+        $("#sim-number-id input").val('');
+        $('#rigForm #div_sim_number').hide();
+    }
+
 });
 
 
