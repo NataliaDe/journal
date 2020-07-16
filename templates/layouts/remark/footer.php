@@ -69,6 +69,9 @@
 
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_datetimepicker.js"></script>
 <script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual.js"></script>
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/media_multi.js"></script>
+
+<script  type="text/javascript" src="<?= $baseUrl ?>/assets/js/manual_remark.js"></script>
 
 <script type="text/javascript">
 //	CKEDITOR.replace('myeditor1');

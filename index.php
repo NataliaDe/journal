@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '13.07.2020');
+define(NEWS_DATE, '15.07.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -51,6 +51,9 @@ CONST REASON_WORK_MOLNIA = 89;// + manual js
 
 
 CONST CITY_VID=array(111,112,113,212,213,300);//city
+
+const UPLOAD_PATH='data';
+const SIZE_SUM_REMARK_RCU_FILE='15000000';
 
 
 
@@ -10723,6 +10726,7 @@ $app->group('/remark', function () use ($app, $log) {
     $app->get('/', function () use ($app) {
 
         $data['title'] = 'Книга замечаний';
+        $data['upload_path']=UPLOAD_PATH;
 
         $bread_crumb = array('Книга замечаний');
         $data['bread_crumb'] = $bread_crumb;
@@ -10747,6 +10751,11 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE r.is_delete = ?', a
             $data['path_to_view'] = 'remark/remark.php';
         }
 
+        if (!empty($data['remarks'])) {
+            foreach ($data['remarks'] as $key => $value) {
+                $data['remarks'][$key]['images_rcu'] = R::getAll('select * from remark_rcu_files  WHERE id_remark = ?', array($value['id']));
+            }
+        }
 
 
         if (isset($_SESSION['save_remark']) && $_SESSION['save_remark'] == 1) {
@@ -10818,6 +10827,14 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
             $data['path_to_view'] = 'remark/remark_rcu_admin.php';
         } else {
             $data['path_to_view'] = 'remark/remark.php';
+        }
+
+
+
+        if (!empty($data['remarks'])) {
+            foreach ($data['remarks'] as $key => $value) {
+                $data['remarks'][$key]['images_rcu'] = R::getAll('select * from remark_rcu_files  WHERE id_remark = ?', array($value['id']));
+            }
         }
 
 
@@ -11358,6 +11375,81 @@ left join  remark_type as t2 on t2.id=r.type_rcu_admin WHERE  ';
         }
 
         $app->redirect(BASE_URL . '/remark');
+    });
+
+
+    $app->post('/rcu_upload_file', function () use ($app) {
+
+        $post = $app->request()->post();
+        $save = [];
+//print_r($post);exit();
+        //delete files
+        R::exec('DELETE from remark_rcu_files  WHERE id_remark =?', array($post['id_remark']));
+
+        if (isset($post['list_files']) && !empty($post['list_files'])) {
+
+            $for_delete=[];
+            if (isset($post['delete_photo_multi']) && !empty($post['delete_photo_multi'])) {
+                $for_delete = $post['delete_photo_multi'];
+            }
+
+            $arr = explode(',', $post['list_files']);
+            foreach ($arr as $value) {
+
+                if (!in_array($value, $for_delete)) {
+                    $save['file'] = $value;
+                    $save['id_remark'] = $post['id_remark'];
+                    $save['created_by'] = $_SESSION['id_user'];
+                    $save['created_date'] = date('Y-m-d H:i:s');
+
+                    if (!empty($save)) {
+                        $w = R::load('remark_rcu_files', 0);
+                        $w->import($save);
+                        R::store($w);
+                    }
+                }
+            }
+            $is_ok = 1;
+        }
+
+        if (isset($is_ok)) {
+            echo json_encode([
+                'msg'   => 'Файлы прикреплены',
+                'is_ok' => $is_ok
+            ]);
+        } else {
+            echo json_encode([
+                'msg'   => 'Файлы не прикреплены',
+                'is_ok' => 0
+            ]);
+        }
+    });
+
+
+    $app->post('/get_rcu_file_modal', function () use ($app) {
+
+        $post = $app->request()->post();
+
+        $data['upload_path']=UPLOAD_PATH;
+
+        $data['images'] = R::getAll('select * from remark_rcu_files  WHERE id_remark = ?', array($post['id']));
+
+        if (!empty($data['images'])) {
+            foreach ($data['images'] as $key => $value) {
+                $info = new SplFileInfo($value['file']);
+                $extens = $info->getExtension();
+                $type_source = '';
+                if (in_array($extens, ['txt', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx'])) {
+                    $type_source = 'file';
+                } else {
+                    $type_source = 'img';
+                }
+                $data['images'][$key]['type_source'] = $type_source;
+            }
+        }
+
+        $view = $app->render('remark/modals/body_modal_media_multi.php', $data);
+        $response = ['success' => TRUE, 'view' => $view];
     });
 });
 
@@ -16606,6 +16698,129 @@ $app->post('/np_edit','is_login', function () use ($app) {
     }
 });
 
+
+
+$app->post('/loadApi/:type','is_login', function ($type) use ($app) {
+
+
+
+
+//print_r($_FILES);
+        if (!empty($_FILES) && isset($type) && !empty($type)) {
+
+                                        function translit($s)
+            {
+                $s = (string) $s; // преобразуем в строковое значение
+                $s = trim($s); // убираем пробелы в начале и конце строки
+                $s = function_exists('mb_strtolower') ? mb_strtolower($s) : strtolower($s); // переводим строку в нижний регистр (иногда надо задать локаль)
+                $s = strtr($s, array('а' => 'a', 'б' => 'b', 'в' => 'v', 'г' => 'g', 'д' => 'd', 'е' => 'e', 'ё' => 'e', 'ж' => 'j', 'з' => 'z', 'и' => 'i', 'й' => 'y', 'к' => 'k', 'л' => 'l', 'м' => 'm', 'н' => 'n', 'о' => 'o', 'п' => 'p', 'р' => 'r', 'с' => 's', 'т' => 't', 'у' => 'u', 'ф' => 'f', 'х' => 'h', 'ц' => 'c', 'ч' => 'ch', 'ш' => 'sh', 'щ' => 'shch', 'ы' => 'y', 'э' => 'e', 'ю' => 'yu', 'я' => 'ya', 'ъ' => '', 'ь' => ''));
+                return $s; // возвращаем результат
+            }
+
+            $uploaddir = UPLOAD_PATH.'/remark/';
+
+            $config = [];
+
+
+            if($type=='remark_rcu_file'){
+
+
+                $allowed_extension = array('doc', 'docx', 'txt', 'xls', 'xlsx', 'jpg', 'png','pdf');
+
+
+                $count = count($_FILES['file']['name']);
+                $post = $_FILES['file'];
+                $arr_photo = [];
+                $arr_error = [];
+
+
+                //check sum size photo
+                $size=0;
+                for ($i = 0; $i < $count; $i++) {
+                    $size += $post['size'][$i];//in bytes
+                }
+
+                 if($size>SIZE_SUM_REMARK_RCU_FILE){
+                     $msg= 'Суммарный объем файлов превышает допустимый ('.(SIZE_SUM_REMARK_RCU_FILE/1000000).' Мб)';
+                     $arr_error = array('error' => $msg);
+                        echo json_encode($arr_error);
+                        die();
+                 }
+
+
+
+
+                for ($i = 0; $i < $count; $i++) {
+
+                    $_FILES['file']['name'] = $post['name'][$i];
+                    $_FILES['file']['type'] = $post['type'][$i];
+                    $_FILES['file']['tmp_name'] = $post['tmp_name'][$i];
+                    $_FILES['file']['error'] = $post['error'][$i];
+                    $_FILES['file']['size'] = $post['size'][$i];
+                    $_FILES['file']['tmp_name'] = $post['tmp_name'][$i];
+                    //echo $_FILES['file']['name'];
+
+
+                      $info = new SplFileInfo($post['name'][$i]);
+                $extens = $info->getExtension();
+
+
+                if(in_array($extens,['txt','doc','docx','xls','xlsx','ppt','pptx'])){
+                    $type_source='file';
+                }
+                else{
+                    $type_source='img';
+                }
+
+                // Allow certain file formats
+                if (!in_array($extens, $allowed_extension)) {
+
+                    $msg = "Допустимы только следующие файлы: " . implode(',', $allowed_extension) . ".";
+
+                    $arr_error = array('error' => $msg);
+                    echo json_encode($arr_error);
+                    die();
+                }
+
+
+
+
+
+                $uploadfile = $uploaddir . basename($_FILES['file']['name']);
+
+                            $file_name_only = basename($uploadfile, "." . $info->getExtension());
+
+                            $translit_file=translit($file_name_only) . '.' . $info->getExtension();
+            $new_name_file = $uploaddir . $translit_file;
+
+                                if (move_uploaded_file($_FILES['file']['tmp_name'], $new_name_file)) {
+     $arr_photo[] = array('success' => $new_name_file, 'file_name' => $translit_file,'type_source'=>$type_source);
+                } else {
+                    $msg = "Возможная атака с помощью файловой загрузки!";
+                   $arr_error = array('error' => $msg,'name_file_error'=>$_FILES['file']['name']);
+                        echo json_encode($arr_error);
+                        die();
+
+                }
+
+
+                }
+
+                if (empty($arr_error)){
+                    $res['is_ok']=1;
+                    $res['images']=$arr_photo;
+                    echo json_encode($res);
+                }
+
+                die();
+
+
+
+            }
+        }
+
+
+});
 
 
 /* ---------------------- SPECIAL D auth --------------------- */

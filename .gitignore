@@ -17,6 +17,8 @@ nb-configuration.xml
 /share/config/default.php
 /share/logs/*.log
 
+/data/
+
 /templates/news/news.php
 /templates/layouts/news_head.php
 /temp/

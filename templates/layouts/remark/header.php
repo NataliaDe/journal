@@ -88,6 +88,8 @@
 
  <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/toastr/css/toastr.min.css" />
 
+ <link rel="stylesheet" type="text/css" href="<?= $baseUrl ?>/assets/css/media.css">
+
         <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
