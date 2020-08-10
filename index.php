@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '15.07.2020');
+define(NEWS_DATE, '07.08.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -54,6 +54,11 @@ CONST CITY_VID=array(111,112,113,212,213,300);//city
 
 const UPLOAD_PATH='data';
 const SIZE_SUM_REMARK_RCU_FILE='15000000';
+
+
+const MIN_OBL_ID=6;
+
+const MIN_OBL_ID_LOCAL=72;
 
 
 
@@ -2008,6 +2013,49 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 } else {
                     $data['rig'] = $rig;
                 }
+
+
+                //molodechno
+            //if ($_SESSION['id_user'] == 19) {
+            if (isset($_SESSION['is_misk_obl_paso_rigs']) && $_SESSION['is_misk_obl_paso_rigs'] == 'yes') {//show rigs of min obl PASO teh
+                $id_grochs_of_teh = R::getCell('select id from ss.locorg where id_local = ? and id_organ = ? limit ?', array(MIN_OBL_ID_LOCAL, PASO, 1));
+                $minsk_obl_paso_rigs_id = $rig_m->selectIdRigByIdGrochsOfTeh(0, $id_grochs_of_teh, $_SESSION['id_locorg'], $filter);
+
+                if (!empty($minsk_obl_paso_rigs_id)) {
+                    $delete_ids = [];
+
+                    foreach ($data['rig'] as $value) {
+
+                        if (in_array($value['id'], $minsk_obl_paso_rigs_id)) {
+                            $delete_ids[] = $value['id'];
+                            //
+                        }
+                    }
+
+                    if (!empty($delete_ids)) {
+                        foreach ($minsk_obl_paso_rigs_id as $key => $v) {
+                            if (in_array($v, $delete_ids))
+                                unset($minsk_obl_paso_rigs_id[$key]);
+                        }
+                    }
+
+                    $minsk_obl_paso_rigs_id = array_unique($minsk_obl_paso_rigs_id);
+                    if (!empty($minsk_obl_paso_rigs_id)) {
+
+                        $not_my_rigs = $rig_m->selectRigsByIds($minsk_obl_paso_rigs_id, $filter);
+
+                        if (!empty($not_my_rigs)) {
+                            foreach ($not_my_rigs as $key => $r) {
+                                $not_my_rigs[$key]['is_not_my'] = 1;
+                                $not_my_rigs[$key]['is_not_can_edit_rig'] = 1;
+                            }
+                        }
+
+                        $data['rig'] = array_merge($data['rig'], $not_my_rigs);
+                        //print_r($data['rig']);exit();
+                    }
+                }
+            }
             }
         } elseif ($_SESSION['id_level'] == 2) {
 
@@ -2294,6 +2342,48 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 $data['rig'] = array_merge($rig, $rig_neighbor);
             } else {
                 $data['rig'] = $rig;
+            }
+
+            //molodechno
+            //if ($_SESSION['id_user'] == 19) {
+            if (isset($_SESSION['is_misk_obl_paso_rigs']) && $_SESSION['is_misk_obl_paso_rigs'] == 'yes') {//show rigs of min obl PASO teh
+                $id_grochs_of_teh = R::getCell('select id from ss.locorg where id_local = ? and id_organ = ? limit ?', array(MIN_OBL_ID_LOCAL, PASO, 1));
+                $minsk_obl_paso_rigs_id = $rig_m->selectIdRigByIdGrochsOfTeh(0, $id_grochs_of_teh, $_SESSION['id_locorg'], $filter);
+
+                if (!empty($minsk_obl_paso_rigs_id)) {
+                    $delete_ids = [];
+
+                    foreach ($data['rig'] as $value) {
+
+                        if (in_array($value['id'], $minsk_obl_paso_rigs_id)) {
+                            $delete_ids[] = $value['id'];
+                            //
+                        }
+                    }
+
+                    if (!empty($delete_ids)) {
+                        foreach ($minsk_obl_paso_rigs_id as $key => $v) {
+                            if (in_array($v, $delete_ids))
+                                unset($minsk_obl_paso_rigs_id[$key]);
+                        }
+                    }
+
+                    $minsk_obl_paso_rigs_id = array_unique($minsk_obl_paso_rigs_id);
+                    if (!empty($minsk_obl_paso_rigs_id)) {
+
+                        $not_my_rigs = $rig_m->selectRigsByIds($minsk_obl_paso_rigs_id, $filter);
+
+                        if (!empty($not_my_rigs)) {
+                            foreach ($not_my_rigs as $key => $r) {
+                                $not_my_rigs[$key]['is_not_my'] = 1;
+                                $not_my_rigs[$key]['is_not_can_edit_rig'] = 1;
+                            }
+                        }
+
+                        $data['rig'] = array_merge($data['rig'], $not_my_rigs);
+                        //print_r($data['rig']);exit();
+                    }
+                }
             }
         } elseif ($_SESSION['id_level'] == 2) {
             if ($_SESSION['sub'] == 2) {// UGZ, ROSN, AVIA
@@ -10724,7 +10814,7 @@ $app->group('/remark', function () use ($app, $log) {
 
 
     $app->get('/', function () use ($app) {
-
+        echo 'В связи с проведением профилактических работ по информационной безопасности раздел временно закрыт';exit();
         $data['title'] = 'Книга замечаний';
         $data['upload_path']=UPLOAD_PATH;
 
@@ -16827,7 +16917,7 @@ $app->post('/loadApi/:type','is_login', function ($type) use ($app) {
 $app->group('/login_to_speciald', 'is_login', function () use ($app, $log) {
 
     // login
-    $app->get('/:id_rig', function ($id_rig = 0) use ($app) {
+    $app->get('/:id_rig/:type_sd/:id_template', function ($id_rig = 0,$type_sd='standart',$id_template=0) use ($app) {
         // echo $_SESSION['id_level'];exit();
         // can or not go to speciald
         // if (($_SESSION['can_edit'] == 1) || ($_SESSION['id_level'] == 2 || $_SESSION['id_level'] == 1)) {
@@ -16843,7 +16933,7 @@ $app->group('/login_to_speciald', 'is_login', function () use ($app, $log) {
 
                 if (isset($user_sd_by_id) && !empty($user_sd_by_id)) {
 
-                    $app->redirect('/speciald/authjour/index/' . $id_user_sd . '/' . $id_rig);
+                    $app->redirect('/speciald/authjour/index/' . $id_user_sd . '/' . $id_rig.'/'.$type_sd.'/'.$id_template);
                 } else {
                     $data['title'] = 'Переход в специальное донесение';
 

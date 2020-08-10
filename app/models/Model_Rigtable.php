@@ -800,6 +800,50 @@ class Model_Rigtable
 
         return R::getAll($sql,$param);
     }
+
+
+        public function selectIdRigByIdGrochsOfTeh($is_delete, $id_grochs_teh,$id_grochs_creator, $filter = null)
+    {
+
+        $sql = 'SELECT * FROM journal.jrig_for_neighbor WHERE grochs_of_teh = ? and is_delete = ? and id_locorg_user <> ?  ';
+        $param = array($id_grochs_teh, $is_delete, $id_grochs_creator);
+
+        if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
+            $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
+        }
+
+        $result = $this->getRigTable($sql, $param);
+        // print_r($result);exit();
+        $new_result = array();
+        foreach ($result as $row) {
+            $new_result [] = $row['id'];
+        }
+
+        return $new_result;
+    }
+
+
+        public function selectRigsByIds($id_rigs, $filter = null)
+    {
+
+        //     return R::getAll('SELECT * FROM journal.rigtable WHERE id_locorg= ?  and is_delete = ? limit ? ', array($id_locorg, $is_delete, $this->limit_rigs));
+
+        if (!empty($id_rigs)) {
+
+            if (is_array($id_rigs))
+                $sql = 'SELECT r.* FROM journal.rigtable AS r WHERE r.id IN(' . implode(',', $id_rigs) . ')';
+            else
+                $sql = 'SELECT r.* FROM journal.rigtable AS r WHERE r.id = ' . $id_rigs;
+
+            if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig'])) {
+                $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']) . ')';
+            }
+
+            return R::getAll($sql);
+        } else {
+            return array();
+        }
+    }
 }
 
 ?>

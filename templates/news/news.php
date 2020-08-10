@@ -308,6 +308,24 @@ background-color: black;
 	    </div> -->
 
 
+<!--<a target="_blank" href="https://anketolog.ru/s/395897/RWQAlQPy">Заполните нашу анкету</a>
+
+<div id="anketolog-frame-395897"></div>
+<script type="text/javascript">
+(function(d)
+{
+	var u = 'https://anketolog.ru/api/v2/frame/js/395897?token=zzidSHSL';
+	var s = d.createElement('script'); s.type = 'text/javascript'; s.async = true; s.src = u;
+	d.body.appendChild(s);
+})(document);
+</script>-->
+
+                       <!-- Здесь в коде Вы можете изменить ширину/высоту по мере необходимости... --><iframe frameborder="0" id="iframeC4J2O9U6D1L9N1D1R" src="https://www.survio.com/survey/i/C4J2O9U6D1L9N1D1R" height="600" width="800"></iframe>
+
+<!--                       <iframe frameborder="0" id="iframeC4J2O9U6D1L9N1D1R" src="https://my.survio.com/S3T7P1E7A9V5J7Z8E2L7/data/index" height="600" width="800"></iframe>-->
+
+
+
 
                         <div class="container">
                             <span style="color: #a94442; font-size: 15px; float: left;"> <i><b> Дата публикации 09.07.2020</b></i></span>

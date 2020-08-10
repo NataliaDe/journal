@@ -756,3 +756,29 @@ background-color: black;
 .rb-warning{
     color: #ff8f03;
 }
+
+/* speciald menu */
+.sd-menu{
+    background-color: #b8dbb3 !important;
+}
+
+.sd-menu > li > a {
+    color: #333;
+    font-weight: 600;
+}
+.sd-menu-dropdown .caret{
+    color: #5e935a !important;
+}
+
+.sd-menu-dropdown {
+    float: left;
+}
+
+
+.is_not_my_rig{
+    border: 5px solid #da0d0d !important;
+    background-color: #d2d6de !important;
+
+}
+
+

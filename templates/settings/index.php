@@ -40,6 +40,13 @@
 
                                 }
                                 }
+                                elseif (isset($settings_type[$id_setting]) && $setting['type'] == 'is_misk_obl_paso_rigs') {
+
+                                if ($_SESSION['id_level'] != 3 && $_SESSION['id_region'] != 6) {
+                                    continue;
+
+                                }
+                                }
                     ?>
                     <tr>
                         <td>

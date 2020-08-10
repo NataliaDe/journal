@@ -137,7 +137,13 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                     ?>
                     <tr style="background-color:#ddd; border: 5px solid #da0d0d !important; ">
                         <?php
-                    } else {
+                    }
+                     elseif(isset($row['is_not_my']) && $row['is_not_my'] == 1){
+?>
+                            <tr class="is_not_my_rig">
+                            <?php
+                        }
+                    else {
 
                         ?>
                     <tr style="background-color: <?= (isset($reasonrig_color[$row['id_reasonrig']])) ? $reasonrig_color[$row['id_reasonrig']] : 'white' ?>;">
@@ -470,10 +476,12 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
         if ($is_show_link_sd == 1) {
 
             ?>
-                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
+<!--                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
                         <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
-                    </a>
+                    </a>-->
+
             <?php
+            include dirname(dirname(__FILE__)) .'/parts/go_to_sd.php';
         }
 
         ?>
@@ -558,7 +566,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 
                     <?php
-                    if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
+                    if ((isset($row['is_neighbor']) && $row['is_neighbor'] == 1) || (isset($row['is_not_my']) && $row['is_not_my'] == 1)) {
 
                         ?>
             <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
