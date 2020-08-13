@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `ss.regions` 
+ * Object model mapping for relational table `ss.regions`
  */
 
 namespace App\MODELS;
@@ -22,7 +22,7 @@ class Model_Silymchs {
 
 //    public function selectAll() {
 //           return R::getAll('SELECT * FROM journal.service ORDER BY name ASC');
-//       
+//
 //    }
 
     public function getPOSTData() {
@@ -39,7 +39,7 @@ class Model_Silymchs {
                     $y[intval($teh)]['id_region'] = intval($value['id_region']);
                     $y[intval($teh)]['id_locorg'] = intval($value['id_locorg']);
                     $y[intval($teh)]['id_pasp'] = intval($value['id_pasp']);
-					
+
                     $id_local=R::getCell('select id_local from ss.locorg where id=?',array($y[intval($teh)]['id_locorg']));
                     $y[intval($teh)]['id_local'] = intval($id_local);
                     $id_organ=R::getCell('select id_organ from ss.locorg where id=?',array($y[intval($teh)]['id_locorg']));
@@ -110,7 +110,7 @@ class Model_Silymchs {
  else {//all
       return R::getAll('SELECT * FROM journal.silymchs WHERE id_rig = ?', array($this->id_rig));
  }
-       
+
     }
 
     //техника, которая на выезде. признак - время возвращения пусто
@@ -123,13 +123,13 @@ class Model_Silymchs {
         $this->setIdRig($id_rig);
  $today=  date("Y-m-d");//выбор техники из строевой на сегодняшн.сутки
         $y = array();
-        
+
         //выбор всех id ПАСЧ, из которых выезжала техника (без удаленной техники из карточки )
         $id_pasp = R::getAll('SELECT distinct id_pasp FROM journal.silymchs WHERE id_rig = ? AND is_delete = ? ', array($this->id_rig,0));
-        
+
         //id pasp, где есть удаленная техника
         $id_pasp_with_delete = R::getAll('SELECT distinct id_pasp FROM journal.silymchs WHERE id_rig = ? AND is_delete = ? ', array($this->id_rig,1));
-        
+
         //для кажд ПАСЧ выбрать всю технику, которая выезжала и техника не удаленя из КУСиС
         foreach ($id_pasp as $value) {
             $teh = R::getAll('SELECT * FROM journal.silymchs WHERE id_rig = ? and id_pasp = ?  ', array($this->id_rig, $value['id_pasp']));
@@ -156,10 +156,10 @@ class Model_Silymchs {
             $on_reserve = R::getAssoc("CALL `getReserveTeh`('{$value['id_pasp']}','{$today}');");
             $y[$value['id_pasp']]['reserve_teh'] = $on_reserve;
             /* --------- END техника из др ПАСЧ - пометить как (К)------- */
-            
+
         }
-        
-                    
+
+
             /* --------- техника  ПАСЧ, которая была удалена из КУСиС------- */
         if (!empty($id_pasp_with_delete)) {
             foreach ($id_pasp_with_delete as $d) {
@@ -169,7 +169,7 @@ class Model_Silymchs {
         }
 
         /* --------- END техника  ПАСЧ, которая была удалена из КУСиС------- */
-        
+
 //        print_r($y);
 //        exit();
         return $y;
@@ -181,12 +181,20 @@ class Model_Silymchs {
 
             $numbsign = R::getCell('select numbsign from ss.technics where id = ?', array($key));
             $mark = R::getCell('select mark from ss.technics where id = ?', array($key));
+
+            /* 1 - br, 2-reserv,3-repaire,4-TO1, 5-TO2*/
+            $status_teh=R::getCell('select CASE WHEN(c.id_type=1) THEN 1 WHEN(c.id_type=2) THEN 2 WHEN(c.is_repair=1) THEN 3'
+                . '  WHEN(c.id_to=1) THEN  4 WHEN(c.id_to=2) THEN 5 ELSE 0 END AS status_car from str.car as c where id_teh = ?
+                    ORDER BY c.dateduty DESC
+                    LIMIT ?', array($key,1));
+
             //новая ед
             $sily = R::dispense('silymchs');
             $sily->id_rig = $this->id_rig;
             $sily->id_teh = $key;
             $sily->numbsign = $numbsign;
             $sily->mark = $mark;
+            $sily->status_teh = $status_teh;
             $sily->id_region = $value['id_region'];
             $sily->id_locorg = $value['id_locorg'];
             $sily->id_pasp = $value['id_pasp'];
@@ -204,9 +212,9 @@ class Model_Silymchs {
             R::trash($s);
         }
     }
-    
-    
-    
+
+
+
     function getIdPasp($id_rig, $is_delete = 0) {
 
         $this->setIdRig($id_rig);
@@ -216,14 +224,14 @@ class Model_Silymchs {
             return R::getAll('SELECT id_pasp FROM journal.silymchs WHERE id_rig = ?', array($this->id_rig));
         }
     }
-	
+
 	        function getNotFullSily($ids_rig)
     {
         return R::getAll('SELECT id_rig FROM journal.jrig WHERE id_rig IN ('. implode(',', $ids_rig).') AND '
             . ' (id_teh is not null AND  time_exit is not null AND time_return is null)');
     }
-	
-	
+
+
 	        public function copy_silymchs($array)
     {
         $sily = R::dispense('silymchs');

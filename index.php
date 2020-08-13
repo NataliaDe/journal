@@ -3452,6 +3452,12 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
     // export to excel rep1
     $app->post('/rep1', function () use ($app, $log) {
 
+        $filter=[];
+
+        if(isset($_POST['status_teh']) && !empty($_POST['status_teh'])){
+            $filter['status_teh']=$_POST['status_teh'];
+        }
+
         /* ------- Даты ------ */
 
         if (isset($_POST['date_start']) && !empty($_POST['date_start'])) {
@@ -3518,6 +3524,9 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             $filter_pasp_name = '';
         }
 
+
+
+
         /* ------- КОНЕЦ Запрошенные область и район------ */
 
 
@@ -3583,7 +3592,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
         /* -------выбор инф по СиС МЧС-------- */
 
-        $sily_mchs = $sily_m->selectAllInIdRig($id_rig);        // в формате mas[id_rig]=>array()
+        $sily_mchs = $sily_m->selectAllInIdRig($id_rig,$filter);        // в формате mas[id_rig]=>array()
         /* -------КОНЕЦ выбор инф по СиС МЧС-------- */
 
 
@@ -3639,9 +3648,14 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
                     }
                 }
             }
+
         }
 
-
+        foreach ($result as $key => $value) {
+            if ((!isset($sily_mchs[$value['id']]) || empty($sily_mchs[$value['id']])) && (isset($filter['status_teh']) && !empty($filter['status_teh']))) {
+                unset($result[$key]);
+            }
+        }
         /* ---------------------------------------------------- ЭКСПОРТ в EXCEL ------------------------------------------------------------------------------ */
         $objPHPExcel = new PHPExcel();
         $objReader = PHPExcel_IOFactory::createReader("Excel2007");
@@ -3805,7 +3819,22 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
                         $sheet->getStyle('G' . $s)->applyFromArray($style_sily);
                     }
 
-                    $sheet->setCellValue('G' . $s, $si['locorg_name'] . ', ' . $si['pasp_name'] . ', ' . $si['mark'] . ' ( гос. номер ' . $si['numbsign'] . ')');
+                    if($si['status_teh'] == 1){
+                        $status='боевая';
+                    }
+                    elseif($si['status_teh'] == 2){
+                        $status='резерв';
+                    }
+                    elseif($si['status_teh'] == 3){
+                        $status='ремонт';
+                    }
+                    elseif($si['status_teh'] == 4){
+                        $status='ТО-1';
+                    }
+                    elseif($si['status_teh'] == 5){
+                        $status='ТО-2';
+                    }
+                    $sheet->setCellValue('G' . $s, $si['locorg_name'] . ', ' . $si['pasp_name'] . ', ' . $si['mark'] . ' ( гос. номер ' . $si['numbsign'] . ')'.((isset($status)) ? ', '.$status : ''));
                     $sheet->setCellValue('H' . $s, '-');
                     $sheet->setCellValue('I' . $s, (($si['time_exit'] == '0000-00-00 00:00:00' || empty($si['time_exit'])) ? '' : date('d.m.Y H:i', strtotime($si['time_exit']))));
                     $sheet->setCellValue('J' . $s, (($si['time_arrival'] == '0000-00-00 00:00:00' || empty($si['time_arrival'])) ? '' : date('d.m.Y H:i', strtotime($si['time_arrival']))));
@@ -10814,7 +10843,7 @@ $app->group('/remark', function () use ($app, $log) {
 
 
     $app->get('/', function () use ($app) {
-        echo 'В связи с проведением профилактических работ по информационной безопасности раздел временно закрыт';exit();
+       // echo 'В связи с проведением профилактических работ по информационной безопасности раздел временно закрыт';exit();
         $data['title'] = 'Книга замечаний';
         $data['upload_path']=UPLOAD_PATH;
 

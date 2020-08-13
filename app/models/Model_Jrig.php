@@ -37,14 +37,26 @@ class Model_Jrig
         return R::getAll('SELECT * FROM journal.jrig WHERE id_rig = ?', array($this->id_rig));
     }
 
-    public function selectAllInIdRig($id_rig)
+    public function selectAllInIdRig($id_rig, $filter = false)
     {
 
         $new_result = array();
 
         if (!empty($id_rig)) {
             $str_id_rig = implode(',', $id_rig);
-            $result = R::getAll('SELECT * FROM jrig WHERE id_rig IN (  ' . $str_id_rig . ')');
+
+            if (isset($filter['status_teh']) && !empty($filter['status_teh'])) {
+                $status_teh = implode(',', $filter['status_teh']);
+            }
+
+            $sql = 'SELECT * FROM jrig WHERE id_rig IN (  ' . $str_id_rig . ')';
+
+            if (isset($status_teh)) {
+                $sql = $sql . ' AND status_teh IN (' . $status_teh . ')';
+            }
+
+            $result=R::getAll($sql);
+
             foreach ($result as $row) {
                 $new_result[$row['id_rig']] [] = $row;
             }

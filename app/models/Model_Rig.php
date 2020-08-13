@@ -196,7 +196,7 @@ class Model_Rig
     public function selectTimeCharacter($id)
     {
         $this->setId($id);
-        return R::getRow('SELECT time_loc, time_likv, is_close, is_likv_before_arrival FROM journal.rig WHERE id = ?', array($this->id));
+        return R::getRow('SELECT time_loc, time_likv, is_close, is_likv_before_arrival, is_not_measures FROM journal.rig WHERE id = ?', array($this->id));
     }
 
     //время лок, ликв
@@ -217,6 +217,8 @@ class Model_Rig
                 $y['is_likv_before_arrival'] = 0;
             }
 
+
+
             return $y;
         } elseif (isset($x['is_likv_before_arrival']) && $x['is_likv_before_arrival'] == 1) {//ликвидация до прибытия
             $y['time_loc'] = '0000-00-00 00:00:00';
@@ -228,10 +230,15 @@ class Model_Rig
             } else {
                 $y['is_close'] = 0; //выезд не закрыт
             }
-        } else {
+        }
+
+        else {
             $y['is_close'] = 0;
             $y['is_likv_before_arrival'] = 0;
         }
+
+        $y['is_not_measures']=(isset($x['is_not_measures']) && !empty($x['is_not_measures'])) ? intval($x['is_not_measures']) : 0;
+
 
         /*         * * проверка на вшивость Время локализации  ** */
         if (isset($x['time_loc']) && !empty($x['time_loc'])) {
@@ -267,6 +274,8 @@ class Model_Rig
 //            $y['time_loc'] =$y['time_likv'] ;
 //            $y['time_likv'] =$a;
         }
+
+
         $y['error'] = $error;
         return $y;
     }

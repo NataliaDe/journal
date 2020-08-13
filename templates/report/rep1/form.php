@@ -140,6 +140,22 @@
             </select>
         </div>
 
+
+
+
+        <div class="form-group">
+            <label for="status_teh">Статус техники</label>
+            <select class=" chosen-select-deselect-single form-control" data-placeholder="Все"  name="status_teh[]" multiple=""  >
+                    <option value="1">боевая</option>
+                    <option value="2">резерв</option>
+                     <option value="3">ремонт</option>
+                    <option value="4">ТО-1</option>
+                    <option value="5">ТО-2</option>
+
+
+            </select>
+        </div>
+
         <div class="form-group">
             <button class="btn bg-purple" type="submit"   >Сформировать</button>
         </div>
