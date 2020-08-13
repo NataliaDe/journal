@@ -151,7 +151,9 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
+
                         <?php
+                    
                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                             ?>

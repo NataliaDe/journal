@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '07.08.2020');
+define(NEWS_DATE, '13.08.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -2017,7 +2017,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
                 //molodechno
             //if ($_SESSION['id_user'] == 19) {
-            if (isset($_SESSION['is_misk_obl_paso_rigs']) && $_SESSION['is_misk_obl_paso_rigs'] == 'yes') {//show rigs of min obl PASO teh
+            if (isset($data['settings_user']['is_misk_obl_paso_rigs']) && $data['settings_user']['is_misk_obl_paso_rigs']['name_sign'] == 'yes') {//show rigs of min obl PASO teh
                 $id_grochs_of_teh = R::getCell('select id from ss.locorg where id_local = ? and id_organ = ? limit ?', array(MIN_OBL_ID_LOCAL, PASO, 1));
                 $minsk_obl_paso_rigs_id = $rig_m->selectIdRigByIdGrochsOfTeh(0, $id_grochs_of_teh, $_SESSION['id_locorg'], $filter);
 
@@ -2344,9 +2344,10 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 $data['rig'] = $rig;
             }
 
+            //print_r($data['settings_user']);exit();
             //molodechno
             //if ($_SESSION['id_user'] == 19) {
-            if (isset($_SESSION['is_misk_obl_paso_rigs']) && $_SESSION['is_misk_obl_paso_rigs'] == 'yes') {//show rigs of min obl PASO teh
+            if (isset($data['settings_user']['is_misk_obl_paso_rigs']) && $data['settings_user']['is_misk_obl_paso_rigs']['name_sign'] == 'yes') {//show rigs of min obl PASO teh
                 $id_grochs_of_teh = R::getCell('select id from ss.locorg where id_local = ? and id_organ = ? limit ?', array(MIN_OBL_ID_LOCAL, PASO, 1));
                 $minsk_obl_paso_rigs_id = $rig_m->selectIdRigByIdGrochsOfTeh(0, $id_grochs_of_teh, $_SESSION['id_locorg'], $filter);
 
