@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '13.08.2020');
+define(NEWS_DATE, '14.08.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -339,7 +339,7 @@ function search_rig_by_id($rig_m, $id_rig)
 
 /* empty or no technics, time character, informing in rig. If empty - icon is red */
 
-function empty_icons($id_rig_arr, $tab = null)
+function empty_icons($id_rig_arr, $tab = null,$ids_rig_for_character=[])
 {
     $result = array();
 
@@ -400,9 +400,9 @@ function empty_icons($id_rig_arr, $tab = null)
 
 
     /* id of rigs, where time character are not selected */
-    if (!empty($id_rig_arr) && $tab == null) {
+    if (!empty($ids_rig_for_character) && $tab == null) {
 
-        $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $id_rig_arr) . ')');
+        $id_rig_empty_character = R::getAll('SELECT id_rig FROM countcharacter WHERE  id_rig IN(' . implode(',', $ids_rig_for_character) . ')');
         $character = array();
 
         if (!empty($id_rig_empty_character)) {
@@ -1533,6 +1533,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         $id_rig_with_informing = array(); //rigs with informing
+        $ids_rig=[];
+        $ids_rig_for_character=[];
 
         foreach ($data['rig'] as $value) {//id of rigs
             if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
@@ -1546,6 +1548,12 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
+            }
+
+
+            if ($value['is_likv_before_arrival'] == 0 && $value['is_not_measures'] == 0) {
+                $ids_rig[] = $value['id'];
+                $ids_rig_for_character[]=$value['id'];
             }
         }
 
@@ -1623,7 +1631,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             if (!empty($id_rig_with_informing)) {
                 $informing_empty = empty_icons($id_rig_with_informing, 'informing');
             }
-            $result_icons_empty = empty_icons($id_rig_arr);
+            $result_icons_empty = empty_icons($id_rig_arr,null,$ids_rig_for_character);
             $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
@@ -1635,8 +1643,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 }
             }
 
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
+            if (!empty($ids_rig)) {
+                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($ids_rig);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
                 }
@@ -1775,6 +1783,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         $id_rig_with_informing = array(); //rigs with informing
+        $ids_rig=[];
+        $ids_rig_for_character=[];
 
         foreach ($data['rig'] as $value) {//id of rigs
             if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
@@ -1788,6 +1798,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
+            }
+
+            if ($value['is_likv_before_arrival'] == 0 && $value['is_not_measures'] == 0) {
+                $ids_rig[] = $value['id'];
+                $ids_rig_for_character[]=$value['id'];
             }
         }
 
@@ -1868,7 +1883,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             if (!empty($id_rig_with_informing)) {
                 $informing_empty = empty_icons($id_rig_with_informing, 'informing');
             }
-            $result_icons_empty = empty_icons($id_rig_arr);
+            $result_icons_empty = empty_icons($id_rig_arr,null,$ids_rig_for_character);
             $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
@@ -1880,8 +1895,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 }
             }
 
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
+            if (!empty($ids_rig)) {
+                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($ids_rig);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
                 }
@@ -2120,6 +2135,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         $id_rig_with_informing = array(); //rigs with informing
+        $ids_rig=[];
+        $ids_rig_for_character=[];
 
         foreach ($data['rig'] as $value) {//id of rigs
             if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
@@ -2132,6 +2149,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             }
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
+            }
+
+            if ($value['is_likv_before_arrival'] == 0 && $value['is_not_measures'] == 0) {
+                $ids_rig[] = $value['id'];
+                $ids_rig_for_character[]=$value['id'];
             }
         }
 
@@ -2212,7 +2234,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             if (!empty($id_rig_with_informing)) {
                 $informing_empty = empty_icons($id_rig_with_informing, 'informing');
             }
-            $result_icons_empty = empty_icons($id_rig_arr);
+            $result_icons_empty = empty_icons($id_rig_arr,null,$ids_rig_for_character);
             $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
@@ -2224,8 +2246,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 }
             }
 
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
+            if (!empty($ids_rig)) {
+                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($ids_rig);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
                 }
@@ -2431,6 +2453,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $id_rig_informing = array();
         $id_rig_sis_mes = array();
         $id_rig_with_informing = array(); //rigs with informing
+        $ids_rig=[];
+        $ids_rig_for_character=[];
 
         foreach ($data['rig'] as $value) {//id of rigs
             if ($value['id'] != null && in_array($value['id_reasonrig'], $data['reasonrig_with_informing'])) {
@@ -2443,6 +2467,10 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             }
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
                 $id_rig_sis_mes[] = $value['id'];
+            }
+            if ($value['is_likv_before_arrival'] == 0 && $value['is_not_measures'] == 0) {
+                $ids_rig[] = $value['id'];
+                $ids_rig_for_character[]=$value['id'];
             }
         }
 
@@ -2521,7 +2549,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
             if (!empty($id_rig_with_informing)) {
                 $informing_empty = empty_icons($id_rig_with_informing, 'informing');
             }
-            $result_icons_empty = empty_icons($id_rig_arr);
+            $result_icons_empty = empty_icons($id_rig_arr,null,$ids_rig_for_character);
             $data['result_icons'] = array_merge($result_icons_empty, $informing_empty);
             /* END fill or no icons */
 
@@ -2532,8 +2560,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
                 }
             }
 
-            if (!empty($id_rig_arr)) {
-                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($id_rig_arr);
+            if (!empty($ids_rig)) {
+                $ids_rig_not_full_sily = $sily_mchs_m->getNotFullSily($ids_rig);
                 foreach ($ids_rig_not_full_sily as $value) {
                     $data['not_full_sily'][] = $value['id_rig'];
                 }
