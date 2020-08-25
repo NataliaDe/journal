@@ -13,6 +13,11 @@ class Model_Main
     {
         return R::getAll('SELECT * from owner_categories');
     }
+
+    public function get_js_connect($y)
+    {
+        return R::getCell('select server_name from ja_connect where number_year = ?', array($y));
+    }
 }
 
 ?>

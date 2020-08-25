@@ -170,6 +170,10 @@ $('#date_start').on('dp.change dp.show', function (e) {
 $('#date_end').on('dp.change dp.show', function (e) {
     $('#rep1Form').bootstrapValidator('revalidateField', 'date_end');
 });
+
+$('#rep1Form').on('submit', function (e) {
+    $('#rep1Form').bootstrapValidator('revalidateField', 'date_start');
+});
 /*----------- END форма для rep1 -------------*/
 
 
@@ -2203,7 +2207,7 @@ $('#getArchiveData').on({
             } else if (date_start === date_end) {
                 toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 5000});
             } else if (date_start >= max_date) {
-                toastr.error('В архиве нет данных, начиная с ' + max_date, 'Ошибка!', {timeOut: 5000});
+                toastr.error('В архиве за выбранный год нет данных, начиная с ' + max_date, 'Ошибка!', {timeOut: 5000});
             }
         }
 

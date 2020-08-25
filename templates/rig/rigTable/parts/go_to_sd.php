@@ -1,5 +1,5 @@
 <ul class="dropdown sd-menu-dropdown"  data-toggle="tooltip" data-placement="left" title="Сформировать СД" >
-    <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" >
+    <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" data-toggle="tooltip" data-placement="left" title="Сформировать СД">
         <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" >
         <b class="caret"></b></a>
     <ul class="dropdown-menu sd-menu" >

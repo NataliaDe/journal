@@ -23,7 +23,7 @@
         }
 
         ?>
-   
+
         <img src="<?= $baseUrl ?>/assets/images/logo.png" width="50" height="50" style="float: left;">
         <!-- mini logo for sidebar mini 50x50 pixels -->
 <!--          <span class="logo-mini">Журнал</span>-->
@@ -48,13 +48,13 @@
 
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
-			
-			
 
 
 
-		
-			
+
+
+
+
 <?php
 /* br mode  */
 if(isset($settings_user_br_table) && !empty($settings_user_br_table)){
@@ -86,8 +86,21 @@ else{
 
 ?>
 
-		
+
 <?php
+if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user']) && in_array($_SESSION['id_user'], array(2,150,433))) {
+?>
+<!--                <li>
+                        <a href="<?= $baseUrl ?>/nii_reports" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Отчеты для НИИПБиЧС" target='_blank'>
+
+                            <img src="<?= $baseUrl ?>/assets/images/osa.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                        </a>
+                    </li>-->
+                <?php
+}
+
+
                // if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
 
                     ?>
@@ -107,7 +120,7 @@ else{
                 ?>
 
 
-			
+
 <?php
                 if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
 
@@ -139,7 +152,7 @@ else{
                 }
 
                 ?>
-			
+
 			                <li>
                     <a href="<?= $baseUrl ?>/remark" class="logo" style="background-color: #3c8dbc;">
                         <img src="<?= $baseUrl ?>/assets/images/feedback.png" width="50" height="50" >

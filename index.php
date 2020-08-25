@@ -27,13 +27,15 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.0');
-define(NEWS_DATE, '14.08.2020');
+define(NEWS_DATE, '19.08.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
 CONST LIST_MONTH = array(1  => 'январь', 2  => 'февраль', 3  => 'март', 4  => 'апрель', 5  => 'май', 6  => 'июнь', 7  => 'июль', 8  => 'август',
     9  => 'сентябрь', 10 => 'октябрь', 11 => 'ноябрь', 12 => 'декабрь');
 
+const IS_NEW_MODE_ARCHIVE =1;// 1 -older years are on 172.26.200.15
+const APP_SERVER='172.26.200.14';
 
 define(ID_BOKK, 23); // = journal.service.id
 
@@ -278,6 +280,13 @@ function is_permis()
             $app->redirect(BASE_URL . '/rig');
         }
     }
+    elseif (strpos($app->request->getResourceUri(), 'nii_reports')) {
+
+        if (!in_array($_SESSION['id_user'], array(2,150,433))) {
+
+            $app->redirect(BASE_URL . '/rig');
+        }
+    }
 }
 /* ----------------- END MIDDLEWARE -------------- */
 
@@ -517,10 +526,43 @@ function set_cookie($permis)
 
 
 
+ function get_pdo_15 ($s='172.26.200.15') {
+//$s='172.26.200.15';
+             $dsn = 'mysql:host='.$s.';dbname=jarchive;charset=utf8';
+    $usr = 'str_natali';
+    $pwd = 'str_natali';
+
+    $pdo = new PDO($dsn, $usr, $pwd);
+
+    return $pdo;
+
+//    $db= array(
+//    'driver' => 'mysql',
+//        'host' => '172.26.200.15',
+//    'user' => 'str_natali',
+//    'pass' => 'str_natali',
+//    'dbname' => 'journal'
+//
+//);
+//    $pdo = new PDO('mysql:host=' . $db['host'] . ';dbname=' . $db['dbname'],
+//        $db['user'], $db['pass']);
+//    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+//    return $pdo;
+//         $dbhost="172.26.200.15";
+//    $dbuser="str_natali";
+//    $dbpass="str_natali";
+//    $dbname="journal";
+//    $dbh = new PDO("mysql:host=$dbhost;dbname=$dbname", $dbuser, $dbpass);
+//    //$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+//    return $dbh;
+}
+
+
 /* -------------- baseUrl ---------------------- */
 
 $app->hook('slim.before', function () use ($app) {
-    $app->view()->appendData(array('baseUrl' => '/journal'));
+    $app->view()->appendData(array('baseUrl' => '/journal','is_new_mode_archive'=>IS_NEW_MODE_ARCHIVE,'app_server'=>APP_SERVER));
 });
 /* -------------- END baseUrl ---------------------- */
 
@@ -4039,9 +4081,12 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
     $app->post('/rep2', function () use ($app) {
 
+        $main_m = new Model_Main();
 
-        $table_name_year = $app->request()->post('archive_year');
+        $table_name_year =$y= $app->request()->post('archive_year');
         $month = $app->request()->post('archive_month');
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
 
         $months = array('01' => 'январь', '02' => 'февраль', '03' => 'март', '04' => 'апрель', '05' => 'май', '06' => 'июнь', '07' => 'июль', '08' => 'август'
             , '09' => 'сентябрь', '10' => 'октябрь', '11' => 'ноябрь', '12' => 'декабрь');
@@ -4052,9 +4097,25 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
         // echo $table_name_year;
         if ($month == '') {//all months
-            $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q GROUP BY q.`reasonrig_name`');
+            if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+                $sql = 'SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q GROUP BY q.`reasonrig_name`';
+                $sth = $pdo->prepare($sql);
+                $sth->execute();
+                $rigs = $sth->fetchAll();
+            } else {
+                $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q GROUP BY q.`reasonrig_name`');
+            }
         } else {
-            $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q WHERE DATE_FORMAT( q.`date_msg`,"%m") ="' . $month . '" GROUP BY q.`reasonrig_name`');
+            if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+                $sql = 'SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q WHERE DATE_FORMAT( q.`date_msg`,"%m") ="' . $month . '" GROUP BY q.`reasonrig_name`';
+                $sth = $pdo->prepare($sql);
+                $sth->execute();
+                $rigs = $sth->fetchAll();
+            } else {
+                $rigs = R::getAll('SELECT q.`reasonrig_name`, COUNT(q.`id`) as cnt FROM jarchive.' . $table_name_year . ' as q WHERE DATE_FORMAT( q.`date_msg`,"%m") ="' . $month . '" GROUP BY q.`reasonrig_name`');
+            }
         }
         // print_r($rigs);
         //exit();
@@ -4226,7 +4287,14 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             $caption_head_2 = 'Могилевское областное управление МЧС Республики Беларусь';
         }
 
-        $caption_head_3 = ' с 06-00 ' . date('d.m.Y', strtotime($d1)) . ' до 06-00 ' . date('d.m.Y', strtotime($d2)) . ' года';
+
+         if ($filter['year'] < date('Y')) {
+            $caption_head_3 = ' за ' . $filter['year'] . ' год';
+        } else {
+            $caption_head_3 = ' с 06-00 ' . date('d.m.Y', strtotime($d1)) . ' до 06-00 ' . date('d.m.Y', strtotime($d2)) . ' года';
+        }
+
+
 
         $caption = $caption_head_1 . '<br>' . '&laquo;' . $caption_head_2 . '&raquo;' . '<br>' . $caption_head_3;
 
@@ -4254,26 +4322,28 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /* -------------------- current daily ------------------------- */
 
         /*         * * current daily: hs ** */
-        $daily_rigs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
         $daily_rigs_array = array();
+        if ($filter['year'] == date('Y')) {
+            $daily_rigs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
 
-        if (empty($daily_rigs)) {
+            if (empty($daily_rigs)) {
 
-            $daily_rigs_array['rig_teh_hs'] = 0;
-            $daily_rigs_array['rig_fire'] = 0;
-            $daily_rigs_array['rig_live_sector'] = 0;
-            $daily_rigs_array['rig_live_support'] = 0;
-            $daily_rigs_array['rig_other_teh_hs'] = 0;
-            $daily_rigs_array['rig_nature_ltt'] = 0;
-        } else {
-            foreach ($daily_rigs as $row) {
+                $daily_rigs_array['rig_teh_hs'] = 0;
+                $daily_rigs_array['rig_fire'] = 0;
+                $daily_rigs_array['rig_live_sector'] = 0;
+                $daily_rigs_array['rig_live_support'] = 0;
+                $daily_rigs_array['rig_other_teh_hs'] = 0;
+                $daily_rigs_array['rig_nature_ltt'] = 0;
+            } else {
+                foreach ($daily_rigs as $row) {
 
-                $daily_rigs_array['rig_teh_hs'] = (!isset($row['rig_teh_hs']) || empty($row['rig_teh_hs']) || $row['rig_teh_hs'] == null) ? 0 : $row['rig_teh_hs'];
-                $daily_rigs_array['rig_fire'] = (!isset($row['rig_fire']) || empty($row['rig_fire']) || $row['rig_fire'] == null) ? 0 : $row['rig_fire'];
-                $daily_rigs_array['rig_live_sector'] = (!isset($row['rig_live_sector']) || empty($row['rig_live_sector']) || $row['rig_live_sector'] == null) ? 0 : $row['rig_live_sector'];
-                $daily_rigs_array['rig_live_support'] = (!isset($row['rig_live_support']) || empty($row['rig_live_support']) || $row['rig_live_support'] == null) ? 0 : $row['rig_live_support'];
-                $daily_rigs_array['rig_other_teh_hs'] = (!isset($row['rig_other_teh_hs']) || empty($row['rig_other_teh_hs']) || $row['rig_other_teh_hs'] == null) ? 0 : $row['rig_other_teh_hs'];
-                $daily_rigs_array['rig_nature_ltt'] = (!isset($row['rig_nature_ltt']) || empty($row['rig_nature_ltt']) || $row['rig_nature_ltt'] == null) ? 0 : $row['rig_nature_ltt'];
+                    $daily_rigs_array['rig_teh_hs'] = (!isset($row['rig_teh_hs']) || empty($row['rig_teh_hs']) || $row['rig_teh_hs'] == null) ? 0 : $row['rig_teh_hs'];
+                    $daily_rigs_array['rig_fire'] = (!isset($row['rig_fire']) || empty($row['rig_fire']) || $row['rig_fire'] == null) ? 0 : $row['rig_fire'];
+                    $daily_rigs_array['rig_live_sector'] = (!isset($row['rig_live_sector']) || empty($row['rig_live_sector']) || $row['rig_live_sector'] == null) ? 0 : $row['rig_live_sector'];
+                    $daily_rigs_array['rig_live_support'] = (!isset($row['rig_live_support']) || empty($row['rig_live_support']) || $row['rig_live_support'] == null) ? 0 : $row['rig_live_support'];
+                    $daily_rigs_array['rig_other_teh_hs'] = (!isset($row['rig_other_teh_hs']) || empty($row['rig_other_teh_hs']) || $row['rig_other_teh_hs'] == null) ? 0 : $row['rig_other_teh_hs'];
+                    $daily_rigs_array['rig_nature_ltt'] = (!isset($row['rig_nature_ltt']) || empty($row['rig_nature_ltt']) || $row['rig_nature_ltt'] == null) ? 0 : $row['rig_nature_ltt'];
+                }
             }
         }
 
@@ -4283,11 +4353,14 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
 
         /*         * * current daily: rigs ** */
-        $all_rigs_today = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
         $all_rigs_today_array = array();
-        if (!empty($all_rigs_today)) {
-            foreach ($all_rigs_today as $k => $row) {
-                $all_rigs_today_array = $row;
+        if ($filter['year'] == date('Y')) {
+            $all_rigs_today = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
+
+            if (!empty($all_rigs_today)) {
+                foreach ($all_rigs_today as $k => $row) {
+                    $all_rigs_today_array = $row;
+                }
             }
         }
         $data['rigs_today'] = $all_rigs_today_array;
@@ -4297,9 +4370,10 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
 
         /*         * * current daily: mans ** */
-        $daily_current = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
-
         $daily_current_array = array();
+        if ($filter['year'] == date('Y')) {
+
+        $daily_current = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
 
         if (empty($daily_current)) {
 
@@ -4398,6 +4472,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
                 $daily_current_array['save_an_mchs'] = (!isset($row['save_an_mchs']) || empty($row['save_an_mchs']) || $row['save_an_mchs'] == null) ? 0 : $row['save_an_mchs'];
             }
         }
+    }
 
 
         $data['daily_current'] = $daily_current_array;
@@ -4477,15 +4552,19 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /* ---------------- all results_battle by all time from journal (it is plused to archive data) --------------------- */
 
         /* mans */
+        $all_days_journal_arr = array();
+
+        if ($filter['year'] == date('Y')) {
         $all_days_journal = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','0');"); //by all rigs in journal
 
-        $all_days_journal_arr = array();
+
 
         if (!empty($all_days_journal)) {
             foreach ($all_days_journal as $row) {
 
                 $all_days_journal_arr = $row;
             }
+        }
         }
 
         $data['all_days_journal_mans'] = $all_days_journal_arr;
@@ -4494,12 +4573,15 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
         /* all hs */
 
+         $all_hs_journal = array();
+        if ($filter['year'] == date('Y')) {
         $all_hs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','0');"); //all rigs from journal
-        $all_hs_journal = array();
+
         if (!empty($all_hs)) {
             foreach ($all_hs as $k => $row) {
                 $all_hs_journal = $row;
             }
+        }
         }
         $data['all_hs_journal'] = $all_hs_journal;
 
@@ -4507,12 +4589,14 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
 
         /* all rigs */
-
-        $all_rigs = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','0');"); //all rigs from journal
         $all_rigs_journal = array();
-        if (!empty($all_rigs)) {
-            foreach ($all_rigs as $k => $row) {
-                $all_rigs_journal = $row;
+        if ($filter['year'] == date('Y')) {
+            $all_rigs = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','0');"); //all rigs from journal
+
+            if (!empty($all_rigs)) {
+                foreach ($all_rigs as $k => $row) {
+                    $all_rigs_journal = $row;
+                }
             }
         }
         $data['all_rigs_journal'] = $all_rigs_journal;
@@ -4528,10 +4612,22 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
         /* ------------------- get data from results_battle_archive_2019: only for 2019 year --------------------- */
 
+        $main_m = new Model_Main();
+
         if (isset($filter['year']) && $filter['year'] == '2019') {
 
             if ($filter['id_region'] == 0) {//by RB
-                $archive_2019 = R::getAll('select * from results_battle_archive_2019 where year = ?', array($filter['year']));
+
+                $real_server = $main_m->get_js_connect($filter['year']);
+                if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+                    $pdo = get_pdo_15($real_server);
+                    $sql = 'select * from results_battle_archive_2019 where year = ?';
+                    $sth = $pdo->prepare($sql);
+                    $sth->execute(array($filter['year']));
+                    $archive_2019 = $sth->fetchAll();
+                } else {
+                    $archive_2019 = R::getAll('select * from results_battle_archive_2019 where year = ?', array($filter['year']));
+                }
 
                 $sumArray = array();
 
@@ -4548,7 +4644,17 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
                 $archive_2019 = $sumArray;
             } else {
-                $archive_2019 = R::getAll('select * from results_battle_archive_2019 where year = ? and id_region =?', array($filter['year'], $filter['id_region']));
+                $real_server = $main_m->get_js_connect($filter['year']);
+                if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+                    $pdo = get_pdo_15($real_server);
+                    $sql = 'select * from results_battle_archive_2019 where year = ? and id_region =?';
+                    $sth = $pdo->prepare($sql);
+                    $sth->execute(array($filter['year'], $filter['id_region']));
+                    $archive_2019 = $sth->fetchAll();
+                } else {
+                    $archive_2019 = R::getAll('select * from results_battle_archive_2019 where year = ? and id_region =?', array($filter['year'], $filter['id_region']));
+                }
+
 
                 foreach ($archive_2019 as $value) {
                     //print_r($value);
@@ -4591,49 +4697,49 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             $sheet->setCellValue('A2', $ca); //выбранный период
             $sheet->setCellValue('A3', $caption_head_3); //выбранный область и район
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_teh_hs'] + $data['daily_rigs_hs']['rig_nature_ltt']));
+            $sheet->setCellValue('C' . $r, (((isset($data['daily_rigs_hs']['rig_teh_hs']) && !empty($data['daily_rigs_hs']['rig_teh_hs'])) ? $data['daily_rigs_hs']['rig_teh_hs'] : 0) + ((isset($data['daily_rigs_hs']['rig_nature_ltt']) && !empty($data['daily_rigs_hs']['rig_nature_ltt'])) ? $data['daily_rigs_hs']['rig_nature_ltt'] : 0)));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_teh_hs']) && !empty($data['all_hs_journal']['rig_teh_hs'])) ? $data['all_hs_journal']['rig_teh_hs'] : 0) +
                 ((isset($data['all_hs_journal']['rig_nature_ltt']) && !empty($data['all_hs_journal']['rig_nature_ltt'])) ? $data['all_hs_journal']['rig_nature_ltt'] : 0) +
                 ((isset($data['archive_rigs']['rig_all_hs']) && !empty($data['archive_rigs']['rig_all_hs'])) ? $data['archive_rigs']['rig_all_hs'] : 0) +
                 ((isset($data['archive_2019']['r_nature_ltt']) && !empty($data['archive_2019']['r_nature_ltt'])) ? $data['archive_2019']['r_nature_ltt'] : 0)));
             $r++;
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_teh_hs']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_teh_hs']) && !empty($data['daily_rigs_hs']['rig_teh_hs'])) ? $data['daily_rigs_hs']['rig_teh_hs'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_teh_hs']) && !empty($data['all_hs_journal']['rig_teh_hs'])) ? $data['all_hs_journal']['rig_teh_hs'] : 0) +
                 ((isset($data['archive_rigs']['rig_teh_hs']) && !empty($data['archive_rigs']['rig_teh_hs'])) ? $data['archive_rigs']['rig_teh_hs'] : 0) +
                 ((isset($data['archive_2019']['r_teh']) && !empty($data['archive_2019']['r_teh'])) ? $data['archive_2019']['r_teh'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_fire']) && !empty($data['daily_rigs_hs']['rig_fire'])) ? $data['daily_rigs_hs']['rig_fire'] : 0)  );
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_fire']) && !empty($data['all_hs_journal']['rig_fire'])) ? $data['all_hs_journal']['rig_fire'] : 0) +
                 ((isset($data['archive_rigs']['rig_fire']) && !empty($data['archive_rigs']['rig_fire'])) ? $data['archive_rigs']['rig_fire'] : 0) +
                 ((isset($data['archive_2019']['r_teh_fire']) && !empty($data['archive_2019']['r_teh_fire'])) ? $data['archive_2019']['r_teh_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_live_sector']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_live_sector']) && !empty($data['daily_rigs_hs']['rig_live_sector'])) ? $data['daily_rigs_hs']['rig_live_sector'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_live_sector']) && !empty($data['all_hs_journal']['rig_live_sector'])) ? $data['all_hs_journal']['rig_live_sector'] : 0) +
                 ((isset($data['archive_rigs']['rig_live_sector']) && !empty($data['archive_rigs']['rig_live_sector'])) ? $data['archive_rigs']['rig_live_sector'] : 0) +
                 ((isset($data['archive_2019']['r_life_sector']) && !empty($data['archive_2019']['r_life_sector'])) ? $data['archive_2019']['r_life_sector'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_live_support']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_live_support']) && !empty($data['daily_rigs_hs']['rig_live_support'])) ? $data['daily_rigs_hs']['rig_live_support'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_live_support']) && !empty($data['all_hs_journal']['rig_live_support'])) ? $data['all_hs_journal']['rig_live_support'] : 0) +
                 ((isset($data['archive_rigs']['rig_live_support']) && !empty($data['archive_rigs']['rig_live_support'])) ? $data['archive_rigs']['rig_live_support'] : 0) +
                 ((isset($data['archive_2019']['r_live_support']) && !empty($data['archive_2019']['r_live_support'])) ? $data['archive_2019']['r_live_support'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_other_teh_hs']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_other_teh_hs']) && !empty($data['daily_rigs_hs']['rig_other_teh_hs'])) ? $data['daily_rigs_hs']['rig_other_teh_hs'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_other_teh_hs']) && !empty($data['all_hs_journal']['rig_other_teh_hs'])) ? $data['all_hs_journal']['rig_other_teh_hs'] : 0) +
                 ((isset($data['archive_rigs']['rig_other_teh_hs']) && !empty($data['archive_rigs']['rig_other_teh_hs'])) ? $data['archive_rigs']['rig_other_teh_hs'] : 0) +
                 ((isset($data['archive_2019']['r_other_teh_hs']) && !empty($data['archive_2019']['r_other_teh_hs'])) ? $data['archive_2019']['r_other_teh_hs'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_rigs_hs']['rig_nature_ltt']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_rigs_hs']['rig_nature_ltt']) && !empty($data['daily_rigs_hs']['rig_nature_ltt'])) ? $data['daily_rigs_hs']['rig_nature_ltt'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['all_hs_journal']['rig_nature_ltt']) && !empty($data['all_hs_journal']['rig_nature_ltt'])) ? $data['all_hs_journal']['rig_nature_ltt'] : 0) +
                 ((isset($data['archive_rigs']['rig_nature_ltt']) && !empty($data['archive_rigs']['rig_nature_ltt'])) ? $data['archive_rigs']['rig_nature_ltt'] : 0) +
                 ((isset($data['archive_2019']['r_nature_ltt']) && !empty($data['archive_2019']['r_nature_ltt'])) ? $data['archive_2019']['r_nature_ltt'] : 0)));
@@ -4813,79 +4919,79 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
             /* posledstvia HS */
             $r++;
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dead_man']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dead_man']) && !empty($data['daily_current']['dead_man'])) ? $data['daily_current']['dead_man'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dead_man']) && !empty($data['daily_archive']['cnt_dead_man'])) ? $data['daily_archive']['cnt_dead_man'] : 0) + ((isset($data['all_days_journal_mans']['dead_man']) && !empty($data['all_days_journal_mans']['dead_man'])) ? $data['all_days_journal_mans']['dead_man'] : 0) + ((isset($archive_2019['dead_man']) && !empty($archive_2019['dead_man'])) ? $archive_2019['dead_man'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dead_child']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dead_child']) && !empty($data['daily_current']['dead_child'])) ? $data['daily_current']['dead_child'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dead_child']) && !empty($data['daily_archive']['cnt_dead_child'])) ? $data['daily_archive']['cnt_dead_child'] : 0) + ((isset($data['all_days_journal_mans']['dead_child']) && !empty($data['all_days_journal_mans']['dead_child'])) ? $data['all_days_journal_mans']['dead_child'] : 0) + ((isset($archive_2019['dead_child']) && !empty($archive_2019['dead_child'])) ? $archive_2019['dead_child'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dead_man_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dead_man_fire']) && !empty($data['daily_current']['dead_man_fire'])) ? $data['daily_current']['dead_man_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dead_man_fire']) && !empty($data['daily_archive']['cnt_dead_man_fire'])) ? $data['daily_archive']['cnt_dead_man_fire'] : 0) + ((isset($data['all_days_journal_mans']['dead_man_fire']) && !empty($data['all_days_journal_mans']['dead_man_fire'])) ? $data['all_days_journal_mans']['dead_man_fire'] : 0) + ((isset($archive_2019['dead_man_fire']) && !empty($archive_2019['dead_man_fire'])) ? $archive_2019['dead_man_fire'] : 0)));
             $r++;
 
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dead_child_fire']));
+            $sheet->setCellValue('C' . $r,((isset($data['daily_current']['dead_child_fire']) && !empty($data['daily_current']['dead_child_fire'])) ? $data['daily_current']['dead_child_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dead_child_fire']) && !empty($data['daily_archive']['cnt_dead_child_fire'])) ? $data['daily_archive']['cnt_dead_child_fire'] : 0) + ((isset($data['all_days_journal_mans']['dead_child_fire']) && !empty($data['all_days_journal_mans']['dead_child_fire'])) ? $data['all_days_journal_mans']['dead_child_fire'] : 0) + ((isset($archive_2019['dead_child_fire']) && !empty($archive_2019['dead_child_fire'])) ? $archive_2019['dead_child_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['inj_man']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['inj_man']) && !empty($data['daily_current']['inj_man'])) ? $data['daily_current']['inj_man'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_inj_man']) && !empty($data['daily_archive']['cnt_inj_man'])) ? $data['daily_archive']['cnt_inj_man'] : 0) + ((isset($data['all_days_journal_mans']['inj_man']) && !empty($data['all_days_journal_mans']['inj_man'])) ? $data['all_days_journal_mans']['inj_man'] : 0) + ((isset($archive_2019['inj_man']) && !empty($archive_2019['inj_man'])) ? $archive_2019['inj_man'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['inj_man_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['inj_man_fire']) && !empty($data['daily_current']['inj_man_fire'])) ? $data['daily_current']['inj_man_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_inj_man_fire']) && !empty($data['daily_archive']['cnt_inj_man_fire'])) ? $data['daily_archive']['cnt_inj_man_fire'] : 0) + ((isset($data['all_days_journal_mans']['inj_man_fire']) && !empty($data['all_days_journal_mans']['inj_man_fire'])) ? $data['all_days_journal_mans']['inj_man_fire'] : 0) + ((isset($archive_2019['inj_man_fire']) && !empty($archive_2019['inj_man_fire'])) ? $archive_2019['inj_man_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['des_build']));
+            $sheet->setCellValue('C' . $r,((isset($data['daily_current']['des_build']) && !empty($data['daily_current']['des_build'])) ? $data['daily_current']['des_build'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_des_build']) && !empty($data['daily_archive']['cnt_des_build'])) ? $data['daily_archive']['cnt_des_build'] : 0) + ((isset($data['all_days_journal_mans']['des_build']) && !empty($data['all_days_journal_mans']['des_build'])) ? $data['all_days_journal_mans']['des_build'] : 0) + ((isset($archive_2019['des_build']) && !empty($archive_2019['des_build'])) ? $archive_2019['des_build'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['des_build_fire']));
+            $sheet->setCellValue('C' . $r,  ((isset($data['daily_current']['des_build_fire']) && !empty($data['daily_current']['des_build_fire'])) ? $data['daily_current']['des_build_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_des_build_fire']) && !empty($data['daily_archive']['cnt_des_build_fire'])) ? $data['daily_archive']['cnt_des_build_fire'] : 0) + ((isset($data['all_days_journal_mans']['des_build_fire']) && !empty($data['all_days_journal_mans']['des_build_fire'])) ? $data['all_days_journal_mans']['des_build_fire'] : 0) + ((isset($archive_2019['des_build_fire']) && !empty($archive_2019['des_build_fire'])) ? $archive_2019['des_build_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dam_build']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dam_build']) && !empty($data['daily_current']['dam_build'])) ? $data['daily_current']['dam_build'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dam_build']) && !empty($data['daily_archive']['cnt_dam_build'])) ? $data['daily_archive']['cnt_dam_build'] : 0) + ((isset($data['all_days_journal_mans']['dam_build']) && !empty($data['all_days_journal_mans']['dam_build'])) ? $data['all_days_journal_mans']['dam_build'] : 0) + ((isset($archive_2019['dam_build']) && !empty($archive_2019['dam_build'])) ? $archive_2019['dam_build'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dam_build_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dam_build_fire']) && !empty($data['daily_current']['dam_build_fire'])) ? $data['daily_current']['dam_build_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dam_build_fire']) && !empty($data['daily_archive']['cnt_dam_build_fire'])) ? $data['daily_archive']['cnt_dam_build_fire'] : 0) + ((isset($data['all_days_journal_mans']['dam_build_fire']) && !empty($data['all_days_journal_mans']['dam_build_fire'])) ? $data['all_days_journal_mans']['dam_build_fire'] : 0) + ((isset($archive_2019['dam_build_fire']) && !empty($archive_2019['dam_build_fire'])) ? $archive_2019['dam_build_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['des_teh']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['des_teh']) && !empty($data['daily_current']['des_teh'])) ? $data['daily_current']['des_teh'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_des_teh']) && !empty($data['daily_archive']['cnt_des_teh'])) ? $data['daily_archive']['cnt_des_teh'] : 0) + ((isset($data['all_days_journal_mans']['des_teh']) && !empty($data['all_days_journal_mans']['des_teh'])) ? $data['all_days_journal_mans']['des_teh'] : 0) + ((isset($archive_2019['des_teh']) && !empty($archive_2019['des_teh'])) ? $archive_2019['des_teh'] : 0)));
             $r++;
 
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['des_teh_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['des_teh_fire']) && !empty($data['daily_current']['des_teh_fire'])) ? $data['daily_current']['des_teh_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_des_teh_fire']) && !empty($data['daily_archive']['cnt_des_teh_fire'])) ? $data['daily_archive']['cnt_des_teh_fire'] : 0) + ((isset($data['all_days_journal_mans']['des_teh_fire']) && !empty($data['all_days_journal_mans']['des_teh_fire'])) ? $data['all_days_journal_mans']['des_teh_fire'] : 0) + ((isset($archive_2019['des_teh_fire']) && !empty($archive_2019['des_teh_fire'])) ? $archive_2019['des_teh_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dam_teh']));
+            $sheet->setCellValue('C' . $r,((isset($data['daily_current']['dam_teh']) && !empty($data['daily_current']['dam_teh'])) ? $data['daily_current']['dam_teh'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dam_teh']) && !empty($data['daily_archive']['cnt_dam_teh'])) ? $data['daily_archive']['cnt_dam_teh'] : 0) + ((isset($data['all_days_journal_mans']['dam_teh']) && !empty($data['all_days_journal_mans']['dam_teh'])) ? $data['all_days_journal_mans']['dam_teh'] : 0) + ((isset($archive_2019['dam_teh']) && !empty($archive_2019['dam_teh'])) ? $archive_2019['dam_teh'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dam_teh_fire']));
+            $sheet->setCellValue('C' . $r,((isset($data['daily_current']['dam_teh_fire']) && !empty($data['daily_current']['dam_teh_fire'])) ? $data['daily_current']['dam_teh_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dam_teh_fire']) && !empty($data['daily_archive']['cnt_dam_teh_fire'])) ? $data['daily_archive']['cnt_dam_teh_fire'] : 0) + ((isset($data['all_days_journal_mans']['dam_teh_fire']) && !empty($data['all_days_journal_mans']['dam_teh_fire'])) ? $data['all_days_journal_mans']['dam_teh_fire'] : 0) + ((isset($archive_2019['dam_teh_fire']) && !empty($archive_2019['dam_teh_fire'])) ? $archive_2019['dam_teh_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['dam_money']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['dam_money']) && !empty($data['daily_current']['dam_money'])) ? $data['daily_current']['dam_money'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_dam_money']) && !empty($data['daily_archive']['cnt_dam_money'])) ? $data['daily_archive']['cnt_dam_money'] : 0) + ((isset($data['all_days_journal_mans']['dam_money']) && !empty($data['all_days_journal_mans']['dam_money'])) ? $data['all_days_journal_mans']['dam_money'] : 0) + ((isset($archive_2019['dam_money']) && !empty($archive_2019['dam_money'])) ? $archive_2019['dam_money'] : 0)));
             $r++;
 
@@ -4893,64 +4999,64 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
             /* results battle */
             $r++;
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_wealth']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_wealth']) && !empty($data['daily_current']['save_wealth'])) ? $data['daily_current']['save_wealth'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_wealth']) && !empty($data['daily_archive']['cnt_save_wealth'])) ? $data['daily_archive']['cnt_save_wealth'] : 0) + ((isset($data['all_days_journal_mans']['save_wealth']) && !empty($data['all_days_journal_mans']['save_wealth'])) ? $data['all_days_journal_mans']['save_wealth'] : 0) + ((isset($archive_2019['save_wealth']) && !empty($archive_2019['save_wealth'])) ? $archive_2019['save_wealth'] : 0)));
             $r++;
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_man']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_man']) && !empty($data['daily_current']['save_man'])) ? $data['daily_current']['save_man'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_man']) && !empty($data['daily_archive']['cnt_save_man'])) ? $data['daily_archive']['cnt_save_man'] : 0) + ((isset($data['all_days_journal_mans']['save_man']) && !empty($data['all_days_journal_mans']['save_man'])) ? $data['all_days_journal_mans']['save_man'] : 0) + ((isset($archive_2019['save_man']) && !empty($archive_2019['save_man'])) ? $archive_2019['save_man'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_child']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_child']) && !empty($data['daily_current']['save_child'])) ? $data['daily_current']['save_child'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_child']) && !empty($data['daily_archive']['cnt_save_child'])) ? $data['daily_archive']['cnt_save_child'] : 0) + ((isset($data['all_days_journal_mans']['save_child']) && !empty($data['all_days_journal_mans']['save_child'])) ? $data['all_days_journal_mans']['save_child'] : 0) + ((isset($archive_2019['save_child']) && !empty($archive_2019['save_child'])) ? $archive_2019['save_child'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_man_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_man_fire']) && !empty($data['daily_current']['save_man_fire'])) ? $data['daily_current']['save_man_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_man_fire']) && !empty($data['daily_archive']['cnt_save_man_fire'])) ? $data['daily_archive']['cnt_save_man_fire'] : 0) + ((isset($data['all_days_journal_mans']['save_man_fire']) && !empty($data['all_days_journal_mans']['save_man_fire'])) ? $data['all_days_journal_mans']['save_man_fire'] : 0) + ((isset($archive_2019['save_man_fire']) && !empty($archive_2019['save_man_fire'])) ? $archive_2019['save_man_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_child_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_child_fire']) && !empty($data['daily_current']['save_child_fire'])) ? $data['daily_current']['save_child_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_child_fire']) && !empty($data['daily_archive']['cnt_save_child_fire'])) ? $data['daily_archive']['cnt_save_child_fire'] : 0) + ((isset($data['all_days_journal_mans']['save_child_fire']) && !empty($data['all_days_journal_mans']['save_child_fire'])) ? $data['all_days_journal_mans']['save_child_fire'] : 0) + ((isset($archive_2019['save_child_fire']) && !empty($archive_2019['save_child_fire'])) ? $archive_2019['save_child_fire'] : 0)));
             $r++;
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_mchs']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_mchs']) && !empty($data['daily_current']['save_mchs'])) ? $data['daily_current']['save_mchs'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_mchs']) && !empty($data['daily_archive']['cnt_save_mchs'])) ? $data['daily_archive']['cnt_save_mchs'] : 0) + ((isset($data['all_days_journal_mans']['save_mchs']) && !empty($data['all_days_journal_mans']['save_mchs'])) ? $data['all_days_journal_mans']['save_mchs'] : 0) + ((isset($archive_2019['save_mchs']) && !empty($archive_2019['save_mchs'])) ? $archive_2019['save_mchs'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['ev_man']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['ev_man']) && !empty($data['daily_current']['ev_man'])) ? $data['daily_current']['ev_man'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_ev_man']) && !empty($data['daily_archive']['cnt_ev_man'])) ? $data['daily_archive']['cnt_ev_man'] : 0) + ((isset($data['all_days_journal_mans']['ev_man']) && !empty($data['all_days_journal_mans']['ev_man'])) ? $data['all_days_journal_mans']['ev_man'] : 0) + ((isset($archive_2019['ev_man']) && !empty($archive_2019['ev_man'])) ? $archive_2019['ev_man'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['ev_child']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['ev_child']) && !empty($data['daily_current']['ev_child'])) ? $data['daily_current']['ev_child'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_ev_child']) && !empty($data['daily_archive']['cnt_ev_child'])) ? $data['daily_archive']['cnt_ev_child'] : 0) + ((isset($data['all_days_journal_mans']['ev_child']) && !empty($data['all_days_journal_mans']['ev_child'])) ? $data['all_days_journal_mans']['ev_child'] : 0) + ((isset($archive_2019['ev_child']) && !empty($archive_2019['ev_child'])) ? $archive_2019['ev_child'] : 0)));
             $r++;
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['ev_man_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['ev_man_fire']) && !empty($data['daily_current']['ev_man_fire'])) ? $data['daily_current']['ev_man_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_ev_man_fire']) && !empty($data['daily_archive']['cnt_ev_man_fire'])) ? $data['daily_archive']['cnt_ev_man_fire'] : 0) + ((isset($data['all_days_journal_mans']['ev_man_fire']) && !empty($data['all_days_journal_mans']['ev_man_fire'])) ? $data['all_days_journal_mans']['ev_man_fire'] : 0) + ((isset($archive_2019['ev_man_fire']) && !empty($archive_2019['ev_man_fire'])) ? $archive_2019['ev_man_fire'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['ev_child_fire']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['ev_child_fire']) && !empty($data['daily_current']['ev_child_fire'])) ? $data['daily_current']['ev_child_fire'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_ev_child_fire']) && !empty($data['daily_archive']['cnt_ev_child_fire'])) ? $data['daily_archive']['cnt_ev_child_fire'] : 0) + ((isset($data['all_days_journal_mans']['ev_child_fire']) && !empty($data['all_days_journal_mans']['ev_child_fire'])) ? $data['all_days_journal_mans']['ev_child_fire'] : 0) + ((isset($archive_2019['ev_child_fire']) && !empty($archive_2019['ev_child_fire'])) ? $archive_2019['ev_child_fire'] : 0)));
             $r++;
 
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['ev_mchs']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['ev_mchs']) && !empty($data['daily_current']['ev_mchs'])) ? $data['daily_current']['ev_mchs'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_ev_mchs']) && !empty($data['daily_archive']['cnt_ev_mchs'])) ? $data['daily_archive']['cnt_ev_mchs'] : 0) + ((isset($data['all_days_journal_mans']['ev_mchs']) && !empty($data['all_days_journal_mans']['ev_mchs'])) ? $data['all_days_journal_mans']['ev_mchs'] : 0) + ((isset($archive_2019['ev_mchs']) && !empty($archive_2019['ev_mchs'])) ? $archive_2019['ev_mchs'] : 0)));
             $r++;
 
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_an']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_an']) && !empty($data['daily_current']['save_an'])) ? $data['daily_current']['save_an'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_an']) && !empty($data['daily_archive']['cnt_save_an'])) ? $data['daily_archive']['cnt_save_an'] : 0) + ((isset($data['all_days_journal_mans']['save_an']) && !empty($data['all_days_journal_mans']['save_an'])) ? $data['all_days_journal_mans']['save_an'] : 0) + ((isset($archive_2019['save_an']) && !empty($archive_2019['save_an'])) ? $archive_2019['save_an'] : 0)));
             $r++;
 
-            $sheet->setCellValue('C' . $r, ($data['daily_current']['save_an_mchs']));
+            $sheet->setCellValue('C' . $r, ((isset($data['daily_current']['save_an_mchs']) && !empty($data['daily_current']['save_an_mchs'])) ? $data['daily_current']['save_an_mchs'] : 0));
             $sheet->setCellValue('D' . $r, (((isset($data['daily_archive']['cnt_save_an_mchs']) && !empty($data['daily_archive']['cnt_save_an_mchs'])) ? $data['daily_archive']['cnt_save_an_mchs'] : 0) + ((isset($data['all_days_journal_mans']['save_an_mchs']) && !empty($data['all_days_journal_mans']['save_an_mchs'])) ? $data['all_days_journal_mans']['save_an_mchs'] : 0) + ((isset($archive_2019['save_an_mchs']) && !empty($archive_2019['save_an_mchs'])) ? $archive_2019['save_an_mchs'] : 0)));
             // $r++;
 
@@ -5018,10 +5124,15 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
     $app->post('/rep4', function () use ($app) {
 
         $rig_m = new Model_Rigtable();
+        $main_m = new Model_Main();
+
+
 
         $filter['id_region'] = (!empty($app->request()->post('id_region'))) ? $app->request()->post('id_region') : 0;
         $filter['id_local'] = (!empty($app->request()->post('id_local'))) ? $app->request()->post('id_local') : 0;
         $filter['year'] = $app->request()->post('year');
+
+        $real_server = $main_m->get_js_connect($filter['year']);
 
 
         if (!empty($filter['id_local'])) {//by local
@@ -5218,13 +5329,35 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
             . ' from jarchive.battle_work_' . $filter['year'];
 
         if ($filter['id_region'] == 0) {//by RB
-            $archive_battle_work = R::getAll($sql_a);
+            if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+                $sth = $pdo->prepare($sql_a);
+                $sth->execute();
+                $archive_battle_work = $sth->fetchAll();
+            } else {
+                $archive_battle_work = R::getAll($sql_a);
+            }
         } elseif (!empty($filter['id_local'])) {//by local
             $sql_a = $sql_a . ' WHERE id_local = ' . $filter['id_local'];
-            $archive_battle_work = R::getAll($sql_a);
+            if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+                $sth = $pdo->prepare($sql_a);
+                $sth->execute();
+                $archive_battle_work = $sth->fetchAll();
+            } else {
+                $archive_battle_work = R::getAll($sql_a);
+            }
         } else {//by region
             $sql_a = $sql_a . ' WHERE id_region = ' . $filter['id_region'] . ' group by id_region';
-            $archive_battle_work = R::getAll($sql_a);
+
+            if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+                $sth = $pdo->prepare($sql_a);
+                $sth->execute();
+                $archive_battle_work = $sth->fetchAll();
+            } else {
+                $archive_battle_work = R::getAll($sql_a);
+            }
         }
         $archive_bw = ((isset($archive_battle_work[0])) ? $archive_battle_work[0] : array()); // there are all data from archive!!!
         //print_r($archive_bw);        echo '<br><br>';
@@ -8414,6 +8547,8 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         $data['region'] = $name_oblast; //области
 
         $archive_m = new Model_Archivedate();
+        $main_m = new Model_Main();
+
         $data['archive_date'] = $archive_m->selectAll();
         //$archive_year_m = new Model_Archiveyear();
         // $data['archive_year'] = $archive_year_m->selectAll();
@@ -8422,10 +8557,28 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
         $archive_year = ARCHIVE_YEAR;
 
+
         foreach ($archive_year as $value) {
-            $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
-            $archive_year_1[] = $value;
+
+            $y = $value['table_name'];
+            $real_server=$main_m->get_js_connect(substr($y, 0, -1));
+
+
+            if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+
+                $pdo = get_pdo_15($real_server);
+
+                $sth = $pdo->prepare("SELECT MAX(a.date_msg) as max_date FROM ".$value['table_name']." as a ");
+                $sth->execute();
+                $value['max_date'] = $sth->fetchColumn();
+                $archive_year_1[] = $value;
+            } else {
+                $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
+                $archive_year_1[] = $value;
+            }
         }
+        //print_r($archive_year_1);
+       // exit();
         $data['archive_year'] = $archive_year_1;
 
 
@@ -8445,6 +8598,20 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
 
     $app->post('/', function () use ($app) {
+
+
+//                $dsn = 'mysql:host=172.26.200.15;dbname=jarchive;charset=utf8';
+//        $usr = 'str_natali';
+//        $pwd = 'str_natali';
+//
+////$pdo = new \FaaPz\PDO\Database($dsn, $usr, $pwd);
+//        $pdo = new PDO($dsn, $usr, $pwd);
+//
+//        $sth = $pdo->prepare("SELECT * FROM 2019a where id = ?");
+//        $sth->execute(array(3187));
+//        print("Fetch the first column from the first row in the result set:\n");
+//        $result = $sth->fetchAll();
+//        print_r($result);
 
         /* если выбран диапазон дат, то выбрать год нельзя и наоборот. Но обязательно что-то из этого должно быть!!! */
         $archive_date = (isset($_POST['archive_date']) && !empty($_POST['archive_date'])) ? $_POST['archive_date'] : 0; //диапазон дат - array
@@ -8527,11 +8694,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
     $app->post('/getInfRig', function () use ($app) {
 
+        $main_m = new Model_Main();
 
         /* post data */
         $date_start = $app->request()->post('date_start');
         $date_end = $app->request()->post('date_end');
-        $table_name_year = $app->request()->post('archive_year');
+        $table_name_year = $y= $app->request()->post('archive_year');
         $region_id = $app->request()->post('region');
         $local = $app->request()->post('local');
         $reasonrig = $app->request()->post('reasonrig');
@@ -8588,7 +8756,20 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
         $sql = 'SELECT id_rig ' . $sql;
-        $data['result'] = R::getAll($sql, $param);
+
+
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $data['result'] = $sth->fetchAll();
+        } else {
+            $data['result'] = R::getAll($sql, $param);
+        }
+
+
 
         $cnt_result = count($data['result']);
 
@@ -8632,6 +8813,8 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* table of tab */
     $app->post('/getTabContent/:id_tab', function ($id_tab) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* post data */
         $date_start = $app->request()->post('date_start');
         $date_end = $app->request()->post('date_end');
@@ -8641,7 +8824,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
         $reasonrig = $app->request()->post('reasonrig');
 
-        $data['table_name_year'] = $table_name_year;
+        $data['table_name_year'] = $y=$table_name_year;
+
+        $data['current_year'] =substr($y, 0, -1);
+
+
+
 //$date_start='2018-12-03';
 //$date_end='2018-12-10';
 //$table_name_year='2018a';
@@ -8729,7 +8917,19 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
 //echo $sql;
-        $data['result'] = R::getAll($sql, $param);
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        $data['real_server']=$real_server;
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $data['result'] = $sth->fetchAll();
+        } else {
+            $data['result'] = R::getAll($sql, $param);
+        }
+
 
 
 
@@ -8766,10 +8966,13 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
     $app->get('/exportExcelTab1/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/:reason/:work_view/:detail/:people/:time_loc/:time_likv', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr, $reason, $work_view, $detail, $people, $time_loc, $time_likv) use ($app) {
 
+
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y=$table;
         $region = $reg;
         $local = $loc;
 
@@ -8864,7 +9067,20 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
 
-        $result = R::getAll($sql, $param);
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+            //print_r($result);exit();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
+
+
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -9066,10 +9282,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* teh info */
     $app->get('/exportExcelTab2/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/:time_loc/:time_likv/:is_likv_before_arrival', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr, $time_loc, $time_likv, $is_likv_before_arrival) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y=$table;
         $region = $reg;
         $local = $loc;
 
@@ -9154,7 +9372,16 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
 
-        $result = R::getAll($sql, $param);
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
+
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -9356,10 +9583,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* informing info */
     $app->get('/exportExcelTab3/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y= $table;
         $region = $reg;
         $local = $loc;
 
@@ -9432,7 +9661,18 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
 
-        $result = R::getAll($sql, $param);
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+        } else {
+           $result = R::getAll($sql, $param);
+        }
+
+
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -9634,10 +9874,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* innerservice info */
     $app->get('/exportExcelTab4/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y= $table;
         $region = $reg;
         $local = $loc;
 
@@ -9711,7 +9953,18 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         }
 
 
-        $result = R::getAll($sql, $param);
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
+
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -9912,10 +10165,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* results battle */
     $app->get('/exportExcelTab5/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y= $table;
         $region = $reg;
         $local = $loc;
 
@@ -9981,10 +10236,18 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, results_battle, rb_chapter_1,rb_chapter_2,rb_chapter_3 ' . $sql;
 
 
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
 
 
-
-        $result = R::getAll($sql, $param);
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -10073,10 +10336,12 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* trunk */
     $app->get('/exportExcelTab6/:id_tab/:table/:date_from/:date_to/:reg/:loc/:reasonrig_form/:id_rig/:date_msg/:time_msg/:local_1/:addr/', function ($id_tab, $table, $date_from, $date_to, $reg, $loc, $reasonrig_form, $id_rig, $date_msg, $time_msg, $local_1, $addr) use ($app) {
 
+        $main_m = new Model_Main();
+
         /* get data */
         $date_start = $date_from;
         $date_end = $date_to;
-        $table_name_year = $table;
+        $table_name_year = $y= $table;
         $region = $reg;
         $local = $loc;
 
@@ -10143,9 +10408,18 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
 
 
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
 
 
-        $result = R::getAll($sql, $param);
 //$cnt_result=count($result);
 //echo $sql;
 //print_r($param);
@@ -10263,6 +10537,8 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
 
     $app->get('/search_form', function () use ($app) {
 
+        $main_m = new Model_Main();
+
         $bread_crumb = array('Архив', 'Поиск по ID выезда');
         $data['bread_crumb'] = $bread_crumb;
         $data['title'] = 'Архив.Поиск по ID выезда';
@@ -10295,8 +10571,21 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         $archive_year = ARCHIVE_YEAR;
 
         foreach ($archive_year as $value) {
-            $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
-            $archive_year_1[] = $value;
+
+            $y = $value['table_name'];
+
+            $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+            if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+                $pdo = get_pdo_15($real_server);
+
+                $sth = $pdo->prepare("SELECT MAX(a.date_msg) as max_date FROM " . $value['table_name'] . " as a ");
+                $sth->execute();
+                $value['max_date'] = $sth->fetchColumn();
+                $archive_year_1[] = $value;
+            } else {
+                $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
+                $archive_year_1[] = $value;
+            }
         }
         $data['archive_year'] = $archive_year_1;
 
@@ -10317,9 +10606,11 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
     /* search from archive */
     $app->post('/search/rig', function () use ($app) {
 
+        $main_m = new Model_Main();
+
         /* select data from bd. */
         $id_rig = $app->request()->post('id_rig');
-        $table_name_year = $app->request()->post('archive_year');
+        $table_name_year = $y= $app->request()->post('archive_year');
 
         $data = getCardByIdRig($table_name_year, $id_rig);
 
@@ -10333,10 +10624,23 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         if (empty($data['result'])) {//no results
             $data['result_search_empty'] = 1;
 
-            $archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+            //$archive_year = R::getAll('SELECT table_name FROM information_schema.tables WHERE TABLE_SCHEMA="jarchive" ');
+            $archive_year = ARCHIVE_YEAR;
             foreach ($archive_year as $value) {
-                $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
-                $archive_year_1[] = $value;
+
+                $y = $value['table_name'];
+                $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+                if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+                    $pdo = get_pdo_15($real_server);
+
+                    $sth = $pdo->prepare("SELECT MAX(a.date_msg) as max_date FROM " . $value['table_name'] . " as a ");
+                    $sth->execute();
+                    $value['max_date'] = $sth->fetchColumn();
+                    $archive_year_1[] = $value;
+                } else {
+                    $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
+                    $archive_year_1[] = $value;
+                }
             }
             $data['archive_year'] = $archive_year_1;
 
@@ -11751,9 +12055,23 @@ function getEmptyFields($rigs)
 
 function getCardByIdRig($table_name_year, $id_rig)
 {
+
+    $main_m = new Model_Main();
+    $y=$table_name_year;
+
     $sql = ' SELECT * FROM jarchive.' . $table_name_year . '  WHERE  id_rig = ' . $id_rig;
 
-    $result = R::getAll($sql);
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $result = $sth->fetchAll();
+    } else {
+        $result = R::getAll($sql);
+    }
+
+
     $r = array();
 
 
@@ -14847,9 +15165,10 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
                 $data['head_date'] = LIST_MONTH[(date('n'))] . ' ' . $filter['year'];
             }
 
+            if(isset($filter['month']))
             $filter['month_single'] = $filter['month'];
 
-            if ($filter['month'] < 10)
+            if (isset($filter['month']) && $filter['month'] < 10)
                 $filter['month'] = '0' . $filter['month'];
 
 
@@ -14917,6 +15236,9 @@ $app->group('/diagram_results_battle', 'is_login', function () use ($app, $log) 
 
 function getCntDeadManByYear($filter)
 {
+
+    $main_m = new Model_Main();
+
     $mas = array();
     $dead_man_by_year_by_rb = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0, 10 => 0, 11 => 0, 12 => 0);
     $dead_child_by_year_by_rb = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0, 8 => 0, 9 => 0, 10 => 0, 11 => 0, 12 => 0);
@@ -14954,10 +15276,25 @@ FROM results_battle_archive_2019 AS rb');
     }
 
     // from archive
+    $real_server = $main_m->get_js_connect($filter['year']);
+
     $tbl_name = 'results_battle_a_' . $filter['year'];
-    $dead_man_archive = R::getAll('SELECT rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
+
+       if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+        $pdo = get_pdo_15($real_server);
+        $sql = 'SELECT rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
+                SUM(rb.`save_man`) AS save_man, SUM(rb.`save_child`) AS save_child
+FROM jarchive.' . $tbl_name . ' AS rb GROUP BY rb.numb_month';
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $dead_man_archive = $sth->fetchAll();
+    } else {
+        $dead_man_archive = R::getAll('SELECT rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
                 SUM(rb.`save_man`) AS save_man, SUM(rb.`save_child`) AS save_child
 FROM jarchive.' . $tbl_name . ' AS rb GROUP BY rb.numb_month');
+    }
+
+
 
     if (!empty($dead_man_archive)) {
 
@@ -14988,6 +15325,8 @@ FROM jarchive.' . $tbl_name . ' AS rb GROUP BY rb.numb_month');
 
 function getCntDeadManByMonthPerRegion($filter)
 {
+    $main_m = new Model_Main();
+
     $mas = array();
     $dead_man = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0); //by region
     $dead_child = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0, 6 => 0, 7 => 0); //by region
@@ -15034,10 +15373,24 @@ FROM results_battle_archive_2019 AS rb GROUP BY rb.`id_region`');
     }
 
     // from archive
+    $real_server = $main_m->get_js_connect($filter['year']);
     $tbl_name = 'results_battle_a_' . $filter['year'];
-    $dead_man_archive = R::getAll('SELECT rb.id_region, rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
+
+
+       if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+        $pdo = get_pdo_15($real_server);
+        $sql = 'SELECT rb.id_region, rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
+                SUM(rb.`save_man`) AS save_man, SUM(rb.`save_child`) AS save_child
+FROM jarchive.' . $tbl_name . ' AS rb WHERE rb.numb_month = ' . $filter['month_single'] . ' GROUP BY rb.id_region';
+        $sth = $pdo->prepare($sql);
+        $sth->execute();
+        $dead_man_archive = $sth->fetchAll();
+    } else {
+        $dead_man_archive = R::getAll('SELECT rb.id_region, rb.numb_month,  SUM(rb.`dead_man`) AS dead_man,SUM(rb.`dead_child`) AS dead_child,
                 SUM(rb.`save_man`) AS save_man, SUM(rb.`save_child`) AS save_child
 FROM jarchive.' . $tbl_name . ' AS rb WHERE rb.numb_month = ' . $filter['month_single'] . ' GROUP BY rb.id_region');
+    }
+
 
     if (!empty($dead_man_archive)) {
 
@@ -15116,6 +15469,8 @@ FROM jarchive.' . $tbl_name . ' AS rb WHERE rb.numb_month = ' . $filter['month_s
 
 function getCntDeadManByDay($filter)
 {
+    $main_m = new Model_Main();
+
     $mas = array();
     $query_date = $filter['year'] . '-' . $filter['month'] . '-01';
     //echo $filter['month_single'];
@@ -15140,6 +15495,8 @@ function getCntDeadManByDay($filter)
         $save_child[$d] = 0;
         //echo $date->format("d.m.Y") . "<br>";
     }
+
+    $real_server = $main_m->get_js_connect($filter['year']);
 
 
 //  from journal
@@ -15194,6 +15551,7 @@ FROM results_battle_archive_2019 AS rb GROUP BY rb.`id_region`');
     }
 
     // from archive
+
     $tbl_name = 'results_battle_a_' . $filter['year'];
 
 
@@ -15210,7 +15568,18 @@ FROM jarchive.' . $tbl_name . ' AS rb WHERE rb.numb_month = ' . $filter['month_s
 
     $sql_a = $sql_a . ' GROUP BY rb.`date_msg`';
 
-    $dead_man_archive = R::getAll($sql_a);
+
+    if (IS_NEW_MODE_ARCHIVE == 1 && $filter['year'] < date('Y') && $real_server != APP_SERVER) {
+        $pdo = get_pdo_15($real_server);
+
+        $sth = $pdo->prepare($sql_a);
+        $sth->execute();
+        $dead_man_archive = $sth->fetchAll();
+    } else {
+        $dead_man_archive = R::getAll($sql_a);
+    }
+
+
 
     if (!empty($dead_man_archive)) {
 
@@ -16969,6 +17338,601 @@ $app->post('/loadApi/:type','is_login', function ($type) use ($app) {
 
 
 });
+
+
+/* NII reports */
+
+$app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log) {
+
+
+    $app->get('/', function () use ($app) {
+
+        $data['title'] = 'ОСА НИИ ПБиЧС/Отчеты';
+
+        $bread_crumb = array('ОСА НИИ ПБиЧС', 'Отчеты');
+        $data['bread_crumb'] = $bread_crumb;
+
+        /*         * *** Классификаторы **** */
+        $region = new Model_Region();
+        $data['region'] = $region->selectAll(); //области
+        $local = new Model_Local();
+        $data['local'] = $local->selectAll(); //районы
+        //$data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'nii_reports/index.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+
+    $app->get('/rep1', function () use ($app) {
+
+
+        $data['title'] = 'ОСА НИИ ПБиЧС/Отчеты';
+        $data['name_rep'] = 'Отчет по пожарам и неучетным загораниям';
+
+        $bread_crumb = array('ОСА НИИ ПБиЧС', '<a href="' . BASE_URL . '/nii_reports">Отчеты</a>', $data['name_rep']);
+        $data['bread_crumb'] = $bread_crumb;
+
+
+
+        /*         * *** Классификаторы **** */
+        $region = new Model_Region();
+        $data['region'] = $region->selectAll(); //области
+        $local = new Model_Local();
+        $data['local'] = $local->selectAll(); //районы
+        //$data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'nii_reports/rep1/form.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+
+    $app->post('/rep1', function () use ($app) {
+
+        $filter = [];
+
+        $post = $app->request()->post();
+        $from = (isset($post['date_start']) && !empty($post['date_start'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_start'])->format('Y-m-d')) : '';
+        $to = (isset($post['date_end']) && !empty($post['date_end'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_end'])->format('Y-m-d')) : '';
+        $id_region = $filter['id_region'] = (isset($post['id_region']) && !empty($post['id_region'])) ? $post['id_region'] : 0;
+        $id_local = $filter['id_local'] = (isset($post['id_local']) && !empty($post['id_local'])) ? $post['id_local'] : '';
+
+
+        /* MODELS */
+        $sily_m = new Model_Jrig();
+        $rig_m = new Model_Rigtable();
+        $inner_m = new Model_Innerservice();
+        $informing_m = new Model_Informing();
+        $sily_mchs_m = new Model_Silymchs();
+
+        $data['settings_user'] = getSettingsUser();
+        $data['settings_user_br_table'] = getSettingsUserMode();
+
+
+
+
+
+        $filter['reasonrig'] = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+
+
+
+        if (isset($from) && !empty($from)) {
+            $rig_m->setDateStart(trim($from));
+        } else {
+            if (date("H:i:s") <= '06:00:00') {//до 06 утра
+                $rig_m->setDateStart(date("d.m.Y", time() - (60 * 60 * 24)));
+            } else {
+                $rig_m->setDateStart(date("d.m.Y"));
+            }
+        }
+
+        if (isset($to) && !empty($to)) {
+            $rig_m->setDateEnd(trim($to));
+        } else {
+            if (date("H:i:s") <= '06:00:00') {//до 06 утра
+                $rig_m->setDateEnd(date("d.m.Y"));
+            } else {
+                $rig_m->setDateEnd(date("d.m.Y", time() + (60 * 60 * 24)));
+            }
+        }
+
+
+        $caption = 'по Республике';
+
+
+        $data['rig'] = $rig_m->select_all_rigs($filter); //без ЦП
+
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs");
+
+        if ($id_region != 0) {
+            $region_name = R::getCell('select name from regions where id = ?', array($id_region));
+
+
+            if ($id_region != 3)
+                $caption = $region_name . ' область';
+            else
+                $caption = $region_name;
+        }
+
+        if ($id_local != 0) {
+            $local_name = R::getCell('select name from locals where id = ?', array($id_local));
+
+            if ($id_region != 0) {
+                $caption = $caption . ', район: ' . $local_name;
+            } else
+                $caption = 'Район: ' . $local_name;
+        }
+
+
+
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs_asc");
+
+        /* ------- select information on SiS MHS -------- */
+        $id_rig_arr = array();
+        $id_rig_informing = array();
+        $id_rig_sis_mes = array();
+
+        $is_fire = 0;
+        $is_other_zagor = 0;
+        $is_help = 0;
+        $is_demerk = 0;
+        $is_molnia = 0;
+        $is_ltt = 0;
+
+        $all_reasons = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+
+        foreach ($data['rig'] as $value) {//id of rigs
+            if ($value['id_reasonrig'] == REASON_FIRE) {
+                $is_fire++;
+            }
+
+            if ($value['id_reasonrig'] == REASON_OTHER_ZAGOR) {
+                $is_other_zagor++;
+            }
+
+
+            if ($value['id'] != null) {
+                $id_rig_arr[] = $value['id'];
+                $id_rig_informing[] = $value['id'];
+            }
+
+            if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
+                $id_rig_sis_mes[] = $value['id'];
+            }
+        }
+
+        /* ------- END select information on SiS MHS-------- */
+
+        $rig_cars = [];
+        $rig_innerservice = [];
+        $rig_informing = [];
+        if (!empty($id_rig_sis_mes)) {
+            //sis mchs
+            $jrig = $sily_m->get_jrig_by_rigs_for_word($id_rig_sis_mes);
+
+            if (!empty($jrig)) {
+                foreach ($jrig as $row) {
+                    $rig_cars[$row['id_rig']][] = $row;
+                }
+            }
+        }
+
+        //sis inner
+        if (!empty($id_rig_arr)) {
+            $inner = $inner_m->get_innerservice_by_rigs($id_rig_arr);
+
+            if (!empty($inner)) {
+                foreach ($inner as $row) {
+                    $rig_innerservice[$row['id_rig']][] = $row;
+                }
+            }
+        }
+
+
+        //informing
+        if (!empty($id_rig_informing)) {
+            $informing = $informing_m->get_informing_by_rigs($id_rig_informing);
+
+            if (!empty($informing)) {
+                foreach ($informing as $row) {
+
+                    $rig_informing[$row['id_rig']][] = $row;
+                }
+            }
+        }
+
+        $data['rig_cars'] = $rig_cars;
+        $data['rig_innerservice'] = $rig_innerservice;
+        $data['rig_informing'] = $rig_informing;
+
+//print_r($data['rig']);
+
+
+
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/nii_reports/rep1.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+
+        $sheet->setCellValue('A1', 'Выезды с 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')) . ' до 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y'))); //выбранный период
+        $sheet->setCellValue('A2', $caption); //выбранный область и район
+
+        $r = 8; //начальная строка для записи
+        $c = 0; //счетчик кол-ва записей № п/п
+
+
+
+        $style_reason = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => '7ad4f5'
+                )
+            )
+        );
+        $style_ate = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => 'fafa28'
+                )
+            )
+        );
+        $style_all = array(
+// Заполнение цветом
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if (isset($data['rig']) && !empty($data['rig'])) {
+
+
+
+            foreach ($all_reasons as $reason) {
+
+                $i = 0;
+                $sheet->mergeCells('A' . $r . ':Q' . $r);
+                if ($reason == REASON_FIRE) {
+
+                    $sheet->setCellValueByColumnAndRow($c, $r, 'ПОЖАРЫ');
+                    $sheet->getStyle('A' . $r . ':Q' . $r)->applyFromArray($style_reason);
+                    if ($is_fire == 0) {
+
+                        $r++;
+                        $sheet->mergeCells('A' . $r . ':Q' . $r);
+                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+                    }
+                } elseif ($reason == REASON_OTHER_ZAGOR) {
+
+                    $sheet->setCellValueByColumnAndRow($c, $r, 'НЕУЧЕТНЫЕ ЗАГОРАНИЯ');
+                    $sheet->getStyle('A' . $r . ':Q' . $r)->applyFromArray($style_reason);
+                    if ($is_other_zagor == 0) {
+
+                        $r++;
+                        $sheet->mergeCells('A' . $r . ':Q' . $r);
+                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+                    }
+                }
+
+                $r++;
+
+                if (($reason == REASON_FIRE && $is_fire > 0) || ($reason == REASON_OTHER_ZAGOR && $is_other_zagor > 0)) {
+
+                    foreach ($data['rig'] as $row) {
+                        $c = 0;
+                        if ($row['id_reasonrig'] == $reason) {
+                            $i++;
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $i);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['id']);
+                            $c++;
+//code ate
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['locality_id']);
+                            $sheet->getStyle('C' . $r . ':C' . $r)->applyFromArray($style_ate);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('d.m.Y', strtotime($row['date_msg'])));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('H:i', strtotime($row['time_msg'])));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['local_name']);
+                            $c++;
+
+                            $addr = '';
+
+                            if (!in_array($row['locality_id_vid'], CITY_VID)) {
+                                $addr = $row['local_name'] . ' район, ';
+                            }
+
+                            if ($row['address_type_table_4'] != NULL) {
+                                $addr = $addr . $row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? '<w:br/>' . $row['additional_field_address'] : ''));
+                            } else {
+                                $addr = $addr . $row['additional_field_address'];
+                            }
+
+                            if (!empty($row['object'])) {
+                                $addr = $addr . chr(10);
+                                $addr = $addr . '(' . $row['object'] . ')';
+                            }
+
+                            if (isset($row['id_owner_category']) && $row['id_owner_category'] != 0) {
+                                $addr = $addr . '. ' . mb_convert_case($row['category_name'], MB_CASE_TITLE, "UTF-8") . ': ';
+                            }
+                            if (isset($row['owner_fio']) && !empty($row['owner_fio'])) {
+                                $addr = $addr . $row['owner_fio'];
+                            }
+                            if (isset($row['owner_year_birthday']) && !empty($row['owner_year_birthday']) && $row['owner_year_birthday'] != 0) {
+                                $addr = $addr . ', ' . $row['owner_year_birthday'] . ' г.р.';
+                            }
+                            if (isset($row['owner_position']) && !empty($row['owner_position'])) {
+                                $addr = $addr . ', ' . $row['owner_position'];
+                            }
+                            if (isset($row['owner_job']) && !empty($row['owner_job'])) {
+                                $addr = $addr . ' ' . $row['owner_job'];
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $addr);
+                            $c++;
+
+
+                            $cars = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+//                        if ($val['is_return'] == 1)
+//                            $cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:r></w:p>";
+//                        else
+
+                                    if ($cars == '')
+                                        $cars = $cars . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+                                    else
+                                        $cars = $cars . chr(10) . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+
+                                    //$cars = $cars ."<w:br/>";
+                                    //$cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr><w:t>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:t></w:r></w:p>";
+                                }
+                                //$table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($cars == '')
+                                        $cars = $cars . $val['service_name'];
+                                    else
+                                        $cars = $cars . chr(10) . $val['service_name'];
+                                    //$cars = $cars ."<w:p><w:r><w:rPr></w:rPr><w:t>" .$val['service_name'] . "</w:t></w:r></w:p>";
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $cars);
+                            $c++;
+
+                            $t_exit = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_exit == '')
+                                        $t_exit = $t_exit . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                    else
+                                        $t_exit = $t_exit . chr(10) . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_exit == '')
+                                        $t_exit = $t_exit . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                    else
+                                        $t_exit = $t_exit . chr(10) . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_exit);
+                            $c++;
+
+                            $t_arrival = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_arrival == '')
+                                        $t_arrival = $t_arrival . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                                    else
+                                        $t_arrival = $t_arrival . chr(10) . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_arrival == '')
+                                        $t_arrival = $t_arrival . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                                    else
+                                        $t_arrival = $t_arrival . chr(10) . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_arrival);
+                            $c++;
+
+
+                            if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                                $t_loc = new DateTime($row['time_loc']);
+                                $time_loc = $t_loc->Format('H:i');
+                            } else {
+                                $time_loc = '';
+                            }
+
+                            if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                                $t_likv = new DateTime($row['time_likv']);
+                                $time_likv = $t_likv->Format('H:i');
+                            } elseif ($row['is_likv_before_arrival'] == 1) {
+                                $time_likv = 'ликв.до' . chr(10) . 'приб.';
+                            } elseif ($row['is_not_measures'] == 1) {
+                                $time_likv = 'меры не' . chr(10) . ' прин.';
+                            } elseif ($row['is_closed'] == 1) {
+                                $time_likv = '-';
+                            } else {
+                                $time_likv = '';
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_loc);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_likv);
+                            $c++;
+
+
+
+                            $t_end = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_end == '')
+                                        $t_end = $t_end . (($val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                    else
+                                        $t_end = $t_end . chr(10) . (($val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_end == '')
+                                        $t_end = $t_end . ((isset($val['time_end']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                    else
+                                        $t_end = $t_end . chr(10) . ((isset($val['time_end']) && $val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_end);
+                            $c++;
+
+
+
+                            $t_return = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($t_return == '')
+                                        $t_return = $t_return . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                                    else
+                                        $t_return = $t_return . chr(10) . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                                }
+                            }
+
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if ($t_return == '')
+                                        $t_return = $t_return . '-';
+                                    else
+                                        $t_return = $t_return . chr(10) . '-';
+                                }
+                            }
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_return);
+                            $c++;
+
+
+
+                            $time_follow = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($time_follow == '')
+                                        $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
+                                    else
+                                        $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                }
+                            }
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if ($time_follow == '')
+                                        $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
+                                    else
+                                        $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                }
+                            }
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_follow);
+                            $c++;
+
+
+                            $distance = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($distance == '')
+                                        $distance = $distance . $val['distance'];
+                                    else
+                                        $distance = $distance . chr(10) . $val['distance'];
+                                }
+                            }
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if ($distance == '')
+                                        $distance = $distance . $val['distance'];
+                                    else
+                                        $distance = $distance . chr(10) . $val['distance'];
+                                }
+                            }
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $distance);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, trim($row['inf_detail']));
+                            $c++;
+
+                            $r++;
+                        }
+                    }
+                }
+            }
+
+            $sheet->getStyle('A' . 8 . ':Q' . ($r - 1))->applyFromArray($style_all);
+        }
+
+
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="Отчет по пожарам и неучетным загораниям.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
+});
+
+
+
 
 
 /* ---------------------- SPECIAL D auth --------------------- */

@@ -29,12 +29,28 @@
     }
 </style>
 
-        <a href="#" class="exclude-statistics <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal_is_exclude_statistics"
-           aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Исключить выезды из статистики" style="float: right;margin-right: 40px;">
 
-            <img src="<?= $baseUrl ?>/assets/images/Server.png" style="width:50px;">
+<?php
+if ($is_new_mode_archive == 1 && $current_year < date('Y') && $real_server != $app_server) {
 
-        </a>
+    ?>
+
+    <?php
+} else {
+
+    ?>
+    <a href="#" class="exclude-statistics <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal_is_exclude_statistics"
+       aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Исключить выезды из статистики" style="float: right;margin-right: 40px;">
+
+        <img src="<?= $baseUrl ?>/assets/images/Server.png" style="width:50px;">
+
+    </a>
+    <?php
+}
+
+?>
+
+
 
 <input type="hidden" value="" id="is_exclude_statistic" >
 <input type="hidden" value="" id="is_exclude_statistic_for_delete" >
@@ -97,10 +113,24 @@
                 <td><?= ($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
                 <td><?= ($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv'])) ?></td>
                 <td class="options">
-                    <label style="margin-left: 10px;">
-                            <input type="checkbox" name="id_exclude_statistic" class="selected-rig" value="<?= $row['id_rig'] ?>" <?=($row['is_statistics'] == 1) ? 'checked':''?> >
-                            <img style="border: 1px solid;" />
-                        </label>
+                        <?php
+                        if ($is_new_mode_archive == 1 && $current_year < date('Y') && $real_server != $app_server) {
+
+                            ?>
+
+                            <?php
+                        } else {
+
+                            ?>
+                            <label style="margin-left: 10px;">
+                                <input type="checkbox" name="id_exclude_statistic" class="selected-rig" value="<?= $row['id_rig'] ?>" <?= ($row['is_statistics'] == 1) ? 'checked' : '' ?> >
+                                <img style="border: 1px solid;" />
+                            </label>
+                            <?php
+                        }
+
+                        ?>
+
                     </td>
             </tr>
             <?php

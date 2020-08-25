@@ -112,6 +112,64 @@
         "homepage": "https://github.com/dompdf/dompdf"
     },
     {
+        "name": "faapz/pdo",
+        "version": "v2.0.1",
+        "version_normalized": "2.0.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/FaaPz/PDO.git",
+            "reference": "4bf3d594b604f0de9f628f8824d411a6c1160639"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/FaaPz/PDO/zipball/4bf3d594b604f0de9f628f8824d411a6c1160639",
+            "reference": "4bf3d594b604f0de9f628f8824d411a6c1160639",
+            "shasum": ""
+        },
+        "require": {
+            "ext-pdo": "*",
+            "php": ">=7.2.0"
+        },
+        "require-dev": {
+            "phan/phan": "^2.2",
+            "phpunit/phpunit": "^8",
+            "squizlabs/php_codesniffer": "3.*"
+        },
+        "time": "2020-01-22T05:57:29+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "FaaPz\\PDO\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Fabian de Laender",
+                "email": "fabian@faapz.productions",
+                "homepage": "https://faapz.productions",
+                "role": "Owner"
+            },
+            {
+                "name": "Alexander Barker",
+                "email": "alex@1stleg.com",
+                "homepage": "https://github.com/kwhat/",
+                "role": "Collaborator"
+            }
+        ],
+        "description": "Just another PDO database library",
+        "homepage": "https://github.com/FaaPz/PDO",
+        "keywords": [
+            "database",
+            "pdo",
+            "sql"
+        ]
+    },
+    {
         "name": "flynsarmy/slim-monolog",
         "version": "v1.0.1",
         "version_normalized": "1.0.1.0",
@@ -793,17 +851,17 @@
     },
     {
         "name": "sabberworm/php-css-parser",
-        "version": "8.3.1",
-        "version_normalized": "8.3.1.0",
+        "version": "8.3.0",
+        "version_normalized": "8.3.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
-            "reference": "d217848e1396ef962fb1997cf3e2421acba7f796"
+            "reference": "91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/d217848e1396ef962fb1997cf3e2421acba7f796",
-            "reference": "d217848e1396ef962fb1997cf3e2421acba7f796",
+            "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f",
+            "reference": "91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f",
             "shasum": ""
         },
         "require": {
@@ -813,7 +871,7 @@
             "codacy/coverage": "^1.4",
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2020-06-01T09:10:00+00:00",
+        "time": "2019-02-22T07:42:52+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

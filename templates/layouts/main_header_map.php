@@ -66,6 +66,21 @@ else{
 
 ?>
 
+
+                <?php
+if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user']) && in_array($_SESSION['id_user'], array(2,150,433))) {
+?>
+<!--                <li>
+                        <a href="<?= $baseUrl ?>/nii_reports" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Отчеты для НИИПБиЧС" target='_blank'>
+
+                            <img src="<?= $baseUrl ?>/assets/images/osa.png" width="50" height="50" style="padding-bottom: 5px;">
+
+                        </a>
+                    </li>-->
+                <?php
+}
+?>
+
                    <li>
  <a href="http://172.26.200.15/peopleSearch" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Поиск людей" target='_blank'>
 

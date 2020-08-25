@@ -33,6 +33,7 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'F' => 
         array (
             'FontLib\\' => 8,
+            'FaaPz\\PDO\\' => 10,
         ),
         'D' => 
         array (
@@ -83,6 +84,10 @@ class ComposerStaticInite5e205a6538e9ce75c9b59d058280e3c
         'FontLib\\' => 
         array (
             0 => __DIR__ . '/..' . '/phenx/php-font-lib/src/FontLib',
+        ),
+        'FaaPz\\PDO\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/faapz/pdo/src',
         ),
         'Dompdf\\' => 
         array (

@@ -768,10 +768,12 @@ background-color: black;
 }
 .sd-menu-dropdown .caret{
     color: #5e935a !important;
+
 }
 
 .sd-menu-dropdown {
     float: left;
+    margin-right: 15px;
 }
 
 

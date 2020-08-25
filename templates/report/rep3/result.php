@@ -37,7 +37,8 @@ include 'form.php';
                         <td></td>
                         <td><b>Всего ЧС</b></td>
                         <td ><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="1+2">
-                                <?= $daily_rigs_hs['rig_teh_hs'] + $daily_rigs_hs['rig_nature_ltt'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_teh_hs']) && !empty($daily_rigs_hs['rig_teh_hs'])) ? $daily_rigs_hs['rig_teh_hs'] : 0) +
+    ((isset($daily_rigs_hs['rig_nature_ltt']) && !empty($daily_rigs_hs['rig_nature_ltt'])) ? $daily_rigs_hs['rig_nature_ltt'] : 0)  ?>
                             </span>
                         </td>
                         <td>
@@ -56,7 +57,7 @@ include 'form.php';
                         <td>1</td>
                         <td>Техногенного характера:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЧС» вид работ «техногенного хар-ра» + причина выезда «пожар» + 1.2 + 1.3 ">
-                                <?= $daily_rigs_hs['rig_teh_hs'] ?>
+                                <?=     ((isset($daily_rigs_hs['rig_teh_hs']) && !empty($daily_rigs_hs['rig_teh_hs'])) ? $daily_rigs_hs['rig_teh_hs'] : 0)  ?>
                             </span>
                         </td>
                         <td>
@@ -73,7 +74,7 @@ include 'form.php';
                         <td>1.1</td>
                         <td>из них на пожары:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «пожар»">
-                                <?= $daily_rigs_hs['rig_fire'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_fire']) && !empty($daily_rigs_hs['rig_fire'])) ? $daily_rigs_hs['rig_fire'] : 0)  ?>
                             </span>
                         </td>
                         <td>
@@ -91,7 +92,7 @@ include 'form.php';
                         <td>1.1.1</td>
                         <td>в том числе в жилом секторе:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «пожар» вид работ «на объекте ">
-                                <?= $daily_rigs_hs['rig_live_sector'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_live_sector']) && !empty($daily_rigs_hs['rig_live_sector'])) ? $daily_rigs_hs['rig_live_sector'] : 0) ?>
                             </span>
                         </td>
                         <td>
@@ -108,7 +109,7 @@ include 'form.php';
                         <td>1.2</td>
                         <td>из них на системах жизнеобеспечения:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЧС» вид работ «на системах жизнеобеспечения»">
-                                <?= $daily_rigs_hs['rig_live_support'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_live_support']) && !empty($daily_rigs_hs['rig_live_support'])) ? $daily_rigs_hs['rig_live_support'] : 0) ?>
                             </span>
                         </td>
                         <td>
@@ -125,7 +126,7 @@ include 'form.php';
                         <td>1.3</td>
                         <td>из них другие ЧС техногенного характера:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЧС» вид работ «другие ЧС техногенного характера»">
-                                <?= $daily_rigs_hs['rig_other_teh_hs'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_other_teh_hs']) && !empty($daily_rigs_hs['rig_other_teh_hs'])) ? $daily_rigs_hs['rig_other_teh_hs'] : 0) ?>
                             </span>
                         </td>
                         <td>
@@ -142,7 +143,7 @@ include 'form.php';
                         <td>2</td>
                         <td>природного характера:</td>
                         <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «ЛТТ», причина выезда «ЧС»+ вид работ «природного характера»">
-                                <?= $daily_rigs_hs['rig_nature_ltt'] ?>
+                                <?= ((isset($daily_rigs_hs['rig_nature_ltt']) && !empty($daily_rigs_hs['rig_nature_ltt'])) ? $daily_rigs_hs['rig_nature_ltt'] : 0) ?>
                             </span>
                         </td>
                         <td>
@@ -601,7 +602,7 @@ include 'form.php';
                         <td>12</td>
                         <td>Погибло людей при ЧС:</td>
                         <td>
-                            <?= $daily_current['dead_man'] ?>
+                            <?= ((isset($daily_current['dead_man']) && !empty($daily_current['dead_man'])) ? $daily_current['dead_man'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -616,7 +617,7 @@ include 'form.php';
                         <td>12.1</td>
                         <td>из них детей:</td>
                         <td>
-                            <?= $daily_current['dead_child'] ?>
+                            <?= ((isset($daily_current['dead_child']) && !empty($daily_current['dead_child'])) ? $daily_current['dead_child'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -631,7 +632,7 @@ include 'form.php';
                         <td>12.2</td>
                         <td>в том числе на пожарах:</td>
                         <td>
-                            <?= $daily_current['dead_man_fire'] ?>
+                            <?= ((isset($daily_current['dead_man_fire']) && !empty($daily_current['dead_man_fire'])) ? $daily_current['dead_man_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -647,7 +648,7 @@ include 'form.php';
                         <td>12.3</td>
                         <td>из них детей:</td>
                         <td>
-                            <?= $daily_current['dead_child_fire'] ?>
+                            <?= ((isset($daily_current['dead_child_fire']) && !empty($daily_current['dead_child_fire'])) ? $daily_current['dead_child_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -663,7 +664,7 @@ include 'form.php';
                         <td>13</td>
                         <td>Травмировано людей при ЧС:</td>
                         <td>
-                            <?= $daily_current['inj_man'] ?>
+                            <?= ((isset($daily_current['inj_man']) && !empty($daily_current['inj_man'])) ? $daily_current['inj_man'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -678,7 +679,7 @@ include 'form.php';
                         <td>13.1</td>
                         <td>в том числе на пожарах:</td>
                         <td>
-                            <?= $daily_current['inj_man_fire'] ?>
+                            <?= ((isset($daily_current['inj_man_fire']) && !empty($daily_current['inj_man_fire'])) ? $daily_current['inj_man_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -693,7 +694,7 @@ include 'form.php';
                         <td>14</td>
                         <td>Уничтожено строений в результате ЧС:</td>
                         <td>
-                            <?= $daily_current['des_build'] ?>
+                            <?= ((isset($daily_current['des_build']) && !empty($daily_current['des_build'])) ? $daily_current['des_build'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -709,7 +710,7 @@ include 'form.php';
                         <td>14.1</td>
                         <td>из них на пожарах:</td>
                         <td>
-                            <?= $daily_current['des_build_fire'] ?>
+                            <?= ((isset($daily_current['des_build_fire']) && !empty($daily_current['des_build_fire'])) ? $daily_current['des_build_fire'] : 0) ?>
                         </td>
 
                         <td>
@@ -726,7 +727,7 @@ include 'form.php';
                         <td>15</td>
                         <td>Повреждено строений:</td>
                         <td>
-                            <?= $daily_current['dam_build'] ?>
+                            <?= ((isset($daily_current['dam_build']) && !empty($daily_current['dam_build'])) ? $daily_current['dam_build'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -742,7 +743,7 @@ include 'form.php';
                         <td>15.1</td>
                         <td>из них на пожарах:</td>
                         <td>
-                            <?= $daily_current['dam_build_fire'] ?>
+                            <?= ((isset($daily_current['dam_build_fire']) && !empty($daily_current['dam_build_fire'])) ? $daily_current['dam_build_fire'] : 0) ?>
                         </td>
 
                         <td>
@@ -760,7 +761,7 @@ include 'form.php';
                         <td>16</td>
                         <td>Уничтожено техники:</td>
                         <td>
-                            <?= $daily_current['des_teh'] ?>
+                            <?= ((isset($daily_current['des_teh']) && !empty($daily_current['des_teh'])) ? $daily_current['des_teh'] : 0) ?>
                         </td>
 
                         <td>
@@ -777,7 +778,7 @@ include 'form.php';
                         <td>16.1</td>
                         <td>из них на пожарах:</td>
                         <td>
-                            <?= $daily_current['des_teh_fire'] ?>
+                            <?=((isset($daily_current['des_teh_fire']) && !empty($daily_current['des_teh_fire'])) ? $daily_current['des_teh_fire'] : 0) ?>
                         </td>
 
                         <td>
@@ -797,7 +798,7 @@ include 'form.php';
                         <td>17</td>
                         <td>Повреждено техники:</td>
                         <td>
-                            <?= $daily_current['dam_teh'] ?>
+                            <?= ((isset($daily_current['dam_teh']) && !empty($daily_current['dam_teh'])) ? $daily_current['dam_teh'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -813,7 +814,7 @@ include 'form.php';
                         <td>17.1</td>
                         <td>из них на пожарах:</td>
                         <td>
-                            <?= $daily_current['dam_teh_fire'] ?>
+                            <?= ((isset($daily_current['dam_teh_fire']) && !empty($daily_current['dam_teh_fire'])) ? $daily_current['dam_teh_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -829,7 +830,7 @@ include 'form.php';
                         <td>18</td>
                         <td>Ущерб (прямые потери), руб:</td>
                         <td>
-                            <?= $daily_current['dam_money'] ?>
+                            <?= ((isset($daily_current['dam_money']) && !empty($daily_current['dam_money'])) ? $daily_current['dam_money'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -858,7 +859,7 @@ include 'form.php';
                         <td>19</td>
                         <td>Спасено мат.ценностей, руб:</td>
                         <td>
-                            <?= $daily_current['save_wealth'] ?>
+                            <?= ((isset($daily_current['save_wealth']) && !empty($daily_current['save_wealth'])) ? $daily_current['save_wealth'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -874,7 +875,7 @@ include 'form.php';
                         <td>20</td>
                         <td>Спасено людей:</td>
                         <td>
-                            <?= $daily_current['save_man'] ?>
+                            <?= ((isset($daily_current['save_man']) && !empty($daily_current['save_man'])) ? $daily_current['save_man'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -890,7 +891,7 @@ include 'form.php';
                         <td>20.1</td>
                         <td>из них детей:</td>
                         <td>
-                            <?= $daily_current['save_child'] ?>
+                            <?= ((isset($daily_current['save_child']) && !empty($daily_current['save_child'])) ? $daily_current['save_child'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -906,7 +907,7 @@ include 'form.php';
                         <td>20.2</td>
                         <td>в том числе на пожарах:</td>
                         <td>
-                            <?= $daily_current['save_man_fire'] ?>
+                            <?= ((isset($daily_current['save_man_fire']) && !empty($daily_current['save_man_fire'])) ? $daily_current['save_man_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -923,7 +924,7 @@ include 'form.php';
                         <td>20.3</td>
                         <td>из них детей:</td>
                         <td>
-                            <?= $daily_current['save_child_fire'] ?>
+                            <?= ((isset($daily_current['save_child_fire']) && !empty($daily_current['save_child_fire'])) ? $daily_current['save_child_fire'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -942,7 +943,7 @@ include 'form.php';
                         <td>20.4</td>
                         <td>в том числе подразделениями МЧС:</td>
                         <td>
-                            <?= $daily_current['save_mchs'] ?>
+                            <?=((isset($daily_current['save_mchs']) && !empty($daily_current['save_mchs'])) ? $daily_current['save_mchs'] : 0) ?>
                         </td>
                         <td>
                             <?=
@@ -959,7 +960,7 @@ include 'form.php';
                 <td>21</td>
                 <td>Эвакуировано людей:</td>
                 <td>
-                    <?= $daily_current['ev_man'] ?>
+                    <?= ((isset($daily_current['ev_man']) && !empty($daily_current['ev_man'])) ? $daily_current['ev_man'] : 0) ?>
                 </td>
                 <td>
                     <?=
@@ -975,7 +976,7 @@ include 'form.php';
                     <td>21.1</td>
                     <td>из них детей:</td>
                     <td>
-                        <?= $daily_current['ev_child'] ?>
+                        <?=((isset($daily_current['ev_child']) && !empty($daily_current['ev_child'])) ? $daily_current['ev_child'] : 0) ?>
                     </td>
                     <td>
                         <?=
@@ -992,7 +993,7 @@ include 'form.php';
                     <td>21.2</td>
                     <td>в том числе на пожарах:</td>
                     <td>
-                        <?= $daily_current['ev_man_fire'] ?>
+                        <?= ((isset($daily_current['ev_man_fire']) && !empty($daily_current['ev_man_fire'])) ? $daily_current['ev_man_fire'] : 0) ?>
                     </td>
                     <td>
                         <?=
@@ -1007,7 +1008,7 @@ include 'form.php';
                     <td>21.3</td>
                     <td>из них детей:</td>
                     <td>
-                        <?= $daily_current['ev_child_fire'] ?>
+                        <?=((isset($daily_current['ev_child_fire']) && !empty($daily_current['ev_child_fire'])) ? $daily_current['ev_child_fire'] : 0) ?>
                     </td>
                     <td>
                         <?=
@@ -1023,7 +1024,7 @@ include 'form.php';
                     <td>21.4</td>
                     <td>в том числе подразделениями МЧС:</td>
                     <td>
-                        <?= $daily_current['ev_mchs'] ?>
+                        <?= ((isset($daily_current['ev_mchs']) && !empty($daily_current['ev_mchs'])) ? $daily_current['ev_mchs'] : 0) ?>
                     </td>
                     <td>
                         <?=
@@ -1040,7 +1041,7 @@ include 'form.php';
                     <td>22</td>
                     <td>Спасено скота:</td>
                     <td>
-                        <?= $daily_current['save_an'] ?>
+                        <?= ((isset($daily_current['save_an']) && !empty($daily_current['save_an'])) ? $daily_current['save_an'] : 0) ?>
                     </td>
                     <td>
                         <?=
@@ -1058,7 +1059,7 @@ include 'form.php';
                     <td>22.1</td>
                     <td>в том числе подразделениями МЧС:</td>
                     <td>
-                        <?= $daily_current['save_an_mchs'] ?>
+                        <?= ((isset($daily_current['save_an_mchs']) && !empty($daily_current['save_an_mchs'])) ? $daily_current['save_an_mchs'] : 0) ?>
                     </td>
                     <td>
                         <?=

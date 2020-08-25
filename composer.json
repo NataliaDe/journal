@@ -11,7 +11,8 @@
         "mpdf/mpdf": "5.7.1",
         "dompdf/dompdf": "^0.8.3",
         "monolog/monolog": "^1.17",
-        "phpoffice/phpword": "^0.17.0"
+        "phpoffice/phpword": "^0.17.0",
+        "faapz/pdo": "^2.0"
     },
     "autoload": {
         "psr-4": {

@@ -19,6 +19,10 @@
         color:  blue !important;
     }
 
+    .sd-menu-dropdown{
+        padding-left: 9px !important;
+    }
+
 </style>
 
 <div class="noprint" id="conttabl">
@@ -153,7 +157,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                     <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
 
                         <?php
-                    
+
                         if (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) {
 
                             ?>
@@ -527,7 +531,11 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
                 <!--                        путевка-->
                 <br><br>
-                <?php
+
+
+                <ul class="dropdown" style="padding-left:0px">
+
+                                    <?php
                 if ($is_show_link_sd == 1) {
 
                     ?>
@@ -540,8 +548,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
                 ?>
 
-                <ul class="dropdown" style="float: right;" data-toggle="tooltip" data-placement="left" title="Сформировать путевку" >
-                    <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" ><i class="fa  fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
+                    <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown" data-toggle="tooltip" data-placement="left" title="Сформировать путевку"  ><i class="fa  fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
                     <ul class="dropdown-menu" id="waybill-menu">
                         <?php
                         // if ($_SESSION['ulevel'] == 1) {

@@ -44,6 +44,7 @@
     .sd-menu-dropdown{
         float: none !important;
         padding-left: 0px !important;
+        margin-right: 0px !important;
     }
     .sd-menu{
         left: -126px !important;

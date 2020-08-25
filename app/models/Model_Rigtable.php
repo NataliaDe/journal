@@ -844,6 +844,27 @@ class Model_Rigtable
             return array();
         }
     }
+
+
+
+        public function select_all_rigs($filter)
+    {
+
+        $sql = 'SELECT * FROM journal.rigtable WHERE is_delete = ?  and locality_id is not null';
+        $param = array(0);
+
+
+                if (isset($filter) && isset($filter['id_local']) && !empty($filter['id_local']) ) {
+            $sql = $sql . ' AND id_local =' .$filter['id_local'];
+        }
+        elseif (isset($filter) && isset($filter['id_region']) && !empty($filter['id_region']) && $filter['id_region'] !=0) {
+            $sql = $sql . ' AND id_region =' . $filter['id_region'];
+        }
+
+        return $this->getRigTable($sql, $param);
+    }
+
+
 }
 
 ?>
