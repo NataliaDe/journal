@@ -354,6 +354,48 @@ $("body #modal-foto-fasad").on("hidden.bs.modal", function () {
 });
 
 
+function getMapsStr(el) {
+
+    let val = el.checked;
+    if (val === true)
+        val = 1;
+    else
+        val = 0;
+    let link = $(el).data('link');
+//console.log('is_str='+val);
+
+
+    if (val === 1) {
+        // alert('rr');
+        $('.menu.scrollable-form-filter').removeClass('str-mode');
+        $('.menu.scrollable-form-filter').addClass('str-mode');
+
+        $('.icon-close').removeClass('str-mode-icon-close');
+        $('.icon-close').addClass('str-mode-icon-close');
+
+        $('.background.start-background').removeClass('str-mode-icon-close');
+        $('.background.start-background').addClass('str-mode-icon-close');
+
+        $('#theme_panel').removeClass('str-mode-theme_panel');
+        $('#theme_panel').addClass('str-mode-theme_panel');
+
+        $('#theme_panel_button').removeClass('str-mode-theme_panel_button');
+        $('#theme_panel_button').addClass('str-mode-theme_panel_button');
+
+    } else {
+        $('.menu.scrollable-form-filter').removeClass('str-mode');
+        $('.icon-close').removeClass('str-mode-icon-close');
+        $('.background.start-background').removeClass('str-mode-icon-close');
+        $('#theme_panel').removeClass('str-mode-theme_panel');
+        $('#theme_panel_button').removeClass('str-mode-theme_panel_button');
+    }
+
+    $('#show_podr').click();
+}
+
+
+
+
 
 
 

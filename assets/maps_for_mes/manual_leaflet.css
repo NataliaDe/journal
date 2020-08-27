@@ -891,6 +891,7 @@ max-height: 100%;
 
 .material-switch{
     font-size: 18px;
+    margin-left: 8px;
 }
 /*
 #star-mes{
@@ -947,3 +948,15 @@ width: 47px;
 .hide{
     display: none;
 }
+
+.str-mode{
+background: #112f18 !important;
+}
+.str-mode-icon-close{
+   background: #133f1c !important;
+}
+
+.str-mode-theme_panel, .str-mode-theme_panel_button{
+    background-color: rgb(230 251 230) !important;
+}
+

@@ -204,16 +204,16 @@
     </div>
 
 
-<!--     <div class="row">
-        <div class="form-group settings-fields" id="div_id_show_border_local" >
-            <div class="checkbox checkbox-warning" style="padding-left: 8px; cursor: pointer">
-                <input id="show_border_local" type="checkbox" name="show_border_local" value="1" checked="">
-                <label for="show_border_local" style="color: white; cursor: pointer">
-                    Границы районов
-                </label>
+    <!--     <div class="row">
+            <div class="form-group settings-fields" id="div_id_show_border_local" >
+                <div class="checkbox checkbox-warning" style="padding-left: 8px; cursor: pointer">
+                    <input id="show_border_local" type="checkbox" name="show_border_local" value="1" checked="">
+                    <label for="show_border_local" style="color: white; cursor: pointer">
+                        Границы районов
+                    </label>
+                </div>
             </div>
-        </div>
-    </div>-->
+        </div>-->
 
 
 
@@ -231,6 +231,15 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="form-group material-switch pull-right" >
+            <span style="padding-right: 10px;
+                  color: #b9f5c6;
+                  padding-top: 0px;">строевая записка</span>
+            <input id="is_str" name="is_str" type="checkbox"  onchange="getMapsStr(this)" data-link="<?= $baseUrl ?>" value="1">
+            <label for="is_str" class="label-warning" style="margin-bottom: -5px;padding-top: 3px;"></label>
+        </div>
+    </div>
 
 
 

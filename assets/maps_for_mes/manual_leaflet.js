@@ -179,7 +179,7 @@ var yandexMapsRoad = {
 
 $(document).ready(function () {
     border_rb(1);
-   // border_region(1);
+    // border_region(1);
     border_local(1);
 });
 
@@ -213,21 +213,21 @@ function border_rb(is_show = 1) {
 
 
         $.getJSON('assets/maps_for_mes/data/geo_rb_all.json', function (geojson) {
-   border_rb_between_array = L.geoJson(geojson, {
+            border_rb_between_array = L.geoJson(geojson, {
 
-        style: function (feature) {
+                style: function (feature) {
 
-            return {
-                //fillColor: 'blue',
-                zIndex: 2500,
-                weight: 5,
-                opacity: 4,
-                color: 'rgb(140, 10, 10,0.8)', //Outline color
-                fillOpacity: 0};
-        }
+                    return {
+                        //fillColor: 'blue',
+                        zIndex: 2500,
+                        weight: 5,
+                        opacity: 4,
+                        color: 'rgb(140, 10, 10,0.8)', //Outline color
+                        fillOpacity: 0};
+                }
 
-    }).addTo(map);
-});
+            }).addTo(map);
+        });
 
 
 
@@ -252,7 +252,7 @@ function border_rb(is_show = 1) {
 
         map.removeLayer(border_rb_array_part);
         map.removeLayer(border_rb_array);
-map.removeLayer(border_rb_between_array);
+        map.removeLayer(border_rb_between_array);
 
 }
 }
@@ -294,88 +294,88 @@ function border_local(is_show = 1) {
 
 
         $.getJSON('assets/maps_for_mes/data/geo_gomel.json', function (geojson) {
-   border_local_gomel_array =   L.geoJson(geojson, {
+            border_local_gomel_array = L.geoJson(geojson, {
 
-        style: function (feature) {
+                style: function (feature) {
 
-            return {
-                fillColor: 'rgb(255, 247, 177)',
-                weight: 3.5,
+                    return {
+                        fillColor: 'rgb(255, 247, 177)',
+                        weight: 3.5,
 //                opacity: 2,
-                color: 'rgba(2, 107, 245)', //Outline color
-                fillOpacity: 0.2
-            };
-        }
+                        color: 'rgba(2, 107, 245)', //Outline color
+                        fillOpacity: 0.2
+                    };
+                }
 
-    }).addTo(map).bringToBack();
-});
-
-
-$.getJSON('assets/maps_for_mes/data/geo_min_obl.json', function (geojson) {
-   border_local_min_obl_array =   L.geoJson(geojson, {
-
-        style: function (feature) {
-
-            return {
-                fillColor: 'rgb(245, 180, 210)',
-                weight: 3.5,
-                color: 'rgba(247, 124, 181)', //Outline color
-                fillOpacity: 0.2
-            };
-        }
-
-    }).addTo(map).bringToBack();
-});
+            }).addTo(map).bringToBack();
+        });
 
 
-$.getJSON('assets/maps_for_mes/data/geo_mogilev.json', function (geojson) {
-  border_local_mogilev_array =   L.geoJson(geojson, {
-        style: function (feature) {
+        $.getJSON('assets/maps_for_mes/data/geo_min_obl.json', function (geojson) {
+            border_local_min_obl_array = L.geoJson(geojson, {
 
-            return {
-                fillColor: 'rgb(251, 217, 202)',
-                weight: 3.5,
-                color: 'rgba(120, 83, 4)', //Outline color
-                fillOpacity: 0.3
-            };
-        }
+                style: function (feature) {
 
-    }).addTo(map).bringToBack();
-});
+                    return {
+                        fillColor: 'rgb(245, 180, 210)',
+                        weight: 3.5,
+                        color: 'rgba(247, 124, 181)', //Outline color
+                        fillOpacity: 0.2
+                    };
+                }
 
-$.getJSON('assets/maps_for_mes/data/geo_vitebsk.json', function (geojson) {
-    border_local_vitebsk_array = L.geoJson(geojson, {
-
-        style: function (feature) {
-
-            return {
-                fillColor: 'rgb(210, 205, 231)',
-                weight: 3.5,
-                color: 'rgba(154, 137, 226)', //Outline color
-                fillOpacity: 0.2
-            };
-        }
-
-    }).addTo(map).bringToBack();
-});
+            }).addTo(map).bringToBack();
+        });
 
 
-$.getJSON('assets/maps_for_mes/data/geo_grodno.json', function (geojson) {
-   border_local_grodno_array =  L.geoJson(geojson, {
+        $.getJSON('assets/maps_for_mes/data/geo_mogilev.json', function (geojson) {
+            border_local_mogilev_array = L.geoJson(geojson, {
+                style: function (feature) {
 
-        style: function (feature) {
+                    return {
+                        fillColor: 'rgb(251, 217, 202)',
+                        weight: 3.5,
+                        color: 'rgba(120, 83, 4)', //Outline color
+                        fillOpacity: 0.3
+                    };
+                }
 
-            return {
-                fillColor: 'rgb(253, 213, 165)',
-                weight: 3.5,
-                zIndex: -1,
-                color: 'rgba(8, 129, 150)', //Outline color
-                fillOpacity: 0.2
-            };
-        }
+            }).addTo(map).bringToBack();
+        });
 
-    }).addTo(map).bringToBack();
-});
+        $.getJSON('assets/maps_for_mes/data/geo_vitebsk.json', function (geojson) {
+            border_local_vitebsk_array = L.geoJson(geojson, {
+
+                style: function (feature) {
+
+                    return {
+                        fillColor: 'rgb(210, 205, 231)',
+                        weight: 3.5,
+                        color: 'rgba(154, 137, 226)', //Outline color
+                        fillOpacity: 0.2
+                    };
+                }
+
+            }).addTo(map).bringToBack();
+        });
+
+
+        $.getJSON('assets/maps_for_mes/data/geo_grodno.json', function (geojson) {
+            border_local_grodno_array = L.geoJson(geojson, {
+
+                style: function (feature) {
+
+                    return {
+                        fillColor: 'rgb(253, 213, 165)',
+                        weight: 3.5,
+                        zIndex: -1,
+                        color: 'rgba(8, 129, 150)', //Outline color
+                        fillOpacity: 0.2
+                    };
+                }
+
+            }).addTo(map).bringToBack();
+        });
 
 
 
@@ -685,8 +685,8 @@ map.on('zoomend ', function (e) {
     if (map.getZoom() === 8 || map.getZoom() === 9 || map.getZoom() === 10) {
 
 
-        var is_show=$('#show_name_local').is(":checked");
-        if(is_show)
+        var is_show = $('#show_name_local').is(":checked");
+        if (is_show)
             show_name_local(1);
         //map.addLayer(pointLayer);
         $('#div_id_show_name_local').show();
@@ -743,10 +743,19 @@ legend.addTo(map);
 /* show podrazdelenia from kusis */
 $('body').on('click', '#show_podr', function (e) {
     e.preventDefault();
-    $.post('/journal/maps_for_mes/getjson', $('#showPodrForm').serialize(), function (response) {
-        console.log(response.res);
-        if (response.length > 0) {
-            addCarFilterDataToMap(response, map, 1);
+
+//if ($('#is_str').is(':checked')===true)  is_str = 1; else  is_str = 0;
+
+    var data = $('#showPodrForm').serialize();
+//console.log('is_str='+$('#is_str').is(':checked'));
+//data.push({name: "is_str", value: is_str});
+
+
+    $.post('/journal/maps_for_mes/getjson', data, function (response) {
+        // console.log(response.points);
+        if (response.points.length > 0) {
+            addCarFilterDataToMap(response.points, map, 1);
+
             toastr.success('Данные успешно получены', 'Успех!', {progressBar: true, timeOut: 5000});
         } else {
             if (markerPodr !== undefined) {
@@ -758,6 +767,8 @@ $('body').on('click', '#show_podr', function (e) {
 
             toastr.error(response.error, 'Ошибка!', {progressBar: true, timeOut: 5000});
         }
+
+        getNewRightTable(response.right_table);
 
         /* bread crumb */
         var is_name_car = $('#id_name_car_map').val();
@@ -800,12 +811,13 @@ $('body').on('click', '#show_podr', function (e) {
         }
 
 
-        console.log(bread_crumb);
+        // console.log(bread_crumb);
 
 
     }, 'json');
 
-    getRightTable();
+    //getRightTable();
+
 });
 
 
@@ -841,8 +853,12 @@ $('body').on('click', '#reset_filter', function (e) {
     $('#id_type_car_map').val('').select2().trigger('change');
 
 
-    $('#theme_panel_inner_table').html('нет данных для отображения');
+    //$('#theme_panel_inner_table').html('нет данных для отображения');
+    $('#theme_panel_inner_table #table-right-maps-for-mes tbody').html('');
+    $('#theme_panel_inner_table #table-right-maps-for-mes tbody').html('нет данных для отображения');
     $('#bread_crumb').html('');
+
+    //$('#is_str').prop('checked',false);
 
 
 });
@@ -850,8 +866,10 @@ $('body').on('click', '#reset_filter', function (e) {
 
 /* default markers - rigs */
 $.getJSON("/journal/maps_for_mes/getjson", function (data) {
-    addDataToMap(data, map);
-    getRightTable();
+    addDataToMap(data.points, map);
+    //getRightTable();
+    //console.log(data.right_table);
+    getNewRightTable(data.right_table);
 });
 
 var theMarker = {};
@@ -1106,6 +1124,7 @@ function addDataToMap(data, map) {
         if (data[i].hasOwnProperty('address'))
             var content_popup = '<b>' + data[i].address + '</b>';
 
+
         if (data[i].hasOwnProperty('is_otdel') && data[i].is_otdel === 1) {
             if (data[i].hasOwnProperty('note_otdel') && data[i].note_otdel !== '') {
                 var content_popup = content_popup + ' <i>(' + 'отдел' + ' ' + data[i].note_otdel + ')</i>';
@@ -1121,6 +1140,15 @@ function addDataToMap(data, map) {
 //            if(data[i].hasOwnProperty('mark') && data[i].hasOwnProperty('mark') !== '') {
 //                var content_popup=content_popup+'</br>'+'<b>'+ data[i].mark+'</b>';
 //            }
+
+
+        if (data[i].hasOwnProperty('dateduty'))
+            var content_popup = content_popup + '</br>дата дежурства: ' + data[i].dateduty;
+
+        if (data[i].hasOwnProperty('ch'))
+            var content_popup = content_popup + ' (смена ' + data[i].ch + ')';
+
+
         if (data[i].hasOwnProperty('all_mark') && data[i].hasOwnProperty('all_mark') !== '') {
             var content_popup = content_popup + '</br>' + '<b>' + data[i].all_mark + '</b>';
         }
@@ -1456,6 +1484,7 @@ function addCarFilterDataToMap(data, map, mark_podr = 0) {
         if (data[i].hasOwnProperty('address'))
             var content_popup = '<b>' + data[i].address + '</b>';
 
+
         if (data[i].hasOwnProperty('is_otdel') && data[i].is_otdel === 1) {
             if (data[i].hasOwnProperty('note_otdel') && data[i].note_otdel !== '') {
                 var content_popup = content_popup + ' <i>(' + 'отдел' + ' ' + data[i].note_otdel + ')</i>';
@@ -1472,6 +1501,13 @@ function addCarFilterDataToMap(data, map, mark_podr = 0) {
 //                var content_popup=content_popup+'</br>'+'<b>'+ data[i].mark+'</b>';
 //            }
 
+
+        if (data[i].hasOwnProperty('dateduty'))
+            var content_popup = content_popup + '</br>дата дежурства: ' + data[i].dateduty;
+
+        if (data[i].hasOwnProperty('ch'))
+            var content_popup = content_popup + ' (смена ' + data[i].ch + ')';
+
         if (data[i].hasOwnProperty('all_mark') && data[i].hasOwnProperty('all_mark') !== '') {
             var content_popup = content_popup + '</br>' + '<b>' + data[i].all_mark + '</b>';
         }
@@ -1483,7 +1519,7 @@ function addCarFilterDataToMap(data, map, mark_podr = 0) {
 
         if (data[i].hasOwnProperty('ss_url'))
             //var content_popup = content_popup + '</br>' + '<a href="' + data[i].ss_url + '" target="_blank">' + ss_url_text + ' </a>';
-                var content_popup = content_popup + '</br>' + '<a href="#" class="btn-show-modal-ss" data-toggle="modal" data-target="#modal-show-ss" data-url="' + data[i].ss_url + '">' + ss_url_text + ' </a>';
+            var content_popup = content_popup + '</br>' + '<a href="#" class="btn-show-modal-ss" data-toggle="modal" data-target="#modal-show-ss" data-url="' + data[i].ss_url + '">' + ss_url_text + ' </a>';
 
 
 
@@ -1576,6 +1612,31 @@ function getRightTable() {
         }
 
     });
+}
+function getNewRightTable(table) {
+
+    var tbody = $('#theme_panel_inner_table #table-right-maps-for-mes tbody ');
+    if (table.length > 0) {
+//console.log(table);
+
+        tbody.html('');
+
+        $(table).each(function (index, value) {
+
+
+            var tr = tbody.append($("<tr></tr>"));
+            tr.append($("<td></td>").text(value.name));
+            tr.append($("<td></td>").text(value.cnt));
+
+
+        });
+
+
+
+    } else {
+        $('#theme_panel_inner_table #table-right-maps-for-mes tbody').html('');
+        $('#theme_panel_inner_table #table-right-maps-for-mes tbody').html('нет данных для отображения');
+    }
 }
 
 

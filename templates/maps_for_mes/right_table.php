@@ -1,5 +1,5 @@
 <?php
-if (isset($res) && !empty($res)) {
+//if (isset($res) && !empty($res)) {
     // print_r($res);
 
     ?>
@@ -16,29 +16,29 @@ if (isset($res) && !empty($res)) {
             <tbody>
 
                 <?php
-                $all = 0;
-                foreach ($res as $value) {
-                    $all += $value['cnt'];
+               // $all = 0;
+               // foreach ($res as $value) {
+                   // $all += $value['cnt'];
 
                     ?>
-                    <tr>
-                        <td><?= $value['name_teh'] ?></td>
-                        <td><?= $value['cnt'] ?></td>
-                    </tr>
+<!--                    <tr>
+                        <td>< $value['name_teh'] ?></td>
+                        <td>< $value['cnt'] ?></td>
+                    </tr>-->
                     <?php
-                }
+                //}
 
-                if (count($res) > 1) {
+               // if (count($res) > 1) {
 
                     ?>
-                    <tr>
+<!--                    <tr>
                         <td>Итого</td>
-                        <td><?= $all ?>
+                        <td>< $all ?>
                         </td>
 
-                    </tr>
+                    </tr>-->
                     <?php
-                }
+              //  }
 
                 ?>
 
@@ -50,10 +50,10 @@ if (isset($res) && !empty($res)) {
     </div>
 
     <?php
-} else {
-    echo 'нет данных для отображения';
-}
+//} else {
+//    echo 'нет данных для отображения';
+//}
 
-?>
+
 
 

@@ -111,7 +111,20 @@ if ($is_new_mode_archive == 1 && $current_year < date('Y') && $real_server != $a
                 <td><?= $row['inf_detail'] ?></td>
                 <td><?= $row['people'] ?></td>
                 <td><?= ($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc'])) ?></td>
-                <td><?= ($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv'])) ?></td>
+
+                <?php
+                $likv='';
+                    if (($row['time_likv'] != '0000-00-00 00:00:00' && !empty($row['time_likv']) && $row['time_likv'] != '-')) {
+                        $likv = date('d.m.Y H:i', strtotime($row['time_likv']));
+                    } elseif ($row['is_likv_before_arrival'] == 1) {
+                        $likv = 'ликв. до приб.';
+                    } elseif ($row['is_not_measures'] == 1) {
+                        $likv = 'меры не приним.';
+                    }
+
+                    ?>
+
+                <td><?= $likv ?></td>
                 <td class="options">
                         <?php
                         if ($is_new_mode_archive == 1 && $current_year < date('Y') && $real_server != $app_server) {

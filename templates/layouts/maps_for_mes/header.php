@@ -77,6 +77,7 @@
         <!-- Extra Markers -->
         <link rel="stylesheet" href="<?= $baseUrl ?>/assets/leaflet_extra_markers/dist/css/leaflet.extra-markers.min.css" />
 
+<link rel="stylesheet" href="<?= $baseUrl ?>/assets/css/switch.css">
 
         <style>
 

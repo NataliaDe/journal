@@ -1,4 +1,41 @@
+<style>
+/*.material-switch > label::before {
+    background: azure;
 
+}
+.material-switch > label::after {
+    background: #28a745;
+    left: 20px;
+}
+
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: #fbfbfb;
+
+}
+
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: #dee2e6;
+    left: 20px;
+}*/
+
+.material-switch > label::after {
+    background: #d6d2d2;
+}
+.material-switch > label::before {
+    background: rgb(255 255 255);
+}
+
+.material-switch > input[type="checkbox"]:checked + label::before {
+    background: #f4f4f4;
+}
+.material-switch > input[type="checkbox"]:checked + label::after {
+    background: #50bf69;
+
+}
+
+
+
+    </style>
 <div class="menu scrollable-form-filter" style="height: 100%">
 
     <!-- Иконка меню -->
@@ -6,6 +43,9 @@
 <!--        <img src="<?= $baseUrl ?>/assets/jquery-side-menu/images/close-btn.png">-->
         <img id="close-btn" src="<?= $baseUrl ?>/assets/jquery-side-menu/images/arrow_left.png" style="width: 45px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Скрыть фильтр" >
         <img id="reset_filter" src="<?= $baseUrl ?>/assets/maps_for_mes/images/trash.png" style="width: 45px;     margin-left: 10px;" aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Очистить фильтр" >
+
+
+
     </div>
 
 

@@ -130,6 +130,7 @@ use App\MODELS\Model_Helpers;
 use App\MODELS\Model_Archivedate;
 use App\MODELS\Model_Archiveyear;
 use App\MODELS\Model_Main;
+use App\MODELS\Model_Str;
 
 use App\CLASSES\Class_Phpword;
 
@@ -8903,7 +8904,7 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         $sql = $sql . ' ORDER BY concat(date_msg," ",time_msg) DESC';
 
         if ($id_tab == 'table-content1') {//rig
-            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail,  people,time_loc, time_likv,is_statistics ' . $sql;
+            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail,  people,time_loc, time_likv,is_statistics,is_likv_before_arrival, is_not_measures ' . $sql;
         } elseif ($id_tab == 'table-content2') {//technic mchs
             $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,time_loc, time_likv, is_likv_before_arrival,silymchs ' . $sql;
         } elseif ($id_tab == 'table-content3') {//informing
@@ -9057,7 +9058,7 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
         $sql = $sql . ' ORDER BY id_rig ASC';
 
         if ($id_tab == 'table-content1') {//rig
-            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv ' . $sql;
+            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv,is_likv_before_arrival, is_not_measures ' . $sql;
         } elseif ($id_tab == 'table-content2') {//technic mchs
             $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,time_loc, time_likv, is_likv_before_arrival, silymchs ' . $sql;
         } elseif ($id_tab == 'table-content3') {//informing
@@ -9128,7 +9129,17 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
                     $sheet->setCellValue('I' . $r, $row['inf_detail']);
                     $sheet->setCellValue('J' . $r, $row['people']);
                     $sheet->setCellValue('K' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
-                    $sheet->setCellValue('L' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
+
+                    $likv = '';
+                    if (($row['time_likv'] != '0000-00-00 00:00:00' && !empty($row['time_likv']) && $row['time_likv'] != '-')) {
+                        $likv = date('d.m.Y H:i', strtotime($row['time_likv']));
+                    } elseif ($row['is_likv_before_arrival'] == 1) {
+                        $likv = 'ликв. до приб.';
+                    } elseif ($row['is_not_measures'] == 1) {
+                        $likv = 'меры не приним.';
+                    }
+
+                    $sheet->setCellValue('L' . $r, $likv);
 
 
                     $r++;
@@ -14361,7 +14372,10 @@ $app->group('/maps_for_mes', function () use ($app) {
         $filter['id_region'] = array(3); //minsk default
         $filter['id_name_car'] = array(1); //AC default
 
-        $res1 = getDataFilter($filter);
+        $cars = getDataFilter($filter);
+        $res1['right_table'] = $cars['right_table'];
+        $res1['points'] = $cars['points'];
+
 
         $data['points'] = json_encode($res1);
 
@@ -14390,6 +14404,8 @@ $app->group('/maps_for_mes', function () use ($app) {
         $filter['id_ob_car'] = $app->request()->post('id_ob_car'); // v
         $filter['id_vid_car'] = $app->request()->post('id_vid_car'); // spec, osn,...
 
+        $is_str=$app->request()->post('is_str');
+        $filter['is_str'] =(isset($is_str) && !empty($is_str)) ? $is_str : 0;
 
 
         $is_show_name_pasp = $app->request()->post('show_number_pasp');
@@ -14397,7 +14413,13 @@ $app->group('/maps_for_mes', function () use ($app) {
             $filter['show_number_pasp'] = 1;
         }
 
-        $res1 = getDataFilter($filter);
+        if ($filter['is_str'] == 0) {
+            $cars = getDataFilter($filter);
+        } else {
+            $cars = getCarsFromStr($filter);
+        }
+            $res1['right_table'] = $cars['right_table'];
+            $res1['points'] = $cars['points'];
 
 
 
@@ -14555,6 +14577,9 @@ $app->group('/maps_for_mes', function () use ($app) {
         $filter['id_ob_car'] = $app->request()->post('id_ob_car'); // v
         $filter['id_vid_car'] = $app->request()->post('id_vid_car'); // spec, osn,...
 
+        $is_str=$app->request()->post('is_str');
+        $filter['is_str'] =(isset($is_str) && !empty($is_str)) ? $is_str : 0;
+
 
         $res1 = getRightTable($filter);
         $data['res'] = $res1;
@@ -14577,7 +14602,9 @@ $app->group('/maps_for_mes', function () use ($app) {
 
         if ($get_sql == 0) {
 
-            $sql = 'select distinct(p.tid), p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record,p.orgid, p.name_teh,p.divizid,p.divizion_num,p.extra_pasp_num,p.extra_pasp_name_or_number from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
+            $sql = 'select distinct(p.tid), p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record,p.orgid, '
+                . 'p.name_teh,p.divizid,p.divizion_num,p.extra_pasp_num,p.extra_pasp_name_or_number, p.des as view_name '
+                . 'from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
                 . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
         }
 
@@ -14727,9 +14754,16 @@ $app->group('/maps_for_mes', function () use ($app) {
             $car_list_by_record = array();
             $podr_with_all_car = array();
             $list_cars_by_record = array();
+            $right_table=[];
             foreach ($podr as $value) {
                 $car_list_by_record[$value['id_record']][] = $value['name_teh'];
                 $list_cars_by_record[$value['id_record']][] = $value['mark'];
+
+
+                if (isset($right_table[$value['name_teh'] . ' (' . $value['view_name'] . ')']))
+                    $right_table[$value['name_teh'] . ' (' . $value['view_name'] . ')'] ++;
+                else
+                    $right_table[$value['name_teh'] . ' (' . $value['view_name'] . ')'] = 1;
             }
 
 
@@ -14836,7 +14870,21 @@ $app->group('/maps_for_mes', function () use ($app) {
             $res = array();
             $res1 = $res;
         }
-        return $res1;
+
+        $result['points'] = $res1;
+
+        $right_table_new = [];
+        if (!empty($right_table)) {
+            $itogo= array_sum($right_table);
+            foreach ($right_table as $key => $value) {
+                $right_table_new[] = array('name' => $key, 'cnt' => $value);
+            }
+            if(count($right_table) >1)
+            $right_table_new[] = array('name' => 'ИТОГО:', 'cnt' => $itogo);
+        }
+
+        $result['right_table'] = $right_table_new;
+        return $result;
     }
 
     function getRightTable($filter)
@@ -14847,18 +14895,311 @@ $app->group('/maps_for_mes', function () use ($app) {
 
         /* data for map */
 
-        $sql = 'select distinct(p.tid), count(p.tid) as cnt, p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record, concat(p.name_teh," (",p.des,")") as name_teh from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
-            . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
-        $sql = $sql . getDataFilter($filter, 1);
-        $sql = $sql . ' GROUP BY p.`idvie`';
-        $sql = $sql . ' ORDER BY p.`name_teh`';
+        if ($filter['is_str'] == 0) {// from ss
+            $sql = 'select distinct(p.tid), count(p.tid) as cnt, p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record, concat(p.name_teh," (",p.des,")") as name_teh from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
+                . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
+            $sql = $sql . getDataFilter($filter, 1);
+            $sql = $sql . ' GROUP BY p.`idvie`';
+            $sql = $sql . ' ORDER BY p.`name_teh`';
 
-        $podr = R::getAll($sql);
+            $podr = R::getAll($sql);
+        } else {// from str
+
+            $sql = 'select distinct(p.tid), count(p.tid) as cnt, p.longitude, p.latitude,p.disloc, p.mark,p.f, p.pasp,p.region, p.id_card, p.id_record, concat(p.name_teh," (",p.des,")") as name_teh from ss.card as p where p.name_teh <> "-" and p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and p.longitude is not null'
+                . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
+            $sql = $sql . getDataFilter($filter, 1);
+            $sql = $sql . ' GROUP BY p.`idvie`';
+            $sql = $sql . ' ORDER BY p.`name_teh`';
+
+            $podr = R::getAll($sql);
+        }
 
         if (!empty($podr))
             return $podr;
         else
             return array();;
+    }
+
+    function getCarsFromStr($filter, $get_sql = 0)
+    {
+
+        $str_model = new Model_Str();
+
+        $exclude_diviz = array(7, 8, 9);
+        $exclude_organs_in_region = array(UMCHS, RCU);
+
+        /* data for map */
+
+        $res1 = array();
+        $res = array();
+        $sql = '';
+
+        if ($get_sql == 0) {
+
+            $sql = 'select distinct(p.id_record), p.longitude, p.latitude,p.disloc,p.f, p.pasp,p.region, p.id_card, p.id_record,p.orgid, '
+                . 'p.divizid,p.divizion_num,p.extra_pasp_num,p.extra_pasp_name_or_number '
+                . 'from ss.card as p where p.latitude <> 0 and p.latitude is not null and p.longitude <> 0 and '
+                . 'p.longitude is not null'
+                . ' and p.divizid NOT IN(' . implode(',', $exclude_diviz) . ') and p.orgid NOT IN(' . implode(',', $exclude_organs_in_region) . ')';
+        }
+
+        if (isset($filter['id_region']) && !empty($filter['id_region'])) {
+            $sql_reg = '';
+            $sql_rosn = '';
+            $sql_ugz = '';
+            $sql_avia = '';
+            $sql_all_reg = '';
+
+            foreach ($filter['id_region'] as $key => $value) {
+                /* rosn, ugz, avia */
+                if ($value == ROSN) {
+                    unset($filter['id_region'][$key]);
+
+                    $sql_rosn = ' p.orgid = 8 ';
+                }
+
+
+                /* without ptc, cou */
+                if ($value == UGZ) {
+                    unset($filter['id_region'][$key]);
+                    $sql_ugz = ' p.orgid = 9 ';
+                }
+
+
+                if ($value == AVIA) {
+                    unset($filter['id_region'][$key]);
+                    $sql_avia = ' p.orgid = 12 ';
+                }
+            }
+
+
+            if (!empty($filter['id_region']))
+                $sql_reg = $sql_reg . '  p.region IN(' . implode(',', $filter['id_region']) . ') ';
+
+            if (!empty($sql_rosn))
+                $sql_all_reg = $sql_all_reg . '' . $sql_rosn;
+            if (!empty($sql_ugz)) {
+
+                if (!empty($sql_all_reg)) {
+                    $sql_all_reg = $sql_all_reg . ' OR ' . $sql_ugz;
+                } else
+                    $sql_all_reg = $sql_all_reg . $sql_ugz;
+            }
+            if (!empty($sql_avia)) {
+
+                if (!empty($sql_all_reg)) {
+                    $sql_all_reg = $sql_all_reg . ' OR ' . $sql_avia;
+                } else {
+                    $sql_all_reg = $sql_all_reg . $sql_avia;
+                }
+            }
+
+
+            if (!empty($sql_reg)) {
+                if (!empty($sql_all_reg)) {
+                    $sql_all_reg = $sql_all_reg . ' OR ' . $sql_reg;
+                } else
+                    $sql_all_reg = $sql_all_reg . $sql_reg;
+            }
+
+
+            $sql = $sql . ' and (' . $sql_all_reg . ') ';
+        }
+        if (isset($filter['id_local']) && !empty($filter['id_local'])) {
+            $sql = $sql . ' and p.id_card IN(' . implode(',', $filter['id_local']) . ')';
+        }
+        if (isset($filter['id_pasp']) && !empty($filter['id_pasp'])) {
+            $sql = $sql . ' and p.id_record IN(' . implode(',', $filter['id_pasp']) . ')';
+        }
+
+        if ($get_sql != 0) {
+            return $sql;
+            die;
+        }
+
+        /* get list podr from ss */
+        $podr = R::getAll($sql);
+
+        $locorg_coords = $ob = R::getAll('select * from ss.coord_locorg where  latitude is not null and longitude is not null and id_pasp <> 0');
+        $ids_pasp_otdel = array();
+
+        foreach ($locorg_coords as $value) {
+            $ids_pasp_otdel[] = $value['id_pasp'];
+        }
+
+        if (!empty($podr)) {
+
+            /* get cars from str by this podr */
+            foreach ($podr as $k => $value) {
+                $main = $str_model->get_main_by_id_pasp($value['id_record']);
+
+                if (isset($main) && !empty($main)) {
+                    $current_ch = $main['ch'];
+                    $current_dateduty = $main['dateduty'];
+                } else {//get duty ch from str.dutych
+                    $duty = $this->str_model->get_dutych();
+                    $current_ch = $duty['start_ch'];
+                    $current_dateduty = $duty['start_date'];
+                }
+
+                $podr[$k]['dateduty'] = \DateTime::createFromFormat('Y-m-d', $current_dateduty)->format('d.m.Y');
+                $podr[$k]['ch'] = $current_ch;
+
+
+
+                // cars of podr
+                $podr[$k]['cars'] = $str_model->get_cars_by_pasp($value['id_record'], $current_dateduty, $current_ch,$filter);
+            }
+
+            /* show list of all cars */
+            $car_list_by_record = array();
+            $podr_with_all_car = array();
+            $list_cars_by_record = array();
+            $right_table = [];
+
+            foreach ($podr as $k => $value) {
+                if (!isset($value['cars']) || empty($value['cars'])) {
+                    unset($podr[$k]);
+                } else {
+                    foreach ($value['cars'] as $car) {
+                        $car_list_by_record[$value['id_record']][] = $car['view_name']; // ac, abr...
+
+                        if (isset($car['my']) && $car['my'] == 0) {
+                            $list_cars_by_record[$value['id_record']][] = $car['mark'].' из др.подразд.';
+                        } else
+                            $list_cars_by_record[$value['id_record']][] = $car['mark'];
+
+                        if (isset($right_table[$car['view_name'] . ' (' . $car['view_abbr'] . ')']))
+                            $right_table[$car['view_name'] . ' (' . $car['view_abbr'] . ')'] ++;
+                        else
+                            $right_table[$car['view_name'] . ' (' . $car['view_abbr'] . ')'] = 1;
+                    }
+                }
+            }
+
+            foreach ($podr as $k => $value) {
+                if (isset($car_list_by_record[$value['id_record']]) && !empty($car_list_by_record[$value['id_record']])) {
+
+                    //$value['mark']= implode(',<br>', $car_list_by_record);
+                    sort($car_list_by_record[$value['id_record']]);
+                    $cnt_per_name_teh = array_count_values($car_list_by_record[$value['id_record']]);
+
+                    $str_mark = '';
+                    $cnt_cars = 0;
+                    foreach ($cnt_per_name_teh as $name => $cnt) {
+                        $str_mark = $str_mark . '<br>' . $name . ' - ' . $cnt;
+                        $cnt_cars += $cnt;
+                    }
+                    $value['mark'] = $str_mark; //cnt of all cars: ac-3, abr-1...
+                    $value['cnt_cars'] = $cnt_cars;
+
+                    if (isset($list_cars_by_record[$value['id_record']]) && !empty($list_cars_by_record[$value['id_record']])) {
+                        $all_mark_str = '';
+                        foreach ($list_cars_by_record[$value['id_record']] as $all_mark) {
+                            $all_mark_str = $all_mark_str . '<br>' . $all_mark;
+                        }
+                        if ($all_mark_str != '')
+                            $value['all_mark'] = $all_mark_str; //all mark in 1 line
+                    }
+
+
+                    $podr_with_all_car[] = $value;
+                }
+            }
+
+            $unique_ids_podr = [];
+            $k = 0;
+
+            foreach ($podr_with_all_car as $value) {
+
+                $k++;
+                $res = array();
+
+                if (!in_array($value['id_record'], $unique_ids_podr)) {
+
+                    $unique_ids_podr[] = $value['id_record'];
+
+                    $res['location'] = array('type' => 'Point', 'coordinates' => array($value['longitude'], $value['latitude']));
+                    $res['disloc'] = $value['disloc'];
+                    $res['mark'] = $value['mark'];
+
+                    if (isset($value['cnt_cars']))
+                        $res['cnt_cars'] = $value['cnt_cars'];
+                    else
+                        $res['cnt_cars'] = 0;
+
+                    $obl = '';
+//                if ($value['region'] != 3)
+//                    $obl = $value['regionn'].' обл.';
+//                else
+//                    $obl=$value['regionn'];
+
+
+                    if (($value['orgid'] == 8 && $value['divizid'] == 4) || ( $value['orgid'] == 6 && $value['divizid'] == 1)) {//rosn, rosn; paso, paso
+                        $res['address'] = $obl . $value['f'];
+                    } else {
+                        $res['address'] = $obl . $value['f'] . ', ' . $value['pasp'];
+                    }
+
+                    $res['ppp'] = (!empty($value['divizion_num'])) ? $value['divizion_num'] : ''; //number of pasp.for PASO it is empty
+                    $res['extra_pasp_num'] = (!empty($value['extra_pasp_num'])) ? $value['extra_pasp_num'] : ''; //  if PASO: PASO. if PASP: number of pasp
+                    $res['extra_pasp_name_or_number'] = intval($value['extra_pasp_name_or_number']); // if PASO: 1, if pasp: 0
+
+                    if (isset($filter['show_number_pasp']) && $filter['show_number_pasp'] == 1) {//only if PASO: 1
+                        $res['show_number_pasp'] = 1;
+                    }
+
+                    $res['ss_url_text'] = 'перейти в карточку сил и средств';
+
+                    //$res['ss_url_text'] = 'просмотреть карточку сил и средств';
+                    $res['ss_url'] = '/ss/card/' . $value['region'] . '/' . $value['id_card'];
+
+                    if (in_array($value['id_record'], $ids_pasp_otdel)) {// otdel
+                        $res['is_otdel'] = 1;
+                        if ($value['id_record'] == 482) {//otdel of vitebskogo ROHS is in PASH 2 Vit GOHS!!!!!482 - pash 2 of Vit GOHS
+                            $res['note_otdel'] = 'Витебского РОЧС';
+                        }
+                    }
+
+                    $res['orgid'] = $value['orgid'];
+                    if (in_array($value['orgid'], array(6, 7))) {//paso
+                        $res['is_paso'] = 1;
+                    }
+
+
+                    if (isset($value['all_mark']) && !empty($value['all_mark'])) {
+                        $res['all_mark'] = $value['all_mark'];
+                    }
+
+                    if (isset($value['dateduty']) && !empty($value['dateduty'])) {
+                        $res['dateduty'] = $value['dateduty'];
+                    }
+                    if (isset($value['ch']) && !empty($value['ch'])) {
+                        $res['ch'] = $value['ch'];
+                    }
+
+                    $res1[] = $res;
+                }
+            }
+        } else {//empty result
+            $res = array();
+            $res1 = $res;
+        }
+
+        $result['points'] = $res1;
+
+        $right_table_new = [];
+        if (!empty($right_table)) {
+            $itogo= array_sum($right_table);
+            foreach ($right_table as $key => $value) {
+                $right_table_new[] = array('name' => $key, 'cnt' => $value);
+            }
+            if(count($right_table) >1)
+            $right_table_new[] = array('name' => 'ИТОГО:', 'cnt' => $itogo);
+        }
+
+        $result['right_table'] = $right_table_new;
+        return $result;
     }
 });
 
