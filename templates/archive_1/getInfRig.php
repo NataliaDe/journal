@@ -4,22 +4,22 @@
 
 <main>
 
-    <input id="tab1" type="radio" name="tabs" checked>
+    <input id="tab1" type="radio" name="tabs" checked class="input-tabs">
     <label for="tab1" class="label-archive">Информация по выездам</label>
 
-    <input id="tab2" type="radio" name="tabs">
+    <input id="tab2" type="radio" name="tabs" class="input-tabs">
     <label for="tab2" class="label-archive">Информация по технике</label>
 
-    <input id="tab3" type="radio" name="tabs">
+    <input id="tab3" type="radio" name="tabs" class="input-tabs">
     <label for="tab3" class="label-archive">Информация по информированию</label>
 
-    <input id="tab4" type="radio" name="tabs">
+    <input id="tab4" type="radio" name="tabs" class="input-tabs">
     <label for="tab4" class="label-archive">Информация по другим службам</label>
 
-    <input id="tab5" type="radio" name="tabs">
+    <input id="tab5" type="radio" name="tabs" class="input-tabs">
     <label for="tab5" class="label-archive">Результаты боевой работы</label>
 
-    <input id="tab6" type="radio" name="tabs">
+    <input id="tab6" type="radio" name="tabs" class="input-tabs">
     <label for="tab6" class="label-archive">Стволы</label>
 
     <section id="content1" class="sec">

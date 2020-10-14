@@ -3,7 +3,7 @@
     if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
            include dirname(dirname(__FILE__)) . '/tabsRig/info_msg_now_update.php';
     }
-	
+
 	include dirname(dirname(__FILE__)) . '/title_block.php';
     ?>
 <div class="box-body">
@@ -30,8 +30,8 @@
 
             </div>
         </div>
-		
-		
+
+
         <div class="row">
             <div class="col-lg-2">
 
@@ -95,7 +95,7 @@
                                 ?>
                                 <select disabled=""  class=" js-example-basic-single form-control" name="informing[<?= $i ?>][id_destination]"  >
 
-                                   
+
                                     <option value="">Выбрать</option>
                                     <?php
                                     // if ($id_level != $_SESSION['id_level']) {
@@ -112,8 +112,8 @@
 
                                     ?>
                                     <select class=" js-example-basic-single form-control " name="informing[<?= $i ?>][id_destination]"  >
-									
-									
+
+
                                                                                 <option value="">Выбрать</option>
                                         <?php
                                         // if ($id_level != $_SESSION['id_level']) {
@@ -299,9 +299,11 @@
                             <option value="">Выбрать</option>
                             <?php
                             foreach ($destinationlist as $row) {
-                                printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id_destination'], $row['fio'], $row['position_name']);
-                            }
-                            ?>
+                                    if ($row['is_delete'] != 1) {
+                                        printf("<p><option value='%s' ><label>%s (%s)</label></option></p>", $row['id_destination'], $row['fio'], $row['position_name']);
+                                    }
+                                }
+                                ?>
                         </select>
                     </div>
                 </div>

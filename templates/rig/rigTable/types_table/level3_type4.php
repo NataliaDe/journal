@@ -71,6 +71,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 //print_r($rig_cars);exit();
 
 ?>
+
 <table class="table table-condensed   table-bordered table-custom " id="rigTableType4" style="width: 100%; font-size: 12px" >
     <!-- строка 1 -->
     <thead>
@@ -159,13 +160,12 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                     ?>
                     <tr style="background-color:#ddd; border: 5px solid #da0d0d !important; ">
                         <?php
-                    }
-                     elseif(isset($row['is_not_my']) && $row['is_not_my'] == 1){
-?>
-                            <tr class="is_not_my_rig">
-                            <?php
-                        }
-                    else {
+                    } elseif (isset($row['is_not_my']) && $row['is_not_my'] == 1) {
+
+                        ?>
+                    <tr class="is_not_my_rig">
+                        <?php
+                    } else {
 
                         ?>
                     <tr style="background-color: <?= (isset($reasonrig_color[$row['id_reasonrig']])) ? $reasonrig_color[$row['id_reasonrig']] : 'white' ?>;">
@@ -226,7 +226,15 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                                <?php
                            }
 
-                           ?>
+
+                            if ($row['is_mes_time'] == 1 && (isset($settings_user['is_mes_time']) && $settings_user['is_mes_time']['name_sign'] == 'yes')) {
+
+                                ?>
+                                <i class="fa fa-clock-o is_mes_time" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="<?= $row['is_mes_time_text'] ?>"></i>
+                                <?php
+                            }
+
+                            ?>
 
                         <!--                        is update rig now-->
             <center>
@@ -581,18 +589,19 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
 
-            <?php
-        } else {// не обрезать
+                <?php
+            } else {// не обрезать
+
+                ?>
+            <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span>
+                <?php
+            }
 
             ?>
-            <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span>
-            <?php
-        }
 
-        ?>
-
-                <?= (isset($row['number_sim']) && !empty($row['number_sim'])) ? '<br><br>№ Сим-карты: '.$row['number_sim'] : ''?>
-            </td>
+            <?= (isset($row['number_sim']) && !empty($row['number_sim'])) ? '<br><br>№ Сим-карты: ' . $row['number_sim'] : '' ?>
+                <?= (isset($row['inspector']) && !empty($row['inspector']) && in_array($row['id_reasonrig'], $reason_show_inspector)) ? '<br><br>Инспектор: ' . $row['inspector'] : '' ?>
+        </td>
 
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>">
             <?= $row['view_work'] ?>
@@ -609,7 +618,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
             if ((isset($row['is_neighbor']) && $row['is_neighbor'] == 1) || (isset($row['is_not_my']) && $row['is_not_my'] == 1)) {
 
                 ?>
-                                                                                                <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
+                                                                                                            <!--                                        <a href="< $baseUrl ?>/rig/new/< $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-default  " type="button"><i class="fa fa-eye fa-lg" style="color:blue" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Подробнее"></i></button></a>-->
                 <a href="<?= $baseUrl ?>/rig/new/<?= $row['id'] ?>" target="_blank"> <button class="btn btn-xs btn-warning " type="button"><i class="fa <?= ($_SESSION['can_edit'] == 0) ? 'fa-eye' : 'fa-pencil' ?>" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Редактировать вызов"></i></button></a>
                 <?php
             } else {
@@ -628,24 +637,24 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 ?>
                 <br><br>
                 <a  href="#" class="create-copy-link <?= ($_SESSION['can_edit'] == 0) ? 'disabled-link' : '' ?>" data-toggle="modal"  data-target="#modal-create-copy" data-id="<?= $row['id'] ?>" data-url="<?= $baseUrl ?>/copy_rig/<?= $row['id'] ?>"  aria-hidden="true" data-toggle="tooltip" data-placement="bottom" title="Создать копию выезда" > <button class="btn btn-xs btn-info" type="button"><i class="fa fa-copy" ></i></button></a>
-                <?php
-            }
+                        <?php
+                    }
 
-            ?>
+                    ?>
 
             <?php
             if ($is_show_link_sd == 1) {
 
                 ?>
                 <br><br>
-<!--                <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
+            <!--                <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
                     <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
                 </a>-->
-            <?php
-            include dirname(dirname(__FILE__)) .'/parts/go_to_sd.php';
-        }
+                <?php
+                include dirname(dirname(__FILE__)) . '/parts/go_to_sd.php';
+            }
 
-        ?>
+            ?>
         </td>
 
 
@@ -654,6 +663,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
         <?php
     }
 }
+$pageLength = ((isset($settings_user['cnt_rows_rigtable']) && isset($settings_user['cnt_rows_rigtable']['name_sign']))) ? $settings_user['cnt_rows_rigtable']['name_sign'] : 50;
 
 ?>
 
@@ -684,7 +694,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                                 orderCellsTop: true,
                                 fixedHeader: true,
 
-                                "pageLength": 50,
+                                "pageLength": <?= $pageLength ?>,
                                 "order": [],
                                 language: {
                                     "processing": "Подождите...",

@@ -64,7 +64,12 @@ class Model_Rig
         $y['id_firereason'] = (isset($x['id_firereason']) && !empty($x['id_firereason'])) ? intval($x['id_firereason']) : 0;
         $y['firereason_descr'] = (isset($x['firereason_descr']) && !empty($x['firereason_descr'])) ? $x['firereason_descr'] : '';
         $y['version_reason'] = (isset($x['version_reason']) && !empty($x['version_reason'])) ? $x['version_reason'] : '';
-        $y['inspector'] = (isset($x['inspector']) && !empty($x['inspector'])) ? $x['inspector'] : '';
+        if ($y['id_reasonrig'] == 34 || $y['id_reasonrig'] == 14) {
+            $y['inspector'] = (isset($x['inspector_fire']) && !empty($x['inspector_fire'])) ? $x['inspector_fire'] : '';
+        } else {
+            $y['inspector'] = (isset($x['inspector']) && !empty($x['inspector'])) ? $x['inspector'] : '';
+        }
+
         $y['id_statusrig'] = (isset($x['id_statusrig']) && !empty($x['id_statusrig'])) ? intval($x['id_statusrig']) : 0;
         $y['is_opg'] = (isset($x['is_opg']) && !empty($x['is_opg'])) ? intval($x['is_opg']) : 0;
         $y['opg_text'] = (isset($y['is_opg']) && $y['is_opg'] == 1 ) ? $x['opg_text'] : NULL; //если не отмечен чекбокс-не записываем в БД описание
@@ -299,6 +304,11 @@ class Model_Rig
         $array['last_update'] = $this->setLastUpdate();
         $rig->import($array);
         R::store($rig);
+    }
+
+    public function get_time_msg($id)
+    {
+        return R::getCell('SELECT time_msg FROM journal.rig WHERE id = ?', array($id));
     }
 }
 

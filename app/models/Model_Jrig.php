@@ -100,6 +100,7 @@ class Model_Jrig
 
 
 
+
         foreach ($x as $key => $row) {
 
             /* ------- Отбой техники -------- */
@@ -391,6 +392,67 @@ FROM (((((((((`journal`.`silymchs` `s`
       ON ((`d`.`id` = `rec`.`id_divizion`)))
 left join ss.views as v on v.id=t.id_view
      ) WHERE id_rig IN (  " . implode(',', $ids_rig) . ')');
+
+
+        return $jrig;
+    }
+
+
+
+        public function get_jrig_by_rig_id($ids_rig)
+    {
+        $jrig = R::getAll("SELECT
+  `s`.`id`             AS `id_sily`,
+  `s`.`id_rig`         AS `id_rig`,
+  `s`.`id_teh`         AS `id_teh`,
+
+  (CASE WHEN ISNULL(`t`.`mark`) THEN `s`.`mark` ELSE CONVERT(`t`.`mark` USING utf8mb4) END) AS `mark`,
+  (CASE WHEN ISNULL(`t`.`numbsign`) THEN `s`.`numbsign` ELSE CONVERT(`t`.`numbsign` USING utf8mb4) END) AS `numbsign`,
+  `reg`.`name`         AS `region_name`,
+
+
+  (CASE WHEN (`org`.`id` = 7) THEN CONCAT(`org`.`name`,'-',`locor`.`no`) ELSE CONCAT('') END) AS `paso_object_num`,
+
+  (CASE WHEN (`rec`.`divizion_num` = 0) THEN `d`.`name` ELSE CONCAT(`d`.`name`,'-',`rec`.`divizion_num`) END) AS `pasp_name`,
+
+    (CASE WHEN (`org`.`id` = 6 ) THEN CONCAT('УМЧС')
+WHEN (rec.`id_divizion`=8 AND org.`id`=8) THEN CONCAT(org.`name`)
+WHEN (rec.`id_divizion`=8 AND reg.`id`=3 AND org.`id`=4) THEN CONCAT(reg.`name`)
+
+ WHEN ( (`org`.`id` = 8 OR `rec`.`id_divizion` = 7 OR org.`id`=4) AND rec.`id_divizion`<>8) THEN CONCAT('')
+ WHEN(org.`id`=9 OR org.`id`=12 ) THEN CONCAT(org.`name`)
+
+  WHEN (`org`.`id` = 7) THEN CONCAT(`org`.`name`,'-',`locor`.`no`,' ',REPLACE(`loc`.`name`,'ий','ого'),' ',`orgg`.`name`)
+
+  ELSE CONCAT(REPLACE(`loc`.`name`,'ий','ого'),' ',`org`.`name`) END) AS `locorg_name`,
+
+  `s`.`time_exit`      AS `time_exit`,
+  `s`.`time_arrival`   AS `time_arrival`,
+  `s`.`time_follow`    AS `time_follow`,
+  `s`.`time_end`       AS `time_end`,
+  `s`.`time_return`    AS `time_return`,
+  `s`.`distance`       AS `distance`,
+  `s`.`is_return`      AS `is_return`,
+  v.name as view_name
+FROM (((((((((`journal`.`silymchs` `s`
+           LEFT JOIN `ss`.`technics` `t`
+             ON ((`t`.`id` = `s`.`id_teh`)))
+          LEFT JOIN `ss`.`regions` `reg`
+            ON ((`reg`.`id` = `s`.`id_region`)))
+         LEFT JOIN `ss`.`locorg` `locor`
+           ON ((`locor`.`id` = `s`.`id_locorg`)))
+        LEFT JOIN `ss`.`locals` `loc`
+          ON ((`loc`.`id` = `locor`.`id_local`)))
+       LEFT JOIN `ss`.`organs` `org`
+         ON ((`locor`.`id_organ` = `org`.`id`)))
+      LEFT JOIN `ss`.`organs` `orgg`
+        ON ((`locor`.`oforg` = `orgg`.`id`)))
+     LEFT JOIN `ss`.`records` `rec`
+       ON ((`rec`.`id` = `t`.`id_record`)))
+    LEFT JOIN `ss`.`divizions` `d`
+      ON ((`d`.`id` = `rec`.`id_divizion`)))
+left join ss.views as v on v.id=t.id_view
+     ) WHERE id_rig = " . $ids_rig);
 
 
         return $jrig;

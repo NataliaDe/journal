@@ -317,203 +317,6 @@ $('#date_end').on('dp.change dp.show', function (e) {
         });
 
 
-        /*  rigTable  */
-        var rig_table_vis = $('#rigTable').DataTable({
-            "pageLength": 50,
-            "order": [],
-            language: {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
-
-            }
-//                                 "columnDefs": [
-//            {
-//                "targets": [ 13 ],
-//                "visible": false
-//            }
-//        ]
-        });
-
-        $('a.toggle-vis-rig-table').on('click', function (e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column = rig_table_vis.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column.visible(!column.visible());
-
-
-        });
-
-
-
-        /*  rigTable type1  */
-        var rig_table_vis_type1 = $('#rigTableType1').DataTable({
-            "pageLength": 50,
-            "order": [],
-            language: {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
-
-            }
-//                                 "columnDefs": [
-//            {
-//                "targets": [ 13 ],
-//                "visible": false
-//            }
-//        ]
-        });
-
-        $('a.toggle-vis-rig-table-type1').on('click', function (e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column_type1 = rig_table_vis_type1.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column_type1.visible(!column_type1.visible());
-
-
-        });
-
-
-
-
-
-        /*  rigTable type2  */
-        var rig_table_vis_type2 = $('#rigTableType2').DataTable({
-            "pageLength": 50,
-            "order": [],
-            language: {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
-
-            }
-//                                 "columnDefs": [
-//            {
-//                "targets": [ 13 ],
-//                "visible": false
-//            }
-//        ]
-        });
-
-        $('a.toggle-vis-rig-table-type2').on('click', function (e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column_type2 = rig_table_vis_type2.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column_type2.visible(!column_type2.visible());
-
-
-        });
-
-
-        /*  rigTable type3  */
-        var rig_table_vis_type3 = $('#rigTableType3').DataTable({
-            "pageLength": 50,
-            "order": [],
-            language: {
-                "processing": "Подождите...",
-                "search": "Поиск:",
-                "lengthMenu": "Показать _MENU_ записей",
-                "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
-                "infoEmpty": "Записи с 0 до 0 из 0 записей",
-                "infoFiltered": "(отфильтровано из _MAX_ записей)",
-                "infoPostFix": "",
-                "loadingRecords": "Загрузка записей...",
-                "zeroRecords": "Записи отсутствуют.",
-                "emptyTable": "В таблице отсутствуют данные",
-                "paginate": {
-                    "first": "Первая",
-                    "previous": "Предыдущая",
-                    "next": "Следующая",
-                    "last": "Последняя"
-                },
-                "aria": {
-                    "sortAscending": ": активировать для сортировки столбца по возрастанию",
-                    "sortDescending": ": активировать для сортировки столбца по убыванию"
-                }
-
-            }
-//                                 "columnDefs": [
-//            {
-//                "targets": [ 13 ],
-//                "visible": false
-//            }
-//        ]
-        });
-
-
-        $('a.toggle-vis-rig-table-type3').on('click', function (e) {
-            e.preventDefault();
-
-            // Get the column API object
-            var column_type3 = rig_table_vis_type3.column($(this).attr('data-column'));
-
-            // Toggle the visibility
-            column_type3.visible(!column_type3.visible());
-
-
-        });
-
-
 
         $('#destinationTable').DataTable({
             "pageLength": 50,
@@ -771,195 +574,6 @@ $(document).ready(function () {
     });
 
     /*---------- END таблица с пользователями ------------*/
-
-    /*---------- таблица с выездами ------------*/
-    $('#rigTable tfoot th').each(function (i) {
-        var table = $('#rigTable').DataTable();
-        if (i !== 1 && i != 8 && i != 14) {
-
-            if (i == 9) {
-                //выпадающий список
-                var y = 'rigForm';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
-                        .appendTo($(this).empty())
-                        .on('change', function () {
-
-                            var val = $(this).val();
-
-                            table.column(i) //Only the first column
-                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
-                                    .draw();
-                        });
-
-                var x = $('#rigTable tfoot th').index($(this));
-                table.column(i).data().unique().sort().each(function (d, j) {
-                    select.append('<option value="' + d + '" >' + d + '</option>');
-                });
-
-
-            } else {
-                var title = $('#rigTable tfoot th').eq($(this).index()).text();
-                var x = $('#rigTable tfoot th').index($(this));
-                var y = 'rigForm';
-                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-            }
-
-        }
-    });
-    $("#rigTable tfoot input").on('keyup change', function () {
-        var table = $('#rigTable').DataTable();
-        table
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-    });
-
-    /*---------- END таблица с выездами ------------*/
-
-
-
-    /*---------- rig table type1 ------------*/
-    $('#rigTableType1 tfoot th').each(function (i) {
-        var table = $('#rigTableType1').DataTable();
-        if (i !== 1 && i != 7 && i != 13) {
-
-            if (i == 8) {
-                //выпадающий список
-                var y = 'rigFormType1';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
-                        .appendTo($(this).empty())
-                        .on('change', function () {
-
-                            var val = $(this).val();
-
-                            table.column(i) //Only the first column
-                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
-                                    .draw();
-                        });
-
-                var x = $('#rigTableType1 tfoot th').index($(this));
-                table.column(i).data().unique().sort().each(function (d, j) {
-                    select.append('<option value="' + d + '" >' + d + '</option>');
-                });
-
-
-            } else {
-                var title = $('#rigTableType1 tfoot th').eq($(this).index()).text();
-                var x = $('#rigTableType1 tfoot th').index($(this));
-                var y = 'rigFormType1';
-                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-            }
-
-        }
-    });
-    $("#rigTableType1 tfoot input").on('keyup change', function () {
-        var table = $('#rigTableType1').DataTable();
-        table
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-    });
-
-    /*---------- END rig table type1 ------------*/
-
-
-
-    /*---------- rig table type2 ------------*/
-    $('#rigTableType2 tfoot th').each(function (i) {
-        var table = $('#rigTableType2').DataTable();
-        if (i != 17) {
-
-            if (i == 14) {
-                //выпадающий список
-                var y = 'rigFormType2';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
-                        .appendTo($(this).empty())
-                        .on('change', function () {
-
-                            var val = $(this).val();
-
-                            table.column(i) //Only the first column
-                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
-                                    .draw();
-                        });
-
-                var x = $('#rigTableType2 tfoot th').index($(this));
-                table.column(i).data().unique().sort().each(function (d, j) {
-                    select.append('<option value="' + d + '" >' + d + '</option>');
-                });
-
-
-            } else {
-                var title = $('#rigTableType2 tfoot th').eq($(this).index()).text();
-                var x = $('#rigTableType2 tfoot th').index($(this));
-                var y = 'rigFormType2';
-                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-            }
-
-        }
-    });
-    $("#rigTableType2 tfoot input").on('keyup change', function () {
-        var table = $('#rigTableType2').DataTable();
-        table
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-    });
-
-    /*---------- END rig table type2 ------------*/
-
-
-    /*---------- rig table type3 ------------*/
-    $('#rigTableType3 tfoot th').each(function (i) {
-        var table = $('#rigTableType3').DataTable();
-        if (i !== 14) {
-
-            if (i == 11) {
-                //выпадающий список
-                var y = 'rigFormType3';
-                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
-                        .appendTo($(this).empty())
-                        .on('change', function () {
-
-                            var val = $(this).val();
-
-                            table.column(i) //Only the first column
-                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
-                                    .draw();
-                        });
-
-                var x = $('#rigTableType3 tfoot th').index($(this));
-                table.column(i).data().unique().sort().each(function (d, j) {
-                    select.append('<option value="' + d + '" >' + d + '</option>');
-                });
-
-
-            } else {
-                var title = $('#rigTableType3 tfoot th').eq($(this).index()).text();
-                var x = $('#rigTableType3 tfoot th').index($(this));
-                var y = 'rigFormType3';
-                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
-                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
-                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
-            }
-
-        }
-    });
-    $("#rigTableType3 tfoot input").on('keyup change', function () {
-        var table = $('#rigTableType3').DataTable();
-        table
-                .column($(this).parent().index() + ':visible')
-                .search(this.value)
-                .draw();
-    });
-
-    /*---------- END rig table type3 ------------*/
 
 
 
@@ -2234,7 +1848,7 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
     //$('#rigForm #object_id').addClass('red-border-input');
     var coord_lat_length = $('#rigForm #coord_lat').val().length;
     //alert(coord_lat);
-    if (reason == 34) {
+    if (reason == 34) {//fire
 
         if (object_id == '') {
             $('#rigForm #object_id').addClass('red-border-input');
@@ -2264,9 +1878,16 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
             $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
         }
 
+
+        $('.inspector_fire_div').removeClass('hide');
+        $('.inspector_div').removeClass('hide');
+        $('.inspector_div').addClass('hide');
+
+        var inspector = $('#rigForm [name="inspector_fire"]').val();
+
         if (inspector == '') {
-            $('#rigForm [name="inspector"]').addClass('red-border-input');
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            $('#rigForm [name="inspector_fire"]').addClass('red-border-input');
+            //$('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
         }
 
 
@@ -2274,7 +1895,37 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
 
 
     //other zagor
-    else if (reason == 14 || reason == 69) {
+    else if (reason == 14) {
+
+          $('.inspector_fire_div').removeClass('hide');
+        $('.inspector_div').removeClass('hide');
+        $('.inspector_div').addClass('hide');
+
+        var inspector = $('#rigForm [name="inspector_fire"]').val();
+
+        if (inspector == '') {
+            $('#rigForm [name="inspector_fire"]').addClass('red-border-input');
+            //$('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+        }
+
+        //reset
+        $('#rigForm #object_id').removeClass('red-border-input');
+        $('#rigForm #coord_lat').removeClass('red-border-input');
+        $('#rigForm #coord_lon').removeClass('red-border-input');
+        $("#office-belong-id .select2-selection").removeClass('red-border-input');
+        $("#firereason-id .select2-selection").removeClass('red-border-input');
+        $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
+    }
+
+
+    else if ( reason == 69) {
+
+        $('.inspector_fire_div').removeClass('hide');
+        $('.inspector_fire_div').addClass('hide');
+        $('.inspector_div').removeClass('hide');
+
+        var inspector = $('#rigForm [name="inspector"]').val();
+
         if (inspector == '') {
             $('#rigForm [name="inspector"]').addClass('red-border-input');
             $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
@@ -2291,6 +1942,12 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
 
     // molnia
     else if (reason == 74) {
+
+        $('.inspector_fire_div').removeClass('hide');
+        $('.inspector_fire_div').addClass('hide');
+        $('.inspector_div').removeClass('hide');
+
+
         if (object_id == '') {
             $('#rigForm #object_id').addClass('red-border-input');
         }
@@ -2308,6 +1965,11 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
         $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
 
     } else {
+
+        $('.inspector_fire_div').removeClass('hide');
+        $('.inspector_fire_div').addClass('hide');
+        $('.inspector_div').removeClass('hide');
+
         $('#rigForm #object_id').removeClass('red-border-input');
         $('#rigForm #coord_lat').removeClass('red-border-input');
         $('#rigForm #coord_lon').removeClass('red-border-input');
@@ -2492,20 +2154,40 @@ $('#rigForm [name="firereason_descr"]').on('keyup', function (e) {
         $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
     } else {
 
-        if (inspector == '' && reason == 34) {
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
-        } else if (id_firereason == '0' && reason == 34) {
-            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
-        } else {
 
-            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+        if (reason == 34) {
+            var inspector = $('#rigForm [name="inspector_fire"]').val();
+            if (id_firereason == '0') {
+                $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            } else {
+
+                $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+            }
         }
+        else if(reason == 14){//other zagor
+
+        }
+        else {
+            if (inspector == '') {
+                $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            } else if (id_firereason == '0') {
+                $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            } else {
+                $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+            }
+        }
+//
+//                if (inspector == '' && reason == 34) {
+//            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+//        } else if (id_firereason == '0' && reason == 34) {
+//            $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+//        } else {
+//
+//            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+//        }
 
         $('#rigForm [name="firereason_descr"]').removeClass('red-border-input');
-
     }
-
-
 });
 
 
@@ -2531,6 +2213,36 @@ $('#rigForm [name="inspector"]').on('keyup', function (e) {
         }
 
         $('#rigForm [name="inspector"]').removeClass('red-border-input');
+
+    }
+});
+
+
+$('#rigForm [name="inspector_fire"]').on('keyup', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var inspector = $('#rigForm [name="inspector_fire"]').val();
+    var firereason_descr = $('#rigForm [name="firereason_descr"]').val();
+    var id_firereason = $('#rigForm [name="id_firereason"]').val();
+
+    if (inspector == '') {
+        $('#rigForm [name="inspector_fire"]').addClass('red-border-input');
+        // $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+    } else {
+
+        if (reason == 34) {
+            if (firereason_descr == '') {
+                $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            } else if (id_firereason == '0') {
+                $('#rigForm .nav-tabs  li:nth-child(3)').addClass('red-border-input');
+            } else {
+                $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+            }
+        } else if (reason == 14) {
+            $('#rigForm .nav-tabs  li:nth-child(3)').removeClass('red-border-input');
+        }
+
+        $('#rigForm [name="inspector_fire"]').removeClass('red-border-input');
 
     }
 });
@@ -2922,3 +2634,44 @@ function removeAllNotifications() {
 });
 
 jQuery("#loc_id_chaned").chained("#reg_id_chaned");
+
+
+
+
+$('#rigs-obl-garnison-modal').on('show.bs.modal', function (e) {
+
+    var btn = $(e.relatedTarget);
+
+    $('#rigs-obl-garnison-modal').find('.modal-body').html('');
+
+        $('#rigs-obl-garnison-modal').find('.modal-content').html('');
+        $('#preload-get-archive-data').css('display', 'block');
+
+    $.ajax({
+        type: 'GET',
+        url: btn.data('url')
+    }).done(function (response) {
+
+
+        $('#rigs-obl-garnison-modal').find('.modal-content').html(response);
+        $('#preload-get-archive-data').css('display', 'none');
+
+    });
+
+});
+
+
+function refresh_rigs_obl_table(){
+
+    var url=$('.rigs-obl-garnison').attr('data-url');
+    $.ajax({
+        type: 'GET',
+        url: url
+    }).done(function (response) {
+
+
+        $('#rigs-obl-garnison-modal').find('.modal-content').html(response);
+        $('#preload-get-archive-data').css('display', 'none');
+
+    });
+}

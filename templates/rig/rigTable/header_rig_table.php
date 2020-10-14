@@ -102,13 +102,27 @@ if (isset($search_rig_by_id)) {
 
                 ?>
                 <a href="<?= $export_word ?>"><i class="fa fa-file-word-o" aria-hidden="true" style="color:blue; cursor: pointer" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Экспорт в Word"></i></a>
-                    <?php
-                }
+                <?php
+            }
 
-                ?>
+            ?>
 
         </b></center>
     <?php
 }
 
+include 'modals.php';
+
+if (isset($is_rigs_obl_table) && $is_rigs_obl_table == 1) {
+
+    ?>
+    <a href="#" class="rigs-obl-garnison" data-toggle="modal"  data-target="#rigs-obl-garnison-modal" data-url="<?= $baseUrl ?>/get_rigs_obl_garnison">
+        <img  src="<?= $baseUrl ?>/assets/images/office-file-sheet_1.png">
+    </a>
+    <?php
+}
+
 ?>
+
+
+

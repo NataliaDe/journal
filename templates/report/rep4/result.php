@@ -397,6 +397,7 @@ include 'form.php';
                     <td>израсходовано пенообразователя, тонн</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался один ствол ГПС-600 или один ствол СВП на пожарах">
+                        <?=$number_3['cnt_fire_gps_1_po_out']?>+<?=$archive_bw['cnt_fire_gps_1_po_out']?>
                         <?=
                         ((isset($number_3['cnt_fire_gps_1_po_out']) && !empty($number_3['cnt_fire_gps_1_po_out'])) ? $number_3['cnt_fire_gps_1_po_out'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_1_po_out']) && !empty($archive_bw['cnt_fire_gps_1_po_out'])) ? $archive_bw['cnt_fire_gps_1_po_out'] : 0)
@@ -424,6 +425,7 @@ include 'form.php';
                     <td>израсходовано пенообразователя, тонн</td>
                     <td>
                         <span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Сумма тонн израсходованного пенообразователя, если использовался два и более ГПС-600 или два и более СВП на пожарах">
+
                         <?=
                         ((isset($number_3['cnt_fire_gps_2_po_out']) && !empty($number_3['cnt_fire_gps_2_po_out'])) ? $number_3['cnt_fire_gps_2_po_out'] : 0) +
                         ((isset($archive_bw['cnt_fire_gps_2_po_out']) && !empty($archive_bw['cnt_fire_gps_2_po_out'])) ? $archive_bw['cnt_fire_gps_2_po_out'] : 0)

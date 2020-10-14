@@ -41,7 +41,7 @@ section .sec {
   border-top: 1px solid #ddd;
 }
 
-input {
+input.input-tabs {
   display: none;
 }
 

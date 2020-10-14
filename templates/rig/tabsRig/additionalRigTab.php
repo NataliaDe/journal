@@ -136,7 +136,7 @@
         </div>
     </div>
 
-    <div class="col-lg-2">
+    <div class="col-lg-2 inspector_div <?= ($id_reasonrig == $reasonrig_fire || $id_reasonrig == $reasonrig_other_zagor) ? 'hide' : '' ?>">
         <div class="form-group">
             <label for="inspector">Инспектор</label>
             <input type="text" class="form-control" placeholder="" name="inspector" value="<?= $inspector ?>"  >

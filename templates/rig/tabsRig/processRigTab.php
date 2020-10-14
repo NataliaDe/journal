@@ -20,7 +20,7 @@
 
 <?php
 //print_r($rig);
-//echo $_SESSION['id_user'];
+
 if (isset($rig) && !empty($rig)) {
 
     $time_msg = date('Y-m-d H:i', strtotime($rig['time_msg']));
@@ -117,6 +117,7 @@ if (isset($rig) && !empty($rig)) {
             if ($_SESSION['auto_locality'] == $l['id'])
                 $id_locality_vid = $l['id_vid'];
         }
+
     }
 
 
@@ -130,6 +131,7 @@ if (isset($rig) && !empty($rig)) {
     else {
         $vid_of_locality = '';
     }
+
 
 
     /* ------- END выбор вида нас.п. -------- */
@@ -285,6 +287,15 @@ foreach ($podr as $row) {
 
 
 
+    <div class="col-lg-2 inspector_fire_div  <?= ($id_reasonrig == $reasonrig_fire || $id_reasonrig == $reasonrig_other_zagor) ? '' : 'hide' ?>">
+        <div class="form-group">
+            <label for="inspector_fire">Инспектор</label>
+            <input type="text" class="form-control" placeholder="" name="inspector_fire" value="<?= $inspector ?>"  >
+        </div>
+    </div>
+
+
+
 	        <div class="col-lg-2" id="div_fio_head_check" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && $id_reasonrig == 18 && $id_workview  != 0 && $id_workview  == 254) ? 'block' : 'none' ?> ">
             <div class="form-group" id="fio-head-check-id">
                 <label for="fio_head_check">Ф.И.О. руководителя проверки</label>
@@ -436,6 +447,8 @@ if ($id != 0) {//редактирование - заполнить  по умо�
 
         foreach ($locality as $row) {
             if (isset($auto_local_city)) {//город
+                printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
+            } elseif ($_SESSION['id_region'] == 3 && $row['id'] == 17030) {
                 printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' selected ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);
             } else {
                 printf("<p><option data-toggle=tooltip data-placement=left  title='%s'  value='%s' ><label>%s</label></option></p>", $row['local_name'], $row['id'], $row['name']);

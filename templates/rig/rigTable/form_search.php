@@ -85,7 +85,7 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
                 </div>
-            
+
         <div class="form-group">
             <div class="checkbox checkbox-success">
 
@@ -159,6 +159,7 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
 
 
     </form>
+
 
 
 

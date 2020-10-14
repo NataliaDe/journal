@@ -26,8 +26,8 @@ define(AVIA, 12); //id_organ AVIACIA
 
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
-define(VER, '4.0');
-define(NEWS_DATE, '19.08.2020');
+define(VER, '4.1');
+define(NEWS_DATE, '14.10.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -61,6 +61,7 @@ const SIZE_SUM_REMARK_RCU_FILE='15000000';
 const MIN_OBL_ID=6;
 
 const MIN_OBL_ID_LOCAL=72;
+
 
 
 
@@ -138,6 +139,7 @@ use App\CLASSES\Class_Phpword;
 
 
 
+
 /* ----------------- MIDDLEWARE ------------------- */
 
 //use \Slim\Middleware;
@@ -156,7 +158,7 @@ function is_login()
         //Проверяем, не пустые ли нужные нам куки...
         if (!empty($_COOKIE['id_user']) && !empty($_COOKIE['key'])) {
             $permissions = new Model_Permissions();
-            $permis = $permissions->selectPermisByCookie($_COOKIE['id_user'], $_COOKIE['cookie']);
+            $permis = $permissions->selectPermisByCookie($_COOKIE['id_user'], $_COOKIE['key']);
 
             if (!empty($permis)) {
                 session_start();
@@ -926,6 +928,8 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
         $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
         $data['reasons_for_sim']=array(REASON_MOLNIA);
         $data['work_for_sim']=array(REASON_WORK_MOLNIA);
+        $data['reasonrig_fire']=REASON_FIRE;
+        $data['reasonrig_other_zagor']=REASON_OTHER_ZAGOR;
 
         /*         * *** Классификаторы **** */
         $region = new Model_Region();
@@ -1070,6 +1074,17 @@ $app->group('/rig', 'is_login', 'is_permis', function () use ($app, $log) {
 
                     $data['selsovet'] = $selsovet->selectAllByLocal($_SESSION['auto_local']); //сельсоветы для района
                 }
+
+            }
+
+
+            if ($_SESSION['id_region'] == 3) {
+                $data['locality'] = $locality_result = $locality->selectAllByLocal(123);
+                foreach ($locality_result as $value) {
+                    $id_locality = $value['id'];
+                }
+
+                $data['street'] = $street->selectAllByLocality($id_locality); //улицы района
             }
 
 
@@ -1413,11 +1428,51 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         R::store($battle);
 
 
-
         if (!empty($post_jrig)) {
+
+
+            //if (isset($data['settings_user']['is_mes_time']) && $data['settings_user']['is_mes_time']['name_sign'] == 'yes') {
+
+                $time_msg = $time_character_m->get_time_msg($id);
+                $first_car_time = '';
+                $is_mes_time = 0;
+                $is_mes_time_text = '';
+                $k = 0;
+                foreach ($post_jrig as $value) {
+                    $k++;
+                    if ($k == 1 && isset($value['time_exit']) && $value['time_exit'] != '' && $value['time_exit'] != null)
+                        $first_car_time = $value['time_exit'];
+
+                    if (isset($value['time_exit']) && $value['time_exit'] != null && $value['time_exit'] != '' && $value['time_exit'] < $time_msg) {
+                        $is_mes_time_text = 'Время сообщения больше времени выезда одной из машин.';
+                    }
+
+                    if (!empty($time_msg) && $time_msg != '0000-00-00 00:00:00' && isset($value['time_exit']) && $value['time_exit'] != null && $value['time_exit'] != '' && $k > 1 && $value['time_exit'] < $first_car_time) {
+                        $first_car_time = $value['time_exit'];
+                    }
+                }
+
+                if (!empty($first_car_time) && !empty($time_msg) && $time_msg != '0000-00-00 00:00:00') {
+                    $start_date = new DateTime($time_msg);
+                    $since_start = $start_date->diff(new DateTime($first_car_time));
+                    $min = $since_start->i;
+
+                    if ($min >= 10) {
+                        $is_mes_time = 1;
+                        if (!empty($is_mes_time_text))
+                            $is_mes_time_text = $is_mes_time_text . ' ' . 'Разница между временем сообщения и выездом первой машины превышает 10 минут.';
+                        else
+                            $is_mes_time_text = 'Разница между временем сообщения и выездом первой машины превышает 10 минут.';
+                    }
+                }
+
+                $r['is_mes_time'] = $is_mes_time;
+                $r['is_mes_time_text'] = $is_mes_time_text;
+                $time_character_m->save($r, $id);
+            //}
+
             $jrig_m->save($post_jrig); //журнал вызова
         }
-
 
 
         /* is updeting now ?  */
@@ -1486,6 +1541,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         $filter = [];
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+        $data['reason_show_inspector']=array(REASON_FIRE,REASON_OTHER_ZAGOR);
 
         /* MODELS */
         $sily_m = new Model_Jrig();
@@ -1731,6 +1787,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
+
+        $data['reason_show_inspector']=array(REASON_FIRE,REASON_OTHER_ZAGOR);
 
 
         $data['id_page'] = $id; //number of tabs
@@ -1984,6 +2042,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
     $app->get('(/:id_rig)(/:is_reset_filter)', function ($id_rig = 0, $is_reset_filter = 0) use ($app) {
 
         $filter = [];
+
+        $data['reason_show_inspector']=array(REASON_FIRE,REASON_OTHER_ZAGOR);
 
         if ($is_reset_filter == 1) {
             rememberFilterDate($filter);
@@ -2320,6 +2380,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         }
         /* is updeting now ?  */
 
+        if($_SESSION['id_level'] == 2 && $_SESSION['sub'] == 0 && $_SESSION['id_organ'] == 4){
+
+            $data['is_rigs_obl_table']=1;
+        }
+
 
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
@@ -2332,6 +2397,8 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
     $app->post('/table', function ($is_remember_filter = 0) use ($app) {
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
+
+        $data['reason_show_inspector']=array(REASON_FIRE,REASON_OTHER_ZAGOR);
 
         $data['settings_user'] = getSettingsUser();
         $data['settings_user_br_table'] = getSettingsUserMode();
@@ -2633,6 +2700,11 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         /* is updeting now ?  */
 
 
+        if($_SESSION['id_level'] == 2 && $_SESSION['sub'] == 0 && $_SESSION['id_organ'] == 4){
+
+            $data['is_rigs_obl_table']=1;
+        }
+
         $app->render('layouts/header.php');
         $data['path_to_view'] = 'rig/rigTable.php';
         $app->render('layouts/div_wrapper.php', $data);
@@ -2697,6 +2769,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         /* is updeting now ?  */
         if ($id != 0) {//edit
             unset_update_rig_now($id);
+            $is_edit=1;
         }
 
 
@@ -2736,6 +2809,50 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
         /* ------- END сохранить инф по привлекаемым СиС др.ведомств ------ */
 
+
+        /* yellow warning about 10 min between first car and time msg */
+        if (isset($is_edit) && $is_edit == 1 && isset($post_rig) && isset($post_rig['time_msg'])) {
+            $time_msg = $post_rig['time_msg'];
+            $first_car_time = '';
+            $is_mes_time = 0;
+            $is_mes_time_text = '';
+            $k = 0;
+            $r = [];
+
+            $jrig = R::getAll('select * from silymchs as s where s.id_rig = ?', array($id));
+
+            foreach ($jrig as $value) {
+                $k++;
+                if ($k == 1 && isset($value['time_exit']) && $value['time_exit'] != '' && $value['time_exit'] != null)
+                    $first_car_time = $value['time_exit'];
+
+                if (isset($value['time_exit']) && $value['time_exit'] != null && $value['time_exit'] != '' && $value['time_exit'] < $time_msg) {
+                    $is_mes_time_text = 'Время сообщения больше времени выезда одной из машин.';
+                }
+
+                if (!empty($time_msg) && $time_msg != '0000-00-00 00:00:00' && isset($value['time_exit']) && $value['time_exit'] != null && $value['time_exit'] != '' && $k > 1 && $value['time_exit'] < $first_car_time) {
+                    $first_car_time = $value['time_exit'];
+                }
+            }
+
+            if (!empty($first_car_time) && !empty($time_msg) && $time_msg != '0000-00-00 00:00:00') {
+                $start_date = new DateTime($time_msg);
+                $since_start = $start_date->diff(new DateTime($first_car_time));
+                $min = $since_start->i;
+
+                if ($min >= 10) {
+                    $is_mes_time = 1;
+                    if (!empty($is_mes_time_text))
+                        $is_mes_time_text = $is_mes_time_text . ' ' . 'Разница между временем сообщения и выездом первой машины превышает 10 минут.';
+                    else
+                        $is_mes_time_text = 'Разница между временем сообщения и выездом первой машины превышает 10 минут.';
+                }
+            }
+
+            $r['is_mes_time'] = $is_mes_time;
+            $r['is_mes_time_text'] = $is_mes_time_text;
+            $rig->save($r, $id);
+        }
 
         if ($new_id) {//успех
             $log_post_rig = json_encode($post_rig, JSON_UNESCAPED_UNICODE);
@@ -13745,6 +13862,8 @@ function unset_update_rig_now($id)
 function is_update_rig_now_refresh_table($rig, $id)
 {
 
+    if(isset( $_SESSION['id_user'])){
+
     if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null && $rig['now_update_by_user'] != $_SESSION['id_user']) {
         //if ($rig['date_start_update'] != null && $rig['now_update_by_user'] != null ) {
 //        $datetime1 = new DateTime(date('Y-m-d H:i:s'));
@@ -13772,6 +13891,7 @@ function is_update_rig_now_refresh_table($rig, $id)
         } else {
             // R::exec('UPDATE rig SET now_update_by_user = ?, date_start_update = ? WHERE id = ?', array(null, null, $id));
         }
+    }
     }
 
     return (isset($is_update_now)) ? $is_update_now : '';
@@ -17681,6 +17801,119 @@ $app->post('/loadApi/:type','is_login', function ($type) use ($app) {
 });
 
 
+
+/* OBL rigs table in modal */
+
+$app->get('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
+
+    $data['ss'] = 1;
+
+    $id_region = $_SESSION['id_region'];
+
+    if ($id_region == 1)
+        $data['obl_name'] = 'Брестского областного';
+    elseif ($id_region == 2)
+        $data['obl_name'] = 'Витебского областного';
+    elseif ($id_region == 3)
+        $data['obl_name'] = 'Минского городского';
+    elseif ($id_region == 4)
+        $data['obl_name'] = 'Гомельского областного';
+    elseif ($id_region == 5)
+        $data['obl_name'] = 'Гродненского областного';
+    elseif ($id_region == 6)
+        $data['obl_name'] = 'Минского областного';
+    elseif ($id_region == 7)
+        $data['obl_name'] = 'Могилевского областного';
+
+
+    $loc = R::getAll('select * from locals where id_region = ?', array($_SESSION['id_region']));
+    $locals = [];
+
+
+    $time_now = date("H:i:s");
+    $yesterday = date("Y-m-d", time() - (60 * 60 * 24));
+    $today = date("Y-m-d");
+    $tomorrow = date("Y-m-d", time() + (60 * 60 * 24));
+
+    if ($time_now <= '06:00:00') {//до 06 утра
+        $date1 = $yesterday . ' 06:00:00';
+        $date2 = $today . ' 06:00:00';
+    } else {//после 06 утра
+        $date1 = $today . ' 06:00:00';
+        $date2 = $tomorrow . ' 06:00:00';
+    }
+
+    //echo $date1.' '.$date2;
+
+    $data['date1'] = \DateTime::createFromFormat('Y-m-d H:i:s', $date1)->format('d.m.Y H:i');
+    $data['date2'] = \DateTime::createFromFormat('Y-m-d H:i:s', $date2)->format('d.m.Y H:i');
+
+    foreach ($loc as $value) {
+        $id_reg = $value['id'];
+
+
+
+
+        //fires, other zagor,help, demerk, les,torf,trava,false
+        $rigs = R::getAssoc("CALL get_cnt_rigs_to_local('{$id_reg}','{$date1}','{$date2}');");
+
+
+        if (!empty($rigs)) {
+            foreach ($rigs as $row) {
+                $locals[$value['name']]['fire'] = (isset($row['fire']) && !empty($row['fire'])) ? $row['fire'] : '';
+                $locals[$value['name']]['o'] = (isset($row['o']) && !empty($row['o'])) ? $row['o'] : '';
+                $locals[$value['name']]['help'] = (isset($row['h']) && !empty($row['h'])) ? $row['h'] : '';
+                $locals[$value['name']]['demerk'] = (isset($row['dem']) && !empty($row['dem'])) ? $row['dem'] : '';
+                $locals[$value['name']]['les'] = (isset($row['les']) && !empty($row['les'])) ? $row['les'] : '';
+                $locals[$value['name']]['torf'] = (isset($row['torf']) && !empty($row['torf'])) ? $row['torf'] : '';
+                $locals[$value['name']]['trava'] = (isset($row['trava']) && !empty($row['trava'])) ? $row['trava'] : '';
+                $locals[$value['name']]['false'] = (isset($row['f']) && !empty($row['f'])) ? $row['f'] : '';
+            }
+        } else {
+            $locals[$value['name']]['fire'] = '';
+            $locals[$value['name']]['o'] = '';
+            $locals[$value['name']]['help'] = '';
+            $locals[$value['name']]['demerk'] = '';
+            $locals[$value['name']]['les'] = '';
+            $locals[$value['name']]['torf'] = '';
+            $locals[$value['name']]['trava'] = '';
+            $locals[$value['name']]['false'] = '';
+        }
+
+
+        // result battle
+        $rb = R::getAssoc("CALL get_cnt_rb_to_local('{$id_reg}','{$date1}','{$date2}');");
+
+
+        if (!empty($rb)) {
+            foreach ($rb as $row) {
+                $locals[$value['name']]['dead'] = (isset($row['dead']) && !empty($row['dead'])) ? $row['dead'] : '';
+                $locals[$value['name']]['inj'] = (isset($row['inj']) && !empty($row['inj'])) ? $row['inj'] : '';
+                $locals[$value['name']]['save'] = (isset($row['save']) && !empty($row['save'])) ? $row['save'] : '';
+                $locals[$value['name']]['ev'] = (isset($row['ev']) && !empty($row['ev'])) ? $row['ev'] : '';
+            }
+        } else {
+            $locals[$value['name']]['dead'] = '';
+            $locals[$value['name']]['inj'] = '';
+            $locals[$value['name']]['save'] = '';
+            $locals[$value['name']]['ev'] = '';
+        }
+    }
+
+
+    $data['locals'] = $locals;
+
+
+
+
+
+
+    $view = $app->render('rigs_obl_garnison/rigs_obl_garnison_modal_body.php', $data);
+    $response = json_encode(['success' => TRUE, 'view' => $view]);
+});
+
+
+
 /* NII reports */
 
 $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log) {
@@ -17736,7 +17969,8 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
     });
 
 
-    $app->post('/rep1', function () use ($app) {
+
+    $app->post('/rep1_old', function () use ($app) {
 
         $filter = [];
 
@@ -17754,16 +17988,11 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
         $informing_m = new Model_Informing();
         $sily_mchs_m = new Model_Silymchs();
 
-        $data['settings_user'] = getSettingsUser();
-        $data['settings_user_br_table'] = getSettingsUserMode();
-
-
-
+        //$data['settings_user'] = getSettingsUser();
+        //$data['settings_user_br_table'] = getSettingsUserMode();
 
 
         $filter['reasonrig'] = array(REASON_FIRE, REASON_OTHER_ZAGOR);
-
-
 
 
         if (isset($from) && !empty($from)) {
@@ -17791,10 +18020,13 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
 
         $data['rig'] = $rig_m->select_all_rigs($filter); //без ЦП
+//echo count($data['rig']);exit();
 
 
         if (!empty($data['rig']))
             usort($data['rig'], "order_rigs");
+
+
 
         if ($id_region != 0) {
             $region_name = R::getCell('select name from regions where id = ?', array($id_region));
@@ -17835,6 +18067,12 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
         $all_reasons = array(REASON_FIRE, REASON_OTHER_ZAGOR);
 
+        $rig_cars = [];
+        $rig_innerservice = [];
+        $rig_informing = [];
+
+
+
 
         foreach ($data['rig'] as $value) {//id of rigs
             if ($value['id_reasonrig'] == REASON_FIRE) {
@@ -17847,60 +18085,69 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
 
             if ($value['id'] != null) {
-                $id_rig_arr[] = $value['id'];
-                $id_rig_informing[] = $value['id'];
+                //$id_rig_arr[] = $value['id'];
+                //$id_rig_informing[] = $value['id'];
+
+
+                $rig_innerservice[$value['id']] = $inner_m->get_innerservice_by_rig_id($value['id']);
+
+                // $rig_informing[$value['id']] = $informing_m->get_informing_by_rig_id($value['id']);
             }
 
             if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
-                $id_rig_sis_mes[] = $value['id'];
+                //$id_rig_sis_mes[] = $value['id'];
+
+                $rig_cars[$value['id']] = $sily_m->get_jrig_by_rig_id($value['id']);
             }
         }
 
+
+//                $i=0;
+//        foreach ($data['rig'] as $row) {
+//            $i++;
+//            echo $row['id_reasonrig'].'<br>';
+//        }
+//        echo $i;
+//
+//        exit();
         /* ------- END select information on SiS MHS-------- */
 
-        $rig_cars = [];
-        $rig_innerservice = [];
-        $rig_informing = [];
-        if (!empty($id_rig_sis_mes)) {
-            //sis mchs
-            $jrig = $sily_m->get_jrig_by_rigs_for_word($id_rig_sis_mes);
 
-            if (!empty($jrig)) {
-                foreach ($jrig as $row) {
-                    $rig_cars[$row['id_rig']][] = $row;
-                }
-            }
-        }
-
+//        if (!empty($id_rig_sis_mes)) {
+//            //sis mchs
+//            $jrig = $sily_m->get_jrig_by_rigs_for_word($id_rig_sis_mes);
+//
+//            if (!empty($jrig)) {
+//                foreach ($jrig as $row) {
+//                    $rig_cars[$row['id_rig']][] = $row;
+//                }
+//            }
+//        }
         //sis inner
-        if (!empty($id_rig_arr)) {
-            $inner = $inner_m->get_innerservice_by_rigs($id_rig_arr);
-
-            if (!empty($inner)) {
-                foreach ($inner as $row) {
-                    $rig_innerservice[$row['id_rig']][] = $row;
-                }
-            }
-        }
-
-
+//        if (!empty($id_rig_arr)) {
+//            $inner = $inner_m->get_innerservice_by_rigs($id_rig_arr);
+//
+//            if (!empty($inner)) {
+//                foreach ($inner as $row) {
+//                    $rig_innerservice[$row['id_rig']][] = $row;
+//                }
+//            }
+//        }
         //informing
-        if (!empty($id_rig_informing)) {
-            $informing = $informing_m->get_informing_by_rigs($id_rig_informing);
-
-            if (!empty($informing)) {
-                foreach ($informing as $row) {
-
-                    $rig_informing[$row['id_rig']][] = $row;
-                }
-            }
-        }
+//        if (!empty($id_rig_informing)) {
+//            $informing = $informing_m->get_informing_by_rigs($id_rig_informing);
+//
+//            if (!empty($informing)) {
+//                foreach ($informing as $row) {
+//
+//                    $rig_informing[$row['id_rig']][] = $row;
+//                }
+//            }
+//        }
 
         $data['rig_cars'] = $rig_cars;
         $data['rig_innerservice'] = $rig_innerservice;
-        $data['rig_informing'] = $rig_informing;
-
-//print_r($data['rig']);
+        // $data['rig_informing'] = $rig_informing;
 
 
 
@@ -17955,6 +18202,7 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                 $i = 0;
                 $sheet->mergeCells('A' . $r . ':Q' . $r);
                 if ($reason == REASON_FIRE) {
+                    $c = 0;
 
                     $sheet->setCellValueByColumnAndRow($c, $r, 'ПОЖАРЫ');
                     $sheet->getStyle('A' . $r . ':Q' . $r)->applyFromArray($style_reason);
@@ -17966,6 +18214,7 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                     }
                 } elseif ($reason == REASON_OTHER_ZAGOR) {
 
+                    $c = 0;
                     $sheet->setCellValueByColumnAndRow($c, $r, 'НЕУЧЕТНЫЕ ЗАГОРАНИЯ');
                     $sheet->getStyle('A' . $r . ':Q' . $r)->applyFromArray($style_reason);
                     if ($is_other_zagor == 0) {
@@ -17980,7 +18229,7 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
                 if (($reason == REASON_FIRE && $is_fire > 0) || ($reason == REASON_OTHER_ZAGOR && $is_other_zagor > 0)) {
 
-                    foreach ($data['rig'] as $row) {
+                    foreach ($data['rig'] as $key => $row) {
                         $c = 0;
                         if ($row['id_reasonrig'] == $reason) {
                             $i++;
@@ -18009,7 +18258,7 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                             }
 
                             if ($row['address_type_table_4'] != NULL) {
-                                $addr = $addr . $row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? '<w:br/>' . $row['additional_field_address'] : ''));
+                                $addr = $addr . $row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? (chr(10) . $row['additional_field_address']) : ''));
                             } else {
                                 $addr = $addr . $row['additional_field_address'];
                             }
@@ -18061,6 +18310,8 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                             if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
 
                                 foreach ($rig_innerservice[$row['id']] as $val) {
+
+
 
                                     if ($cars == '')
                                         $cars = $cars . $val['service_name'];
@@ -18216,10 +18467,12 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                             }
                             if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
                                 foreach ($rig_innerservice[$row['id']] as $val) {
-                                    if ($time_follow == '')
-                                        $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
-                                    else
-                                        $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                    if (isset($val['time_follow']) && !empty($val['time_follow'])) {
+                                        if ($time_follow == '')
+                                            $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
+                                        else
+                                            $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                    }
                                 }
                             }
 
@@ -18254,6 +18507,8 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                             $c++;
 
                             $r++;
+
+                            unset($data['rig'][$key]);
                         }
                     }
                 }
@@ -18264,8 +18519,539 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
 
 
+        $file_name='vyezdy_06-00_'.(\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')).'-'.(\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y')).'_'.date('H-i').'_'.date('d.m.Y').'.xlsx';
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="Отчет по пожарам и неучетным загораниям.xlsx"');
+        header('Content-Disposition: attachment;filename="'.$file_name.'"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
+
+
+
+    $app->post('/rep1', function () use ($app) {
+
+        $filter = [];
+
+        $post = $app->request()->post();
+        $from = (isset($post['date_start']) && !empty($post['date_start'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_start'])->format('Y-m-d')) : '';
+        $to = (isset($post['date_end']) && !empty($post['date_end'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_end'])->format('Y-m-d')) : '';
+        $id_region = $filter['id_region'] = (isset($post['id_region']) && !empty($post['id_region'])) ? $post['id_region'] : 0;
+        $id_local = $filter['id_local'] = (isset($post['id_local']) && !empty($post['id_local'])) ? $post['id_local'] : '';
+
+
+        /* MODELS */
+        $sily_m = new Model_Jrig();
+        $rig_m = new Model_Rigtable();
+        $inner_m = new Model_Innerservice();
+        $informing_m = new Model_Informing();
+        $sily_mchs_m = new Model_Silymchs();
+
+        //$data['settings_user'] = getSettingsUser();
+        //$data['settings_user_br_table'] = getSettingsUserMode();
+
+
+        $filter['reasonrig'] = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+
+        if (isset($from) && !empty($from)) {
+            $rig_m->setDateStart(trim($from));
+        } else {
+            if (date("H:i:s") <= '06:00:00') {//до 06 утра
+                $rig_m->setDateStart(date("d.m.Y", time() - (60 * 60 * 24)));
+            } else {
+                $rig_m->setDateStart(date("d.m.Y"));
+            }
+        }
+
+        if (isset($to) && !empty($to)) {
+            $rig_m->setDateEnd(trim($to));
+        } else {
+            if (date("H:i:s") <= '06:00:00') {//до 06 утра
+                $rig_m->setDateEnd(date("d.m.Y"));
+            } else {
+                $rig_m->setDateEnd(date("d.m.Y", time() + (60 * 60 * 24)));
+            }
+        }
+
+
+        $caption = 'по Республике';
+
+
+        $data['rig'] = $rig_m->select_all_rigs($filter); //без ЦП
+//echo count($data['rig']);exit();
+
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs");
+
+
+
+        if ($id_region != 0) {
+            $region_name = R::getCell('select name from regions where id = ?', array($id_region));
+
+
+            if ($id_region != 3)
+                $caption = $region_name . ' область';
+            else
+                $caption = $region_name;
+        }
+
+        if ($id_local != 0) {
+            $local_name = R::getCell('select name from locals where id = ?', array($id_local));
+
+            if ($id_region != 0) {
+                $caption = $caption . ', район: ' . $local_name;
+            } else
+                $caption = 'Район: ' . $local_name;
+        }
+
+
+
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs_asc");
+
+        /* ------- select information on SiS MHS -------- */
+        $id_rig_arr = array();
+        $id_rig_informing = array();
+        $id_rig_sis_mes = array();
+
+        $is_fire = 0;
+        $is_other_zagor = 0;
+        $is_help = 0;
+        $is_demerk = 0;
+        $is_molnia = 0;
+        $is_ltt = 0;
+
+        $all_reasons = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+        $rig_cars = [];
+        $rig_innerservice = [];
+        $rig_informing = [];
+
+
+
+
+        foreach ($data['rig'] as $value) {//id of rigs
+            if ($value['id_reasonrig'] == REASON_FIRE) {
+                $is_fire++;
+            }
+
+            if ($value['id_reasonrig'] == REASON_OTHER_ZAGOR) {
+                $is_other_zagor++;
+            }
+
+
+            if ($value['id'] != null) {
+                //$id_rig_arr[] = $value['id'];
+                //$id_rig_informing[] = $value['id'];
+
+
+                $rig_innerservice[$value['id']] = $inner_m->get_innerservice_by_rig_id($value['id']);
+
+                // $rig_informing[$value['id']] = $informing_m->get_informing_by_rig_id($value['id']);
+            }
+
+            if ($value['is_sily_mchs'] != 1 && $value['id'] != null) {
+                //$id_rig_sis_mes[] = $value['id'];
+
+                $rig_cars[$value['id']] = $sily_m->get_jrig_by_rig_id($value['id']);
+            }
+        }
+
+        $data['rig_cars'] = $rig_cars;
+        $data['rig_innerservice'] = $rig_innerservice;
+        // $data['rig_informing'] = $rig_informing;
+
+
+
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/nii_reports/rep1_new.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+
+        // $sheet->setCellValue('A1', 'Выезды с 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')) . ' до 06:00 ' . (\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y'))); //выбранный период
+        // $sheet->setCellValue('A2', $caption); //выбранный область и район
+
+        $r = 2; //начальная строка для записи
+        $c = 0; //счетчик кол-ва записей № п/п
+
+
+
+        $style_reason = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => '7ad4f5'
+                )
+            )
+        );
+        $style_ate = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => 'fafa28'
+                )
+            )
+        );
+        $style_all = array(
+// Заполнение цветом
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if (isset($data['rig']) && !empty($data['rig'])) {
+
+
+
+            foreach ($all_reasons as $reason) {
+
+                $i = 0;
+                $sheet->mergeCells('A' . $r . ':R' . $r);
+                if ($reason == REASON_FIRE) {
+                    $c = 0;
+
+                    $sheet->setCellValueByColumnAndRow($c, $r, 'ПОЖАРЫ');
+                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
+                    if ($is_fire == 0) {
+
+                        $r++;
+                        $sheet->mergeCells('A' . $r . ':R' . $r);
+                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+                    }
+                } elseif ($reason == REASON_OTHER_ZAGOR) {
+
+                    $c = 0;
+                    $sheet->setCellValueByColumnAndRow($c, $r, 'НЕУЧЕТНЫЕ ЗАГОРАНИЯ');
+                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
+                    if ($is_other_zagor == 0) {
+
+                        $r++;
+                        $sheet->mergeCells('A' . $r . ':R' . $r);
+                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+                    }
+                }
+
+                $r++;
+
+                if (($reason == REASON_FIRE && $is_fire > 0) || ($reason == REASON_OTHER_ZAGOR && $is_other_zagor > 0)) {
+
+                    foreach ($data['rig'] as $key => $row) {
+                        $c = 0;
+                        if ($row['id_reasonrig'] == $reason) {
+                            $i++;
+
+
+                            //$sheet->setCellValueByColumnAndRow($c, $r, $i);
+                            //$c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['id']);
+                            $c++;
+//code ate
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['locality_id']);
+                            $sheet->getStyle('B' . $r . ':B' . $r)->applyFromArray($style_ate);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('d.m.Y', strtotime($row['date_msg'])));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('H:i', strtotime($row['time_msg'])));
+                            $c++;
+                            //$sheet->setCellValueByColumnAndRow($c, $r, $row['local_name']);
+                            //$c++;
+
+                            $addr = '';
+
+                            if (!in_array($row['locality_id_vid'], CITY_VID)) {
+                                $addr = $row['local_name'] . ' район, ';
+                            }
+
+                            if ($row['address_type_table_4'] != NULL) {
+                                $addr = $addr . $row['address_type_table_4'] . ((!empty($row['additional_field_address']) ? (chr(10) . $row['additional_field_address']) : ''));
+                            } else {
+                                $addr = $addr . $row['additional_field_address'];
+                            }
+
+                            if (!empty($row['object'])) {
+                                $addr = $addr . chr(10);
+                                $addr = $addr . '(' . $row['object'] . ')';
+                            }
+
+                            if (isset($row['id_owner_category']) && $row['id_owner_category'] != 0) {
+                                $addr = $addr . '. ' . mb_convert_case($row['category_name'], MB_CASE_TITLE, "UTF-8") . ': ';
+                            }
+                            if (isset($row['owner_fio']) && !empty($row['owner_fio'])) {
+                                $addr = $addr . $row['owner_fio'];
+                            }
+                            if (isset($row['owner_year_birthday']) && !empty($row['owner_year_birthday']) && $row['owner_year_birthday'] != 0) {
+                                $addr = $addr . ', ' . $row['owner_year_birthday'] . ' г.р.';
+                            }
+                            if (isset($row['owner_position']) && !empty($row['owner_position'])) {
+                                $addr = $addr . ', ' . $row['owner_position'];
+                            }
+                            if (isset($row['owner_job']) && !empty($row['owner_job'])) {
+                                $addr = $addr . ' ' . $row['owner_job'];
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $addr);
+                            $c++;
+
+
+                            $cars = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+//                        if ($val['is_return'] == 1)
+//                            $cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:r></w:p>";
+//                        else
+
+                                    if ($cars == '')
+                                        $cars = $cars . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+                                    else
+                                        $cars = $cars . chr(10) . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'];
+
+                                    //$cars = $cars ."<w:br/>";
+                                    //$cars = $cars . "<w:p><w:r><w:rPr><w:strike/></w:rPr><w:t>" . $val['view_name'] . ' ' . $val['pasp_name'] . ' ' . $val['locorg_name'] . "</w:t></w:r></w:p>";
+                                }
+                                //$table->addCell(PhpOffice\PhpWord\Shared\Converter::cmToTwip(7), array('valign' => 'top', 'align' => 'center'))->addText($cars, $style_php_word::style_cell_font, array('align' => 'left', 'spaceAfter' => 0, 'spacing' => 0));
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+
+
+                                    if ($cars == '')
+                                        $cars = $cars . $val['service_name'];
+                                    else
+                                        $cars = $cars . chr(10) . $val['service_name'];
+                                    //$cars = $cars ."<w:p><w:r><w:rPr></w:rPr><w:t>" .$val['service_name'] . "</w:t></w:r></w:p>";
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $cars);
+                            $c++;
+
+                            $t_exit = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_exit == '')
+                                        $t_exit = $t_exit . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                    else
+                                        $t_exit = $t_exit . chr(10) . (($val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_exit == '')
+                                        $t_exit = $t_exit . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                    else
+                                        $t_exit = $t_exit . chr(10) . ((isset($val['time_exit']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_exit'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_exit);
+                            $c++;
+
+                            $t_arrival = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_arrival == '')
+                                        $t_arrival = $t_arrival . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                                    else
+                                        $t_arrival = $t_arrival . chr(10) . (($val['is_return'] == 1) ? 'возврат' : (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-'));
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_arrival == '')
+                                        $t_arrival = $t_arrival . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                                    else
+                                        $t_arrival = $t_arrival . chr(10) . (($val['time_arrival'] != null) ? date('H:i', strtotime($val['time_arrival'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_arrival);
+                            $c++;
+
+
+                            if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                                $t_loc = new DateTime($row['time_loc']);
+                                $time_loc = $t_loc->Format('H:i');
+                            } else {
+                                $time_loc = '';
+                            }
+
+                            if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                                $t_likv = new DateTime($row['time_likv']);
+                                $time_likv = $t_likv->Format('H:i');
+                            } elseif ($row['is_likv_before_arrival'] == 1) {
+                                $time_likv = 'ликв.до' . chr(10) . 'приб.';
+                            } elseif ($row['is_not_measures'] == 1) {
+                                $time_likv = 'меры не' . chr(10) . ' прин.';
+                            } elseif ($row['is_closed'] == 1) {
+                                $time_likv = '-';
+                            } else {
+                                $time_likv = '';
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_loc);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_likv);
+                            $c++;
+
+
+
+                            $t_end = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+
+                                foreach ($rig_cars[$row['id']] as $val) {
+
+                                    if ($t_end == '')
+                                        $t_end = $t_end . (($val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                    else
+                                        $t_end = $t_end . chr(10) . (($val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                }
+                            }
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+
+                                    if ($t_end == '')
+                                        $t_end = $t_end . ((isset($val['time_end']) && $val['time_exit'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                    else
+                                        $t_end = $t_end . chr(10) . ((isset($val['time_end']) && $val['time_end'] != null) ? date('H:i', strtotime($val['time_end'])) : '-');
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_end);
+                            $c++;
+
+
+
+                            $t_return = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($t_return == '')
+                                        $t_return = $t_return . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                                    else
+                                        $t_return = $t_return . chr(10) . (($val['time_return'] != null) ? date('H:i', strtotime($val['time_return'])) : '-');
+                                }
+                            }
+
+
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if ($t_return == '')
+                                        $t_return = $t_return . '-';
+                                    else
+                                        $t_return = $t_return . chr(10) . '-';
+                                }
+                            }
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_return);
+                            $c++;
+
+
+
+                            $time_follow = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($time_follow == '')
+                                        $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
+                                    else
+                                        $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                }
+                            }
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if (isset($val['time_follow']) && !empty($val['time_follow'])) {
+                                        if ($time_follow == '')
+                                            $time_follow = $time_follow . date('H:i', strtotime($val['time_follow']));
+                                        else
+                                            $time_follow = $time_follow . chr(10) . date('H:i', strtotime($val['time_follow']));
+                                    }
+                                }
+                            }
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_follow);
+                            $c++;
+
+
+                            $distance = '';
+                            if (isset($rig_cars[$row['id']]) && !empty($rig_cars[$row['id']])) {
+                                foreach ($rig_cars[$row['id']] as $val) {
+                                    if ($distance == '')
+                                        $distance = $distance . $val['distance'];
+                                    else
+                                        $distance = $distance . chr(10) . $val['distance'];
+                                }
+                            }
+                            if (isset($rig_innerservice[$row['id']]) && !empty($rig_innerservice[$row['id']])) {
+                                foreach ($rig_innerservice[$row['id']] as $val) {
+                                    if ($distance == '')
+                                        $distance = $distance . $val['distance'];
+                                    else
+                                        $distance = $distance . chr(10) . $val['distance'];
+                                }
+                            }
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $distance);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, trim($row['inf_detail']));
+                            $c++;
+
+
+                            if ($value['id_reasonrig'] == REASON_FIRE) {
+                                $reason_name = 'пожар';
+                            } elseif ($value['id_reasonrig'] == REASON_OTHER_ZAGOR) {
+                                $reason_name = 'другие загорания';
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $reason_name);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, trim($row['latitude']));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, trim($row['longitude']));
+                            $c++;
+
+                            $r++;
+
+                            unset($data['rig'][$key]);
+                        }
+                    }
+                }
+            }
+
+            $sheet->getStyle('A' . 2 . ':R' . ($r - 1))->applyFromArray($style_all);
+        }
+
+
+
+        $file_name = 'vyezdy_06-00_' . (\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')) . '-' . (\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y')) . '_' . date('H-i') . '_' . date('d.m.Y') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $file_name . '"');
         header('Cache-Control: max-age=0');
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');

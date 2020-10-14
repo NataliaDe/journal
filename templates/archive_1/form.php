@@ -149,11 +149,14 @@ if (isset($msg) && !empty($msg)) {
                 <input class="form-control" type="text" name="id_local" id="id_local_archive_1" placeholder="Введите первые символы">
             </div>
         </div>
+    </div>
 
+
+    <div class="row">
         <div class="col-lg-2">
             <div class="form-group">
                 <label for="reasonrig">Причина вызова</label>
-                <select class=" js-example-basic-single form-control" name="reasonrig"   >
+                <select class="js-example-basic-single form-control" name="reasonrig"  >
                     <option value="">Все</option>
                     <?php
                     foreach ($reasonrig as $row) {
@@ -165,7 +168,6 @@ if (isset($msg) && !empty($msg)) {
                 </select>
             </div>
         </div>
-
     </div>
 
 

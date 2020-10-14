@@ -783,4 +783,35 @@ background-color: black;
 
 }
 
+.is_mes_time{
+    color: #ff8100;
+    background-color: #ecef45;
+}
+
+
+.rigs-obl-garnison{
+    position: absolute;
+    left: 39%;
+    bottom: 76%;
+    z-index: 500;
+}
+
+.rigs-obl-garnison img{
+width:25px;
+}
+
+
+
+#rigs-obl-garnison-modal .modal-dialog {
+    width: 984px !important;
+
+}
+
+.td-red{
+    background-color: #fbeded;
+}
+.tbl-obl-rigs thead th{
+    background-color: #b1d7ec !important;
+}
+
 

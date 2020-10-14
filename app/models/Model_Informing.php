@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Object model mapping for relational table `Informing` 
+ * Object model mapping for relational table `Informing`
  */
 
 namespace App\MODELS;
@@ -12,7 +12,7 @@ class Model_Informing {
 
 //    public function selectAll() {
 //           return R::getAll('SELECT * FROM journal.service ORDER BY name ASC');
-//       
+//
 //    }
     public function setIdRig($id_rig) {
         $this->id_rig = $id_rig;
@@ -24,7 +24,7 @@ class Model_Informing {
 		$error=array();
 
         foreach ($x as $key => $value) {
-			
+
 			if($x [$key]['my'] == 1){
             //не учитывать,если адресат не выбран
             if ($x [$key]['id_destination'] == '' && empty($x [$key]['destination_text'])) {//должен быть выбран адресат либо заполнено поле адресат
@@ -34,9 +34,9 @@ class Model_Informing {
                 $y[$key]['id'] = intval($x [$key]['id']); // id of informing table - int
 
                 $y[$key]['id_destination'] = intval($x [$key]['id_destination']); // id адресата - int
-                
+
                 $y [$key]['destination_text']=$x [$key]['destination_text'];
-				
+
 				$y[$key]['id_level_created'] = $_SESSION['id_level'];
 
                 /*                 * * проверка на вшивость Время сообщения  ** */
@@ -88,7 +88,7 @@ class Model_Informing {
                     $error['time_exit_arrival'] = ' Время выезда не может превышать время прибытия ';
                 }
                   }
-              
+
             }
 			}
         }
@@ -112,7 +112,7 @@ class Model_Informing {
 
         // что сейчас в БД
         $service_from_bd = $this->selectAllByIdRigOnlyMy($id_rig,$_SESSION['id_level']);
-        
+
 //        print_r($service_from_bd);
 //        echo '<br>';
 //        print_r($array);
@@ -174,18 +174,18 @@ class Model_Informing {
         //return R::getAll('SELECT * FROM journal.informing WHERE id_rig = ?', array($this->id_rig));
          return R::getAll('SELECT * FROM journal.informingrep WHERE id_rig = ?', array($this->id_rig));
     }
-    
+
         public function selectAllInIdRig($id_rig) {
-			
+
 			$new_result=array();
-			
+
 			if(!empty($id_rig)){
 			 $str_id_rig = implode(',', $id_rig);
 
         $result = R::getAll('SELECT * FROM informingrep WHERE id_rig IN (  ' . $str_id_rig . ')');
         foreach ($result as $row) {
             $new_result[$row['id_rig']] []= $row;
-        }	
+        }
 			}
 
        return $new_result;
@@ -211,33 +211,39 @@ class Model_Informing {
             R::trash($s);
         }
     }
-	
+
 	        public function selectAllByIdRigOnlyMy($id_rig,$id_level) {
         $this->setIdRig($id_rig);
         //return R::getAll('SELECT * FROM journal.informing WHERE id_rig = ?', array($this->id_rig));
          return R::getAll('SELECT * FROM journal.informingrep WHERE id_rig = ? and id_level_created = ?', array($this->id_rig, $id_level));
     }
-	
+
 	    function getNotFullInfo($ids_rig)
     {
         return R::getAll('SELECT id_rig FROM journal.informingrep WHERE id_rig IN ('. implode(',', $ids_rig).') AND '
             . ' (id_destination <> 0 OR destination_text <> "") AND (time_msg is null OR time_exit is null OR time_arrival is null)');
     }
 
-	
-	
+
+
             public function copy_informing($array)
     {
         $sily = R::dispense('informing');
         $sily->import($array);
         R::store($sily);
     }
-	
-	
-	
+
+
+
 	    public function get_informing_by_rigs($ids_rig)
     {
         $res = R::getAll('SELECT id_rig, fio, time_msg, time_exit, time_arrival FROM informingrep  WHERE id_rig IN (  ' . implode(',', $ids_rig) . ')');
+        return $res;
+    }
+
+    	    public function get_informing_by_rig_id($ids_rig)
+    {
+        $res = R::getAll('SELECT id_rig, fio, time_msg, time_exit, time_arrival FROM informingrep  WHERE id_rig = ' .$ids_rig);
         return $res;
     }
 }

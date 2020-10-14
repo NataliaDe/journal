@@ -850,7 +850,9 @@ class Model_Rigtable
         public function select_all_rigs($filter)
     {
 
-        $sql = 'SELECT * FROM journal.rigtable WHERE is_delete = ?  and locality_id is not null';
+        $sql = 'SELECT id,locality_id,date_msg,time_msg,full_time_msg,local_name,region_name,locality_id_vid, address_type_table_4,additional_field_address,object,'
+            . ' id_owner_category,category_name,owner_fio,owner_year_birthday,owner_position,owner_job,inf_detail,id_reasonrig,is_sily_mchs,'
+            . 'time_loc,time_likv,is_likv_before_arrival,is_not_measures,is_closed, latitude, longitude  FROM journal.rigtable WHERE is_delete = ?  and locality_id is not null';
         $param = array(0);
 
 
@@ -859,6 +861,10 @@ class Model_Rigtable
         }
         elseif (isset($filter) && isset($filter['id_region']) && !empty($filter['id_region']) && $filter['id_region'] !=0) {
             $sql = $sql . ' AND id_region =' . $filter['id_region'];
+        }
+
+            if (isset($filter) && isset($filter['reasonrig']) && !empty($filter['reasonrig']) ) {
+            $sql = $sql . ' AND id_reasonrig IN(' . implode(',', $filter['reasonrig']).')';
         }
 
         return $this->getRigTable($sql, $param);

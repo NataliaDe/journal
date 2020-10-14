@@ -110,13 +110,12 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                     ?>
                     <tr style="background-color:#ddd; border: 5px solid #da0d0d !important; ">
                         <?php
-                    }
-                     elseif(isset($row['is_not_my']) && $row['is_not_my'] == 1){
-?>
-                            <tr class="is_not_my_rig">
-                            <?php
-                        }
-                    else {
+                    } elseif (isset($row['is_not_my']) && $row['is_not_my'] == 1) {
+
+                        ?>
+                    <tr class="is_not_my_rig">
+                        <?php
+                    } else {
 
                         ?>
                     <tr style="background-color: <?= (isset($reasonrig_color[$row['id_reasonrig']])) ? $reasonrig_color[$row['id_reasonrig']] : 'white' ?>;">
@@ -192,7 +191,14 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                    <?php
                }
 
-               ?></td>
+                            if ($row['is_mes_time'] == 1 && (isset($settings_user['is_mes_time']) && $settings_user['is_mes_time']['name_sign'] == 'yes')) {
+
+                                ?>
+                                <i class="fa fa-clock-o is_mes_time" aria-hidden="true"  data-toggle="tooltip" data-placement="right" title="<?= $row['is_mes_time_text'] ?>"></i>
+                                <?php
+                            }
+
+                            ?></td>
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= date('d.m.Y', strtotime($row['date_msg'])) ?></td>
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= date('H:i', strtotime($row['time_msg'])) ?></td>
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $row['local_name'] ?></td>
@@ -290,7 +296,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
         </td>
 
-                        <!--                    <td>< $row['floor'] ?></td>-->
+                                <!--                    <td>< $row['floor'] ?></td>-->
         <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" >
             <?php
             /* id of rigs, where silymschs/innerservice are not selected */
@@ -340,23 +346,23 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                         ?>
                         <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank" style="color: #c51a05 !important">
                             <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Не заполнено."></i></a>
-                <?php
-            } elseif (isset($not_full_info) && in_array($row['id'], $not_full_info)) {
+                        <?php
+                    } elseif (isset($not_full_info) && in_array($row['id'], $not_full_info)) {
 
-                ?>
+                        ?>
                         <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank"  style="color: #f39c12 !important">
                             <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование. Заполнено частично."></i></a>
-                <?php
-            } else {
+                        <?php
+                    } else {
 
-                ?>
+                        ?>
                         <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/info" target="_blank">
                             <i class="fa fa-lg fa-info-circle" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Информирование"></i></a>
-                <?php
-            }
-        }
+                        <?php
+                    }
+                }
 
-        ?>
+                ?>
                 <?php
                 /* id of rigs, where silymschs/innerservice are not selected */
                 if (isset($result_icons['character']) && in_array($row['id'], $result_icons['character'])) {
@@ -364,22 +370,22 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                     ?>
                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank" style="color: #c51a05 !important">
                         <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
-            <?php
-        } elseif (isset($not_full_sily) && in_array($row['id'], $not_full_sily)) {
+                    <?php
+                } elseif (isset($not_full_sily) && in_array($row['id'], $not_full_sily)) {
 
-            ?>
+                    ?>
                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank"  style="color: #f39c12 !important">
                         <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики. Не заполнено время возвращения"></i></a>
-            <?php
-        } else {
+                    <?php
+                } else {
 
-            ?>
+                    ?>
                     <a href="<?= $baseUrl ?>/rig/<?= $row['id'] ?>/character" target="_blank">
                         <i class="fa fa-lg fa-clock-o" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Временные характеристики"></i></a>
-            <?php
-        }
+                    <?php
+                }
 
-        ?>
+                ?>
 
 
                 <a href="<?= $baseUrl ?>/results_battle/<?= $row['id'] ?>" target="_blank">
@@ -397,18 +403,18 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 <ul class="dropdown" style="padding-left:0px" >
 
 
-                            <?php
-        if ($is_show_link_sd == 1) {
-
-            ?>
-<!--                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
-                        <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
-                    </a>-->
                     <?php
-                    include dirname(dirname(__FILE__)) .'/parts/go_to_sd.php';
-                }
+                    if ($is_show_link_sd == 1) {
 
-                ?>
+                        ?>
+            <!--                    <a href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>" target="_blank" >
+                                    <img src="<?= $baseUrl ?>/assets/images/sd.png" style="width:20px" aria-hidden='true' data-toggle="tooltip" data-placement="left" title="Сформировать СД">
+                                </a>-->
+                        <?php
+                        include dirname(dirname(__FILE__)) . '/parts/go_to_sd.php';
+                    }
+
+                    ?>
 
 
                     <a href="# "  style="color: #222d32;" class="dropdown-toggle navbar-right-customer" data-toggle="dropdown"  data-toggle="tooltip" data-placement="left" title="Сформировать путевку"><i class="fa  fa-file-text" aria-hidden='true' style="color: #222d32;"></i><b class="caret"></b></a>
@@ -470,19 +476,20 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
 
 
-                    <?php
-                } else {// не обрезать
+                        <?php
+                    } else {// не обрезать
+
+                        ?>
+                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span>
+                        <?php
+                    }
 
                     ?>
-                    <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><span id="sp<?= $i ?>"> <?= $row['inf_detail'] ?></span>
-                    <?php
-                }
-
-                ?>
 
 
-                    <?= (isset($row['number_sim']) && !empty($row['number_sim'])) ? '<br><br>№ Сим-карты: '.$row['number_sim'] : ''?>
- </td>
+                    <?= (isset($row['number_sim']) && !empty($row['number_sim'])) ? '<br><br>№ Сим-карты: ' . $row['number_sim'] : '' ?>
+                        <?= (isset($row['inspector']) && !empty($row['inspector']) && in_array($row['id_reasonrig'], $reason_show_inspector)) ? '<br><br>Инспектор: ' . $row['inspector'] : '' ?>
+                </td>
 
 
                 <td class="<?= (isset($row['is_neighbor']) && $row['is_neighbor'] == 1) ? 'is-neighbor-td' : '' ?>" ><?= $time_loc ?></td>
@@ -525,6 +532,7 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
                 <?php
             }
         }
+        $pageLength = ((isset($settings_user['cnt_rows_rigtable']) && isset($settings_user['cnt_rows_rigtable']['name_sign']))) ? $settings_user['cnt_rows_rigtable']['name_sign'] : 50;
 
         ?>
 
@@ -532,3 +540,116 @@ include dirname(dirname(__FILE__)) . '/header_rig_table.php';
 
         </tbody>
 </table>
+
+
+
+<script src="<?= $baseUrl ?>/assets/plugins/jQuery/jQuery-2.1.4.min.js"></script>
+<script>
+
+                                $(document).ready(function () {
+
+
+                                    $("tfoot").css("display", "table-header-group");//tfoot of table
+
+
+
+
+                                    /*  rigTable type1  */
+                                    var rig_table_vis_type1 = $('#rigTableType1').DataTable({
+                                        "pageLength": <?=$pageLength?>,
+                                        "order": [],
+                                        language: {
+                                            "processing": "Подождите...",
+                                            "search": "Поиск:",
+                                            "lengthMenu": "Показать _MENU_ записей",
+                                            "info": "Записи с _START_ до _END_ из _TOTAL_ записей",
+                                            "infoEmpty": "Записи с 0 до 0 из 0 записей",
+                                            "infoFiltered": "(отфильтровано из _MAX_ записей)",
+                                            "infoPostFix": "",
+                                            "loadingRecords": "Загрузка записей...",
+                                            "zeroRecords": "Записи отсутствуют.",
+                                            "emptyTable": "В таблице отсутствуют данные",
+                                            "paginate": {
+                                                "first": "Первая",
+                                                "previous": "Предыдущая",
+                                                "next": "Следующая",
+                                                "last": "Последняя"
+                                            },
+                                            "aria": {
+                                                "sortAscending": ": активировать для сортировки столбца по возрастанию",
+                                                "sortDescending": ": активировать для сортировки столбца по убыванию"
+                                            }
+
+                                        }
+//                                 "columnDefs": [
+//            {
+//                "targets": [ 13 ],
+//                "visible": false
+//            }
+//        ]
+                                    });
+
+                                    $('a.toggle-vis-rig-table-type1').on('click', function (e) {
+                                        e.preventDefault();
+
+                                        // Get the column API object
+                                        var column_type1 = rig_table_vis_type1.column($(this).attr('data-column'));
+
+                                        // Toggle the visibility
+                                        column_type1.visible(!column_type1.visible());
+
+
+                                    });
+
+
+
+                                    /*---------- rig table type1 ------------*/
+                                    $('#rigTableType1 tfoot th').each(function (i) {
+                                        var table = $('#rigTableType1').DataTable();
+                                        if (i !== 1 && i != 7 && i != 13) {
+
+                                            if (i == 8) {
+                                                //выпадающий список
+                                                var y = 'rigFormType1';
+                                                var select = $('<select class="' + i + '  noprint" id="sel' + y + i + '"><option value=""></option></select>')
+                                                        .appendTo($(this).empty())
+                                                        .on('change', function () {
+
+                                                            var val = $(this).val();
+
+                                                            table.column(i) //Only the first column
+                                                                    .search(val ? '^' + $(this).val() + '$' : val, true, false)
+                                                                    .draw();
+                                                        });
+
+                                                var x = $('#rigTableType1 tfoot th').index($(this));
+                                                table.column(i).data().unique().sort().each(function (d, j) {
+                                                    select.append('<option value="' + d + '" >' + d + '</option>');
+                                                });
+
+
+                                            } else {
+                                                var title = $('#rigTableType1 tfoot th').eq($(this).index()).text();
+                                                var x = $('#rigTableType1 tfoot th').index($(this));
+                                                var y = 'rigFormType1';
+                                                //$(this).html( '<input type="text" placeholder="Поиск '+title+'" />' );
+                                                $(this).html('<input type="text" class="noprint" id="inpt' + y + x + '" placeholder="Поиск"  />');
+                                                // document.getElementById("inpt11").html('placeholder="<i class="fa fa-search" aria-hidden="true"></i>"');
+                                            }
+
+                                        }
+                                    });
+                                    $("#rigTableType1 tfoot input").on('keyup change', function () {
+                                        var table = $('#rigTableType1').DataTable();
+                                        table
+                                                .column($(this).parent().index() + ':visible')
+                                                .search(this.value)
+                                                .draw();
+                                    });
+
+                                    /*---------- END rig table type1 ------------*/
+
+                                });
+
+
+</script>
