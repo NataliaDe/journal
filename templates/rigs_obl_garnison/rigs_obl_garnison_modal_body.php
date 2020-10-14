@@ -1,3 +1,9 @@
+<style>
+    .tbl-obl-rigs tbody tr:hover {
+  background-color: #edf1f9;
+}
+</style>
+
 <div class="modal-header" >
     <h4 class="modal-title ff-l header-name" id="myModalLabel">
         <img  src="<?= $baseUrl ?>/assets/images/monitor-refresh.png"  onclick="refresh_rigs_obl_table();" style="width: 35px;cursor: pointer" data-toggle="tooltip" data-placement="top" title="Обновить">
@@ -19,11 +25,13 @@
         <th>район</th>
         <th>пожары</th>
         <th>гибель</th>
-        <th>пострадав-<br>шие</th>
+        <th>постра-<br>давшие</th>
         <th>спас/эвак</th>
         <th>др. загорания</th>
         <th>помощь</th>
-        <th>демеркуриз.</th>
+        <th>демер-<br>куризация</th>
+        <th>молния</th>
+        <th>др.сигна-<br>лизации</th>
         <th>лес</th>
         <th>торф</th>
         <th>трава</th>
@@ -64,6 +72,12 @@
                     </td>
                     <td>
                         <?= $row['demerk'] ?>
+                    </td>
+                     <td>
+                        <?= $row['moln'] ?>
+                    </td>
+                     <td>
+                        <?= $row['signl'] ?>
                     </td>
                     <td>
                         <?= $row['les'] ?>

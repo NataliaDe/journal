@@ -790,10 +790,10 @@ background-color: black;
 
 
 .rigs-obl-garnison{
-    position: absolute;
+/*    position: absolute;
     left: 39%;
     bottom: 76%;
-    z-index: 500;
+    z-index: 500;*/
 }
 
 .rigs-obl-garnison img{

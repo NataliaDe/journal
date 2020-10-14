@@ -17868,6 +17868,8 @@ $app->get('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
                 $locals[$value['name']]['torf'] = (isset($row['torf']) && !empty($row['torf'])) ? $row['torf'] : '';
                 $locals[$value['name']]['trava'] = (isset($row['trava']) && !empty($row['trava'])) ? $row['trava'] : '';
                 $locals[$value['name']]['false'] = (isset($row['f']) && !empty($row['f'])) ? $row['f'] : '';
+                $locals[$value['name']]['moln'] = (isset($row['moln']) && !empty($row['moln'])) ? $row['moln'] : '';
+                $locals[$value['name']]['signl'] = (isset($row['signl']) && !empty($row['signl'])) ? $row['signl'] : '';
             }
         } else {
             $locals[$value['name']]['fire'] = '';
@@ -17878,6 +17880,8 @@ $app->get('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
             $locals[$value['name']]['torf'] = '';
             $locals[$value['name']]['trava'] = '';
             $locals[$value['name']]['false'] = '';
+             $locals[$value['name']]['moln']='';
+             $locals[$value['name']]['signl']='';
         }
 
 
@@ -18664,6 +18668,7 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
         $data['rig_innerservice'] = $rig_innerservice;
         // $data['rig_informing'] = $rig_informing;
 
+        //print_r($data['rig']);exit();
 
 
 
@@ -18715,32 +18720,32 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
             foreach ($all_reasons as $reason) {
 
                 $i = 0;
-                $sheet->mergeCells('A' . $r . ':R' . $r);
-                if ($reason == REASON_FIRE) {
-                    $c = 0;
+                //$sheet->mergeCells('A' . $r . ':R' . $r);
+//                if ($reason == REASON_FIRE) {
+//                    $c = 0;
+//
+//                    $sheet->setCellValueByColumnAndRow($c, $r, 'ПОЖАРЫ');
+//                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
+//                    if ($is_fire == 0) {
+//
+//                        $r++;
+//                        $sheet->mergeCells('A' . $r . ':R' . $r);
+//                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+//                    }
+//                } elseif ($reason == REASON_OTHER_ZAGOR) {
+//
+//                    $c = 0;
+//                    $sheet->setCellValueByColumnAndRow($c, $r, 'НЕУЧЕТНЫЕ ЗАГОРАНИЯ');
+//                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
+//                    if ($is_other_zagor == 0) {
+//
+//                        $r++;
+//                        $sheet->mergeCells('A' . $r . ':R' . $r);
+//                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
+//                    }
+//                }
 
-                    $sheet->setCellValueByColumnAndRow($c, $r, 'ПОЖАРЫ');
-                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
-                    if ($is_fire == 0) {
-
-                        $r++;
-                        $sheet->mergeCells('A' . $r . ':R' . $r);
-                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
-                    }
-                } elseif ($reason == REASON_OTHER_ZAGOR) {
-
-                    $c = 0;
-                    $sheet->setCellValueByColumnAndRow($c, $r, 'НЕУЧЕТНЫЕ ЗАГОРАНИЯ');
-                    $sheet->getStyle('A' . $r . ':R' . $r)->applyFromArray($style_reason);
-                    if ($is_other_zagor == 0) {
-
-                        $r++;
-                        $sheet->mergeCells('A' . $r . ':R' . $r);
-                        $sheet->setCellValueByColumnAndRow($c, $r, 'нет');
-                    }
-                }
-
-                $r++;
+                //$r++;
 
                 if (($reason == REASON_FIRE && $is_fire > 0) || ($reason == REASON_OTHER_ZAGOR && $is_other_zagor > 0)) {
 
@@ -19022,9 +19027,10 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
                             $c++;
 
 
-                            if ($value['id_reasonrig'] == REASON_FIRE) {
+                            $reason_name='';
+                            if ($row['id_reasonrig'] == REASON_FIRE) {
                                 $reason_name = 'пожар';
-                            } elseif ($value['id_reasonrig'] == REASON_OTHER_ZAGOR) {
+                            } elseif ($row['id_reasonrig'] == REASON_OTHER_ZAGOR) {
                                 $reason_name = 'другие загорания';
                             }
 

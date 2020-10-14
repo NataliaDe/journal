@@ -33,7 +33,20 @@ if (isset($search_rig_by_id)) {
     }
 
     ?>
-    <center><b>
+    <center>
+<?php
+
+        if (isset($is_rigs_obl_table) && $is_rigs_obl_table == 1) {
+
+    ?>
+    <a href="#" class="rigs-obl-garnison" data-toggle="modal"  data-target="#rigs-obl-garnison-modal" data-url="<?= $baseUrl ?>/get_rigs_obl_garnison">
+        <img  src="<?= $baseUrl ?>/assets/images/office-file-sheet_1.png">
+    </a>
+    <?php
+}
+
+?>
+        <b>
             Выезды <?= $cnt_rig ?> с 06:00 <u><?= $start_date ?></u> до 06:00 <u><?= $end_date ?></u>
 
 
@@ -113,14 +126,6 @@ if (isset($search_rig_by_id)) {
 
 include 'modals.php';
 
-if (isset($is_rigs_obl_table) && $is_rigs_obl_table == 1) {
-
-    ?>
-    <a href="#" class="rigs-obl-garnison" data-toggle="modal"  data-target="#rigs-obl-garnison-modal" data-url="<?= $baseUrl ?>/get_rigs_obl_garnison">
-        <img  src="<?= $baseUrl ?>/assets/images/office-file-sheet_1.png">
-    </a>
-    <?php
-}
 
 ?>
 
