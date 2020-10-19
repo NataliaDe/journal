@@ -38,8 +38,15 @@ if (isset($search_rig_by_id)) {
 
         if (isset($is_rigs_obl_table) && $is_rigs_obl_table == 1) {
 
+            if(isset($active_tab) && !empty($active_tab)){//rcu
+
+                $id_region=$active_tab;
+            }
+            else{
+                $id_region=0;
+            }
     ?>
-    <a href="#" class="rigs-obl-garnison" data-toggle="modal"  data-target="#rigs-obl-garnison-modal" data-url="<?= $baseUrl ?>/get_rigs_obl_garnison">
+    <a href="#" class="rigs-obl-garnison" data-toggle="modal"  data-target="#rigs-obl-garnison-modal" data-url="<?= $baseUrl ?>/get_rigs_obl_garnison" data-region="<?=$id_region?>">
         <img  src="<?= $baseUrl ?>/assets/images/office-file-sheet_1.png">
     </a>
     <?php

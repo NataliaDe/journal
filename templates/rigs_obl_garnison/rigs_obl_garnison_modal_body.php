@@ -2,6 +2,9 @@
     .tbl-obl-rigs tbody tr:hover {
   background-color: #edf1f9;
 }
+.tbl-obl-rigs .left {
+  text-align: left;
+}
 </style>
 
 <div class="modal-header" >
@@ -49,7 +52,7 @@
                     <td>
                         <?= $k ?>
                     </td>
-                    <td>
+                    <td class="left">
                         <?= $loc_name ?>
                     </td>
                     <td>

@@ -1771,6 +1771,10 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         /* is updeting now ?  */
 
 
+                if ($_SESSION['id_user'] == 2) {
+            $data['is_rigs_obl_table'] = 1;
+        }
+
 
 
         $data['bread_crumb'] = $bread_crumb;
@@ -2028,6 +2032,9 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
 
 
+                        if ($_SESSION['id_user'] == 2) {
+            $data['is_rigs_obl_table'] = 1;
+        }
 
 
         $app->render('layouts/header.php');
@@ -17804,11 +17811,20 @@ $app->post('/loadApi/:type','is_login', function ($type) use ($app) {
 
 /* OBL rigs table in modal */
 
-$app->get('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
+$app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
 
     $data['ss'] = 1;
 
-    $id_region = $_SESSION['id_region'];
+
+    $post=$app->request()->post();
+
+    if (isset($post['id_region']) && !empty($post['id_region']) && $post['id_region'] != 0) {
+        $id_region = $post['id_region'];
+    } else {
+        $id_region = $_SESSION['id_region'];
+    }
+
+
 
     if ($id_region == 1)
         $data['obl_name'] = 'Брестского областного';
@@ -17826,7 +17842,7 @@ $app->get('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
         $data['obl_name'] = 'Могилевского областного';
 
 
-    $loc = R::getAll('select * from locals where id_region = ?', array($_SESSION['id_region']));
+    $loc = R::getAll('select * from locals where id_region = ?', array($id_region));
     $locals = [];
 
 

@@ -2642,14 +2642,17 @@ $('#rigs-obl-garnison-modal').on('show.bs.modal', function (e) {
 
     var btn = $(e.relatedTarget);
 
+    var id_region=btn.data('region');
+
     $('#rigs-obl-garnison-modal').find('.modal-body').html('');
 
         $('#rigs-obl-garnison-modal').find('.modal-content').html('');
         $('#preload-get-archive-data').css('display', 'block');
 
     $.ajax({
-        type: 'GET',
-        url: btn.data('url')
+        type: 'POST',
+        url: btn.data('url'),
+        data:{'id_region': id_region}
     }).done(function (response) {
 
 
@@ -2664,9 +2667,11 @@ $('#rigs-obl-garnison-modal').on('show.bs.modal', function (e) {
 function refresh_rigs_obl_table(){
 
     var url=$('.rigs-obl-garnison').attr('data-url');
+    var id_region=$('.rigs-obl-garnison').attr('data-region');
     $.ajax({
-        type: 'GET',
-        url: url
+        type: 'POST',
+        url: url,
+        data:{'id_region': id_region}
     }).done(function (response) {
 
 
