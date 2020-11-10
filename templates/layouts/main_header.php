@@ -52,9 +52,6 @@
 
 
 
-
-
-
 <?php
 /* br mode  */
 if(isset($settings_user_br_table) && !empty($settings_user_br_table)){
@@ -118,6 +115,22 @@ if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user']) && in_array($_SE
                // }
 
                 ?>
+
+
+
+                <?php
+                if (isset($_SESSION['id_user']) && !empty($_SESSION['id_user'])) {
+
+                    ?>
+                    <li>
+                        <a href="/speciald" class="logo"  style="background-color:#3c8dbc" data-placement="left" title="Перейти в ПС «Специальные донесения»" target='_blank'>
+                            <img src="<?= $baseUrl ?>/assets/images/writing-pad.png" width="50" height="50" style="padding-bottom: 5px;">
+                        </a>
+                    </li>
+
+                    <?php
+                }
+                    ?>
 
 
 

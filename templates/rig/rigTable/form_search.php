@@ -31,6 +31,23 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
 <br>
     <form  role="form" class="form-inline" id="filterRigForm" method="POST" action=" <?= $path ?> ">
 
+        <?php
+        if (isset($filter_error) && !empty($filter_error)) {
+
+            ?>
+
+                <div class="alert alert-danger alert-danger-custom" style="padding-top: 10px;padding-bottom: 10px;width: 81%;">
+            <strong>
+    <?= $filter_error ?>
+            </strong>
+        </div>
+
+            <?php
+        }
+
+        ?>
+
+
                 <div class="form-group">
                     <label for="date_start" >с</label>
                     <div class="input-group date" id="date_start">

@@ -803,7 +803,7 @@ width:25px;
 
 
 #rigs-obl-garnison-modal .modal-dialog {
-    width: 984px !important;
+    width: 1053px !important;
 
 }
 
@@ -812,6 +812,11 @@ width:25px;
 }
 .tbl-obl-rigs thead th{
     background-color: #b1d7ec !important;
+}
+
+
+.div-error{
+    color: red;
 }
 
 

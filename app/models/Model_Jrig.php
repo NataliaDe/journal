@@ -316,7 +316,7 @@ FROM (((((((((`journal`.`silymchs` `s`
       LEFT JOIN `ss`.`organs` `orgg`
         ON ((`locor`.`oforg` = `orgg`.`id`)))
      LEFT JOIN `ss`.`records` `rec`
-       ON ((`rec`.`id` = `t`.`id_record`)))
+       ON ((`rec`.`id` = `s`.`id_pasp`)))
     LEFT JOIN `ss`.`divizions` `d`
       ON ((`d`.`id` = `rec`.`id_divizion`)))
 

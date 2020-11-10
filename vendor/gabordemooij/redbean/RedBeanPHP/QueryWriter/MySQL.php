@@ -144,8 +144,9 @@ class MySQL extends AQueryWriter implements QueryWriter
 	 * object.
 	 *
 	 * @param Adapter $adapter Database Adapter
+	 * @param array   $options options array
 	 */
-	public function __construct( Adapter $adapter )
+	public function __construct( Adapter $adapter, $options = array() )
 	{
 		$this->typeno_sqltype = array(
 			MySQL::C_DATATYPE_BOOL             => ' TINYINT(1) UNSIGNED ',
@@ -172,8 +173,36 @@ class MySQL extends AQueryWriter implements QueryWriter
 		}
 
 		$this->adapter = $adapter;
-
 		$this->encoding = $this->adapter->getDatabase()->getMysqlEncoding();
+		$me = $this;
+		if (!isset($options['noInitcode']))
+		$this->adapter->setInitCode(function($version) use(&$me) {
+			try {
+				if (strpos($version, 'maria')===FALSE && intval($version)>=8) {
+						$me->useFeature('ignoreDisplayWidth');
+				}
+			} catch( \Exception $e ){}
+		});
+	}
+
+	/**
+	 * Enables certain features/dialects.
+	 *
+	 * - ignoreDisplayWidth required for MySQL8+
+	 *   (automatically set by setup() if you pass dsn instead of PDO object)
+	 *
+	 * @param string $name feature ID
+	 *
+	 * @return void
+	 */
+	public function useFeature($name) {
+		if ($name == 'ignoreDisplayWidth') {
+			$this->typeno_sqltype[MySQL::C_DATATYPE_BOOL] = ' TINYINT UNSIGNED ';
+			$this->typeno_sqltype[MySQL::C_DATATYPE_UINT32] = ' INT UNSIGNED ';
+			foreach ( $this->typeno_sqltype as $k => $v ) {
+				$this->sqltype_typeno[trim( strtolower( $v ) )] = $k;
+			}
+		}
 	}
 
 	/**
@@ -261,7 +290,7 @@ class MySQL extends AQueryWriter implements QueryWriter
 		}
 
 		//setter turns TRUE FALSE into 0 and 1 because database has no real bools (TRUE and FALSE only for test?).
-		if ( $value === FALSE || $value === TRUE || $value === '0' || $value === '1' ) {
+		if ( $value === FALSE || $value === TRUE || $value === '0' || $value === '1' || $value === 0 || $value === 1 ) {
 			return MySQL::C_DATATYPE_BOOL;
 		}
 

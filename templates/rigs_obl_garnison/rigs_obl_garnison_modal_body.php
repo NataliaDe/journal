@@ -1,10 +1,21 @@
 <style>
     .tbl-obl-rigs tbody tr:hover {
-  background-color: #edf1f9;
-}
-.tbl-obl-rigs .left {
-  text-align: left;
-}
+        background-color: #edf1f9;
+    }
+    .tbl-obl-rigs .left {
+        text-align: left;
+    }
+    .tbl-obl-rigs tbody  tr td, .tbl-obl-rigs thead th{
+        border: 2px solid #00000075 !important
+    }
+
+    .tbl-obl-rigs tbody  .tr-itogo{
+        background-color: #ffff004a;
+        font-weight: 600;
+    }
+        .tbl-obl-rigs {
+       width: 85% !important;
+    }
 </style>
 
 <div class="modal-header" >
@@ -21,7 +32,7 @@
 </div>
 <div class="modal-body">
 
-<!--    <button  type="button" class="btn btn-success " onclick="refresh_rigs_obl_table();" >Обновить</button>-->
+    <!--    <button  type="button" class="btn btn-success " onclick="refresh_rigs_obl_table();" >Обновить</button>-->
     <table class="table table-condensed   table-bordered table-custom tbl-obl-rigs ">
         <thead>
         <th>№ п.п</th>
@@ -76,10 +87,10 @@
                     <td>
                         <?= $row['demerk'] ?>
                     </td>
-                     <td>
+                    <td>
                         <?= $row['moln'] ?>
                     </td>
-                     <td>
+                    <td>
                         <?= $row['signl'] ?>
                     </td>
                     <td>
@@ -99,8 +110,57 @@
             }
 
             ?>
+            <tr class="tr-itogo">
+                <td colspan="2">
+                    ИТОГО
+                </td>
+
+
+
+                <td>
+                    <?= ($itogo['fire'] > 0 ? $itogo['fire'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['dead'] > 0 ? $itogo['dead'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['inj'] > 0 ? $itogo['inj'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['save'] > 0 ? $itogo['save'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['o'] > 0 ? $itogo['o'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['help'] > 0 ? $itogo['help'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['demerk'] > 0 ? $itogo['demerk'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['moln'] > 0 ? $itogo['moln'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['signl'] > 0 ? $itogo['signl'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['les'] > 0 ? $itogo['les'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['torf'] > 0 ? $itogo['torf'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['trava'] > 0 ? $itogo['trava'] : '') ?>
+                </td>
+                <td>
+                    <?= ($itogo['false'] > 0 ? $itogo['false'] : '') ?>
+                </td>
+            </tr>
+
         </tbody>
     </table>
+
 </div>
 <div class="modal-footer">
     <button  type="button" class="btn btn-secondary " data-dismiss="modal" >Закрыть</button>

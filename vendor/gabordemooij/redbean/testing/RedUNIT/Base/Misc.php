@@ -625,7 +625,8 @@ class Misc extends Base
 	/**
 	 * Test if adding SimpleModles to a shared list will auto unbox them.
 	 */
-	public function testSharedListsAutoUnbox() {
+	public function testSharedListsAutoUnbox()
+	{
 		$boxedBean = R::dispense( 'boxedbean' );
 		$bean = R::dispense( 'bean' );
 		$model = new SimpleModel();
@@ -637,5 +638,16 @@ class Misc extends Base
 		} catch ( \Exception $e ) {
 			fail();
 		}
+	}
+
+	/**
+	 * Test if we can obtain a database server version string
+	 * from the Facade.
+	 */
+	public function testGetDatabaseServerVersion()
+	{
+		$version = R::getDatabaseServerVersion();
+		asrt(is_string($version), TRUE);
+		asrt(strlen($version)>0, TRUE);
 	}
 }

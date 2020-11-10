@@ -245,7 +245,6 @@ $('#filterRigForm')
 
 
 
-
 $('#date_start').on('dp.change dp.show', function (e) {
     $('#filterRigForm').bootstrapValidator('revalidateField', 'date_start');
 });
@@ -253,6 +252,72 @@ $('#date_start').on('dp.change dp.show', function (e) {
 $('#date_end').on('dp.change dp.show', function (e) {
     $('#filterRigForm').bootstrapValidator('revalidateField', 'date_end');
 });
+$('#filterRigForm').on('submit', function (e) {
+    $('#filterRigForm').bootstrapValidator('revalidateField', 'date_start');
+});
+
+
+//$('#date_start').on('dp.change dp.show', function (e) {
+//    $('#filterRigForm').bootstrapValidator('revalidateField', 'date_start');
+//});
+//
+//$('#date_end').on('dp.change dp.show', function (e) {
+//    $('#filterRigForm').bootstrapValidator('revalidateField', 'date_end');
+//});
+
+
+
+/* form rigtable filter */
+//$('form#filterRigForm').submit(function (e) {
+//
+//    // Запрещаем стандартное поведение для кнопки submit
+//    e.preventDefault();
+//
+//
+////$('#filterRigForm').bootstrapValidator('revalidateField', 'date_start');
+//
+//    var date_start = $('#filterRigForm [name="date_start"]').val();
+//    var date_end = $('#filterRigForm [name="date_end"]').val();
+//
+////console.log(diffDates(new Date(date_end), new Date(date_start)));
+//
+//validateDate(date_start);
+//
+//    if (date_start == '')
+//        toastr.error('Выберите дату начала', 'Ошибка!', {timeOut: 2500});
+//    else if (date_end == '') {
+//        toastr.error('Выберите дату окончания', 'Ошибка!', {timeOut: 2500});
+//    } else if (date_start === date_end) {
+//        toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 2500});
+//    } else if (date_start > date_end) {
+//        toastr.error('Дата окончания должна быть больше даты начала ', 'Ошибка!', {timeOut: 2500});
+//    }
+//    else if(diffDates(new Date(date_end), new Date(date_start)) >7){
+//        toastr.error('Диапазон не может превышать 1 недели ', 'Ошибка!', {timeOut: 2500});
+//    }
+//    else {
+//        //later you decide you want to submit
+//                //$(this).unbind('submit').submit();
+//    }
+//
+//});
+//
+//
+//function diffDates(day_one, day_two) {
+//    return (day_one - day_two) / (60 * 60 * 24 * 1000);
+//};
+//
+//function validateDate(date){
+//    //var regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
+//    var regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
+//    var dateOk=regex.test(date);
+//    if(dateOk){
+//        alert("Ok");
+//    }else{
+//        alert("not Ok");
+//    }
+//}
+
 /*----------- END форма поиска выездов по диапазону дат-------------*/
 
 
@@ -2680,3 +2745,6 @@ function refresh_rigs_obl_table(){
 
     });
 }
+
+
+

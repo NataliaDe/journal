@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '14.10.2020');
+define(NEWS_DATE, '06.11.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -1551,8 +1551,16 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $sily_mchs_m = new Model_Silymchs();
 
         if ($is_reset_filter == 1) {
+            unset($_SESSION['journal_nat']['filter_error']);
             rememberFilterDate($filter);
         }
+
+
+         if (isset($_SESSION['journal_nat']['filter_error']) && !empty($_SESSION['journal_nat']['filter_error'])) {
+             $data['filter_error']=$_SESSION['journal_nat']['filter_error'];
+             unset($_SESSION['journal_nat']['filter_error']);
+         }
+
         $bread_crumb = array('Все выезды');
 
         $data['id_page'] = $id; //номер вклдаки
@@ -1789,6 +1797,44 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
     // table for rcu - filter on dates
     $app->post('/table/for_rcu/:id(/:id_rig)', function ($id, $id_rig = 0) use ($app) {
 
+
+         $rig_m = new Model_Rigtable();
+        $sily_m = new Model_Jrig();
+        $inner_m = new Model_Innerservice();
+        $informing_m = new Model_Informing();
+        $sily_mchs_m = new Model_Silymchs();
+
+
+        /* check date period. Can't be more 7 days !!!!!  */
+        unset($_SESSION['journal_nat']['filter_error']);
+        if ($id_rig == 0) {
+            $date_start = $app->request()->post('date_start');
+            $date_end = $app->request()->post('date_end');
+
+            if (!empty($date_start) && !empty($date_end)) {
+                if ($rig_m->isDateTimeValid($date_start, "Y-m-d") == true && $rig_m->isDateTimeValid($date_end, "Y-m-d") == true) {
+
+                    $start = new DateTime($date_start);
+                    $end = new DateTime($date_end);
+                    $diff = $end->diff($start);
+                    $diff_days = $diff->d;
+
+                    if ($diff_days > 7) {
+                        $_SESSION['journal_nat']['filter_error'] = 'Период не может превышать 1 недели в связи с большим объемом данных';
+                        $app->redirect(BASE_URL . '/rig/table/for_rcu/' . $id);
+                    }
+                } else {
+                    $_SESSION['journal_nat']['filter_error'] = 'Неверный  формат дат';
+                    $app->redirect(BASE_URL . '/rig/table/for_rcu/' . $id);
+                }
+            } else {
+                $_SESSION['journal_nat']['filter_error'] = 'Проверьте корректность дат';
+                $app->redirect(BASE_URL . '/rig/table/for_rcu/' . $id);
+            }
+        }
+
+
+
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
 
@@ -1801,11 +1847,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $data['settings_user_br_table'] = getSettingsUserMode();
 
 
-        $rig_m = new Model_Rigtable();
-        $sily_m = new Model_Jrig();
-        $inner_m = new Model_Innerservice();
-        $informing_m = new Model_Informing();
-        $sily_mchs_m = new Model_Silymchs();
+
 
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
@@ -2048,13 +2090,22 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
     //rigtable
     $app->get('(/:id_rig)(/:is_reset_filter)', function ($id_rig = 0, $is_reset_filter = 0) use ($app) {
 
+
+
         $filter = [];
 
         $data['reason_show_inspector']=array(REASON_FIRE,REASON_OTHER_ZAGOR);
 
         if ($is_reset_filter == 1) {
+             unset($_SESSION['journal_nat']['filter_error']);
             rememberFilterDate($filter);
         }
+
+         if (isset($_SESSION['journal_nat']['filter_error']) && !empty($_SESSION['journal_nat']['filter_error'])) {
+             $data['filter_error']=$_SESSION['journal_nat']['filter_error'];
+             unset($_SESSION['journal_nat']['filter_error']);
+         }
+         
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
 
@@ -2402,6 +2453,43 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
     //rigtable - filter on dates
     $app->post('/table', function ($is_remember_filter = 0) use ($app) {
+
+
+        $rig_m = new Model_Rigtable();
+        $sily_m = new Model_Jrig();
+        $inner_m = new Model_Innerservice();
+        $informing_m = new Model_Informing();
+        $sily_mchs_m = new Model_Silymchs();
+
+
+        unset($_SESSION['journal_nat']['filter_error']);
+
+            $date_start = $app->request()->post('date_start');
+            $date_end = $app->request()->post('date_end');
+
+            if (!empty($date_start) && !empty($date_end)) {
+                if ($rig_m->isDateTimeValid($date_start, "Y-m-d") == true && $rig_m->isDateTimeValid($date_end, "Y-m-d") == true) {
+
+                     $start=new DateTime($date_start);
+            $end=new DateTime($date_end);
+            $diff=$end->diff($start);
+            $diff_days=$diff->d;
+
+            if($diff_days >7){
+                 $_SESSION['journal_nat']['filter_error'] = 'Период не может превышать 1 недели в связи с большим объемом данных';
+                    $app->redirect(BASE_URL . '/rig');
+            }
+
+                } else {
+                    $_SESSION['journal_nat']['filter_error'] = 'Неверный  формат дат';
+                    $app->redirect(BASE_URL . '/rig');
+                }
+            } else {
+                $_SESSION['journal_nat']['filter_error'] = 'Проверьте корректность дат';
+                $app->redirect(BASE_URL . '/rig');
+            }
+
+
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
 
@@ -2413,11 +2501,6 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         $data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
 
 
-        $rig_m = new Model_Rigtable();
-        $sily_m = new Model_Jrig();
-        $inner_m = new Model_Innerservice();
-        $informing_m = new Model_Informing();
-        $sily_mchs_m = new Model_Silymchs();
 
         $data['reasonrig_with_informing'] = REASONRIG_WITH_INFORMING;
 
@@ -17816,7 +17899,7 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
     $data['ss'] = 1;
 
 
-    $post=$app->request()->post();
+    $post = $app->request()->post();
 
     if (isset($post['id_region']) && !empty($post['id_region']) && $post['id_region'] != 0) {
         $id_region = $post['id_region'];
@@ -17864,10 +17947,27 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
     $data['date1'] = \DateTime::createFromFormat('Y-m-d H:i:s', $date1)->format('d.m.Y H:i');
     $data['date2'] = \DateTime::createFromFormat('Y-m-d H:i:s', $date2)->format('d.m.Y H:i');
 
+
+
+    $itogo = [];
+    $itogo['fire'] = 0;
+    $itogo['o'] = 0;
+    $itogo['help'] = 0;
+    $itogo['demerk'] = 0;
+    $itogo['les'] = 0;
+    $itogo['torf'] = 0;
+    $itogo['trava'] = 0;
+    $itogo['false'] = 0;
+    $itogo['moln'] = 0;
+    $itogo['signl'] = 0;
+
+    $itogo['dead'] = 0;
+    $itogo['inj'] = 0;
+    $itogo['save'] = 0;
+    $itogo['ev'] = 0;
+
     foreach ($loc as $value) {
         $id_reg = $value['id'];
-
-
 
 
         //fires, other zagor,help, demerk, les,torf,trava,false
@@ -17886,6 +17986,18 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
                 $locals[$value['name']]['false'] = (isset($row['f']) && !empty($row['f'])) ? $row['f'] : '';
                 $locals[$value['name']]['moln'] = (isset($row['moln']) && !empty($row['moln'])) ? $row['moln'] : '';
                 $locals[$value['name']]['signl'] = (isset($row['signl']) && !empty($row['signl'])) ? $row['signl'] : '';
+
+
+                $itogo['fire'] += ( (isset($row['fire'])) ? $row['fire'] : 0);
+                $itogo['o'] += ( (isset($row['o'])) ? $row['o'] : 0);
+                $itogo['help'] += $row['h'];
+                $itogo['demerk'] += ( (isset($row['dem'])) ? $row['dem'] : 0);
+                $itogo['les'] += ( (isset($row['les'])) ? $row['les'] : 0);
+                $itogo['torf'] += ( (isset($row['torf'])) ? $row['torf'] : 0);
+                $itogo['trava'] += ( (isset($row['trava'])) ? $row['trava'] : 0);
+                $itogo['false'] += ( (isset($row['f'])) ? $row['f'] : 0);
+                $itogo['moln'] += ( (isset($row['moln'])) ? $row['moln'] : 0);
+                $itogo['signl'] += ( (isset($row['signl'])) ? $row['signl'] : 0);
             }
         } else {
             $locals[$value['name']]['fire'] = '';
@@ -17896,8 +18008,8 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
             $locals[$value['name']]['torf'] = '';
             $locals[$value['name']]['trava'] = '';
             $locals[$value['name']]['false'] = '';
-             $locals[$value['name']]['moln']='';
-             $locals[$value['name']]['signl']='';
+            $locals[$value['name']]['moln'] = '';
+            $locals[$value['name']]['signl'] = '';
         }
 
 
@@ -17911,6 +18023,13 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
                 $locals[$value['name']]['inj'] = (isset($row['inj']) && !empty($row['inj'])) ? $row['inj'] : '';
                 $locals[$value['name']]['save'] = (isset($row['save']) && !empty($row['save'])) ? $row['save'] : '';
                 $locals[$value['name']]['ev'] = (isset($row['ev']) && !empty($row['ev'])) ? $row['ev'] : '';
+
+
+
+                $itogo['dead'] += $row['dead'];
+                $itogo['inj'] += $row['inj'];
+                $itogo['save'] += $row['save'];
+                $itogo['ev'] += $row['ev'];
             }
         } else {
             $locals[$value['name']]['dead'] = '';
@@ -17923,7 +18042,7 @@ $app->post('/get_rigs_obl_garnison', 'is_login', function () use ($app) {
 
     $data['locals'] = $locals;
 
-
+    $data['itogo'] = $itogo;
 
 
 

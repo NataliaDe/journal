@@ -45,36 +45,38 @@
     },
     {
         "name": "dompdf/dompdf",
-        "version": "v0.8.5",
-        "version_normalized": "0.8.5.0",
+        "version": "v0.8.6",
+        "version_normalized": "0.8.6.0",
         "source": {
             "type": "git",
             "url": "https://github.com/dompdf/dompdf.git",
-            "reference": "6782abfc090b132134cd6cea0ec6d76f0fce2c56"
+            "reference": "db91d81866c69a42dad1d2926f61515a1e3f42c5"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/dompdf/dompdf/zipball/6782abfc090b132134cd6cea0ec6d76f0fce2c56",
-            "reference": "6782abfc090b132134cd6cea0ec6d76f0fce2c56",
+            "url": "https://api.github.com/repos/dompdf/dompdf/zipball/db91d81866c69a42dad1d2926f61515a1e3f42c5",
+            "reference": "db91d81866c69a42dad1d2926f61515a1e3f42c5",
             "shasum": ""
         },
         "require": {
             "ext-dom": "*",
             "ext-mbstring": "*",
-            "phenx/php-font-lib": "^0.5.1",
+            "phenx/php-font-lib": "^0.5.2",
             "phenx/php-svg-lib": "^0.3.3",
             "php": "^7.1"
         },
         "require-dev": {
+            "mockery/mockery": "^1.3",
             "phpunit/phpunit": "^7.5",
             "squizlabs/php_codesniffer": "^3.5"
         },
         "suggest": {
             "ext-gd": "Needed to process images",
             "ext-gmagick": "Improves image processing performance",
-            "ext-imagick": "Improves image processing performance"
+            "ext-imagick": "Improves image processing performance",
+            "ext-zlib": "Needed for pdf stream compression"
         },
-        "time": "2020-02-20T03:52:51+00:00",
+        "time": "2020-08-30T22:54:22+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -224,20 +226,20 @@
         "source": {
             "type": "git",
             "url": "https://github.com/gabordemooij/redbean.git",
-            "reference": "0652f9da8d96f732fa62b5b27e8eadb6e7d1c6e6"
+            "reference": "39ed7c3135c14b1efbb09b21901586cc527e74df"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/0652f9da8d96f732fa62b5b27e8eadb6e7d1c6e6",
-            "reference": "0652f9da8d96f732fa62b5b27e8eadb6e7d1c6e6",
+            "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/39ed7c3135c14b1efbb09b21901586cc527e74df",
+            "reference": "39ed7c3135c14b1efbb09b21901586cc527e74df",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.4"
         },
-        "time": "2020-05-29T14:12:49+00:00",
+        "time": "2020-10-16T22:03:37+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "RedBeanPHP\\": "RedBeanPHP"
@@ -262,17 +264,17 @@
     },
     {
         "name": "monolog/monolog",
-        "version": "1.25.4",
-        "version_normalized": "1.25.4.0",
+        "version": "1.25.5",
+        "version_normalized": "1.25.5.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Seldaek/monolog.git",
-            "reference": "3022efff205e2448b560c833c6fbbf91c3139168"
+            "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/3022efff205e2448b560c833c6fbbf91c3139168",
-            "reference": "3022efff205e2448b560c833c6fbbf91c3139168",
+            "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1817faadd1846cd08be9a49e905dc68823bc38c0",
+            "reference": "1817faadd1846cd08be9a49e905dc68823bc38c0",
             "shasum": ""
         },
         "require": {
@@ -307,7 +309,7 @@
             "ruflin/elastica": "Allow sending log messages to an Elastic Search server",
             "sentry/sentry": "Allow sending log messages to a Sentry server"
         },
-        "time": "2020-05-22T07:31:27+00:00",
+        "time": "2020-07-23T08:35:51+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -337,6 +339,16 @@
             "log",
             "logging",
             "psr-3"
+        ],
+        "funding": [
+            {
+                "url": "https://github.com/Seldaek",
+                "type": "github"
+            },
+            {
+                "url": "https://tidelift.com/funding/github/packagist/monolog/monolog",
+                "type": "tidelift"
+            }
         ]
     },
     {
@@ -505,22 +517,23 @@
     },
     {
         "name": "phpmailer/phpmailer",
-        "version": "v6.1.6",
-        "version_normalized": "6.1.6.0",
+        "version": "v6.1.8",
+        "version_normalized": "6.1.8.0",
         "source": {
             "type": "git",
             "url": "https://github.com/PHPMailer/PHPMailer.git",
-            "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3"
+            "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
-            "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
+            "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
+            "reference": "917ab212fa00dc6eacbb26e8bc387ebe40993bc1",
             "shasum": ""
         },
         "require": {
             "ext-ctype": "*",
             "ext-filter": "*",
+            "ext-hash": "*",
             "php": ">=5.5.0"
         },
         "require-dev": {
@@ -536,7 +549,7 @@
             "stevenmaguire/oauth2-microsoft": "Needed for Microsoft XOAUTH2 authentication",
             "symfony/polyfill-mbstring": "To support UTF-8 if the Mbstring PHP extension is not enabled (^1.2)"
         },
-        "time": "2020-05-27T12:24:03+00:00",
+        "time": "2020-10-09T14:55:58+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -565,7 +578,13 @@
                 "name": "Brent R. Matzelle"
             }
         ],
-        "description": "PHPMailer is a full-featured email creation and transfer class for PHP"
+        "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
+        "funding": [
+            {
+                "url": "https://github.com/synchro",
+                "type": "github"
+            }
+        ]
     },
     {
         "name": "phpoffice/common",
@@ -851,17 +870,17 @@
     },
     {
         "name": "sabberworm/php-css-parser",
-        "version": "8.3.0",
-        "version_normalized": "8.3.0.0",
+        "version": "8.3.1",
+        "version_normalized": "8.3.1.0",
         "source": {
             "type": "git",
             "url": "https://github.com/sabberworm/PHP-CSS-Parser.git",
-            "reference": "91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f"
+            "reference": "d217848e1396ef962fb1997cf3e2421acba7f796"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f",
-            "reference": "91bcc3e3fdb7386c9a2e0e0aa09ca75cc43f121f",
+            "url": "https://api.github.com/repos/sabberworm/PHP-CSS-Parser/zipball/d217848e1396ef962fb1997cf3e2421acba7f796",
+            "reference": "d217848e1396ef962fb1997cf3e2421acba7f796",
             "shasum": ""
         },
         "require": {
@@ -871,7 +890,7 @@
             "codacy/coverage": "^1.4",
             "phpunit/phpunit": "~4.8"
         },
-        "time": "2019-02-22T07:42:52+00:00",
+        "time": "2020-06-01T09:10:00+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -898,20 +917,20 @@
     },
     {
         "name": "setasign/tfpdf",
-        "version": "1.31.1",
-        "version_normalized": "1.31.1.0",
+        "version": "v1.32",
+        "version_normalized": "1.32.0.0",
         "source": {
             "type": "git",
             "url": "https://github.com/Setasign/tFPDF.git",
-            "reference": "a55066212cce37a7246b7d4e332c4294ee46b257"
+            "reference": "a879b83485c263605cbf98ab2e8fdd4d37ca2707"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/Setasign/tFPDF/zipball/a55066212cce37a7246b7d4e332c4294ee46b257",
-            "reference": "a55066212cce37a7246b7d4e332c4294ee46b257",
+            "url": "https://api.github.com/repos/Setasign/tFPDF/zipball/a879b83485c263605cbf98ab2e8fdd4d37ca2707",
+            "reference": "a879b83485c263605cbf98ab2e8fdd4d37ca2707",
             "shasum": ""
         },
-        "time": "2020-02-25T14:34:53+00:00",
+        "time": "2020-08-31T07:28:46+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {
@@ -999,23 +1018,23 @@
     },
     {
         "name": "twbs/bootstrap",
-        "version": "v4.5.0",
-        "version_normalized": "4.5.0.0",
+        "version": "v4.5.3",
+        "version_normalized": "4.5.3.0",
         "source": {
             "type": "git",
             "url": "https://github.com/twbs/bootstrap.git",
-            "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965"
+            "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/7a6da5e3e7ad7c749dde806546a35d4d4259d965",
-            "reference": "7a6da5e3e7ad7c749dde806546a35d4d4259d965",
+            "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a716fb03f965dc0846df479e14388b1b4b93d7ce",
+            "reference": "a716fb03f965dc0846df479e14388b1b4b93d7ce",
             "shasum": ""
         },
         "replace": {
             "twitter/bootstrap": "self.version"
         },
-        "time": "2020-05-12T17:44:42+00:00",
+        "time": "2020-10-13T15:38:30+00:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -1048,6 +1067,12 @@
             "responsive",
             "sass",
             "web"
+        ],
+        "funding": [
+            {
+                "url": "https://opencollective.com/bootstrap",
+                "type": "open_collective"
+            }
         ]
     },
     {

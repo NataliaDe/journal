@@ -164,7 +164,7 @@ class Model_Silymchs {
         if (!empty($id_pasp_with_delete)) {
             foreach ($id_pasp_with_delete as $d) {
                 $delete_teh = R::getAll('SELECT * FROM journal.silymchs WHERE id_rig = ? and id_pasp = ? AND is_delete = ? ', array($this->id_rig, $d['id_pasp'], 1));
-                $y['delete_teh'][$value['id_pasp']] = $delete_teh;
+                $y['delete_teh'][$d['id_pasp']] = $delete_teh;
             }
         }
 
