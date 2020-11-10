@@ -24,4 +24,8 @@ nb-configuration.xml
 /temp/
 /tmpl/save_to_json/*.json
 
+/data/
+/vendor/
+
+
 
