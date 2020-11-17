@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '06.11.2020');
+define(NEWS_DATE, '17.11.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -2105,7 +2105,7 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
              $data['filter_error']=$_SESSION['journal_nat']['filter_error'];
              unset($_SESSION['journal_nat']['filter_error']);
          }
-         
+
         $bread_crumb = array('Все выезды');
         $data['bread_crumb'] = $bread_crumb;
 
@@ -18108,6 +18108,63 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
     });
 
 
+    $app->get('/rep1_archive', function () use ($app) {
+
+
+        $data['title'] = 'ОСА НИИ ПБиЧС/Отчеты';
+        $data['name_rep'] = 'Отчет по пожарам и неучетным загораниям из архива выездов';
+
+        $bread_crumb = array('ОСА НИИ ПБиЧС', '<a href="' . BASE_URL . '/nii_reports">Отчеты</a>', $data['name_rep']);
+        $data['bread_crumb'] = $bread_crumb;
+
+
+
+        /*         * *** Классификаторы **** */
+        $region = new Model_Region();
+        $data['region'] = $region->selectAll(); //области
+        $local = new Model_Local();
+        $data['local'] = $local->selectAll(); //районы
+        //$data['reasonrig'] = R::getAll('select * from reasonrig where is_delete = ?', array(0));
+
+        $archive_m = new Model_Archivedate();
+        $main_m = new Model_Main();
+
+        $data['archive_date'] = $archive_m->selectAll();
+        $archive_year = ARCHIVE_YEAR;
+
+        foreach ($archive_year as $value) {
+
+            $y = $value['table_name'];
+            $real_server=$main_m->get_js_connect(substr($y, 0, -1));
+
+
+            if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+
+                $pdo = get_pdo_15($real_server);
+
+                $sth = $pdo->prepare("SELECT MAX(a.date_msg) as max_date FROM ".$value['table_name']." as a ");
+                $sth->execute();
+                $value['max_date'] = $sth->fetchColumn();
+                $archive_year_1[] = $value;
+            } else {
+                $value['max_date'] = R::getCell('SELECT MAX(a.date_msg) as max_date FROM jarchive.' . $value['table_name'] . ' AS a  ');
+                $archive_year_1[] = $value;
+            }
+        }
+
+        $data['archive_year'] = $archive_year_1;
+
+
+
+        /*         * *** КОНЕЦ Классификаторы **** */
+
+        $app->render('layouts/header.php', $data);
+        $data['path_to_view'] = 'nii_reports/rep1_archive/form.php';
+        $app->render('layouts/div_wrapper.php', $data);
+        $app->render('layouts/footer.php');
+    });
+
+
 
     $app->post('/rep1_old', function () use ($app) {
 
@@ -19190,6 +19247,460 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 
 
         $file_name = 'vyezdy_06-00_' . (\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')) . '-' . (\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y')) . '_' . date('H-i') . '_' . date('d.m.Y') . '.xlsx';
+
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $file_name . '"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
+
+
+
+    $app->post('/rep1_archive', function () use ($app) {
+
+        $filter = [];
+
+        //requisted reasons
+        $filter['reasonrig'] = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+        $main_m = new Model_Main();
+        /* post data */
+        $post = $app->request()->post();
+        $from = (isset($post['date_start']) && !empty($post['date_start'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_start'])->format('Y-m-d')) : '';
+        $to = (isset($post['date_end']) && !empty($post['date_end'])) ? (\DateTime::createFromFormat('Y-m-d', $post['date_end'])->format('Y-m-d')) : '';
+        $id_region = $filter['id_region'] = (isset($post['id_region']) && !empty($post['id_region'])) ? $post['id_region'] : 0;
+        $id_local = $filter['id_local'] = (isset($post['id_local']) && !empty($post['id_local'])) ? $post['id_local'] : '';
+        $table_name_year = $y = $post['archive_year'];
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql = ' FROM jarchive.' . $table_name_year . '  WHERE date_msg between ? and ? and id_rig not in '
+            . '  ( SELECT id_rig FROM jarchive.' . $table_name_year . ' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+        $param[] = $from;
+        $param[] = $to;
+
+        $param[] = $from;
+        $param[] = '06:00:00';
+        $param[] = $to;
+        $param[] = '06:00:00';
+
+
+
+
+        if (isset($id_region) && $id_region != '') {
+            $sql = $sql . ' AND id_region = ?';
+            $param[] = $id_region;
+        }
+        if (isset($id_local) && !empty($id_local)) {
+            $sql = $sql . ' AND id_local = ?';
+            $param[] = $id_local;
+        }
+
+
+        $sql = $sql . ' AND reasonrig_id IN (' . implode(',', $filter['reasonrig']) . ')';
+        $sql = 'SELECT *, concat(date_msg," ",time_msg) as full_time_msg ' . $sql;
+
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $data['rig'] = $sth->fetchAll(); //без ЦП
+        } else {
+            $data['rig'] = R::getAll($sql, $param); //без ЦП
+        }
+
+        $caption = 'по Республике';
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs");
+
+
+
+        if ($id_region != 0) {
+            switch ($id_region) {
+                case 1: $region_name = "Брестская";
+                    break;
+                case 2: $region_name = "Витебская";
+                    break;
+                case 3: $region_name = "г.Минск";
+                    break;
+                case 4: $region_name = "Гомельская";
+                    break;
+                case 5: $region_name = "Гродненская";
+                    break;
+                case 6:$region_name = "Минская";
+                    break;
+                case 7:$region_name = "Могилевская";
+                    break;
+                default: $region_name = "";
+                    break;
+            }
+
+
+            if ($id_region != 3)
+                $caption = $region_name . ' область';
+            else
+                $caption = $region_name;
+        }
+
+
+
+        if (!empty($data['rig']))
+            usort($data['rig'], "order_rigs_asc");
+
+        /* ------- select information on SiS MHS -------- */
+
+        $is_fire = 0;
+        $is_other_zagor = 0;
+
+
+        $all_reasons = array(REASON_FIRE, REASON_OTHER_ZAGOR);
+
+
+        foreach ($data['rig'] as $value) {//id of rigs
+            if ($value['reasonrig_id'] == REASON_FIRE) {
+                $is_fire++;
+            }
+
+            if ($value['reasonrig_id'] == REASON_OTHER_ZAGOR) {
+                $is_other_zagor++;
+            }
+        }
+
+
+
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/nii_reports/rep1_new.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 2; //начальная строка для записи
+        $c = 0; //счетчик кол-ва записей № п/п
+
+        $style_reason = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => '7ad4f5'
+                )
+            )
+        );
+        $style_ate = array(
+            'fill' => array(
+                'type'  => PHPExcel_STYLE_FILL::FILL_SOLID,
+                'color' => array(
+                    'rgb' => 'fafa28'
+                )
+            )
+        );
+        $style_all = array(
+// Заполнение цветом
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if (isset($data['rig']) && !empty($data['rig'])) {
+
+
+
+            foreach ($all_reasons as $reason) {
+
+                $i = 0;
+
+                if (($reason == REASON_FIRE && $is_fire > 0) || ($reason == REASON_OTHER_ZAGOR && $is_other_zagor > 0)) {
+
+                    foreach ($data['rig'] as $key => $row) {
+                        $c = 0;
+                        if ($row['reasonrig_id'] == $reason) {
+                            $i++;
+
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['id_rig']);
+                            $c++;
+//code ate
+                            $sheet->setCellValueByColumnAndRow($c, $r, $row['locality_id']);
+                            $sheet->getStyle('B' . $r . ':B' . $r)->applyFromArray($style_ate);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('d.m.Y', strtotime($row['date_msg'])));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, date('H:i', strtotime($row['time_msg'])));
+                            $c++;
+
+                            $addr = '';
+
+                            if (!in_array($row['locality_id_vid'], CITY_VID)) {
+                                $addr = $row['local_name'] . ' район, ';
+                            }
+
+                            if ($row['address'] != NULL) {
+                                $addr = $addr . $row['address'] . ((!empty($row['address']) ? (chr(10) . $row['additional_field_address']) : ''));
+                            } else {
+                                $addr = $addr . $row['additional_field_address'];
+                            }
+
+                            if (!empty($row['object'])) {
+                                $addr = $addr . chr(10);
+                                $addr = $addr . '(' . $row['object'] . ')';
+                            }
+
+                            $owner_row = explode('&', $row['owner']);
+                            $id_owner_category = (isset($owner_row[0]) && !empty($owner_row[0])) ? $owner_row[0] : 0;
+                            $category_name = (isset($owner_row[1]) && !empty($owner_row[1])) ? $owner_row[1] : '';
+                            $owner_fio = (isset($owner_row[2]) && !empty($owner_row[2])) ? $owner_row[2] : '';
+                            $owner_year_birthday = (isset($owner_row[3]) && !empty($owner_row[3])) ? $owner_row[3] : 0;
+                            $owner_position = (isset($owner_row[5]) && !empty($owner_row[5])) ? $owner_row[5] : '';
+                            $owner_job = (isset($owner_row[6]) && !empty($owner_row[6])) ? $owner_row[6] : '';
+
+
+
+                            if ($id_owner_category != 0 && !empty($category_name)) {
+                                $addr = $addr . '. ' . mb_convert_case($category_name, MB_CASE_TITLE, "UTF-8") . ': ';
+                            }
+                            if (!empty($owner_fio)) {
+                                $addr = $addr . $owner_fio;
+                            }
+                            if ($owner_year_birthday != 0) {
+                                $addr = $addr . ', ' . $owner_year_birthday . ' г.р.';
+                            }
+                            if (!empty($owner_position)) {
+                                $addr = $addr . ', ' . $owner_position;
+                            }
+                            if (!empty($owner_job)) {
+                                $addr = $addr . ' ' . $owner_job;
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $addr);
+                            $c++;
+
+
+                            $cars = '';
+                            $t_exit = '';
+                            $t_arrival = '';
+                            $t_end = '';
+                            $t_return = '';
+                            $time_follow = '';
+                            $distance = '';
+
+                            if (isset($row['silymchs']) && !empty($row['silymchs'])) {
+
+                                $arr_silymchs = explode('~', $row['silymchs']);
+
+                                foreach ($arr_silymchs as $value) {
+                                    if (!empty($value)) {
+
+                                        $arr_mark = explode('#', $value);
+                                        /* mark - before # */
+                                        // $mark[]=$arr_mark[0];
+                                        $mark = $arr_mark[0];
+
+                                        /* all after # explode, exit,arrival......is_return , result -all  after ? */
+                                        $arr_time = explode('?', $arr_mark[1]);
+
+                                        /* grochs + pasp */
+                                        $podr = explode('%', $arr_time[0]);
+                                        $pasp = $podr[1];
+                                        $grochs_parts = explode('$', $podr[0]);
+                                        $grochs = $grochs_parts[1];
+
+                                        /* all  after ? explode.  exit,arrival......is_return */
+                                        $each_time = explode('&', $arr_time[1]);
+
+                                        $t_exit_car = $each_time[0];
+                                        $t_arrival_car = $each_time[1];
+                                        $t_follow_car = $each_time[2];
+                                        $t_end_car = $each_time[3];
+                                        $t_return_car = $each_time[4];
+                                        $t_distance = $each_time[5];
+                                        $t_is_return = ($each_time[6] == 1) ? 1 : 0;
+
+                                        if ($cars == '')
+                                            $cars = $cars . $mark . ' ' . $pasp . ' ' . $grochs;
+                                        else
+                                            $cars = $cars . chr(10) . $mark . ' ' . $pasp . ' ' . $grochs;
+
+
+                                        if ($t_exit == '')
+                                            $t_exit = $t_exit . (($t_exit_car == '0000-00-00 00:00:00' || empty($t_exit_car) || $t_exit_car == '-') ? '-' : date('H:i', strtotime($t_exit_car)));
+                                        else
+                                            $t_exit = $t_exit . chr(10) . (($t_exit_car == '0000-00-00 00:00:00' || empty($t_exit_car) || $t_exit_car == '-') ? '-' : date('H:i', strtotime($t_exit_car)));
+
+                                        if ($t_arrival == '')
+                                            $t_arrival = $t_arrival . ( ($t_is_return == 1) ? 'возврат' : ( ($t_arrival_car == '0000-00-00 00:00:00' || empty($t_arrival_car) || $t_arrival_car == '-') ? '-' : date('H:i', strtotime($t_arrival_car)) ) );
+                                        else
+                                            $t_arrival = $t_arrival . chr(10) . ( ($t_is_return == 1) ? 'возврат' : ( ($t_arrival_car == '0000-00-00 00:00:00' || empty($t_arrival_car) || $t_arrival_car == '-') ? '-' : date('H:i', strtotime($t_arrival_car)) ) );
+
+                                        if ($t_end == '')
+                                            $t_end = $t_end . (($t_end_car == '0000-00-00 00:00:00' || empty($t_end_car) || $t_end_car == '-' ) ? '-' : date('H:i', strtotime($t_end_car)) );
+                                        else
+                                            $t_end = $t_end . chr(10) . (($t_end_car == '0000-00-00 00:00:00' || empty($t_end_car) || $t_end_car == '-' ) ? '-' : date('H:i', strtotime($t_end_car)) );
+
+
+                                        if ($t_return == '')
+                                            $t_return = $t_return . (($t_return_car == '0000-00-00 00:00:00' || empty($t_return_car) || $t_return_car == '-') ? '-' : date('H:i', strtotime($t_return_car)) );
+                                        else
+                                            $t_return = $t_return . chr(10) . (($t_return_car == '0000-00-00 00:00:00' || empty($t_return_car) || $t_return_car == '-') ? '-' : date('H:i', strtotime($t_return_car)) );
+
+
+                                        if ($time_follow == '')
+                                            $time_follow = $time_follow . (($t_follow_car == '0000-00-00 00:00:00' || empty($t_follow_car) || $t_follow_car == '-') ? '-' : date('H:i', strtotime($t_follow_car)) );
+                                        else
+                                            $time_follow = $time_follow . chr(10) . (($t_follow_car == '0000-00-00 00:00:00' || empty($t_follow_car) || $t_follow_car == '-') ? '-' : date('H:i', strtotime($t_follow_car)) );
+
+
+                                        if ($distance == '')
+                                            $distance = $distance . $t_distance;
+                                        else
+                                            $distance = $distance . chr(10) . $t_distance;
+                                    }
+                                }
+                            }
+
+                            if (isset($row['innerservice']) && !empty($row['innerservice'])) {
+                                $arr = explode('~', $row['innerservice']);
+                                foreach ($arr as $value) {
+
+                                    if (!empty($value)) {
+                                        $i++;
+                                        $arr_name = explode('#', $value);
+                                        /* fio - before # */
+                                        $service_name = $arr_name[0];
+
+                                        /* all  after # explode. time_msg,time_exit.... */
+                                        $each_time = explode('&', $arr_name[1]);
+
+                                        //$t_msg = $each_time[0];
+                                        $t_arrival_service = $each_time[1];
+
+                                        $note = explode('%', $each_time[2]);
+
+                                        $t_distance = $note[0];
+                                        //$t_note = $note[1];
+
+                                        if ($cars == '')
+                                            $cars = $cars . $service_name;
+                                        else
+                                            $cars = $cars . chr(10) . $service_name;
+
+                                        if ($t_exit == '')
+                                            $t_exit = $t_exit . '-';
+                                        else
+                                            $t_exit = $t_exit . chr(10) . '-';
+
+
+                                        if ($t_arrival == '')
+                                            $t_arrival = $t_arrival . ( ($t_arrival_service == '0000-00-00 00:00:00' || empty($t_arrival_service) || $t_arrival_service == '-') ? '-' : date('H:i', strtotime($t_arrival_service)) );
+                                        else
+                                            $t_arrival = $t_arrival . chr(10) . ( ($t_arrival_service == '0000-00-00 00:00:00' || empty($t_arrival_service) || $t_arrival_service == '-') ? '-' : date('H:i', strtotime($t_arrival_service)) );
+
+
+                                        if ($t_end == '')
+                                            $t_end = $t_end . '-';
+                                        else
+                                            $t_end = $t_end . chr(10) . '-';
+
+
+                                        if ($t_return == '')
+                                            $t_return = $t_return . '-';
+                                        else
+                                            $t_return = $t_return . chr(10) . '-';
+
+                                        if ($time_follow == '')
+                                            $time_follow = $time_follow . '-';
+                                        else
+                                            $time_follow = $time_follow . chr(10) . '-';
+
+                                        if ($distance == '')
+                                            $distance = $distance . $t_distance;
+                                        else
+                                            $distance = $distance . chr(10) . $t_distance;
+                                    }
+                                }
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $cars);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_exit);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_arrival);
+                            $c++;
+
+
+                            if ($row['time_loc'] != NULL && $row['time_loc'] != '0000-00-00 00:00:00') {
+                                $t_loc = new DateTime($row['time_loc']);
+                                $time_loc = $t_loc->Format('H:i');
+                            } else {
+                                $time_loc = '';
+                            }
+
+                            if ($row['time_likv'] != NULL && $row['time_likv'] != '0000-00-00 00:00:00') {
+                                $t_likv = new DateTime($row['time_likv']);
+                                $time_likv = $t_likv->Format('H:i');
+                            } elseif ($row['is_likv_before_arrival'] == 1) {
+                                $time_likv = 'ликв.до' . chr(10) . 'приб.';
+                            } elseif ($row['is_not_measures'] == 1) {
+                                $time_likv = 'меры не' . chr(10) . ' прин.';
+                            } elseif ($row['is_closed'] == 1) {
+                                $time_likv = '-';
+                            } else {
+                                $time_likv = '';
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_loc);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_likv);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_end);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $t_return);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $time_follow);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, $distance);
+                            $c++;
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, trim($row['inf_detail']));
+                            $c++;
+
+                            $reason_name = '';
+                            if ($row['reasonrig_id'] == REASON_FIRE) {
+                                $reason_name = 'пожар';
+                            } elseif ($row['reasonrig_id'] == REASON_OTHER_ZAGOR) {
+                                $reason_name = 'другие загорания';
+                            }
+
+                            $sheet->setCellValueByColumnAndRow($c, $r, $reason_name);
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, (($row['latitude'] !=0) ? trim($row['latitude']) : ''));
+                            $c++;
+                            $sheet->setCellValueByColumnAndRow($c, $r, (($row['longitude'] !=0) ? trim($row['longitude']) : ''));
+                            $c++;
+
+                            $r++;
+
+                            unset($data['rig'][$key]);
+                        }
+                    }
+                }
+            }
+
+            $sheet->getStyle('A' . 2 . ':R' . ($r - 1))->applyFromArray($style_all);
+        }
+
+
+
+        $file_name = 'vyezdy_archive_06-00_' . (\DateTime::createFromFormat('Y-m-d', $from)->format('d.m.Y')) . '-' . (\DateTime::createFromFormat('Y-m-d', $to)->format('d.m.Y')) . '_' . date('H-i') . '_' . date('d.m.Y') . '.xlsx';
 
         header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
         header('Content-Disposition: attachment;filename="' . $file_name . '"');
