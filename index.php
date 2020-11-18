@@ -269,7 +269,14 @@ function is_permis()
           else{
           $app->redirect(BASE_URL . '/no_permission');
           } */
-    } elseif (strpos($app->request->getResourceUri(), 'archive')) {
+    }
+        elseif (strpos($app->request->getResourceUri(), 'nii_reports')) {
+        if (!in_array($_SESSION['id_user'], array(2,150,433))) {
+
+            $app->redirect(BASE_URL . '/rig');
+        }
+    }
+    elseif (strpos($app->request->getResourceUri(), 'archive')) {
 
         /* only rcu admin */
 
@@ -283,13 +290,7 @@ function is_permis()
             $app->redirect(BASE_URL . '/rig');
         }
     }
-    elseif (strpos($app->request->getResourceUri(), 'nii_reports')) {
 
-        if (!in_array($_SESSION['id_user'], array(2,150,433))) {
-
-            $app->redirect(BASE_URL . '/rig');
-        }
-    }
 }
 /* ----------------- END MIDDLEWARE -------------- */
 
