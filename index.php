@@ -1780,9 +1780,9 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
         /* is updeting now ?  */
 
 
-                if ($_SESSION['id_user'] == 2) {
+       if (!in_array($id,array(ROSN, UGZ, AVIA))) {
             $data['is_rigs_obl_table'] = 1;
-        }
+       }
 
 
 
@@ -2075,9 +2075,9 @@ when (r.of_gohs is not null)  THEN CONCAT(r.pasp_name," ",r.locorg_name)
 
 
 
-                        if ($_SESSION['id_user'] == 2) {
+       if (!in_array($id,array(ROSN, UGZ, AVIA))) {
             $data['is_rigs_obl_table'] = 1;
-        }
+       }
 
 
         $app->render('layouts/header.php');
