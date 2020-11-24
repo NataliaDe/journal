@@ -9,5 +9,8 @@
         <li class="dropdown-submenu">
             <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/ct_1"  class="caret-spr_inf" target="_blank">Простое (шаблон 1)</a>
         </li>
+         <li class="dropdown-submenu">
+            <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/0"  class="caret-spr_inf" target="_blank">Простое (шаблон 2)</a>
+        </li>
     </ul>
 </ul>

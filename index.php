@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '17.11.2020');
+define(NEWS_DATE, '24.11.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -59,8 +59,14 @@ const SIZE_SUM_REMARK_RCU_FILE='15000000';
 
 
 const MIN_OBL_ID=6;
+CONST REGION_ID_MINSK=3;
 
 const MIN_OBL_ID_LOCAL=72;
+
+
+const TIME_EDIT_RIG_MINSK=5;//5 MIN
+const TIME_EDIT_RIG=10;//10 MIN
+
 
 
 
@@ -13925,7 +13931,16 @@ function is_update_rig_now($rig, $id)
         $raznost = round($interval / 60);
 
         //if ($raznost < 10 && $raznost_d == 0 && $raznost_h==0 && $raznost_m == 0 && $raznost_y==0) {
-        if ($raznost < 10) {
+
+        if($_SESSION['id_region'] == REGION_ID_MINSK){
+
+            $t=TIME_EDIT_RIG_MINSK;
+        }
+        else{
+            $t=TIME_EDIT_RIG;
+        }
+
+        if ($raznost < $t) {
             $name_user = R::getCell('select user_name from permissions where id_user = ?', array($rig['now_update_by_user']));
 
             // update now
@@ -13971,10 +13986,18 @@ function is_update_rig_now_refresh_table($rig, $id)
         $datetime2 = strtotime($rig['date_start_update']);
         $interval = abs($datetime2 - $datetime1);
         $raznost = round($interval / 60);
-        // echo 'Diff. in minutes is: ' . $minutes;
-        //echo $raznost;exit();
-        //if ($raznost < 10 && $raznost_d == 0 && $raznost_h==0 && $raznost_m == 0 && $raznost_y==0) {
-        if ($raznost < 10) {
+            // echo 'Diff. in minutes is: ' . $minutes;
+            //echo $raznost;exit();
+            //if ($raznost < 10 && $raznost_d == 0 && $raznost_h==0 && $raznost_m == 0 && $raznost_y==0) {
+
+            if ($_SESSION['id_region'] == REGION_ID_MINSK) {
+
+                $t = TIME_EDIT_RIG_MINSK;
+            } else {
+                $t = TIME_EDIT_RIG;
+            }
+
+            if ($raznost < $t) {
             $name_user = R::getCell('select user_name from permissions where id_user = ?', array($rig['now_update_by_user']));
 
             // update now
