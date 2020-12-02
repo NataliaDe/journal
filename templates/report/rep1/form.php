@@ -70,10 +70,10 @@
         <div class="form-group">
             <label for="date_end">&nbsp;по</label>
             <div class="input-group date" id="date_end">
-<?php
-if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
+                <?php
+                if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && $_POST['date_end'] != NULL) {
 
-    ?>
+                    ?>
                     <input type="text" class="form-control datetime"  name="date_end"  value="<?= $_POST['date_end'] ?>"/>
 
                     <?php
@@ -81,10 +81,10 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
 
                     ?>
                     <input type="text" class="form-control datetime"  name="date_end" />
-    <?php
-}
+                    <?php
+                }
 
-?>
+                ?>
 
                 <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
             </div>
@@ -128,6 +128,7 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
 
                 ?>
             </select>
+
         </div>
 
 
@@ -157,6 +158,16 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
         </div>
     </div>
 
+    <div class="row row_minobl_paso hide" >
+        <div class="form-group col-lg-5">   </div>
+        <div class="form-group">
+            <input id="checkbox_molod" type="checkbox"  name="is_minobl_paso" value="1" checked=""  >
+            <label for="checkbox_molod" style="font-weight: 600">
+                добавить выезды техники Минского ПАСО
+            </label>
+
+        </div>
+    </div>
 
     <br> <br>
     <div class="row">
@@ -173,10 +184,10 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
 
                     ?>
                     <input id="checkbox3" type="checkbox" name="is_pasp" value="1"  checked="" >
-    <?php
-}
+                    <?php
+                }
 
-?>
+                ?>
                 <label for="checkbox3">
                     из указанных подразделений
                 </label>
@@ -210,10 +221,10 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
         <div class="form-group" data-toggle="tooltip" data-placement="right" id="lable-for-neighbor"
              title="Будут отображены все выезды в указанную область и(или) район.">
             <div class="checkbox checkbox-success">
-                       <?php
-                       if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
+                <?php
+                if (!isset($_POST['is_neighbor']) || $_POST['is_neighbor'] == 0) {
 
-                           ?>
+                    ?>
                     <input id="checkbox2" type="checkbox" data-neighbor-descr="Будут отображены все выезды в указанную область и(или) район."
                            data-not-neighbor-descr="Будут отображены выезды в указанную область и(или) район, которые создал указанный область и(или) район."
                            name="is_neighbor" value="1" checked="" onchange="changeNeighborRep1(this);" >
@@ -224,10 +235,10 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
                     <input id="checkbox2" type="checkbox" data-neighbor-descr="Будут отображены все выезды в указанную область и(или) район."
                            data-not-neighbor-descr="Будут отображены выезды в указанную область и(или) район, которые создал указанный область и(или) район."
                            name="is_neighbor" value="1" onchange="changeNeighborRep1(this);" >
-    <?php
-}
+                           <?php
+                       }
 
-?>
+                       ?>
                 <label for="checkbox2" style="font-weight: 600">
                     Учесть выезды в соседний гарнизон
                 </label>
@@ -260,3 +271,7 @@ if (isset($_POST['date_end']) && $_POST['date_end'] != '0000-00-00 00:00:00' && 
 include dirname(dirname(__FILE__)) . '/bokk/form.php';
 
 ?>
+
+<script>
+
+</script>

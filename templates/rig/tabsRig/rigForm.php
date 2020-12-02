@@ -24,10 +24,10 @@
                     <?php
                 } elseif($active_tab != 2) {
                     ?>
-                <li>                     
+                <li>
                     <?php
                 }
-				
+
 				if($active_tab != 2) {
                 ?>
                 <a  href="#1" data-toggle="tab">Обработка вызова</a>
@@ -35,14 +35,14 @@
 
             <?php
 				}
-				
+
             if (($active_tab == 2 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 20)) {
                 ?>
                 <li class="active">
                     <?php
                 } else {
                     ?>
-                <li>                     
+                <li>
                     <?php
                 }
                 ?>
@@ -52,19 +52,19 @@
             <?php
             if (($active_tab == 3 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 30)) {
                 ?>
-                <li class="active">
+                <li class="active <?=  (isset($settings_user['is_addit_on_process_tab']) && $settings_user['is_addit_on_process_tab']['name_sign'] == 'yes') ? 'hide' : '' ?>">
                     <?php
                 } elseif($active_tab != 2) {
                     ?>
-                <li>                     
+                <li class="<?=  (isset($settings_user['is_addit_on_process_tab']) && $settings_user['is_addit_on_process_tab']['name_sign'] == 'yes') ? 'hide' : '' ?>">
                     <?php
                 }
-				
+
 				if($active_tab != 2) {
                 ?>
                 <a href="#3" data-toggle="tab">Дополнительно</a>
             </li>
-			
+
 
                 <?php
                 if (isset($rig) && !empty($rig) && isset($settings_user['vid_rig_table']) && $settings_user['vid_rig_table']['name_sign'] == 'level3_type4') {
@@ -78,7 +78,7 @@
 
 
                     </li>
-					
+
                     <?php
                     }
                     ?>
@@ -108,7 +108,7 @@
                     <?php
                 }
 
-               
+
 				}
 				?>
         </ul>
@@ -126,14 +126,14 @@
                     <div class="tab-pane " id="1">
                         <?php
                     }
-					if($active_tab != 2) 
+					if($active_tab != 2)
                     include dirname(__FILE__) . '/processRigTab.php';
                     ?>
                 </div>
 
                 <!--Высылка техники-->
                 <?php
-     
+
                 if (($active_tab == 2 && !isset($new_active_tab)) || (isset($new_active_tab) && $new_active_tab == 20)) {
                     ?>
                     <div class="tab-pane active" id="2">
@@ -158,21 +158,21 @@
                             <div class="tab-pane" id="3">
                                 <?php
                             }
-							if($active_tab != 2) 
+							if($active_tab != 2)
                             include dirname(__FILE__) . '/additionalRigTab.php';
                             ?>
                         </div>
 
-                    </div> 
+                    </div>
 <!--                    tab-content-->
 
 
 
                     </form>
                 </div>
-				
-				
-				
+
+
+
 				 <script>
   window.onload = function() {
    // alert( 'Документ и все ресурсы загружены' );
@@ -186,9 +186,9 @@
     var object_id = $('#rigForm #object_id').val();
     var coord_lat = $('#rigForm #coord_lat').val();
     var coord_lon = $('#rigForm #coord_lon').val();
-	
+
 	var work_view = $('#rigForm [name="id_work_view"]').val();
-	
+
 	    if(work_view == 0){
         $('#rigForm #work-view-id .select2-selection').addClass('red-border-input');
     }
@@ -253,8 +253,8 @@
 	    else if(reason == 0){
          $("#reason-rig-id .select2-selection").addClass('red-border-input');
     }
-	
-	
+
+
 	  <?php
   if (isset($is_sily_mchs) && $is_sily_mchs == 1) {
 
@@ -266,11 +266,11 @@
   ?>
 
   };
-  
-  
-  
+
+
+
   function toggleSilyMchs(t) {
-     
+
     if ($(t).prop('checked') === true) {
         $('.sily_select').attr('disabled', true);
     } else {

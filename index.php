@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '24.11.2020');
+define(NEWS_DATE, '02.12.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
