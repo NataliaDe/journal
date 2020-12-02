@@ -36,11 +36,7 @@ $('#id_pasp').empty().trigger('chosen:updated');
              success: function (data) {
 
                   $(data).each(function(index, value) {
-
                       $("#id_pasp").append($("<option></option>").attr("value", value.pasp_id).text(value.pasp_name+' ('+value.locorg_name+')')).trigger('chosen:updated');
-
-
-
                     });
 
             },
@@ -50,7 +46,7 @@ $('#id_pasp').empty().trigger('chosen:updated');
         });
 
 
-$('#id_pasp_chosen').css('width','260px');
+            $('#id_pasp_chosen').css('width','260px');
             //show select local
             $('#div_is_pasp').css('display','inline');
             $('#div_id_pasp').css('display','inline');
@@ -60,6 +56,23 @@ $('#id_pasp_chosen').css('width','260px');
             $('#div_is_pasp').css('display','none');
             $('#div_id_pasp').css('display','none');
         }
+
+//show checkbox Minobl PASO
+      var is_by_car = $('input[name="is_switch_by_podr"]').is(':checked');
+
+    if (parseInt(id_local) === 76) {//Molodechno
+
+        if (is_by_car) {
+            $('#rep1Form').find('.row_minobl_paso').removeClass('hide');
+        } else {
+            $('#rep1Form').find('.row_minobl_paso').addClass('hide');
+        }
+
+//$('#rep1Form').find('.row_minobl_paso').removeClass('hide');
+
+    } else {
+        $('#rep1Form').find('.row_minobl_paso').addClass('hide');
+    }
 
     });
 

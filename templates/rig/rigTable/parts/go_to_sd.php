@@ -7,10 +7,10 @@
             <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/standart/0"  class="caret-spr_inf" target="_blank">Стандартное</a>
         </li>
         <li class="dropdown-submenu">
-            <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/ct_1"  class="caret-spr_inf" target="_blank">Простое (шаблон 1)</a>
+            <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/ct_1"  class="caret-spr_inf" target="_blank">Простое (рапорт)</a>
         </li>
          <li class="dropdown-submenu">
-            <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/0"  class="caret-spr_inf" target="_blank">Простое (шаблон 2)</a>
+            <a tabindex="-1" href="<?= $baseUrl ?>/login_to_speciald/<?= $row['id'] ?>/simple/0"  class="caret-spr_inf" target="_blank">Простое</a>
         </li>
     </ul>
 </ul>

@@ -2575,14 +2575,65 @@ function changeModeRep1(el) {
     let by_place = $(el).data('place-descr');
     let by_podr = $(el).data('podr-descr');
 
-    if (val === 1) {
+    var loc=$('#rep1Form').find('#auto_local').val();
+    var id_region=$('#id_region').val();
+
+    if (val === 1) {//by car's podr
         // $('#block-mode-rep1-descr').text(by_podr);
         $('input[name="is_neighbor"]').prop('disabled', true);
         $('#block-neighbor-descr').css('opacity', '0.5');
+
+        if(parseInt(loc) === 76){//Molodechno
+            $('#rep1Form').find('.row_minobl_paso').removeClass('hide');
+        }
+
+
+        if(id_region !== null && loc !== null && loc !== ''){
+
+            $('#id_pasp').empty().trigger('chosen:updated');
+            //get locals by region
+            $.ajax({
+                dataType: "json",
+                url: '/journal/select',
+                method: 'POST',
+                data: {
+                    id_region: id_region,
+                    id_local: loc,
+                    action: 'showPaspByLocalForRep1'
+                },
+                success: function (data) {
+
+                    $(data).each(function (index, value) {
+
+                        $("#id_pasp").append($("<option></option>").attr("value", value.pasp_id).text(value.pasp_name + ' (' + value.locorg_name + ')')).trigger('chosen:updated');
+                    });
+
+                },
+                error: function () {
+                    console.log('jj');
+                }
+            });
+
+
+            $('#id_pasp_chosen').css('width','260px');
+            //show select local
+            $('#div_is_pasp').css('display','inline');
+            $('#div_id_pasp').css('display','inline');
+        }
+        else{
+            $('#div_is_pasp').css('display','none');
+            $('#div_id_pasp').css('display','none');
+        }
+
     } else {
         // $('#block-mode-rep1-descr').text(by_place);
         $('input[name="is_neighbor"]').prop('disabled', false);
         $('#block-neighbor-descr').css('opacity', '1');
+
+        $('#rep1Form').find('.row_minobl_paso').addClass('hide');
+
+//        $('#div_is_pasp').css('display','none');
+//        $('#div_id_pasp').css('display','none');
 
     }
 

@@ -14,6 +14,8 @@ class Model_Rigtable
     //public $time1 = '05:59:59';
     public $time1 = '06:00:00';
     public $time2 = '06:00:00';
+    const MINOBL_PASO_LOCORG=158;
+
 
     //  $today =  date("Y-m-d");
     //$yesterday=date("Y-m-d", time()-(60*60*24));
@@ -370,6 +372,8 @@ class Model_Rigtable
 
         $y['is_neighbor'] = (isset($x['is_neighbor']) && !empty($x['is_neighbor'])) ? $x['is_neighbor'] : 0;
 
+        $y['is_minobl_paso'] = (isset($x['is_minobl_paso']) && !empty($x['is_minobl_paso'])) ? $x['is_minobl_paso'] : 0;
+
         /*         * * проверка на вшивость дат - по умолч сег дата ставится ** */
         if (isset($x['date_start']) && !empty($x['date_start'])) {
             if ($this->isDateTimeValid($x['date_start'], "Y-m-d")) {
@@ -416,7 +420,7 @@ class Model_Rigtable
         $this->setDateEnd($y['date_end']); //по
 
 
-        if ($y['is_switch_by_podr'] == 1) {
+        if ($y['is_switch_by_podr'] == 1) {//by car's podr
             $sql = 'SELECT r.* FROM journal.silymchs AS s  LEFT JOIN rigtable AS r ON r.`id`=s.`id_rig` WHERE  r.is_delete = ?  ';
         } else
             $sql = 'SELECT r.* FROM journal.rigtable as r WHERE  r.is_delete = ?  ';
@@ -452,21 +456,64 @@ class Model_Rigtable
 
         if ($y['is_switch_by_podr'] == 1) {
 
-            if ($y['id_region'] != 0) { //куда был выезд
-                $region = ' AND s.id_region = ?  ';
-                $param[] = $y['id_region'];
-            }
 
-            if ($y['id_local'] != 0) { //куда был выезд
-                $local = ' AND s.id_local = ?  ';
-                $param[] = $y['id_local'];
-            }
+//            if (isset($y['id_pasp']) && !empty($y['id_pasp'])) {
+//
+//                if ($y['id_region'] != 0) { //откуда был выезд
+//                    $region = ' AND s.id_region = ?  ';
+//                    $param[] = $y['id_region'];
+//                }
+//
+//                if ($y['id_local'] != 0) { //откуда был выезд
+//                    $local = ' AND s.id_local = ?  ';
+//                    $param[] = $y['id_local'];
+//                }
+//            } else {
+
+                if ($y['id_region'] != 0 && $y['id_local'] != 0) {//by local
+                    if ($y['is_minobl_paso'] == 1) { //add rigs of Minobl PASO
+
+                        $region = ' AND (s.id_region = ?  ';
+                        $param[] = $y['id_region'];
+
+                        $local = ' OR s.id_local = ?  ';
+                        $param[] = $y['id_local'];
+
+                        $local =$local. ' OR s.id_locorg = ?  ) ';
+                        $param[] = self::MINOBL_PASO_LOCORG;
+                        $local =$local. ' AND  r.id_local_user =  '.$y['id_local'].' ';
+
+                    }
+                    else{
+                        $region = ' AND s.id_region = ?  ';
+                        $param[] = $y['id_region'];
+
+                        $local = ' AND s.id_local = ?  ';
+                        $param[] = $y['id_local'];
+                    }
+                } else {
+                    if ($y['id_region'] != 0) { //откуда был выезд
+                        $region = ' AND s.id_region = ?  ';
+                        $param[] = $y['id_region'];
+                    }
+
+                    if ($y['id_local'] != 0) { //откуда был выезд
+                        $local = ' AND s.id_local = ?  ';
+                        $param[] = $y['id_local'];
+                    }
+                }
+           // }
 
 
 
 
             if (isset($y['id_pasp']) && !empty($y['id_pasp'])) {
-                $pasp = ' AND s.id_pasp IN(' . implode(',', $y['id_pasp']) . ')';
+
+//                if ($y['is_minobl_paso'] == 1) { //add rigs of Minobl PASO
+//                    $pasp = ' AND  (s.id_pasp IN(' . implode(',', $y['id_pasp']) . ') OR s.id_locorg =  ' . MINOBL_PASO_LOCORG . ') '.' AND  r.id_local_user =  '.$y['id_local'].' ';
+//                } else {
+                    $pasp = ' AND s.id_pasp IN(' . implode(',', $y['id_pasp']) . ')';
+              //  }
             }
 
 
@@ -486,7 +533,8 @@ class Model_Rigtable
             if (isset($pasp)) {
                 $sql = $sql . $pasp;
             }
-            //  echo $sql;            print_r($param);exit();
+
+            //echo $sql;            print_r($param);exit();
             return R::getAll($sql, $param);
         }
 
