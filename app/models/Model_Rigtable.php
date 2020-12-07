@@ -352,6 +352,9 @@ class Model_Rigtable
     //проверка на формат дата-время
     public function isDateTimeValid($field, $format)
     {
+//        $date = new \DateTime($field);
+//echo $date->format('Y-m-d H:i');
+
         $t_exit = \DateTime::createFromFormat($format, $field);
         if ($t_exit)
             return true;

@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '02.12.2020');
+define(NEWS_DATE, '03.12.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -12564,6 +12564,46 @@ function getCardByIdRig($table_name_year, $id_rig)
             }
         }
         $data['trunk'] = $trunk;
+
+
+
+
+        /* other result battle */
+                $rb_1 = array();
+
+        if (!empty($value['rb_chapter_1'])) {
+            $arr = explode('#', $value['rb_chapter_1']);
+            if (!empty($arr)) {
+                if (isset($arr[4]) && $arr[4] == 1)
+                    $rb_1['type_sily'] = 'силами одного отделения';
+                elseif (isset($arr[5]) && $arr[5] == 1)
+                    $rb_1['type_sily'] = 'силами одной смены';
+                elseif (isset($arr[6]) && $arr[6] == 1)
+                    $rb_1['type_sily'] = 'с привлечением дополнительных сил МЧС';
+
+                if (isset($arr[12]) && $arr[12] == 1)
+                    $rb_1['cnt_gdzs'] = 'одно звено ГДЗС';
+                elseif (isset($arr[13]) && $arr[13] == 1)
+                    $rb_1['cnt_gdzs'] = 'два и более звеньев ГДЗС';
+            }
+        }
+
+                if (!empty($value['rb_chapter_3'])) {
+            $arr = explode('#', $value['rb_chapter_3']);
+            if (!empty($arr)) {
+                if (isset($arr[0]) && $arr[0] >0)
+                    $rb_1['s_peop_dtp'] =$arr[0];
+
+                if (isset($arr[3]) && $arr[3] >0)
+                    $rb_1['s_peop_water'] =$arr[3];
+
+                if (isset($arr[21]) && $arr[21] == 1)
+                    $rb_1['hero'] = 'в районе выезда подразделения';
+                elseif (isset($arr[22]) && $arr[22] == 1)
+                    $rb_1['hero'] = 'вне района выезда подразделения';
+            }
+        }
+        $data['rb_1'] = $rb_1;
     }
 
 
@@ -12832,7 +12872,51 @@ LEFT JOIN trunklist AS tl ON tl.`id`=t.`id_trunk_list` WHERE j.`id_rig` =  ?', a
         $data['trunk'] = $trunk;
     }
 
-    // print_r($silymchs);exit();
+
+
+
+
+        /* other result battle */
+    $rb_1 = R::getRow("SELECT
+case when (r.alone_otd=1) then CONCAT('силами одного отделения')
+when (r.alone_shift=1) then CONCAT('силами одной смены')
+when (r.dop_mes=1) then CONCAT('с привлечением дополнительных сил МЧС')
+else concat('')
+ END AS type_sily,
+case when (r.one_gdzs=1) then CONCAT('одно звено ГДЗС')
+when (r.many_gdzs=1) then CONCAT('два и более звеньев ГДЗС')
+else concat('')
+ END AS cnt_gdzs
+FROM rb_chapter_1 AS r
+WHERE r.id_rig= ?", array($id_rig));
+
+
+        $rb_3 = R::getRow("SELECT r.s_peop_dtp,r.s_peop_water,
+case when(r.hero_in = 1) then CONCAT('в районе выезда подразделения')
+when(r.hero_out = 1) then CONCAT('вне района выезда подразделения')
+ELSE CONCAT('')  END AS hero
+FROM rb_chapter_3 AS r
+WHERE r.id_rig= ?", array($id_rig));
+
+            if(isset($rb_3) && !empty($rb_3)){
+
+        foreach ($rb_3 as $n => $value) {
+            if(($n =='hero' && $rb_3[$n] == '' ) || ($n !='hero' && $rb_3[$n] == 0))
+                unset($rb_3[$n]);
+        }
+    }
+//print_r($rb_3);exit();
+    if(isset($rb_1) && !empty($rb_1)){
+
+        foreach ($rb_1 as $n => $value) {
+            if($rb_1[$n] == '')
+                unset($rb_1[$n]);
+        }
+    }
+    $data['rb_1'] = array_merge($rb_1,$rb_3);
+
+
+    //print_r($silymchs);exit();
 
 
 
@@ -19735,7 +19819,51 @@ $app->group('/nii_reports', 'is_login', 'is_permis', function () use ($app, $log
 });
 
 
+/*--------------------- check time msg ------------------------*/
 
+$app->post('/check_time_msg', function () use ($app) {
+    $is_ajax = $app->request->isAjax();
+    if ($is_ajax) {
+        $post = $app->request()->post();
+        $time_msg = $post['time_msg'];
+
+        $rig_m = new Model_Rigtable();
+        if ($rig_m->isDateTimeValid($time_msg, "Y-m-d H:i") == true ) {
+
+            $date = new \DateTime($time_msg);
+            $time_msg= $date->format('Y-m-d H:i');
+
+                    if (date("H:i:s") <= '06:00:00') {//до 06 утра
+            $start_date = date("Y-m-d", time() - (60 * 60 * 24));
+            $end_date = date("Y-m-d");
+        } else {
+            $start_date = date("Y-m-d");
+            $end_date = date("Y-m-d", time() + (60 * 60 * 24));
+        }
+
+        $start_date=$start_date.' 06:00';
+        $end_date=$end_date.' 06:00';
+
+        if($time_msg>=$end_date){
+            echo json_encode(array('error' => 'Время  поступления сообщения не попадает на текущие сутки. В связи с чем в таблице выездов за текущие сутки он не отобразится.','is_show_modal'=>1));
+
+        }
+        elseif($time_msg<$start_date){
+            echo json_encode(array('error' => 'Время  поступления сообщения не попадает на текущие сутки. В связи с чем в таблице выездов за текущие сутки он не отобразится.','is_show_modal'=>1));
+
+        }
+        else{
+             echo json_encode(array('success' => 'ok'));
+        }
+
+        } else {
+            echo json_encode(array('error' => 'Неверный  формат времени поступления сообщения','is_show_modal'=>0));
+        }
+
+        return true;
+    }
+});
+/*------------------------ END check time msg ------------*/
 
 
 /* ---------------------- SPECIAL D auth --------------------- */

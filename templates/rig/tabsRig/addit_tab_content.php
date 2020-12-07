@@ -218,7 +218,7 @@
         </div>
     </div>
 
-    <div class="col-lg-3">
+    <div class="col-lg-5">
         <div class="form-group">
 
             <label for="address">Описание</label>
@@ -226,12 +226,12 @@
             if (isset($is_opg) && $is_opg == 1) {
 
                 ?>
-                <textarea class="form-control" rows="2" cols="22" placeholder="" name="opg_text"><?= $opg_text ?></textarea>
+                <textarea class="form-control" rows="2" cols="24" placeholder="" name="opg_text"><?= $opg_text ?></textarea>
     <?php
 } else {
 
     ?>
-                <textarea class="form-control" rows="2" cols="22" placeholder="" name="opg_text" disabled=""><?= $opg_text ?></textarea>
+                <textarea class="form-control" rows="2" cols="24" placeholder="" name="opg_text" disabled=""><?= $opg_text ?></textarea>
     <?php
 }
 

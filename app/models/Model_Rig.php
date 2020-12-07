@@ -34,7 +34,9 @@ class Model_Rig
         /*         * * проверка на вшивость Время сообщения  ** */
         if (isset($x['time_msg']) && !empty($x['time_msg'])) {
             if ($this->isDateTimeValid($x['time_msg'], "Y-m-d H:i")) {
-                $y['time_msg'] = $x['time_msg'] . ':00';
+                //$y['time_msg'] = $x['time_msg'] . ':00';
+                $date = new \DateTime($x['time_msg']);
+                $y['time_msg']= $date->format('Y-m-d H:i:s');
             } else {
                 $y['time_msg'] = date("Y-m-d H:i:s");
             }

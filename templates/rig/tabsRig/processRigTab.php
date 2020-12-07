@@ -668,7 +668,7 @@ if (isset($settings_user['test_ver_coord']) && $settings_user['test_ver_coord'][
     <div class="col-lg-2">
         <div class="form-group">
             <label for="object">Объект</label>
-            <textarea class="form-control" rows="2" cols="22" placeholder="описание объекта" name="object" id="object_id"><?= $object ?></textarea>
+            <textarea class="form-control" rows="6" cols="22" placeholder="описание объекта" name="object" id="object_id"><?= $object ?></textarea>
         </div>
     </div>
 
@@ -705,6 +705,7 @@ foreach ($officebelong as $row) {
 
 
 </div>
+
 
 
 <!--by settings: additional tab-->

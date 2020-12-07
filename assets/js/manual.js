@@ -2799,3 +2799,25 @@ function refresh_rigs_obl_table(){
 
 
 
+
+function diffDates(day_one, day_two) {
+    return (day_one - day_two) / (60 * 60 * 24 * 1000);
+};
+
+function validateDate(date){
+    //var regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
+    var regex=new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
+    var dateOk=regex.test(date);
+    if(dateOk){
+        alert("Ok");
+    }else{
+        alert("not Ok");
+    }
+}
+
+
+
+
+
+
+

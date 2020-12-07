@@ -44,7 +44,7 @@
 
         <a onclick="window.close()" style="color: black">  <button type="button" style="position: absolute; margin-left: 50px; margin-top: 25px;"><i class="fa fa-backward" aria-hidden="true"></i>&nbsp;назад</button></a>
         <?php
-                
+
         } else {
 
             ?>
@@ -67,7 +67,7 @@
             </div>
             <!-- /.container-fluid -->
 
-			
+
 			            <div class="row">
                 <div class="col-lg-8">
 			 <div class="panel panel-default">
@@ -139,10 +139,10 @@
                         </div>
                         <!-- /.panel-body -->
                     </div>
-					
+
 					</div>
-					
-					
+
+
 					<div class="col-lg-4">
 
 <?php
@@ -151,7 +151,7 @@ if (!empty($result['coord'])) {
 
     ?>
 
-                      
+
 <!-- apikey is NESSESARY-->
 <script src="http://api-maps.yandex.ru/2.1-dev/?apikey=f009fa81-ba29-4ad9-bdbd-4deb99c8b2b6&lang=ru-RU&load=package.full" type="text/javascript"></script>
 
@@ -167,8 +167,8 @@ function init() {
                         zoom: 17
                       //  controls: ['zoomControl', 'searchControl', 'typeSelector', 'geolocationControl']
                         });
-						
-						
+
+
 						    myMap.controls.remove('geolocationControl');
                             myMap.controls.remove('searchControl');
                             myMap.controls.remove('trafficControl');
@@ -496,15 +496,15 @@ var myPlacemark_1=new ymaps.Placemark([<?=$result['coord']?>], {
             <?php
               }
             ?>
-			
-			
-			
+
+
+
 
         <!-- /#page-wrapper -->
-		
-		
-		
-		
+
+
+
+
 <?php
 
 if(isset($results_battle) && !empty($results_battle) && (isset(array_count_values($results_battle)[0]) && array_count_values($results_battle)[0]<count($results_battle))){
@@ -621,6 +621,116 @@ if(isset($trunk) && !empty($trunk)){
     <?php }
     ?>
 
+                            </tbody>
+                    </table>
+                </div>
+                <!-- /.table-responsive -->
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <?php
+}
+
+
+        if (isset($rb_1) && !empty($rb_1)) {
+
+            ?>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Другая боевая работа
+                </div>
+                <!-- /.panel-heading -->
+                <div class="panel-body">
+                    <div class="table-responsive table-bordered">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <?php
+                                    foreach ($rb_1 as $key => $value) {
+                                        if ($key == 'type_sily') {
+
+                                            ?>
+                                            <th>Силами</th>
+                                            <?php
+                                        } elseif ($key == 'cnt_gdzs') {
+
+                                            ?>
+                                            <th>Звенья ГДЗС</th>
+                                            <?php
+                                        }
+                                        elseif ($key == 's_peop_dtp') {
+
+                                            ?>
+                                            <th>Спасено людей при ДТП</th>
+                                            <?php
+                                        }
+                                        elseif ($key == 's_peop_water') {
+
+                                            ?>
+                                            <th>Спасено людей на водоемах</th>
+                                            <?php
+                                        }
+                                        elseif ($key == 'hero') {
+
+                                            ?>
+                                            <th>Случаи героизма</th>
+                                            <?php
+                                        }
+                                    }
+
+                                    ?>
+
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr >
+                                <?php
+                                foreach ($rb_1 as $key => $value) {
+
+                                    ?>
+
+                                        <?php
+                                        if ($key == 'type_sily') {
+
+                                            ?>
+                                            <td><?= $rb_1['type_sily'] ?></td>
+                                            <?php
+                                        } elseif ($key == 'cnt_gdzs') {
+
+                                            ?>
+                                            <td><?= $rb_1['cnt_gdzs'] ?></td>
+                                            <?php
+                                        }
+                                        elseif ($key == 's_peop_dtp') {
+
+                                            ?>
+                                            <td><?= $rb_1['s_peop_dtp'] ?></td>
+                                            <?php
+                                        }
+                                        elseif ($key == 's_peop_water') {
+
+                                            ?>
+                                            <td><?= $rb_1['s_peop_water'] ?></td>
+                                            <?php
+                                        }
+                                          elseif ($key == 'hero') {
+
+                                            ?>
+                                            <td><?= $rb_1['hero'] ?></td>
+                                            <?php
+                                        }
+
+                                        ?>
+
+
+
+
+                                <?php }
+
+                                ?>
+  </tr>
                             </tbody>
                     </table>
                 </div>
