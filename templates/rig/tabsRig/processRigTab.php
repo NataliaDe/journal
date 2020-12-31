@@ -264,7 +264,7 @@ foreach ($workview as $row) {
     if (isset($podr) && !empty($podr)) {
 
         ?>
-	<div class="col-lg-2" id="div_podr_zanytia" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && ($id_reasonrig == 18 || $id_reasonrig == 47 || $id_reasonrig == 75) ) ? 'block' : 'none'  ?> ">
+	<div class="col-lg-2" id="div_podr_zanytia" style="display: <?= (isset($id_reasonrig) && $id_reasonrig != 0 && ($id_reasonrig == 18 || $id_reasonrig == 47 || $id_reasonrig == 75 || ($id_reasonrig == 67 && $id_workview == 199 )) ) ? 'block' : 'none'  ?> ">
         <div class="form-group" id="zanyatia-id">
             <label for="podr_zanytia">Выбор подразделения</label>
             <select class="js-example-basic-single form-control" name="podr_zanytia" style=" border: solid 2px #e61010 !important;" >

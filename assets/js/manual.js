@@ -1903,6 +1903,7 @@ $('#getArchiveData').on({
 $('#rigForm #id_reasonrig').on('change', function (e) {
 
     var reason = $('#rigForm #id_reasonrig').val();
+    var work = $('#rigForm #id_workview').val();
     var object_id = $('#rigForm #object_id').val();
     var coord_lat = $('#rigForm #coord_lat').val();
     var coord_lon = $('#rigForm #coord_lon').val();
@@ -2048,8 +2049,8 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
     }
 
 
-    /* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv  */
-    if (reason == 18 || reason == 47 || reason == 75) {
+    /* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv, 67-sluzevny+199 proverka podr  */
+    if (reason == 18 || reason == 47 || reason == 75 || (reason == 67 && work == 199)) {
 
         $('#rigForm #div_podr_zanytia').show();
         $("#zanyatia-id .select2-selection").addClass('blue-border-input');
@@ -2060,6 +2061,21 @@ $('#rigForm #id_reasonrig').on('change', function (e) {
 
 });
 
+/* processing rig tab. change work */
+$('#rigForm #id_workview').on('change', function (e) {
+
+    var reason = $('#rigForm #id_reasonrig').val();
+    var work = $('#rigForm #id_workview').val();
+
+    /* podr for select: 18 - zanytia, 47 - hoz work, 75 - ptv, 67-sluzevny+199 proverka podr  */
+    if (reason == 18 || reason == 47 || reason == 75 || (reason == 67 && work == 199)) {
+
+        $('#rigForm #div_podr_zanytia').show();
+        $("#zanyatia-id .select2-selection").addClass('blue-border-input');
+    } else {
+        $('#rigForm #div_podr_zanytia').hide();
+    }
+});
 
 
 /* change work view */

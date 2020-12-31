@@ -19,12 +19,12 @@
     if(isset($is_update_now) && !empty($is_update_now) && (isset($settings_user['update_rig_now']) && $settings_user['update_rig_now']['name_sign'] == 'yes')){
            include dirname(dirname(__FILE__)) . '/rig/tabsRig/info_msg_now_update.php';
     }
-	
-	
+
+
 	    include dirname(dirname(__FILE__)) . '/rig/title_block.php';
     ?>
 <div class="box-body">
-    
+
 
 
     <ul class="nav nav-tabs">
@@ -108,9 +108,9 @@
              <div class="tab-pane <?= ($active_tab == 1) ? 'active': ''?>" id="1">
 
 			<form  role="form" id="resultsBattleForm" method="POST" action="<?= $baseUrl ?>/results_battle/<?=$id_rig ?>" >
-			
+
 			<a href="#" class="validate_href" data-form="resultsBattleForm" data-toggle="modal"  data-target="#validate_modal"></a>
-			
+
                 <div class="row">
 
 
@@ -135,7 +135,7 @@
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['dead_man']) || $battle['dead_man'] == 0) ) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="dead_man" value="<?= (isset($battle['dead_man'])) ? $battle['dead_man'] : 0 ?>" >
                         </div>
                     </div>
-					
+
 				     <div class="col-lg-1">
                         <div class="form-group">
                             <label for="dead_child">в т.ч. детей</label>
@@ -149,38 +149,38 @@
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_man']) || $battle['save_man'] == 0) ) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_man" value="<?= (isset($battle['save_man'])) ? $battle['save_man'] : 0 ?>" >
                         </div>
                     </div>
-					
-					
+
+
 					 <div class="col-lg-1">
                         <div class="form-group">
                             <label for="save_child">в т.ч. детей</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_child']) || $battle['save_child'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_child" value="<?= (isset($battle['save_child'])) ? $battle['save_child'] : 0 ?>" >
                         </div>
                     </div>
-					
+
 					<div class="col-lg-2">
                         <div class="form-group">
                             <label for="save_mchs">в т.ч. подразделениями МЧС</label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_mchs']) || $battle['save_mchs'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_mchs" value="<?= (isset($battle['save_mchs'])) ? $battle['save_mchs'] : 0 ?>" >
                         </div>
                     </div>
-					
-					
+
+
 					<div class="col-lg-2"></div>
-					
-					
+
+
                     <div class="col-lg-2">
                         <div class="box-body">
                             <button type="submit" class="btn-save-rig">  <div class="i2Style">Сохранить данные</div></button>
                         </div>    </div>
 
-    
+
 
                 </div>
-				
-				
+
+
 				 <div class="row">
-				 
+
 				  <div class="col-lg-1">
                         <div class="form-group">
                             <label for="inj_man_l">Травмировано</label>
@@ -194,7 +194,7 @@
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['ev_man']) || $battle['ev_man'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="ev_man" value="<?= (isset($battle['ev_man'])) ? $battle['ev_man'] : 0 ?>" >
                         </div>
                     </div>
-					
+
 					<div class="col-lg-1">
                         <div class="form-group">
                             <label for="ev_child">в т.ч. детей</label>
@@ -209,7 +209,7 @@
                         </div>
                     </div>
 
-				 
+
 				  </div>
 
 
@@ -286,9 +286,9 @@
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_an']) || $battle['save_an'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_an" value="<?= (isset($battle['save_an'])) ? $battle['save_an'] : 0 ?>" >
                         </div>
                     </div>
-					
-					
-					
+
+
+
                     <div class="col-lg-2">
                         <div class="form-group">
                             <label for="save_an_mchs">в т.ч. подразделениями МЧС</label>
@@ -322,21 +322,21 @@
 
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="save_plan_l">Спасено (тонн)</label>
+                            <label for="save_plan_l">Спасено (тонн) <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_plan']) || $battle['save_plan'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_plan" value="<?= (isset($battle['save_plan'])) ? $battle['save_plan'] : 0 ?>" >
                         </div>
                     </div>
 
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="dam_plan_l">Повреждено (тонн)</label>
+                            <label for="dam_plan_l">Повреждено (тонн) <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['dam_plan']) || $battle['dam_plan'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="dam_plan" value="<?= (isset($battle['dam_plan'])) ? $battle['dam_plan'] : 0 ?>" >
                         </div>
                     </div>
 
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="des_plan_l">Уничтожено (тонн)</label>
+                            <label for="des_plan_l">Уничтожено (тонн) <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['des_plan']) || $battle['des_plan'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="des_plan" value="<?= (isset($battle['des_plan'])) ? $battle['des_plan'] : 0 ?>" >
                         </div>
                     </div>
@@ -345,10 +345,10 @@
 
 
                 </div>
-				
-				
-				
-				
+
+
+
+
 				              <p class="line"><span>Ущерб (прямые потери) и материальные ценности</span></p>
 <!--<center><span class="name-part-of-rig-form">Причины</span></center>-->
 
@@ -356,14 +356,14 @@
 
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="dam_money">Ущерб (прямые потери), руб.</label>
+                            <label for="dam_money">Ущерб (прямые потери), руб. <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['dam_money']) || $battle['dam_money'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="dam_money" value="<?= (isset($battle['dam_money'])) ? $battle['dam_money'] : 0 ?>" >
                         </div>
                     </div>
 
                     <div class="col-lg-2">
                         <div class="form-group">
-                            <label for="save_wealth">Спасено мат. ценностей, руб.</label>
+                            <label for="save_wealth">Спасено мат. ценностей, руб. <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                             <input type="text" class="form-control <?= (isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($battle['save_wealth']) || $battle['save_wealth'] == 0)) ? 'fire' : '' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="save_wealth" value="<?= (isset($battle['save_wealth'])) ? $battle['save_wealth'] : 0 ?>" >
                         </div>
                     </div>
@@ -492,10 +492,10 @@ include 'modals/validate_modal.php';
             }
         });
     });
-	
-	
-	
-	
+
+
+
+
 
     $(document).ready(function () {
         $('body').on('change', '#resultsBattleFormPart_1 input[name="one_gdzs"]', function (e) {
@@ -530,13 +530,13 @@ include 'modals/validate_modal.php';
 
  if(<?= $is_success ?> === 1)
         toastr.success('Информация текущей вкладки сохранена.', 'Успех!', {progressBar:     true,timeOut: 5000});
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
 	$('form#resultsBattleForm').on('submit', function (e) {
         e.preventDefault();
         var form = $('form#resultsBattleForm');

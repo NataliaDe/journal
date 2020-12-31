@@ -26,8 +26,14 @@ $(function () {  //всплывающая подсказка
         return false;
 });
 
+ $('.int-cnt').keypress(function (key) {
 
-    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"], #trunkForm input[name="s_bef"], #trunkForm input[name="s_loc"], #resultsBattleForm input[name="dam_money"], #resultsBattleForm input[name="save_wealth"]').keypress(function (key) {
+   if ((key.charCode < 48) || (key.charCode > 57))
+        return false;
+});
+
+
+    $('#resultsBattleForm input[name="save_plan"], #resultsBattleForm input[name="dam_plan"], #resultsBattleForm input[name="des_plan"], #trunkForm input[name="s_bef"], #trunkForm input[name="s_loc"], #resultsBattleForm input[name="dam_money"],#resultsBattleFormPart_1 input[name="powder_out"],#resultsBattleFormPart_1 input[name="powder_mob"],#resultsBattleFormPart_1 input[name="save_p_mask"],#resultsBattleFormPart_1 input[name="pred_food"], #resultsBattleFormPart_1 input[name="pred_build"],#resultsBattleFormPart_1 input[name="pred_vehicle"],#resultsBattleForm input[name="save_wealth"],#resultsBattleFormPart_3 input[name="col_arg"],#resultsBattleFormPart_3 input[name="col_was"]').keypress(function (key) {
      if (((key.charCode < 48)&& (key.charCode != 46)) || (key.charCode > 57) )
         return false;
 });

@@ -77,8 +77,11 @@ class Model_Rig
         $y['opg_text'] = (isset($y['is_opg']) && $y['is_opg'] == 1 ) ? $x['opg_text'] : NULL; //если не отмечен чекбокс-не записываем в БД описание
 
 
-        if (isset($y['id_reasonrig']) && ($y['id_reasonrig'] == 18 || $y['id_reasonrig'] == 47 || $y['id_reasonrig'] == 75)) {// zanyatia, hoz work, ptv
+        if (isset($y['id_reasonrig']) && ($y['id_reasonrig'] == 18 || $y['id_reasonrig'] == 47 || $y['id_reasonrig'] == 75 || ($y['id_reasonrig'] == 67 && $y['id_work_view'] == 199))) {// zanyatia, hoz work, ptv, sluzebny+proverka podr
             $y['podr_zanytia'] = (isset($x['podr_zanytia']) && !empty($x['podr_zanytia'])) ? $x['podr_zanytia'] : 0;
+        }
+        else{
+            $y['podr_zanytia'] = 0;
         }
 
         $y['fio_head_check'] = (isset($x['fio_head_check']) && !empty($x['fio_head_check'])) ? trim($x['fio_head_check']) : '';
