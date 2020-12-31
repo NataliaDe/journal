@@ -12,7 +12,7 @@ if (isset($id_rig) && !empty($id_rig) && isset($settings_user['vid_rig_table']) 
             <a href="<?= $baseUrl ?>/rig/new/<?= $id_rig ?>/20">Высылка техники</a>
         </li>
 
-        <li>
+        <li class="<?= (isset($settings_user['is_addit_on_process_tab']) && $settings_user['is_addit_on_process_tab']['name_sign'] == 'yes') ? 'hide' : '' ?>">
             <a href="<?= $baseUrl ?>/rig/new/<?= $id_rig ?>/30" >Дополнительно</a>
         </li>
 

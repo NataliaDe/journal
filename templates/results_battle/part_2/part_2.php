@@ -64,7 +64,7 @@
 
             <div class="form-group">
                 <label for="avia_4s">Количество привлеченной авиационной техники</label>
-                <input type="text" class="form-control" placeholder="0" name="avia_4s" value="<?= (isset($part_2['avia_4s'])) ? $part_2['avia_4s'] : 0 ?>" >
+                <input type="text" class="form-control int-cnt" placeholder="0" name="avia_4s" value="<?= (isset($part_2['avia_4s'])) ? $part_2['avia_4s'] : 0 ?>" >
             </div>
         </div>
 

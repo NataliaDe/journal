@@ -205,7 +205,7 @@
 
                 <div class="col-lg-3">
                     <div class="form-group">
-                        <label for="save_an_l">Израсходовано порошка, тонн</label>
+                        <label for="save_an_l">Израсходовано порошка, тонн <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                         <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($part_1['powder_out']) || $part_1['powder_out'] == 0)  ) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="powder_out" value="<?= (isset($part_1['powder_out'])) ? $part_1['powder_out'] : 0 ?>" >
                     </div>
                 </div>
@@ -229,7 +229,7 @@
 
                 <div class="col-lg-3">
                     <div class="form-group">
-                        <label for="dam_an_l">Предотвращено уничтожение кормов (тонн)</label>
+                        <label for="dam_an_l">Предотвращено уничтожение кормов (тонн) <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                         <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 34 && (!isset($part_1['pred_food']) || $part_1['pred_food'] == 0)  ) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 34) ? 'required' : '' ?>" placeholder="0" name="pred_food" value="<?= (isset($part_1['pred_food'])) ? $part_1['pred_food'] : 0 ?>" >
                     </div>
                 </div>

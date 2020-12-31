@@ -126,7 +126,7 @@
                 <input type="text" class="form-control int-cnt" placeholder="0" name="s_chi_kon" value="<?= (isset($part_3['s_chi_kon'])) ? $part_3['s_chi_kon'] : 0 ?>" >
             </div>
         </div>
-		
+
 		        <div class="col-lg-3">
             <div class="form-group">
                 <label for="s_people_cons">Спасено людей при других обстоятельствах</label>
@@ -154,14 +154,14 @@
 
         <div class="col-lg-2">
             <div class="form-group">
-                <label for="col_arg">Собрано ртути, кг</label>
-                <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 68 && (!isset($part_3['col_arg']) || $part_3['col_arg'] == 0)) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 68) ? 'required' : '' ?>" placeholder="0" name="col_arg" value="<?= (isset($part_3['col_arg'])) ? $part_3['col_arg'] : 0 ?> " >
+                <label for="col_arg">Собрано ртути, кг <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
+                <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 68 && (!isset($part_3['col_arg']) || $part_3['col_arg'] == 0)) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 68) ? 'required' : '' ?>" placeholder="0" name="col_arg" value="<?= (isset($part_3['col_arg'])) ? $part_3['col_arg'] : 0 ?>" >
             </div>
         </div>
 
-        <div class="col-lg-2">
+        <div class="col-lg-3">
             <div class="form-group">
-                <label for="col_was">Собрано ртутьсодержащих отходов, кг</label>
+                <label for="col_was">Собрано ртутьсодержащих отходов, кг <i class="fa fa-info-circle info-decimal" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="" data-original-title="Разделителем целой и дробной части является ТОЧКА (.)"></i></label>
                 <input type="text" class="form-control str-cnt <?=(isset($current_reason_rig) && $current_reason_rig == 68 && (!isset($part_3['col_was']) || $part_3['col_was'] == 0)) ? 'fire':'' ?> <?= (isset($current_reason_rig) && $current_reason_rig == 68) ? 'required' : '' ?>" placeholder="0" name="col_was" value="<?= (isset($part_3['col_was'])) ? $part_3['col_was'] : 0 ?>" >
             </div>
         </div>

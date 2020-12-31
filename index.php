@@ -27,7 +27,7 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '03.12.2020');
+define(NEWS_DATE, '28.12.2020');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
 CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
@@ -531,6 +531,36 @@ function set_cookie($permis)
     $u = R::load('user', $permis['id_user']);
     $u->cookie = $key;
     R::store($u);
+}
+
+function validate_float($str)
+{
+
+    $delete_points = function ($a, $b) {
+
+        $coma = strpos($a, '.');
+        if ($coma === false) {
+
+            return $a . '' . $b;
+        } elseif ($b == '.') {
+            return $a;
+        }
+        return $a . '' . $b;
+    };
+
+
+    $coma = false;
+    $coma = strpos($str, ',');
+    if ($coma === false) {
+
+    } else {
+        $str = str_replace(',', '.', $str);
+    }
+
+    $str = preg_replace("/[^.0-9]/", '', $str);
+
+    $result = array_reduce(str_split($str), $delete_points, "");
+    return $result;
 }
 /* -------------------------- END ФУНКЦИИ ------------------------- */
 
@@ -3058,7 +3088,6 @@ $app->group('/news', function () use ($app) {
 
     // show news
     $app->get('/', function () use ($app) {
-
         $data['title'] = 'Новости';
 
         $bread_crumb = array('Новости');
@@ -13069,11 +13098,30 @@ $app->group('/results_battle', function () use ($app, $log) {
         $save_data['save_an_mchs'] = (empty($app->request()->post('save_an_mchs'))) ? 0 : intval($app->request()->post('save_an_mchs'));
 
         $save_data['save_plan'] = (empty($app->request()->post('save_plan'))) ? 0 : $app->request()->post('save_plan');
+        if (isset($save_data['save_plan']) && !empty($save_data['save_plan'])) {
+            $save_data['save_plan'] = validate_float($save_data['save_plan']);
+        }
+
         $save_data['dam_plan'] = (empty($app->request()->post('dam_plan'))) ? 0 : $app->request()->post('dam_plan');
+        if (isset($save_data['dam_plan']) && !empty($save_data['dam_plan'])){
+            $save_data['dam_plan'] = validate_float($save_data['dam_plan']);
+        }
+
         $save_data['des_plan'] = (empty($app->request()->post('des_plan'))) ? 0 : $app->request()->post('des_plan');
+        if (isset($save_data['des_plan']) && !empty($save_data['des_plan'])){
+            $save_data['des_plan'] = validate_float($save_data['des_plan']);
+        }
+
 
         $save_data['dam_money'] = (empty($app->request()->post('dam_money'))) ? 0 : $app->request()->post('dam_money');
+        if (isset($save_data['dam_money']) && !empty($save_data['dam_money'])){
+            $save_data['dam_money'] = validate_float($save_data['dam_money']);
+        }
+
         $save_data['save_wealth'] = (empty($app->request()->post('save_wealth'))) ? 0 : $app->request()->post('save_wealth');
+        if (isset($save_data['save_wealth']) && !empty($save_data['save_wealth'])){
+            $save_data['save_wealth'] = validate_float($save_data['save_wealth']);
+        }
 
 
 
@@ -13151,7 +13199,15 @@ $app->group('/results_battle_part_1', function () use ($app, $log) {
 
 
         $save_data['powder_out'] = (empty($app->request()->post('powder_out'))) ? 0 : $app->request()->post('powder_out');
+        if (isset($save_data['powder_out']) && !empty($save_data['powder_out'])){
+            $save_data['powder_out'] = validate_float($save_data['powder_out']);
+        }
+
+
         $save_data['pred_food'] = (empty($app->request()->post('pred_food'))) ? 0 : $app->request()->post('pred_food');
+        if (isset($save_data['pred_food']) && !empty($save_data['pred_food'])){
+            $save_data['pred_food'] = validate_float($save_data['pred_food']);
+        }
 
         //print_r($save_data);exit();
 
@@ -13262,8 +13318,16 @@ $app->group('/results_battle_part_3', function () use ($app, $log) {
         $save_data['s_people_cons'] = (empty($app->request()->post('s_people_cons'))) ? 0 : intval($app->request()->post('s_people_cons'));
         $save_data['s_chi_cons'] = (empty($app->request()->post('s_chi_cons'))) ? 0 : intval($app->request()->post('s_chi_cons'));
 
+
         $save_data['col_arg'] = (empty($app->request()->post('col_arg'))) ? 0 : $app->request()->post('col_arg');
+        if (isset($save_data['col_arg']) && !empty($save_data['col_arg'])) {
+            $save_data['col_arg'] = validate_float($save_data['col_arg']);
+        }
+
         $save_data['col_was'] = (empty($app->request()->post('col_was'))) ? 0 : $app->request()->post('col_was');
+        if (isset($save_data['col_was']) && !empty($save_data['col_was'])) {
+            $save_data['col_was'] = validate_float($save_data['col_was']);
+        }
 
 
         $save_data['ins_kill_free'] = (empty($app->request()->post('ins_kill_free'))) ? 0 : intval($app->request()->post('ins_kill_free'));
@@ -13704,8 +13768,26 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
 
                             $save_sily['id_trunk_list'] = $value['trunk'][$j];
                             $save_sily['cnt'] = (isset($value['means'][$j]) && !empty($value['means'][$j])) ? intval($value['means'][$j]) : 0;
-                            $save_sily['water'] = $value['water'][$j];
+                           $w = $value['water'][$j];
+                            if (!empty($w)) {
+                                $parts = explode('/', $w);
 
+                                if (!empty($parts)) {
+                                    $first = (isset($parts[0]) && !empty($parts[0]) ) ? $parts[0] : 0;
+                                    $first = validate_float($first);
+
+                                    $second = (isset($parts[1]) && !empty($parts[1])) ? $parts[1] : 0;
+                                    $second = validate_float($second);
+
+                                    $w = $first . '/' . $second;
+                                } else {
+                                    $w = '0/0';
+                                }
+                            } else {
+                                $w = '0/0';
+                            }
+
+                            $save_sily['water'] = $w;
 
                             //save
                             if (!empty($save_sily)) {
@@ -13727,6 +13809,13 @@ $app->group('/trunk', 'is_login', function () use ($app, $log) {
 
         $save_data['s_bef'] = (empty($app->request()->post('s_bef'))) ? 0 : $app->request()->post('s_bef');
         $save_data['s_loc'] = (empty($app->request()->post('s_loc'))) ? 0 : $app->request()->post('s_loc');
+
+        if (isset($save_data['s_bef']) && !empty($save_data['s_bef'])) {
+            $save_data['s_bef'] = validate_float($save_data['s_bef']);
+        }
+        if (isset($save_data['s_loc']) && !empty($save_data['s_loc'])) {
+            $save_data['s_loc'] = validate_float($save_data['s_loc']);
+        }
 
 
 

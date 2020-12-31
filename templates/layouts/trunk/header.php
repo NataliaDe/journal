@@ -78,7 +78,7 @@
 
 
         <!-- manual -->
-        <link href="<?= $baseUrl ?>/assets/css/manual.css" rel="stylesheet">
+        <link href="<?= $baseUrl ?>/assets/css/manual.css?<?php echo time();?>" rel="stylesheet">
         <link href="<?= $baseUrl ?>/assets/css/signin.css" rel="stylesheet">
 
 
