@@ -142,10 +142,23 @@
         </div>
     </div>
 
+    <div class="row">
+        <br><br>
+        <div class="form-group hide" id="div_id_show_paso" >
+            <div class="checkbox checkbox-info" style="padding-left: 8px; cursor: pointer">
+                <input id="checkbox2" type="checkbox" name="is_show_paso" value="1" >
+                <label for="checkbox2" style="color: white; cursor: pointer">
+                    Показать ПАСО
+                </label>
+            </div>
+
+
+        </div>
+    </div>
 
 
     <div class="row">
-        <br><br>
+        <br>
         <div class="form-group" id="div_id_show_number_pasp" >
             <div class="checkbox checkbox-success" style="padding-left: 8px; cursor: pointer">
                 <input id="checkbox1" type="checkbox" name="show_number_pasp" value="1" >

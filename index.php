@@ -27,10 +27,10 @@ define(AVIA, 12); //id_organ AVIACIA
 define(DIVIZ_COU_ID,8);//id divizion of cou
 
 define(VER, '4.1');
-define(NEWS_DATE, '28.12.2020');
+define(NEWS_DATE, '14.01.2021');
 
 CONST ARCHIVE_YEAR = array(0 => array('table_name' => '2019a'), 1 => array('table_name' => '2020a'));
-CONST ARCHIVE_YEAR_LIST = array(2019, 2020);
+CONST ARCHIVE_YEAR_LIST = array(2019, 2020,2021);
 CONST LIST_MONTH = array(1  => 'январь', 2  => 'февраль', 3  => 'март', 4  => 'апрель', 5  => 'май', 6  => 'июнь', 7  => 'июль', 8  => 'август',
     9  => 'сентябрь', 10 => 'октябрь', 11 => 'ноябрь', 12 => 'декабрь');
 
@@ -4568,7 +4568,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /*         * * current daily: hs ** */
         $daily_rigs_array = array();
         if ($filter['year'] == date('Y')) {
-            $daily_rigs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
+            $daily_rigs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','1','{$filter['year']}');"); //current day from 06:00 till 06:00
 
             if (empty($daily_rigs)) {
 
@@ -4599,7 +4599,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /*         * * current daily: rigs ** */
         $all_rigs_today_array = array();
         if ($filter['year'] == date('Y')) {
-            $all_rigs_today = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
+            $all_rigs_today = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','1','{$filter['year']}');"); //current day from 06:00 till 06:00
 
             if (!empty($all_rigs_today)) {
                 foreach ($all_rigs_today as $k => $row) {
@@ -4617,7 +4617,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         $daily_current_array = array();
         if ($filter['year'] == date('Y')) {
 
-        $daily_current = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','1');"); //current day from 06:00 till 06:00
+        $daily_current = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','1','{$filter['year']}');"); //current day from 06:00 till 06:00
 
         if (empty($daily_current)) {
 
@@ -4798,18 +4798,16 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /* mans */
         $all_days_journal_arr = array();
 
-        if ($filter['year'] == date('Y')) {
-        $all_days_journal = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','0');"); //by all rigs in journal
+      //  if ($filter['year'] == date('Y')) {
+            $all_days_journal = R::getAssoc("CALL daily_report_current_get_results_battle('{$filter['id_region']}','0','{$filter['year']}');"); //by all rigs in journal
 
+            if (!empty($all_days_journal)) {
+                foreach ($all_days_journal as $row) {
 
-
-        if (!empty($all_days_journal)) {
-            foreach ($all_days_journal as $row) {
-
-                $all_days_journal_arr = $row;
+                    $all_days_journal_arr = $row;
+                }
             }
-        }
-        }
+      //  }
 
         $data['all_days_journal_mans'] = $all_days_journal_arr;
         /* END mans */
@@ -4818,15 +4816,16 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /* all hs */
 
          $all_hs_journal = array();
-        if ($filter['year'] == date('Y')) {
-        $all_hs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','0');"); //all rigs from journal
+     //   if ($filter['year'] == date('Y')) {
+        $all_hs = R::getAssoc("CALL daily_report_current_get_hs('{$filter['id_region']}','0','{$filter['year']}');"); //all rigs from journal
 
         if (!empty($all_hs)) {
             foreach ($all_hs as $k => $row) {
                 $all_hs_journal = $row;
             }
         }
-        }
+      //  }
+
         $data['all_hs_journal'] = $all_hs_journal;
 
         /* END all hs */
@@ -4834,15 +4833,15 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
 
         /* all rigs */
         $all_rigs_journal = array();
-        if ($filter['year'] == date('Y')) {
-            $all_rigs = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','0');"); //all rigs from journal
+      //  if ($filter['year'] == date('Y')) {
+            $all_rigs = R::getAssoc("CALL daily_report_current_get_rigs('{$filter['id_region']}','0','{$filter['year']}');"); //all rigs from journal
 
             if (!empty($all_rigs)) {
                 foreach ($all_rigs as $k => $row) {
                     $all_rigs_journal = $row;
                 }
             }
-        }
+      //  }
         $data['all_rigs_journal'] = $all_rigs_journal;
 
         /* END all rigs */
@@ -5469,7 +5468,7 @@ $app->group('/report', 'is_login', function () use ($app, $log) {
         /*         * *** end classif **** */
 
 
-
+//print_r($filter);exit();
 
         /* ---------------------- all data from archive ------------------------- */
 
@@ -10996,6 +10995,210 @@ $app->group('/archive_1', 'is_login', 'is_permis', function () use ($app) {
             }
         }
     });
+
+
+
+
+
+/*---------------  04.01.2020 !!!! --------------------*/
+    $app->get('/export_for_grodno', function () use ($app) {
+
+//exit();
+        $main_m = new Model_Main();
+
+        /* get data */
+        $date_start = '2020-10-01';
+        $date_end = '2020-10-02';
+        $table_name_year = $y='2020a';
+        $region = 'Гродненская';
+        $local = '';
+
+
+
+        /* from 06:00:00 till 06:00:00 */
+        $sql = ' FROM jarchive.' . $table_name_year . '  WHERE date_msg between ? and ? and id_rig not in '
+            . '  ( SELECT id_rig FROM jarchive.' . $table_name_year . ' WHERE (date_msg = ? and time_msg< ? )'
+            . ' or  (date_msg = ? and time_msg>= ? )  ) AND is_delete = 0 ';
+
+
+        $param[] = $date_start;
+        $param[] = $date_end;
+
+        $param[] = $date_start;
+        $param[] = '06:00:00';
+        $param[] = $date_end;
+        $param[] = '06:00:00';
+        //  $param[]=0;
+//var_dump($region);
+        if ($region != 'no') {
+            // echo 'uuuuuu';
+            // $sql=$sql.' AND region_name like ?';
+            $sql = $sql . ' AND region_name = ?';
+            $param[] = $region;
+        }
+
+//        if ($local != 'no') {
+//
+//            $sql = $sql . ' AND ( local_name like "' . $local . '" OR local_name like "' . $local . '%" ) ';
+//            //$param[] = $local;
+//        }
+
+//        if ($reasonrig_form != 'no') {
+//
+//            $sql = $sql . ' AND reasonrig_name =  "' . $reasonrig_form . '"';
+//        }
+
+
+
+        $sql = $sql . ' ORDER BY id_rig ASC';
+         $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv,is_likv_before_arrival, is_not_measures, silymchs ' . $sql;
+
+//        if ($id_tab == 'table-content1') {//rig
+//            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,reasonrig_name, view_work, inf_detail, people,time_loc, time_likv,is_likv_before_arrival, is_not_measures, silymchs ' . $sql;
+//        } elseif ($id_tab == 'table-content2') {//technic mchs
+//            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address,time_loc, time_likv, is_likv_before_arrival, silymchs ' . $sql;
+//        } elseif ($id_tab == 'table-content3') {//informing
+//            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, informing ' . $sql;
+//        } elseif ($id_tab == 'table-content4') {//innerservice
+//            $sql = 'SELECT id_rig,date_msg,time_msg, local_name,address, innerservice ' . $sql;
+//        }
+
+
+
+        $real_server = $main_m->get_js_connect(substr($y, 0, -1));
+        if (IS_NEW_MODE_ARCHIVE == 1 && substr($y, 0, -1) < date('Y') && $real_server != APP_SERVER) {
+            $pdo = get_pdo_15($real_server);
+
+            $sth = $pdo->prepare($sql);
+            $sth->execute($param);
+            $result = $sth->fetchAll();
+            //print_r($result);exit();
+        } else {
+            $result = R::getAll($sql, $param);
+        }
+
+
+//$cnt_result=count($result);
+//echo $sql;
+//print_r($param);
+//echo $cnt_result;
+//exit();
+
+        $objPHPExcel = new PHPExcel();
+        $objReader = PHPExcel_IOFactory::createReader("Excel2007");
+        $objPHPExcel = $objReader->load(__DIR__ . '/tmpl/archive/grodno.xlsx');
+
+        $objPHPExcel->setActiveSheetIndex(0); //activate worksheet number 1
+        $sheet = $objPHPExcel->getActiveSheet();
+
+        $r = 9; //strначальная строка для записи
+        $c = 0; // stolbec начальный столбец для записи
+
+        $i = 0; //счетчик кол-ва записей № п/п
+
+
+        $sheet->setCellValue('A2', 'с ' . date('d.m.Y', strtotime($date_start)) . ' по ' . date('d.m.Y', strtotime($date_end))); //выбранный период
+        $sheet->setCellValue('A3', 'область: ' . (($region != 'no') ? $region : 'все')); //выбранный область и район
+
+        /* устанавливаем бордер ячейкам */
+        $styleArray = array(
+            'borders' => array(
+                'allborders' => array(
+                    'style' => PHPExcel_Style_Border::BORDER_THIN
+                )
+            )
+        );
+
+        if (!empty($result)) {
+                foreach ($result as $row) {
+                    $i++;
+
+                    $sheet->setCellValue('A' . $r, $i); //№ п/п
+                    $sheet->setCellValue('B' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+                    $sheet->setCellValue('C' . $r, date('H:i', strtotime($row['time_msg'])));
+                    //$sheet->setCellValue('E' . $r, $row['local_name']);
+                    $sheet->setCellValue('F' . $r, $row['address']);
+                    $sheet->setCellValue('G' . $r, $row['reasonrig_name']);
+                    $sheet->setCellValue('H' . $r, $row['view_work']);
+                    $sheet->setCellValue('I' . $r, $row['inf_detail']);
+                    $sheet->setCellValue('J' . $r, $row['people']);
+                    $sheet->setCellValue('K' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+
+                    $likv = '';
+                    if (($row['time_likv'] != '0000-00-00 00:00:00' && !empty($row['time_likv']) && $row['time_likv'] != '-')) {
+                        $likv = date('d.m.Y H:i', strtotime($row['time_likv']));
+                    } elseif ($row['is_likv_before_arrival'] == 1) {
+                        $likv = 'ликв. до приб.';
+                    } elseif ($row['is_not_measures'] == 1) {
+                        $likv = 'меры не приним.';
+                    }
+
+                    $sheet->setCellValue('L' . $r, $likv);
+
+
+                    $r++;
+                }
+
+//            elseif ($id_tab == 'table-content2') {//technic mchs
+//                $i = 0;
+//                foreach ($result as $row) {
+//                    $arr_silymchs = explode('~', $row['silymchs']);
+//
+//                    foreach ($arr_silymchs as $value) {
+//                        if (!empty($value)) {
+//                            $i++;
+//                            $arr_mark = explode('#', $value);
+//
+//                            $mark = $arr_mark[0];
+//
+//                            /* all after # explode, exit,arrival......is_return , result -all  after ? */
+//                            $arr_time = explode('?', $arr_mark[1]);
+//
+//                            /* all  after ? explode.  exit,arrival......is_return */
+//                            $each_time = explode('&', $arr_time[1]);
+//
+//                            $t_exit = $each_time[0];
+//                            $t_arrival = $each_time[1];
+//                            $t_follow = $each_time[2];
+//                            $t_end = $each_time[3];
+//                            $t_return = $each_time[4];
+//                            $t_distance = $each_time[5];
+//                            $t_is_return = ($each_time[6] == 0) ? 'нет' : 'да';
+//
+//                            $sheet->setCellValue('A' . $r, $i); //№ п/п
+//                            $sheet->setCellValue('B' . $r, $row['id_rig']);
+//                            $sheet->setCellValue('C' . $r, date('d.m.Y', strtotime($row['date_msg'])));
+//                            $sheet->setCellValue('D' . $r, date('H:i', strtotime($row['time_msg'])));
+//                            $sheet->setCellValue('E' . $r, $row['local_name']);
+//                            $sheet->setCellValue('F' . $r, $row['address']);
+//                            $sheet->setCellValue('G' . $r, $mark);
+//                            $sheet->setCellValue('H' . $r, (($t_exit == '0000-00-00 00:00:00' || empty($t_exit) || $t_exit == '-') ? '' : date('d.m.Y H:i', strtotime($t_exit))));
+//                            $sheet->setCellValue('I' . $r, (($t_arrival == '0000-00-00 00:00:00' || empty($t_arrival) || $t_arrival == '-') ? '' : date('d.m.Y H:i', strtotime($t_arrival))));
+//                            $sheet->setCellValue('J' . $r, (($row['time_loc'] == '0000-00-00 00:00:00' || empty($row['time_loc']) || $row['time_loc'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_loc']))));
+//                            $sheet->setCellValue('K' . $r, (($row['time_likv'] == '0000-00-00 00:00:00' || empty($row['time_likv']) || $row['time_likv'] == '-') ? '' : date('d.m.Y H:i', strtotime($row['time_likv']))));
+//                            $sheet->setCellValue('L' . $r, (($row['is_likv_before_arrival']) == 1 ? 'да' : 'нет'));
+//                            $sheet->setCellValue('M' . $r, (($t_end == '0000-00-00 00:00:00' || empty($t_end) || $t_end == '-' ) ? '' : date('d.m.Y H:i', strtotime($t_end))));
+//                            $sheet->setCellValue('N' . $r, (($t_return == '0000-00-00 00:00:00' || empty($t_return) || $t_return == '-') ? '' : date('d.m.Y H:i', strtotime($t_return))));
+//                            $sheet->setCellValue('O' . $r, $t_distance);
+//                            $sheet->setCellValue('P' . $r, $t_is_return);
+//
+//                            $r++;
+//                        }
+//                    }
+//                }
+//                $sheet->getStyleByColumnAndRow(0, 8, 15, $r - 1)->applyFromArray($styleArray);
+//            }
+        }
+
+        /* Сохранить в файл */
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="grodno.xlsx"');
+        header('Cache-Control: max-age=0');
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        $objWriter->save('php://output');
+    });
+
+
 });
 
 
@@ -14805,6 +15008,23 @@ $app->group('/maps_for_mes', function () use ($app) {
         $filter['id_region'] = $app->request()->post('id_region');
         $filter['id_local'] = $app->request()->post('id_local');
         $filter['id_pasp'] = $app->request()->post('id_pasp');
+
+        $is_show_paso = $app->request()->post('is_show_paso');
+        $filter['is_show_paso'] = (isset($is_show_paso)) ? intval($is_show_paso) : 0;
+
+        if ($filter['is_show_paso'] == 1) {// add PASO
+            if (!empty($filter['id_local'])) {
+
+                foreach ($filter['id_local'] as $value) {
+                    $locorg_info = R::getRow('SELECT id_local,id_organ  FROM ss.locorg  WHERE id = ? ', array($value));
+                    $paso_ids = R::getALL('SELECT id  FROM ss.locorg  WHERE id_local=? AND id_organ = ? AND oforg = ? ', array($locorg_info['id_local'], PASOO, $locorg_info['id_organ']));
+                    if (!empty($paso_ids)) {
+                        $paso_ids = array_column($paso_ids, 'id');
+                        $filter['id_local'] = array_merge($filter['id_local'], $paso_ids);
+                    }
+                }
+            }
+        }
 
         $filter['id_name_car'] = $app->request()->post('id_name_car');
         $filter['id_type_car'] = $app->request()->post('id_type_car'); //boevay, res

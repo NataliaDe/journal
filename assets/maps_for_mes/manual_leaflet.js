@@ -31,6 +31,106 @@ var map = L.map('mapid', {attributionControl: false,
 });
 map.setView([53.894551, 27.556915], 12);
 
+
+/* ---------------------------------------------------------- MEASURE ------------------------------------------------------------- */
+
+options = {
+        localization: 'ru',
+    position: 'topleft',            // Position to show the control. Values: 'topright', 'topleft', 'bottomright', 'bottomleft'
+    unit: 'metres',                 // Show imperial or metric distances. Values: 'metres', 'landmiles', 'nauticalmiles'
+    clearMeasurementsOnStop: true,  // Clear all the measurements when the control is unselected
+    showBearings: false,            // Whether bearings are displayed within the tooltips
+    bearingTextIn: 'In'    ,         // language dependend label for inbound bearings
+    bearingTextOut: 'Out',          // language dependend label for outbound bearings
+    tooltipTextFinish: 'Кликните мышью, чтобы <b>удалить линию</b><br>',//Click to <b>finish line</b><br>
+    tooltipTextDelete: 'Нажмите клавишу SHIFT и кликните, чтобы <b>удалить точку</b>',//Press SHIFT-key and click to <b>delete point</b>
+    tooltipTextMove: 'Щелкните и перетащите, чтобы <b>переместить точку</b><br>',//Click and drag to <b>move point</b><br>
+    tooltipTextResume: '<br>Нажмите клавишу CTRL и щелкните, чтобы <b>возобновить строку</b>',//<br>Press CTRL-key and click to <b>resume line</b>
+    tooltipTextAdd: 'Нажмите клавишу CTRL и щелкните, чтобы <b>добавить точку</b>',//Press CTRL-key and click to <b>add point</b>
+                                    // language dependend labels for point's tooltips
+    measureControlTitleOn: 'Включить измеритель расстояния',   // Title for the control going to be switched on: Turn on PolylineMeasure
+    measureControlTitleOff: 'Выключить измеритель расстояния', // Title for the control going to be switched off
+    measureControlLabel: '&#8614;', // Label of the Measure control (maybe a unicode symbol)
+    measureControlClasses: [],      // Classes to apply to the Measure control
+    showClearControl: true,        // Show a control to clear all the measurements
+    clearControlTitle: 'Очистить измерения', // Title text to show on the clear measurements control button: Clear Measurements
+    clearControlLabel: '&times',    // Label of the Clear control (maybe a unicode symbol)
+    clearControlClasses: [],        // Classes to apply to clear control button
+    showUnitControl: false,         // Show a control to change the units of measurements
+    distanceShowSameUnit: false,    // Keep same unit in tooltips in case of distance less then 1 km/mi/nm
+    unitControlTitle: {             // Title texts to show on the Unit Control button
+        text: 'Change Units',
+        metres: 'metres',
+        landmiles: 'land miles',
+        nauticalmiles: 'nautical miles'
+    },
+    unitControlLabel: {             // Unit symbols to show in the Unit Control button and measurement labels
+        metres: 'м.',
+        kilometres: 'км.',
+        feet: 'ft',
+        landmiles: 'mi',
+        nauticalmiles: 'nm'
+    },
+    tempLine: {                     // Styling settings for the temporary dashed line
+        color: '#00f',              // Dashed line color
+        weight: 2                   // Dashed line weight
+    },
+    fixedLine: {                    // Styling for the solid line
+        color: '#006',              // Solid line color
+        weight: 2                   // Solid line weight
+    },
+    startCircle: {                  // Style settings for circle marker indicating the starting point of the polyline
+        color: '#000',              // Color of the border of the circle
+        weight: 1,                  // Weight of the circle
+        fillColor: '#0f0',          // Fill color of the circle
+        fillOpacity: 1,             // Fill opacity of the circle
+        radius: 3                   // Radius of the circle
+    },
+    intermedCircle: {               // Style settings for all circle markers between startCircle and endCircle
+        color: '#000',              // Color of the border of the circle
+        weight: 1,                  // Weight of the circle
+        fillColor: '#ff0',          // Fill color of the circle
+        fillOpacity: 1,             // Fill opacity of the circle
+        radius: 3                   // Radius of the circle
+    },
+    currentCircle: {                // Style settings for circle marker indicating the latest point of the polyline during drawing a line
+        color: '#000',              // Color of the border of the circle
+        weight: 1,                  // Weight of the circle
+        fillColor: '#f0f',          // Fill color of the circle
+        fillOpacity: 1,             // Fill opacity of the circle
+        radius: 3                   // Radius of the circle
+    },
+    endCircle: {                    // Style settings for circle marker indicating the last point of the polyline
+        color: '#000',              // Color of the border of the circle
+        weight: 1,                  // Weight of the circle
+        fillColor: '#f00',          // Fill color of the circle
+        fillOpacity: 1,             // Fill opacity of the circle
+        radius: 3                   // Radius of the circle
+    }
+
+};
+//let polylineMeasure = L.control.polylineMeasure ({position:'topleft', unit:'metres', showBearings:true, clearMeasurementsOnStop: false, showClearControl: true, showUnitControl: false,localization: 'ru'});
+let polylineMeasure = L.control.polylineMeasure (options);
+            polylineMeasure.addTo (map);
+
+            function debugevent(e) { console.debug(e.type, e, polylineMeasure._currentLine) }
+
+            map.on('polylinemeasure:toggle', debugevent);
+            map.on('polylinemeasure:start', debugevent);
+            map.on('polylinemeasure:resume', debugevent);
+            map.on('polylinemeasure:finish', debugevent);
+            map.on('polylinemeasure:clear', debugevent);
+            map.on('polylinemeasure:add', debugevent);
+            map.on('polylinemeasure:insert', debugevent);
+            map.on('polylinemeasure:move', debugevent);
+            map.on('polylinemeasure:remove', debugevent);
+
+/* ---------------------------------------------------------- END MEASURE ------------------------------------------------------------- */
+
+
+
+
+
 /* types of layers */
 var baseMaps = {
     "Интернет-карта": internetlayer,
@@ -743,6 +843,11 @@ legend.addTo(map);
 /* show podrazdelenia from kusis */
 $('body').on('click', '#show_podr', function (e) {
     e.preventDefault();
+
+if($('#polyline-measure-control').hasClass('polyline-measure-controlOnBgColor')){
+    $('#polyline-measure-control').click();
+    polylineMeasure._toggleMeasure();
+}
 
 //if ($('#is_str').is(':checked')===true)  is_str = 1; else  is_str = 0;
 

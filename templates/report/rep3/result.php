@@ -309,7 +309,7 @@ include 'form.php';
                     <tr>
                         <td>5</td>
                         <td>На другие загорания:</td>
-                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «другие загорания» все виды работ, кроме «факт горения не подтвердился»  + 5.1">
+                        <td><span aria-hidden="true" data-toggle="tooltip" data-placement="right" title="причина выезда «другие загорания» все виды работ + 5.1">
                                 <?= ((isset($rigs_today['rig_other_zagor']) && !empty($rigs_today['rig_other_zagor'])) ? $rigs_today['rig_other_zagor'] : 0) ?>
                             </span>
                         </td>

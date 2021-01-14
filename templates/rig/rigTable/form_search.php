@@ -49,6 +49,8 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
 
 
                 <div class="form-group">
+                    <button class="btn btn-default" type="button"  data-toggle="tooltip" data-placement="top" title="День назад" id="prev_day" > <i class="fa fa-angle-left" aria-hidden="true"></i></button>
+
                     <label for="date_start" >с</label>
                     <div class="input-group date" id="date_start">
                         <?php
@@ -101,6 +103,7 @@ if (isset($settings_user) && !empty($settings_user) && isset($settings_user['fie
 
                         <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                     </div>
+                     <button class="btn btn-default" type="button"   data-toggle="tooltip" data-placement="top" title="День вперед" id="next_day"> <i class="fa fa-angle-right" aria-hidden="true"></i></button>
                 </div>
 
         <div class="form-group">

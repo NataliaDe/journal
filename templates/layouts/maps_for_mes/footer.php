@@ -24,6 +24,8 @@
 
 
 <script src="<?= $baseUrl ?>/assets/leaflet/leaflet.js"></script>
+<script src="<?= $baseUrl ?>/assets/leaflet/Leaflet.PolylineMeasure.js"></script>
+
 
 
 <!-- Extra Markers -->

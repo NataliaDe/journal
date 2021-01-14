@@ -209,9 +209,9 @@ $('#filterRigForm')
             message: 'This value is not valid',
             //live: 'submitted',
             feedbackIcons: {
-                valid: 'glyphicon glyphicon-ok',
-                invalid: 'glyphicon glyphicon-remove',
-                validating: 'glyphicon glyphicon-refresh'
+//                valid: 'glyphicon glyphicon-ok',
+//                invalid: 'glyphicon glyphicon-remove',
+//                validating: 'glyphicon glyphicon-refresh'
             },
             fields: {
                 date_start: {
@@ -2832,8 +2832,72 @@ function validateDate(date){
 }
 
 
+//From: http://stackoverflow.com/questions/3066586/get-string-in-yyyymmdd-format-from-js-date-object
+Date.prototype.toInputFormat = function () {
+    var yyyy = this.getFullYear().toString();
+    var mm = (this.getMonth() + 1).toString(); // getMonth() is zero-based
+    var dd = this.getDate().toString();
+    return yyyy + "-" + (mm[1] ? mm : "0" + mm[0]) + "-" + (dd[1] ? dd : "0" + dd[0]); // padding
+};
+
+$('body').on('click', '#filterRigForm #next_day', function (e) {
+
+    e.preventDefault();
+
+    var d_start = new Date($('#filterRigForm input[name="date_start"]').val());
+    var d_end = new Date($('#filterRigForm input[name="date_end"]').val());
+
+    var days = 1;
+
+    if (!isNaN(d_start.getTime())) {
+        d_start.setDate(d_start.getDate() + days);
+
+        $('#filterRigForm input[name="date_start"]').val(d_start.toInputFormat());
+        $('#filterRigForm input[name="date_start"]').trigger('change');
+    } else {
+        toastr.error('Неверный формат даты начала периода', 'Ошибка!', {timeOut: 2500});
+    }
+
+    if (!isNaN(d_end.getTime())) {
+        d_end.setDate(d_end.getDate() + days);
+//alert(d_end.toInputFormat());
+        $('#filterRigForm input[name="date_end"]').val(d_end.toInputFormat());
+        $('#filterRigForm input[name="date_end"]').trigger('change');
+    } else {
+        toastr.error('Неверный формат даты окончания периода', 'Ошибка!', {timeOut: 2500});
+    }
+
+});
 
 
+$('body').on('click', '#filterRigForm #prev_day', function (e) {
+
+    e.preventDefault();
+
+    var d_start = new Date($('#filterRigForm input[name="date_start"]').val());
+    var d_end = new Date($('#filterRigForm input[name="date_end"]').val());
+
+    var days = 1;
+
+    if (!isNaN(d_start.getTime())) {
+        d_start.setDate(d_start.getDate() - days);
+
+        $('#filterRigForm input[name="date_start"]').val(d_start.toInputFormat());
+        $('#filterRigForm input[name="date_start"]').trigger('change');
+    } else {
+        toastr.error('Неверный формат даты начала периода', 'Ошибка!', {timeOut: 2500});
+    }
+
+    if (!isNaN(d_end.getTime())) {
+        d_end.setDate(d_end.getDate() - days);
+
+        $('#filterRigForm input[name="date_end"]').val(d_end.toInputFormat());
+        $('#filterRigForm input[name="date_end"]').trigger('change');
+    } else {
+        toastr.error('Неверный формат даты окончания периода', 'Ошибка!', {timeOut: 2500});
+    }
+
+});
 
 
 

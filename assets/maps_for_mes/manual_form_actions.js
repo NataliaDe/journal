@@ -53,6 +53,7 @@ $('#id_region_map').on('change', function (e) {
 
 
                     if (arr_current_local.includes(value.id)) {
+                        $('#div_id_show_paso').removeClass('hide');
                         $("#id_local_map").append($("<option selected></option>").attr("value", value.id).text(value.name)).trigger('chosen:updated');
                     } else {
                         $("#id_local_map").append($("<option></option>").attr("value", value.id).text(value.name)).trigger('chosen:updated');
@@ -65,12 +66,13 @@ $('#id_region_map').on('change', function (e) {
                 console.log('jj');
             }
         });
+
 //$('#id_local_map_chosen').css('width','215px');
         //show select local
         // $('#div_id_local_map').css('display','inline');
 
     } else {
-
+$('#div_id_show_paso').addClass('hide');
 // $('#div_id_local_map').css('display','none');
     }
 
@@ -125,8 +127,9 @@ $('#id_local_map').on('change', function (e) {
                 console.log('jj');
             }
         });
+        $('#div_id_show_paso').removeClass('hide');
     } else {
-
+$('#div_id_show_paso').addClass('hide');
 // $('#div_id_local_map').css('display','none');
     }
 

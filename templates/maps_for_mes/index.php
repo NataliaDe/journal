@@ -64,6 +64,10 @@
 border: 1px solid rgba(145, 138, 143, 0.33) !important;
 }
 
+.hide{
+    display: none  !important;
+}
+
 </style>
 <div id="mapid"></div>
 
